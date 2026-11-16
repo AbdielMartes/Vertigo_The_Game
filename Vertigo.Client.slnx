@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Client/">
+    <Project Path="src/Client/Vertigo.Client.Networking/Vertigo.Client.Networking.csproj" />
+    <Project Path="src/Client/Vertigo.Client.UI/Vertigo.Client.UI.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/Vertigo.Contracts/Vertigo.Contracts.csproj" />
+  </Folder>
+</Solution>
