@@ -11,4 +11,7 @@
   <Folder Name="/src/Shared/">
     <Project Path="src/Shared/Vertigo.Contracts/Vertigo.Contracts.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Vertigo.Server.Game.Tests/Vertigo.Server.Game.Tests.csproj" />
+  </Folder>
 </Solution>
