@@ -1,0 +1,234 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
+             x:Class="Vertigo.Client.UI.Views.MatchView"
+             x:DataType="vm:MatchViewModel"
+             xmlns:validation="using:Vertigo.Client.UI.Utilities.Validation"
+             x:CompileBindings="True">
+    <UserControl.KeyBindings>
+        <KeyBinding Gesture="Escape" Command="{Binding CancelExitCommand}"/>
+    </UserControl.KeyBindings>
+    <UserControl.Styles>
+        <Style Selector="Border.match-panel">
+            <Setter Property="Background" Value="{DynamicResource ColorWhite}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorBorderStrong}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+            <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
+            <Setter Property="Padding" Value="14"/>
+        </Style>
+        <Style Selector="Border.match-pile">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorSnesBlue}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="{DynamicResource ColorInfoBackground}"/>
+            <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="MinWidth" Value="86"/>
+            <Setter Property="MinHeight" Value="132"/>
+        </Style>
+        <Style Selector="Button:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+        <Style Selector="TextBox:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+    </UserControl.Styles>
+    <Grid Background="{DynamicResource ColorCanvas}">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      IsEnabled="{Binding !IsExitConfirmationOpen}">
+            <StackPanel MinWidth="980" MaxWidth="1510" Margin="24" Spacing="14"
+                        HorizontalAlignment="Center">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="20">
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="VÉRTIGO" FontSize="32" FontWeight="Bold"
+                                   FontFamily="{DynamicResource FontTitleDisplay}"/>
+                        <TextBlock Text="{Binding TitleText}" FontSize="12"
+                                   Foreground="{DynamicResource ColorTextSecondary}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="{Binding RoundText}" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding RoundLabel}" FontFamily="{DynamicResource FontMono}"
+                                   Foreground="{DynamicResource ColorSnesBlue}"/>
+                        <TextBlock Text="{Binding TurnText}" FontWeight="SemiBold" Margin="12,0,0,0"/>
+                        <TextBlock Text="{Binding CurrentTurnLabel}"/>
+                    </StackPanel>
+                    <Button Grid.Column="2" Classes="vertigo-button danger" TabIndex="0"
+                            Content="{Binding ExitText}" Command="{Binding RequestExitCommand}"/>
+                </Grid>
+                <Border IsVisible="{Binding HasError}" Classes="match-panel"
+                        Background="{DynamicResource ColorErrorBackground}"
+                        BorderBrush="{DynamicResource ColorError}">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Path Width="18" Height="18" Stretch="Uniform"
+                              Stroke="{DynamicResource ColorError}" StrokeThickness="2"
+                              Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
+                        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+                <Grid ColumnDefinitions="210,*,260" ColumnSpacing="14" MinHeight="450">
+                    <Border Grid.Column="0" Classes="match-panel">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="{Binding PlayersText}" FontSize="18" FontWeight="Bold"/>
+                            <ListBox ItemsSource="{Binding Players}" TabIndex="1" MinHeight="300"
+                                     AutomationProperties.Name="{Binding PlayersText}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="rows:MatchPlayerRow">
+                                        <Border BorderBrush="{DynamicResource ColorDivider}"
+                                                BorderThickness="0,0,0,1" Padding="4,10">
+                                            <StackPanel Spacing="5">
+                                                <TextBlock Text="{Binding Username}" FontWeight="SemiBold"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Path Width="15" Height="15" Stroke="{DynamicResource ColorSnesBlue}"
+                                                          StrokeThickness="1.6" Data="M 2,13 L 13,13 L 13,2 L 2,2 Z"/>
+                                                    <TextBlock Text="{Binding FloorsBuilt}"
+                                                               FontFamily="{DynamicResource FontMono}"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="1" Classes="match-panel">
+                        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock Text="{Binding BoardText}" FontSize="18" FontWeight="Bold"/>
+                                <Button Grid.Column="1" Classes="vertigo-button neutral"
+                                        Command="{Binding RefreshBoardCommand}"
+                                        IsEnabled="{Binding !IsLoadingBoard}"
+                                        Content="↻" AutomationProperties.Name="{Binding BoardText}"
+                                        TabIndex="9"/>
+                            </Grid>
+                            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Disabled">
+                                <ListBox ItemsSource="{Binding Piles}"
+                                         SelectedItem="{Binding SelectedPile, Mode=TwoWay}"
+                                         SelectionMode="Single" TabIndex="7"
+                                         AutomationProperties.Name="{Binding BoardText}">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" Spacing="14"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="rows:MatchPileRow">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Text="{Binding Label}" HorizontalAlignment="Center"
+                                                           FontWeight="SemiBold"/>
+                                                <Border Classes="match-pile">
+                                                    <Grid RowDefinitions="*,Auto">
+                                                        <Path Stretch="Uniform" Width="46" Height="55"
+                                                              Stroke="{DynamicResource ColorSnesBlue}"
+                                                              StrokeThickness="1.5"
+                                                              Data="M 5,5 L 41,5 L 41,50 L 5,50 Z M 12,12 L 34,12 M 12,18 L 34,18"/>
+                                                        <TextBlock Grid.Row="1" Text="{Binding TopCardText}"
+                                                                   FontSize="24" FontWeight="Bold"
+                                                                   HorizontalAlignment="Center"
+                                                                   FontFamily="{DynamicResource FontMono}"/>
+                                                    </Grid>
+                                                </Border>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </ScrollViewer>
+                            <TextBlock Grid.Row="2" Text="{Binding BoardHintText}"
+                                       TextWrapping="Wrap" Foreground="{DynamicResource ColorTextSecondary}"
+                                       FontSize="12"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="2" Classes="match-panel">
+                        <Grid RowDefinitions="Auto,*,Auto,Auto,Auto" RowSpacing="10">
+                            <TextBlock Text="{Binding ChatText}" FontSize="18" FontWeight="Bold"/>
+                            <ListBox Grid.Row="1" TabIndex="2" MinHeight="240"
+                                     ItemsSource="{Binding ChatMessages}"
+                                     AutomationProperties.Name="{Binding ChatText}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="rows:MatchChatRow">
+                                        <StackPanel Margin="4,6" Spacing="3">
+                                            <TextBlock Text="{Binding Sender}" FontWeight="Bold"
+                                                       Foreground="{DynamicResource ColorSnesBlue}"/>
+                                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <TextBox Grid.Row="2" TabIndex="3" MaxLength="{x:Static validation:MatchChatRules.MaximumLength}"
+                                     Text="{Binding DraftMessage, Mode=TwoWay}"
+                                     PlaceholderText="{Binding MessageHintText}" AcceptsReturn="False"
+                                     AutomationProperties.Name="{Binding MessageHintText}"/>
+                            <TextBlock Grid.Row="3" Text="{Binding ChatLengthLabel}"
+                                       HorizontalAlignment="Right" FontSize="11"
+                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                            <Button Grid.Row="4" Classes="vertigo-button primary" TabIndex="4"
+                                    Content="{Binding SendText}" IsEnabled="False"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Border Classes="match-panel">
+                    <Grid ColumnDefinitions="*,200" ColumnSpacing="24">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="{Binding HandText}" FontSize="19" FontWeight="Bold"/>
+                            <ListBox ItemsSource="{Binding Hand}" SelectedItem="{Binding SelectedCard, Mode=TwoWay}"
+                                     TabIndex="5" MaxHeight="168" SelectionMode="Single">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="9"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="rows:MatchCardRow">
+                                        <Border Classes="match-pile" MinHeight="100" MinWidth="75"
+                                                Background="{DynamicResource ColorWhite}">
+                                            <TextBlock Text="{Binding DisplayValue}" FontSize="28"
+                                                       FontWeight="Bold" HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontFamily="{DynamicResource FontMono}"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="8">
+                            <TextBlock Text="{Binding WildcardText}" FontWeight="SemiBold"/>
+                            <ItemsControl ItemsSource="{Binding Wildcards}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="rows:MatchCardRow">
+                                        <Border Classes="match-pile" MinHeight="52">
+                                            <TextBlock Text="{Binding DisplayValue}" FontSize="22"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Classes="vertigo-button primary" TabIndex="6"
+                                    Content="{Binding PlayCardText}" Command="{Binding PlaceCardCommand}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+        <Border IsVisible="{Binding IsExitConfirmationOpen}" Background="{DynamicResource ColorCanvas}"
+                BorderBrush="{DynamicResource ColorCoal}" BorderThickness="2"
+                CornerRadius="{DynamicResource RadiusSmall}"
+                Width="450" MaxWidth="450" Padding="24"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Focusable="True">
+            <StackPanel Spacing="14">
+                <TextBlock Text="{Binding ExitConfirmTitleText}" FontWeight="Bold" FontSize="21"/>
+                <TextBlock Text="{Binding ExitConfirmBodyText}" TextWrapping="Wrap"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                    <Button Content="{Binding CancelText}" Command="{Binding CancelExitCommand}"
+                            Classes="vertigo-button neutral" TabIndex="7"/>
+                    <Button Content="{Binding ConfirmText}"
+                            Classes="vertigo-button danger" TabIndex="8" IsEnabled="False"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

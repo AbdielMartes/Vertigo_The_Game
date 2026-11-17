@@ -1,0 +1,25 @@
+using System.Runtime.Serialization;
+
+namespace Vertigo.Contracts.Models;
+
+[DataContract]
+public sealed class MatchBoardSnapshot
+{
+    [DataMember]
+    public Guid MatchId { get; set; }
+
+    [DataMember]
+    public long Revision { get; set; }
+
+    [DataMember]
+    public int? RoundNumber { get; set; }
+
+    [DataMember]
+    public Guid CurrentTurnPlayerId { get; set; }
+
+    [DataMember]
+    public List<MatchBoardPlayer> Players { get; set; } = new();
+
+    [DataMember]
+    public List<MatchBoardPile> Piles { get; set; } = new();
+}

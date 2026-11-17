@@ -54,7 +54,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         {
             if (_lobbies.Values.Any(lobby => lobby.Contains(host.PlayerId)))
             {
-                throw CreateFault(ServiceErrorCodes.LobbyInviteNotAllowed, ServiceMessageKeys.LobbyInviteNotAllowed);
+                throw CreateFault(ServiceErrorCodes.PlayerAlreadyInLobby, ServiceMessageKeys.PlayerAlreadyInLobby);
             }
 
             lobbyCode = GenerateUniqueLobbyCode();
@@ -113,7 +113,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             }
             else if (_lobbies.Values.Any(otherLobby => otherLobby.Contains(player.PlayerId)))
             {
-                throw CreateFault(ServiceErrorCodes.LobbyInviteNotAllowed, ServiceMessageKeys.LobbyInviteNotAllowed);
+                throw CreateFault(ServiceErrorCodes.PlayerAlreadyInLobby, ServiceMessageKeys.PlayerAlreadyInLobby);
             }
             else
             {
@@ -180,6 +180,122 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             LobbyState lobby = RequireLobbyMember(lobbyCode, identity.PlayerId);
             return lobby.ToPreparation();
         }
+    }
+
+    public LobbyPreparation? GetCurrentLobby(string sessionToken)
+    {
+        SessionIdentity identity = ResolveIdentity(sessionToken);
+        lock (_lobbyLock)
+        {
+            LobbyState? lobby = _lobbies.Values.FirstOrDefault(candidate => candidate.Contains(identity.PlayerId));
+            return lobby?.ToPreparation();
+        }
+    }
+
+    public MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken)
+    {
+        SessionIdentity identity = ResolveIdentity(sessionToken);
+        lock (_lobbyLock)
+        {
+            LobbyState lobby = RequireLobbyMember(lobbyCode, identity.PlayerId);
+            if (lobby.Status != LobbyStatus.InGame || lobby.MatchId == Guid.Empty)
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyAlreadyInGame, ServiceMessageKeys.LobbyAlreadyInGame);
+            }
+
+            return _gameOperations.GetPrivateHand(lobby.MatchId, identity.PlayerId)
+                ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+        }
+    }
+
+    public MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken)
+    {
+        SessionIdentity identity = ResolveIdentity(sessionToken);
+        MatchBoardSnapshot board;
+
+        lock (_lobbyLock)
+        {
+            LobbyState lobby = RequireLobbyMember(lobbyCode, identity.PlayerId);
+            if (lobby.Status != LobbyStatus.InGame || lobby.MatchId == Guid.Empty)
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyAlreadyStarted, ServiceMessageKeys.LobbyAlreadyStarted);
+            }
+
+            board = _gameOperations.GetBoard(lobby.MatchId)
+                ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+            Dictionary<Guid, string> names = lobby.GetMembersExcept(Guid.Empty)
+                .ToDictionary(member => member.PlayerId, member => member.Username);
+            foreach (MatchBoardPlayer player in board.Players)
+            {
+                if (names.TryGetValue(player.PlayerId, out string? username))
+                {
+                    player.Username = username;
+                }
+            }
+        }
+
+        return board;
+    }
+
+    public MatchBoardSnapshot PlaceMatchCard(MatchPlaceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        SessionIdentity identity = ResolveIdentity(request.SessionToken);
+        lock (_lobbyLock)
+        {
+            LobbyState lobby = RequireLobbyMember(request.LobbyCode, identity.PlayerId);
+            if (lobby.Status != LobbyStatus.InGame || lobby.MatchId == Guid.Empty)
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyNotReady, ServiceMessageKeys.LobbyNotReady);
+            }
+
+            MatchPlacement move = new(request.CardNumber, request.PilePosition, request.ExpectedRevision);
+            MatchPlacementResult result = _gameOperations.TryPlace(lobby.MatchId, identity.PlayerId, move);
+            if (result != MatchPlacementResult.Applied)
+            {
+                throw CreateFault(PlacementError(result), PlacementMessage(result));
+            }
+
+            MatchBoardSnapshot board = _gameOperations.GetBoard(lobby.MatchId)
+                ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+            Dictionary<Guid, string> names = lobby.GetMembersExcept(Guid.Empty)
+                .ToDictionary(member => member.PlayerId, member => member.Username);
+            foreach (MatchBoardPlayer player in board.Players)
+            {
+                if (names.TryGetValue(player.PlayerId, out string? username))
+                {
+                    player.Username = username;
+                }
+            }
+
+            return board;
+        }
+    }
+
+    private static string PlacementError(MatchPlacementResult result)
+    {
+        return result switch
+        {
+            MatchPlacementResult.NotYourTurn => "MATCH_NOT_YOUR_TURN",
+            MatchPlacementResult.CardNotOwned => "MATCH_CARD_NOT_OWNED",
+            MatchPlacementResult.InvalidPile => "MATCH_INVALID_PILE",
+            MatchPlacementResult.InvalidPlacement => "MATCH_UNSTABLE_PLACEMENT",
+            MatchPlacementResult.StaleRevision => "MATCH_STALE_REVISION",
+            _ => "MATCH_UNAVAILABLE"
+        };
+    }
+
+    private static string PlacementMessage(MatchPlacementResult result)
+    {
+        return result switch
+        {
+            MatchPlacementResult.NotYourTurn => "Match.Error.NotYourTurn",
+            MatchPlacementResult.CardNotOwned => "Match.Error.CardNotOwned",
+            MatchPlacementResult.InvalidPile => "Match.Error.InvalidPile",
+            MatchPlacementResult.InvalidPlacement => "Match.Error.Unstable",
+            MatchPlacementResult.StaleRevision => "Match.Error.Stale",
+            _ => "Match.Error.Unavailable"
+        };
     }
 
     public LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken)

@@ -1,5 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:playviews="using:Vertigo.Client.UI.Views"
+             xmlns:playvm="using:Vertigo.Client.UI.ViewModels"
              x:Class="Vertigo.Client.UI.App"
              xmlns:local="using:Vertigo.Client.UI"
              RequestedThemeVariant="Light"
@@ -8,6 +10,9 @@
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
+        <DataTemplate DataType="{x:Type playvm:PlayViewModel}">
+            <playviews:PlayView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type homevm:HomeViewModel}">
             <homeviews:HomeView />
         </DataTemplate>
@@ -22,6 +27,14 @@
 
         <DataTemplate DataType="{x:Type homevm:ProfileViewModel}">
             <homeviews:ProfileView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type homevm:LobbyViewModel}">
+            <homeviews:LobbyView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type homevm:MatchViewModel}">
+            <homeviews:MatchView/>
         </DataTemplate>
 
         <local:ViewLocator />

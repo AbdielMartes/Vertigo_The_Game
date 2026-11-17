@@ -46,6 +46,7 @@ builder.Services.AddTransient<FriendshipService>();
 builder.Services.AddSingleton<FriendshipNotificationService>();
 builder.Services.AddMatchLifecycleServices();
 builder.Services.AddSingleton<LobbyMatchActivation>();
+builder.Services.AddSingleton<MatchReadServices>();
 builder.Services.AddSingleton<LobbyGameOperations>();
 builder.Services.AddSingleton<LobbyService>();
 builder.Services.AddSingleton<ILobbyDirectory>(services => services.GetRequiredService<LobbyService>());

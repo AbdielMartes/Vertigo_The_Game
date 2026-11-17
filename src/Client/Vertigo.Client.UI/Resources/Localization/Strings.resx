@@ -304,4 +304,189 @@
   <data name="SocialUi.Unblock" xml:space="preserve">
     <value>Desbloquear</value>
   </data>
+  <data name="Play.Title" xml:space="preserve">
+      <value>JUGAR</value>
+  </data>
+  <data name="Play.Subtitle" xml:space="preserve">
+      <value>Construye tu sala o encuentra una partida.</value>
+  </data>
+  <data name="Play.CreateTitle" xml:space="preserve">
+      <value>Crear partida</value>
+  </data>
+  <data name="Play.Public" xml:space="preserve">
+      <value>Sala pública</value>
+  </data>
+  <data name="Play.MaxPlayers" xml:space="preserve">
+      <value>Máximo de jugadores</value>
+  </data>
+  <data name="Play.Create" xml:space="preserve">
+      <value>Crear sala</value>
+  </data>
+  <data name="Play.JoinTitle" xml:space="preserve">
+      <value>Unirse con código</value>
+  </data>
+  <data name="Play.Code" xml:space="preserve">
+      <value>Código de sala (6 caracteres)</value>
+  </data>
+  <data name="Play.Join" xml:space="preserve">
+      <value>Unirse</value>
+  </data>
+  <data name="Play.BrowseTitle" xml:space="preserve">
+      <value>Partidas públicas disponibles</value>
+  </data>
+  <data name="Play.Browse" xml:space="preserve">
+      <value>Buscar partidas públicas</value>
+  </data>
+  <data name="Play.Refresh" xml:space="preserve">
+      <value>Actualizar lista</value>
+  </data>
+  <data name="Play.Empty" xml:space="preserve">
+      <value>No hay salas públicas disponibles.</value>
+  </data>
+  <data name="Play.Room" xml:space="preserve">
+      <value>Sala</value>
+  </data>
+  <data name="Play.Host" xml:space="preserve">
+      <value>Anfitrión</value>
+  </data>
+  <data name="Play.Players" xml:space="preserve">
+      <value>Jugadores</value>
+  </data>
+  <data name="Play.InvalidCode" xml:space="preserve">
+      <value>El código debe tener seis caracteres válidos.</value>
+  </data>
+  <data name="Play.InvalidCapacity" xml:space="preserve">
+      <value>Selecciona entre 2 y 6 jugadores.</value>
+  </data>
+  <data name="Play.SelectRoom" xml:space="preserve">
+      <value>Selecciona una sala de la lista.</value>
+  </data>
+  <data name="Play.NetworkError" xml:space="preserve">
+      <value>No se pudo completar la operación. Comprueba la conexión.</value>
+  </data>
+  <data name="Room.Title" xml:space="preserve">
+      <value>SALA DE PARTIDA</value>
+  </data>
+  <data name="Room.Code" xml:space="preserve">
+      <value>Código</value>
+  </data>
+  <data name="Room.Leave" xml:space="preserve">
+      <value>Salir de la sala</value>
+  </data>
+  <data name="Room.Members" xml:space="preserve">
+      <value>Participantes</value>
+  </data>
+  <data name="Room.MembersDescription" xml:space="preserve">
+      <value>Jugadores conectados a esta sala.</value>
+  </data>
+  <data name="Room.Preparation" xml:space="preserve">
+      <value>Preparación</value>
+  </data>
+  <data name="Room.PreparationHint" xml:space="preserve">
+      <value>Todos los jugadores deben estar listos para comenzar.</value>
+  </data>
+  <data name="Room.Host" xml:space="preserve">
+      <value>Anfitrión</value>
+  </data>
+  <data name="Room.Player" xml:space="preserve">
+      <value>Jugador</value>
+  </data>
+  <data name="Room.Guest" xml:space="preserve">
+      <value>Invitado</value>
+  </data>
+  <data name="Room.Ready" xml:space="preserve">
+      <value>Listo</value>
+  </data>
+  <data name="Room.NotReady" xml:space="preserve">
+      <value>No listo</value>
+  </data>
+  <data name="Room.InGame" xml:space="preserve">
+      <value>Partida iniciada</value>
+  </data>
+  <data name="Room.Waiting" xml:space="preserve">
+      <value>Esperando jugadores</value>
+  </data>
+  <data name="Room.ReadyAction" xml:space="preserve">
+      <value>Estoy listo</value>
+  </data>
+  <data name="Room.NotReadyAction" xml:space="preserve">
+      <value>Dejar de estar listo</value>
+  </data>
+  <data name="Room.Start" xml:space="preserve">
+      <value>Iniciar partida</value>
+  </data>
+  <data name="Room.Chat" xml:space="preserve">
+      <value>Chat de la sala</value>
+  </data>
+  <data name="Room.MessagePlaceholder" xml:space="preserve">
+      <value>Escribe un mensaje...</value>
+  </data>
+  <data name="Room.Send" xml:space="preserve">
+      <value>Enviar</value>
+  </data>
+  <data name="Room.ErrorHeading" xml:space="preserve">
+      <value>No se pudo completar la acción</value>
+  </data>
+  <data name="Match.Title" xml:space="preserve">
+    <value>PARTIDA EN CURSO</value>
+  </data>
+  <data name="Match.Round" xml:space="preserve">
+    <value>Ronda</value>
+  </data>
+  <data name="Match.Turn" xml:space="preserve">
+    <value>Turno</value>
+  </data>
+  <data name="Match.Players" xml:space="preserve">
+    <value>JUGADORES</value>
+  </data>
+  <data name="Match.Floors" xml:space="preserve">
+    <value>Pisos</value>
+  </data>
+  <data name="Match.Board" xml:space="preserve">
+    <value>PILAS DE DESCARTE</value>
+  </data>
+  <data name="Match.BoardHint" xml:space="preserve">
+    <value>Selecciona una carta de tu mano y una pila compatible. Las jugadas se activarán al conectar Game.</value>
+  </data>
+  <data name="Match.Hand" xml:space="preserve">
+    <value>MI MANO</value>
+  </data>
+  <data name="Match.Wildcards" xml:space="preserve">
+    <value>PLANOS MAESTROS</value>
+  </data>
+  <data name="Match.Chat" xml:space="preserve">
+    <value>CHAT DE PARTIDA</value>
+  </data>
+  <data name="Match.MessageHint" xml:space="preserve">
+    <value>Mensaje (máx. 40 caracteres)</value>
+  </data>
+  <data name="Match.Send" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="Match.PlayCard" xml:space="preserve">
+    <value>Colocar carta</value>
+  </data>
+  <data name="Match.Exit" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="Match.ExitConfirmTitle" xml:space="preserve">
+    <value>¿Abandonar la partida?</value>
+  </data>
+  <data name="Match.ExitConfirmBody" xml:space="preserve">
+    <value>La salida definitiva todavía no está habilitada. Podrás cancelar este diálogo.</value>
+  </data>
+  <data name="Match.Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Match.Confirm" xml:space="preserve">
+    <value>Confirmar salida</value>
+  </data>
+  <data name="Lobby.PlayerAlreadyInLobby" xml:space="preserve"><value>Ya perteneces a una sala. Reanúdala antes de crear o unirte a otra.</value></data>
+  <data name="Play.ResumeLobby" xml:space="preserve"><value>Reanudar sala</value></data>
+  <data name="Match.Error.NotYourTurn" xml:space="preserve"><value>No es tu turno.</value></data>
+  <data name="Match.Error.CardNotOwned" xml:space="preserve"><value>La carta no está en tu mano.</value></data>
+  <data name="Match.Error.InvalidPile" xml:space="preserve"><value>Selecciona una torre válida.</value></data>
+  <data name="Match.Error.Unstable" xml:space="preserve"><value>La carta debe superar el tope entre 1 y 10.</value></data>
+  <data name="Match.Error.Stale" xml:space="preserve"><value>El tablero cambió. Actualízalo e inténtalo de nuevo.</value></data>
+  <data name="Match.Error.Unavailable" xml:space="preserve"><value>No es posible jugar en este momento.</value></data>
 </root>

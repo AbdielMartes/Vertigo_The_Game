@@ -4,7 +4,9 @@ public enum NavigationPage
 {
     Access,
     Home,
+    Play,
     Lobby,
+    Match,
     Social,
     Settings,
     Profile

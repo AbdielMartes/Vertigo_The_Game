@@ -29,6 +29,22 @@ public interface ILobbyService
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
+    MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    LobbyPreparation? GetCurrentLobby(string sessionToken);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    MatchBoardSnapshot PlaceMatchCard(MatchPlaceRequest request);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
     LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken);
 
     [OperationContract]

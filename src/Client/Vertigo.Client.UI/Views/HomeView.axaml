@@ -100,7 +100,7 @@
                                Margin="0,-10,0,24"
                                Foreground="{DynamicResource ColorTextSecondary}"/>
                     <Button Classes="vertigo-home-action" TabIndex="5"
-                            Command="{Binding TogglePlayCommand}"
+                            Command="{Binding OpenPlayCommand}"
                             AutomationProperties.Name="{Binding PlayText}">
                         <StackPanel Orientation="Horizontal" Spacing="18">
                             <Path Width="32" Height="32" Stretch="Uniform"
@@ -142,33 +142,6 @@
                             <TextBlock Text="{Binding SettingsText}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Border IsVisible="{Binding IsPlayPanelOpen}"
-                            Background="{DynamicResource ColorSurface}"
-                            BorderBrush="{DynamicResource ColorBorderStrong}"
-                            BorderThickness="{DynamicResource BorderThin}"
-                            CornerRadius="{DynamicResource RadiusSmall}" Padding="16">
-                        <StackPanel Spacing="12">
-                            <StackPanel Orientation="Horizontal" Spacing="12">
-                                <TextBlock Text="{Binding PublicText}" VerticalAlignment="Center"/>
-                                <CheckBox IsChecked="{Binding IsPublic, Mode=TwoWay}"
-                                          TabIndex="9" AutomationProperties.Name="{Binding PublicText}"/>
-                                <TextBlock Text="{Binding MaxPlayersText}" VerticalAlignment="Center"/>
-                                <NumericUpDown Value="{Binding MaxPlayers, Mode=TwoWay}"
-                                               Minimum="2" Maximum="6" Increment="1"
-                                               Width="75" TabIndex="10"/>
-                            </StackPanel>
-                            <Button Classes="vertigo-button primary" TabIndex="11"
-                                    IsEnabled="{Binding !IsBusy}" Command="{Binding CreateLobbyCommand}"
-                                    Content="{Binding CreateText}"/>
-                            <TextBlock Text="{Binding CodeText}"/>
-                            <TextBox Classes="vertigo-input" TabIndex="12"
-                                     Text="{Binding LobbyCode, Mode=TwoWay}" MaxLength="6"
-                                     AutomationProperties.Name="{Binding CodeText}"/>
-                            <Button Classes="vertigo-button secondary" TabIndex="13"
-                                    IsEnabled="{Binding !IsBusy}" Command="{Binding JoinLobbyCommand}"
-                                    Content="{Binding JoinText}"/>
-                        </StackPanel>
-                    </Border>
                     <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
                                Foreground="{DynamicResource ColorError}"/>
                 </StackPanel>

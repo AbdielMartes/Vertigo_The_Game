@@ -46,7 +46,12 @@ public partial class App : Application
             registrations.AddTransient<MainScreensContext>();
             registrations.AddTransient<MainContext>();
             registrations.AddSingleton<AccessViewModel>();
+            registrations.AddSingleton<PlayViewModel>();
             registrations.AddSingleton<HomeViewModel>();
+            registrations.AddTransient<MatchBoardServices>();
+            registrations.AddTransient<MatchBoardContext>();
+            registrations.AddSingleton<MatchViewModel>(provider =>
+                new MatchViewModel(provider.GetRequiredService<MatchBoardContext>()));
             registrations.AddSingleton<LobbyViewModel>();
             registrations.AddSingleton<SocialOperation>();
             registrations.AddSingleton<FriendsViewModel>();

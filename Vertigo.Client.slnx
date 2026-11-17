@@ -17,5 +17,6 @@
     <Project Path="tests/Vertigo.Server.Matchmaking.Tests/Vertigo.Server.Matchmaking.Tests.csproj" />
     <Project Path="tests/Vertigo.Client.TestAccounts.Setup/Vertigo.Client.TestAccounts.Setup.csproj" />
     <Project Path="tests/Vertigo.Client.Reconnection.Smoke/Vertigo.Client.Reconnection.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.MatchBoard.Smoke/Vertigo.Client.MatchBoard.Smoke.csproj" />
   </Folder>
 </Solution>

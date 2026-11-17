@@ -22,53 +22,33 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     private readonly IClientErrorText _errors;
     private readonly ISessionGuard _coordinator;
     private readonly ITextLocalizer _text;
-    private string _lobbyCode = string.Empty;
     private string _errorMessage = string.Empty;
-    private bool _isPublic = true;
-    private int _maxPlayers = 4;
     private bool _isBusy;
-    private bool _isPlayPanelOpen;
     private bool _isNotificationsOpen;
 
-    public HomeViewModel(HomeContext context, LobbyViewModel lobby)
+    public HomeViewModel(HomeContext context, LobbyViewModel lobby, PlayViewModel play)
     {
         _sessions = context.Sessions;
         _playerSession = context.PlayerSession;
         _navigation = context.Ui.Navigation;
         _lobby = lobby;
+        Play = play;
         _errors = context.Ui.Services.Errors;
         _coordinator = context.Ui.Services.SessionGuard;
         _text = context.Ui.Services.Text;
-        CreateLobbyCommand = new AsyncRelayCommand(CreateLobbyAsync);
-        JoinLobbyCommand = new AsyncRelayCommand(JoinLobbyAsync);
         LogoutCommand = new AsyncRelayCommand(LogoutAsync);
         OpenSocialCommand = new RelayCommand(OpenSocial);
-        TogglePlayCommand = new RelayCommand(TogglePlay);
+        OpenPlayCommand = new RelayCommand(OpenPlay);
         ToggleNotificationsCommand = new RelayCommand(ToggleNotifications);
         OpenProfileCommand = new RelayCommand(OpenProfile);
         OpenSettingsCommand = new RelayCommand(OpenSettings);
     }
 
+    public PlayViewModel Play { get; }
+    public IRelayCommand OpenPlayCommand { get; }
+
     public string Username => _playerSession.GetActiveSession()?.Username ?? string.Empty;
     public bool IsGuest => _playerSession.GetActiveSession()?.IsGuest ?? false;
-
-    public string LobbyCode
-    {
-        get => _lobbyCode;
-        set => SetProperty(ref _lobbyCode, value);
-    }
-
-    public bool IsPublic
-    {
-        get => _isPublic;
-        set => SetProperty(ref _isPublic, value);
-    }
-
-    public int MaxPlayers
-    {
-        get => _maxPlayers;
-        set => SetProperty(ref _maxPlayers, value);
-    }
 
     public string ErrorMessage
     {
@@ -82,20 +62,11 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
         private set => SetProperty(ref _isBusy, value);
     }
 
-    public IAsyncRelayCommand CreateLobbyCommand { get; }
-    public IAsyncRelayCommand JoinLobbyCommand { get; }
     public IAsyncRelayCommand LogoutCommand { get; }
     public IRelayCommand OpenSocialCommand { get; }
-    public IRelayCommand TogglePlayCommand { get; }
     public IRelayCommand ToggleNotificationsCommand { get; }
     public IRelayCommand OpenProfileCommand { get; }
     public IRelayCommand OpenSettingsCommand { get; }
-
-    public bool IsPlayPanelOpen
-    {
-        get => _isPlayPanelOpen;
-        private set => SetProperty(ref _isPlayPanelOpen, value);
-    }
 
     public bool IsNotificationsOpen
     {
@@ -116,11 +87,6 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     public string OpenSocialNotificationsText => _text.Get("Home.OpenSocialNotifications");
     public string GlossaryText => _text.Get("Home.Glossary");
     public string LogoutText => _text.Get("Home.Logout");
-    public string CreateText => _text.Get("Home.Create");
-    public string JoinText => _text.Get("Home.Join");
-    public string CodeText => _text.Get("Home.Code");
-    public string PublicText => _text.Get("Home.Public");
-    public string MaxPlayersText => _text.Get("Home.MaxPlayers");
     public string CloseText => _text.Get("Home.Close");
     public string NotAvailableText => _text.Get("Home.NotAvailable");
     public string VersionText => "v0.1.0";
@@ -130,7 +96,6 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     {
         ErrorMessage = string.Empty;
         IsNotificationsOpen = false;
-        IsPlayPanelOpen = false;
         if (_coordinator.HasActiveSession())
         {
             RefreshIdentity();
@@ -142,7 +107,6 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     {
         ErrorMessage = string.Empty;
         IsNotificationsOpen = false;
-        IsPlayPanelOpen = false;
     }
 
     public void RefreshIdentity()
@@ -153,12 +117,11 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
         OnPropertyChanged(nameof(AccountKindText));
     }
 
-    private void TogglePlay()
+    private void OpenPlay()
     {
-        if (!IsBusy)
+        if (!IsBusy && _coordinator.HasActiveSession())
         {
-            IsPlayPanelOpen = !IsPlayPanelOpen;
-            IsNotificationsOpen = false;
+            _navigation.NavigateTo(NavigationPage.Play);
         }
     }
 
@@ -197,39 +160,8 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
         OnPropertyChanged(nameof(OpenSocialNotificationsText));
         OnPropertyChanged(nameof(LogoutText));
         OnPropertyChanged(nameof(GlossaryText));
-        OnPropertyChanged(nameof(CreateText));
-        OnPropertyChanged(nameof(JoinText));
-        OnPropertyChanged(nameof(CodeText));
-        OnPropertyChanged(nameof(PublicText));
-        OnPropertyChanged(nameof(MaxPlayersText));
         OnPropertyChanged(nameof(CloseText));
         OnPropertyChanged(nameof(NotAvailableText));
-    }
-
-    private async Task CreateLobbyAsync()
-    {
-        if (IsBusy || !_coordinator.HasActiveSession()) return;
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
-        {
-            bool created = await _lobby.CreateAsync(IsPublic, MaxPlayers);
-            if (!created) ErrorMessage = _lobby.ErrorMessage;
-        }
-        finally { IsBusy = false; }
-    }
-
-    private async Task JoinLobbyAsync()
-    {
-        if (IsBusy || !_coordinator.HasActiveSession()) return;
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
-        {
-            bool joined = await _lobby.JoinAsync(LobbyCode);
-            if (!joined) ErrorMessage = _lobby.ErrorMessage;
-        }
-        finally { IsBusy = false; }
     }
 
     private void OpenSocial()

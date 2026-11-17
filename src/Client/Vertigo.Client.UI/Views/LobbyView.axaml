@@ -1,0 +1,147 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:presentation="using:Vertigo.Client.UI.ViewModels.Presentation"
+             xmlns:models="using:Vertigo.Contracts.Models"
+             x:Class="Vertigo.Client.UI.Views.LobbyView"
+             x:DataType="vm:LobbyViewModel"
+             x:CompileBindings="True">
+    <UserControl.Styles>
+        <Style Selector="Button:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+        <Style Selector="TextBox:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer Background="{DynamicResource ColorCanvas}"
+                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel MinWidth="880" MaxWidth="1380" Margin="28" Spacing="18"
+                    HorizontalAlignment="Center">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding RoomTitleText}" FontFamily="{DynamicResource FontTitleDisplay}"
+                               FontSize="34" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="{Binding CodeTitleText}" VerticalAlignment="Center"/>
+                        <Border Background="{DynamicResource ColorInfoBackground}"
+                                BorderBrush="{DynamicResource ColorSnesBlue}" BorderThickness="1"
+                                CornerRadius="{DynamicResource RadiusSmall}" Padding="12,6">
+                            <TextBlock Text="{Binding LobbyCode}" FontSize="20" FontWeight="Bold"
+                                       FontFamily="{DynamicResource FontMono}"/>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+                <Button Grid.Column="1" Classes="vertigo-button danger" TabIndex="0"
+                        Command="{Binding LeaveCommand}" Content="{Binding LeaveText}"
+                        IsEnabled="{Binding !IsBusy}"
+                        AutomationProperties.Name="{Binding LeaveText}"/>
+            </Grid>
+            <Border Classes="vertigo-alert" IsVisible="{Binding HasError}"
+                    AutomationProperties.Name="{Binding ErrorHeadingText}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Path Width="22" Height="22" Stretch="Uniform" VerticalAlignment="Top"
+                          Stroke="{DynamicResource ColorError}" StrokeThickness="2"
+                          Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
+                    <StackPanel Grid.Column="1" Spacing="5">
+                        <TextBlock Text="{Binding ErrorHeadingText}" FontWeight="Bold"
+                                   Foreground="{DynamicResource ColorError}"/>
+                        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource ColorTextPrimary}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Grid ColumnDefinitions="1.05*,0.9*,1.2*" ColumnSpacing="16" MinHeight="480">
+                <Border Grid.Column="0" Classes="vertigo-lobby-panel">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="{Binding MembersTitleText}" FontSize="21" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding MembersDescriptionText}"
+                                   Foreground="{DynamicResource ColorTextSecondary}" TextWrapping="Wrap"/>
+                        <ItemsControl ItemsSource="{Binding MemberRows}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="presentation:LobbyMemberRow">
+                                    <Border BorderBrush="{DynamicResource ColorDivider}" BorderThickness="0,0,0,1"
+                                            Padding="6,12">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                            <Path Width="28" Height="28" Stretch="Uniform"
+                                                  Stroke="{DynamicResource ColorSnesBlue}" StrokeThickness="1.7"
+                                                  Data="M 12,3 A 5,5 0 1 1 11.99,3 Z M 3,23 Q 3,14 12,14 Q 21,14 21,23 Z"/>
+                                            <StackPanel Grid.Column="1" Spacing="4">
+                                                <TextBlock Text="{Binding Username}" FontWeight="SemiBold"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding RoleText}" FontSize="12"
+                                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                                            </StackPanel>
+                                            <Border Grid.Column="2" Classes="vertigo-status"
+                                                    
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ReadyText}" FontSize="12"
+                                                           FontWeight="SemiBold"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Classes="vertigo-lobby-panel">
+                    <StackPanel Spacing="16">
+                        <TextBlock Text="{Binding PreparationTitleText}" FontSize="21" FontWeight="SemiBold"/>
+                        <Path Height="116" Width="110" HorizontalAlignment="Center" Stretch="Uniform"
+                              Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.5"
+                              Fill="{DynamicResource ColorInfoBackground}"
+                              Data="M 16,108 L 16,55 L 35,55 L 35,28 L 53,28 L 53,10 L 87,10 L 87,108 Z
+                                    M 8,108 L 102,108 M 25,66 L 29,66 M 25,77 L 29,77
+                                    M 44,39 L 48,39 M 44,51 L 48,51 M 62,24 L 76,24 M 62,40 L 76,40"/>
+                        <TextBlock Text="{Binding PreparationHintText}" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource ColorTextSecondary}"
+                                   TextAlignment="Center"/>
+                        <Border Background="{DynamicResource ColorSurfaceMuted}" Padding="10"
+                                CornerRadius="{DynamicResource RadiusSmall}">
+                            <StackPanel Spacing="7">
+                                <TextBlock Text="{Binding HostLabelText}" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding HostUsername}" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding MatchStatusText}" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+                        <Button Classes="vertigo-button secondary" TabIndex="1"
+                                Command="{Binding ToggleReadyCommand}"
+                                Content="{Binding ReadyActionText}" IsEnabled="{Binding CanPrepare}"/>
+                        <Button Classes="vertigo-button primary" TabIndex="2"
+                                IsVisible="{Binding IsHost}" IsEnabled="{Binding CanPrepare}"
+                                Command="{Binding StartMatchCommand}" Content="{Binding StartText}"/>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Classes="vertigo-lobby-panel">
+                    <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="12">
+                        <TextBlock Text="{Binding ChatTitleText}" FontSize="21" FontWeight="SemiBold"/>
+                        <ListBox Grid.Row="1" ItemsSource="{Binding Messages}" TabIndex="3"
+                                 MinHeight="260" MaxHeight="520"
+                                 AutomationProperties.Name="{Binding ChatTitleText}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:LobbyChatMessage">
+                                    <StackPanel Margin="4,8" Spacing="3">
+                                        <TextBlock Text="{Binding SenderUsername}" FontWeight="Bold"
+                                                   Foreground="{DynamicResource ColorSnesBlue}"/>
+                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBox Grid.Row="2" Classes="vertigo-input" TabIndex="4"
+                                 MaxLength="500" AcceptsReturn="False"
+                                 Text="{Binding MessageText, Mode=TwoWay}"
+                                 PlaceholderText="{Binding MessagePlaceholderText}"
+                                 AutomationProperties.Name="{Binding MessagePlaceholderText}"/>
+                        <Button Grid.Row="3" Classes="vertigo-button primary" TabIndex="5"
+                                Command="{Binding SendMessageCommand}"
+                                Content="{Binding SendText}" IsEnabled="{Binding !IsBusy}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

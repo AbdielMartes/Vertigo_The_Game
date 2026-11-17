@@ -22,7 +22,9 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         _playerSession = context.SocialContext.PlayerSession;
         Access = access;
         Home = context.Home;
+        Play = context.Home.Play;
         Lobby = context.Lobby;
+        Match = context.Lobby.Match;
         Social = context.SocialContext.Social;
         Settings = context.Settings;
         Profile = context.Profile;
@@ -35,7 +37,9 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 
     public AccessViewModel Access { get; }
     public HomeViewModel Home { get; }
+    public PlayViewModel Play { get; }
     public LobbyViewModel Lobby { get; }
+    public MatchViewModel Match { get; }
     public SocialViewModel Social { get; }
     public SettingsViewModel Settings { get; }
     public ProfileViewModel Profile { get; }
@@ -45,22 +49,21 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 
     public AccessViewModel? AccessContent => IsAccessPage ? Access : null;
 
-    public object? TemplatedContent => IsAccessPage || IsPlaceholderPage ? null : CurrentViewModel;
+    public object? TemplatedContent => IsAccessPage ? null : CurrentViewModel;
 
-    public bool IsPlaceholderPage => CurrentPage == NavigationPage.Lobby;
 
     public object CurrentViewModel => CurrentPage switch
     {
         NavigationPage.Home => Home,
+        NavigationPage.Play => Play,
         NavigationPage.Lobby => Lobby,
+        NavigationPage.Match => Match,
         NavigationPage.Social => Social,
         NavigationPage.Settings => Settings,
         NavigationPage.Profile => Profile,
         _ => Access
     };
 
-    // Temporary binding for the current placeholder MainWindow; not the final UI.
-    public string Greeting => $"Vértigo — {CurrentPage}";
 
     private void OnPageChanged(object? sender, NavigationPage page)
     {
@@ -88,9 +91,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(IsAccessPage));
         OnPropertyChanged(nameof(AccessContent));
         OnPropertyChanged(nameof(TemplatedContent));
-        OnPropertyChanged(nameof(IsPlaceholderPage));
         OnPropertyChanged(nameof(CurrentViewModel));
-        OnPropertyChanged(nameof(Greeting));
     }
 
     private INavigationAware? GetPage(NavigationPage page)
@@ -99,7 +100,9 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         {
             NavigationPage.Access => Access,
             NavigationPage.Home => Home,
+            NavigationPage.Play => Play,
             NavigationPage.Lobby => Lobby,
+            NavigationPage.Match => Match,
             NavigationPage.Social => Social,
             NavigationPage.Settings => Settings,
             NavigationPage.Profile => Profile,

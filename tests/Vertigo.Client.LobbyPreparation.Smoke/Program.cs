@@ -99,6 +99,22 @@ try
     }
     Console.WriteLine("PASS: MATCH ID CONSISTENT ACROSS RPC AND CALLBACK");
 
+    MatchBoardSnapshot hostBoard = hostLobby.GetMatchBoard(firstCode, hostToken);
+    MatchBoardSnapshot guestBoard = guestLobby.GetMatchBoard(firstCode, guestToken);
+    Require(hostBoard.MatchId == started.MatchId && guestBoard.MatchId == started.MatchId,
+        "Public board MatchId mismatch");
+    foreach (MatchBoardSnapshot board in new[] { hostBoard, guestBoard })
+    {
+        Require(board.Players.Count == 2 && board.Players.All(player =>
+            !string.IsNullOrWhiteSpace(player.Username) && player.FloorsBuilt == 0), "Invalid public participants");
+        Require(board.RoundNumber == 1 && board.CurrentTurnPlayerId == hostId,
+            "Initial round or turn did not match the server rules");
+        Require(board.Piles.Select(pile => pile.Position).SequenceEqual(new[] { 1, 2, 3, 4 })
+            && board.Piles.All(pile => pile.CardCount == 1 && pile.TopCardNumber is not null),
+            "Initial towers did not contain one foundation each");
+    }
+    Console.WriteLine("PASS: BOTH CLIENTS READ PUBLIC BOARD");
+
     bool repeatStartDenied = false;
     try
     {
@@ -126,8 +142,16 @@ try
     Console.WriteLine("PASS: READY AFTER START REJECTED");
     Console.WriteLine("PASS: START CALLBACK");
 
-    Require(guestLobby.LeaveLobby(firstCode, guestToken), "Guest could not leave first lobby");
-    Require(hostLobby.LeaveLobby(firstCode, hostToken), "Host could not leave first lobby");
+    Require(!guestLobby.LeaveLobby(firstCode, guestToken), "Guest unexpectedly left an active match");
+    Require(!hostLobby.LeaveLobby(firstCode, hostToken), "Host unexpectedly left an active match");
+    guestLobby.Disconnect();
+    hostLobby.Disconnect();
+    LogoutQuietly(first);
+    LogoutQuietly(second);
+
+    hostToken = CreateGuest(first);
+    guestToken = CreateGuest(second);
+    guestId = second.GetRequiredService<PlayerSession>().GetActiveSession()!.PlayerId;
 
     secondCode = hostLobby.CreateLobby(true, 2, hostToken);
     hostLobby.SetReady(secondCode, true, hostToken);

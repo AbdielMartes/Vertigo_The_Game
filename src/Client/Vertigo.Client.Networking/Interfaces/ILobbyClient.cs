@@ -22,6 +22,14 @@ public interface ILobbyClient : IDisposable
 
     LobbyPreparation GetPreparation(string lobbyCode, string sessionToken);
 
+    MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken);
+
+    MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken);
+
+    MatchBoardSnapshot PlaceMatchCard(MatchPlaceRequest request);
+
+    LobbyPreparation? GetCurrentLobby(string sessionToken);
+
     LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken);
 
     LobbyPreparation StartMatch(string lobbyCode, string sessionToken);

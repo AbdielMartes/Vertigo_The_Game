@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using Vertigo.Client.UI.ViewModels.Presentation;
 using System.ServiceModel;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -45,6 +46,8 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         _errors = context.Ui.Services.Errors;
         _coordinator = context.Ui.Services.SessionGuard;
         _text = context.Ui.Services.Text;
+        Match = context.Match;
+        Members.CollectionChanged += (_, _) => RefreshMemberRows();
         _lobbyClient.PlayerJoined += OnPlayerJoined;
         _lobbyClient.PlayerLeft += OnPlayerLeft;
         _lobbyClient.MessageReceived += OnMessageReceived;
@@ -55,7 +58,10 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         StartMatchCommand = new AsyncRelayCommand(StartMatchAsync);
     }
 
+    public MatchViewModel Match { get; }
+
     public ObservableCollection<LobbyMember> Members { get; } = new();
+    public ObservableCollection<LobbyMemberRow> MemberRows { get; } = new();
     public ObservableCollection<LobbyChatMessage> Messages { get; } = new();
     public ObservableCollection<Guid> ReadyPlayerIds { get; } = new();
 
@@ -68,9 +74,18 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
     public bool IsMatchStarted
     {
         get => _isMatchStarted;
-        private set => SetProperty(ref _isMatchStarted, value);
+        private set
+        {
+            if (SetProperty(ref _isMatchStarted, value))
+            {
+                OnPropertyChanged(nameof(MatchStatusText));
+                OnPropertyChanged(nameof(CanPrepare));
+            }
+        }
     }
 
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
+    public string HostUsername => Members.FirstOrDefault(m => m.PlayerId == HostPlayerId)?.Username ?? string.Empty;
     public bool IsHost => _playerSession.GetActiveSession()?.PlayerId == HostPlayerId;
     public bool IsReady => _playerSession.GetActiveSession() is { } active && ReadyPlayerIds.Contains(active.PlayerId);
 
@@ -89,14 +104,44 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
     public string ErrorMessage
     {
         get => _errorMessage;
-        private set => SetProperty(ref _errorMessage, value);
+        private set
+        {
+            if (SetProperty(ref _errorMessage, value))
+            {
+                OnPropertyChanged(nameof(HasError));
+            }
+        }
     }
 
     public bool IsBusy
     {
         get => _isBusy;
-        private set => SetProperty(ref _isBusy, value);
+        private set
+        {
+            if (SetProperty(ref _isBusy, value))
+            {
+                OnPropertyChanged(nameof(CanPrepare));
+            }
+        }
     }
+
+    public bool CanPrepare => !IsBusy && !IsMatchStarted;
+
+    public string RoomTitleText => _text.Get("Room.Title");
+    public string CodeTitleText => _text.Get("Room.Code");
+    public string LeaveText => _text.Get("Room.Leave");
+    public string MembersTitleText => _text.Get("Room.Members");
+    public string MembersDescriptionText => _text.Get("Room.MembersDescription");
+    public string PreparationTitleText => _text.Get("Room.Preparation");
+    public string PreparationHintText => _text.Get("Room.PreparationHint");
+    public string HostLabelText => _text.Get("Room.Host");
+    public string MatchStatusText => _text.Get(IsMatchStarted ? "Room.InGame" : "Room.Waiting");
+    public string ReadyActionText => _text.Get(IsReady ? "Room.NotReadyAction" : "Room.ReadyAction");
+    public string StartText => _text.Get("Room.Start");
+    public string ChatTitleText => _text.Get("Room.Chat");
+    public string MessagePlaceholderText => _text.Get("Room.MessagePlaceholder");
+    public string SendText => _text.Get("Room.Send");
+    public string ErrorHeadingText => _text.Get("Room.ErrorHeading");
 
     public IAsyncRelayCommand SendMessageCommand { get; }
     public IAsyncRelayCommand LeaveCommand { get; }
@@ -292,8 +337,18 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         {
             ReadyPlayerIds.Add(playerId);
         }
+        RefreshMemberRows();
         OnPropertyChanged(nameof(IsHost));
         OnPropertyChanged(nameof(IsReady));
+        OnPropertyChanged(nameof(ReadyActionText));
+        if (MatchEntryRules.CanEnter(preparation, LobbyCode))
+        {
+            bool activated = Match.Activate(preparation.MatchId, LobbyCode);
+            if (activated)
+            {
+                _navigation.NavigateTo(NavigationPage.Match);
+            }
+        }
     }
 
     private async Task SendMessageAsync()
@@ -396,6 +451,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
 
     public void OnNavigatedTo()
     {
+        RefreshRoomTexts();
         if (!_coordinator.HasActiveSession()) return;
         ErrorMessage = string.Empty;
     }
@@ -410,6 +466,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
     {
         _lobbyGeneration++;
         _preparationRevision.Reset();
+        Match.Reset();
         LobbyCode = string.Empty;
         MessageText = string.Empty;
         ErrorMessage = string.Empty;
@@ -418,6 +475,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         ReadyPlayerIds.Clear();
         HostPlayerId = Guid.Empty;
         IsMatchStarted = false;
+        RefreshMemberRows();
         OnPropertyChanged(nameof(IsHost));
         OnPropertyChanged(nameof(IsReady));
     }
@@ -444,6 +502,44 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
     {
         ErrorMessage = _text.Get(key);
         return false;
+    }
+
+    private void RefreshMemberRows()
+    {
+        MemberRows.Clear();
+        foreach (LobbyMember member in Members)
+        {
+            bool host = member.PlayerId == HostPlayerId;
+            bool ready = ReadyPlayerIds.Contains(member.PlayerId);
+            MemberRows.Add(new LobbyMemberRow
+            {
+                Username = member.Username,
+                RoleText = _text.Get(host ? "Room.Host" : member.IsGuest ? "Room.Guest" : "Room.Player"),
+                ReadyText = _text.Get(ready ? "Room.Ready" : "Room.NotReady"),
+                IsReady = ready
+            });
+        }
+        OnPropertyChanged(nameof(HostUsername));
+    }
+
+    private void RefreshRoomTexts()
+    {
+        OnPropertyChanged(nameof(RoomTitleText));
+        OnPropertyChanged(nameof(CodeTitleText));
+        OnPropertyChanged(nameof(LeaveText));
+        OnPropertyChanged(nameof(MembersTitleText));
+        OnPropertyChanged(nameof(MembersDescriptionText));
+        OnPropertyChanged(nameof(PreparationTitleText));
+        OnPropertyChanged(nameof(PreparationHintText));
+        OnPropertyChanged(nameof(HostLabelText));
+        OnPropertyChanged(nameof(MatchStatusText));
+        OnPropertyChanged(nameof(ReadyActionText));
+        OnPropertyChanged(nameof(StartText));
+        OnPropertyChanged(nameof(ChatTitleText));
+        OnPropertyChanged(nameof(MessagePlaceholderText));
+        OnPropertyChanged(nameof(SendText));
+        OnPropertyChanged(nameof(ErrorHeadingText));
+        RefreshMemberRows();
     }
 
     public void Dispose()

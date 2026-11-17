@@ -21,9 +21,5 @@
             </ContentControl.ContentTemplate>
         </ContentControl>
         <ContentControl Content="{Binding TemplatedContent}"/>
-        <TextBlock IsVisible="{Binding IsPlaceholderPage}"
-                   Text="{Binding Greeting}"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
     </Grid>
 </Window>

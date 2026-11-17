@@ -1,11 +1,12 @@
 using Vertigo.Contracts.Internal;
 using Vertigo.Server.Game.Matches.Models;
+using Vertigo.Contracts.Models;
 
 namespace Vertigo.Server.Game.Matches.Implementations;
 
 // One synchronized in-memory registry for idempotent starts and terminal transitions.
 // Deliberately no automatic cancellation when lobby connections disappear (Phase 7B).
-public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLifecycle, IMatchPresence
+public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLifecycle, IMatchPresence, IMatchBoardReader, IMatchPrivateHandReader, IMatchPlacementService
 {
     private readonly object _syncRoot = new();
     private readonly Dictionary<Guid, MatchRecord> _matchesByLobby = new();
@@ -36,6 +37,49 @@ public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLi
                 _matchesByLobby.Add(request.LobbyInstanceId, created);
                 _matchesById.Add(created.Session.MatchId, created);
                 result = created.Session;
+            }
+        }
+
+        return result;
+    }
+
+    public MatchBoardSnapshot? GetBoard(Guid matchId)
+    {
+        MatchBoardSnapshot? result = null;
+        lock (_syncRoot)
+        {
+            if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
+            {
+                result = record.ToBoard();
+            }
+        }
+
+        return result;
+    }
+
+    public MatchPrivateHand? GetPrivateHand(Guid matchId, Guid playerId)
+    {
+        MatchPrivateHand? result = null;
+        lock (_syncRoot)
+        {
+            if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
+            {
+                result = record.ToPrivateHand(playerId);
+            }
+        }
+
+        return result;
+    }
+
+    public MatchPlacementResult TryPlace(Guid matchId, Guid playerId, MatchPlacement move)
+    {
+        ArgumentNullException.ThrowIfNull(move);
+        MatchPlacementResult result = MatchPlacementResult.MatchUnavailable;
+        lock (_syncRoot)
+        {
+            if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
+            {
+                result = record.TryPlace(playerId, move);
             }
         }
 

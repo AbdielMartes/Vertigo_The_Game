@@ -16,4 +16,5 @@
     <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Controls/StatusIndicators.axaml"/>
     <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Controls/Lists.axaml"/>
     <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Layouts/Panels.axaml"/>
+    <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Controls/Alerts.axaml"/>
 </Styles>

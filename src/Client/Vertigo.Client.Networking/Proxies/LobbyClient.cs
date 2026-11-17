@@ -177,6 +177,60 @@ public sealed class LobbyClient : ILobbyClient
         }
     }
 
+    public MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken)
+    {
+        return ReadOnIndependentChannel(channel => channel.GetMatchBoard(lobbyCode, sessionToken));
+    }
+
+    public MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken)
+    {
+        return ReadOnIndependentChannel(channel => channel.GetMatchPrivateHand(lobbyCode, sessionToken));
+    }
+
+    public MatchBoardSnapshot PlaceMatchCard(MatchPlaceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ReadOnIndependentChannel(channel => channel.PlaceMatchCard(request));
+    }
+
+    public LobbyPreparation? GetCurrentLobby(string sessionToken)
+    {
+        return ReadOnIndependentChannel(channel => channel.GetCurrentLobby(sessionToken));
+    }
+
+    // The normal duplex channel is occupied by callbacks. Reusing it from a
+    // callback-driven navigation can trigger WCF's Single-concurrency deadlock guard.
+    private static TResult ReadOnIndependentChannel<TResult>(Func<ILobbyService, TResult> read)
+    {
+        DuplexChannelFactory<ILobbyService>? factory = null;
+        ICommunicationObject? communication = null;
+        try
+        {
+            NetTcpBinding binding = new(SecurityMode.None)
+            {
+                OpenTimeout = OperationTimeout,
+                SendTimeout = OperationTimeout
+            };
+            factory = new DuplexChannelFactory<ILobbyService>(
+                new InstanceContext(new LobbyCallbackHandler()), binding,
+                new EndpointAddress(ServiceEndpoints.LobbyServiceAddress));
+            ILobbyService channel = factory.CreateChannel();
+            communication = (ICommunicationObject)channel;
+            return read(channel);
+        }
+        finally
+        {
+            if (communication is not null)
+            {
+                CloseSafely(communication);
+            }
+            if (factory is not null)
+            {
+                CloseSafely(factory);
+            }
+        }
+    }
+
     public LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken)
     {
         ILobbyService channel = GetOrCreateChannel();

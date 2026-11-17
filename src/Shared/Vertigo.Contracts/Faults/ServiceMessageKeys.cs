@@ -19,6 +19,7 @@ public static class ServiceMessageKeys
     public const string FriendshipBlocked = "Friends.RequestBlocked";
     public const string FriendRequestNotFound = "Notifications.FriendRequestNotFound";
     public const string LobbyInviteNotAllowed = "InviteFriends.NotAllowed";
+    public const string PlayerAlreadyInLobby = "Lobby.PlayerAlreadyInLobby";
     
     public const string LobbyNotMember = "Lobby.NotMember";
     public const string LobbyNotHost = "Lobby.NotHost";

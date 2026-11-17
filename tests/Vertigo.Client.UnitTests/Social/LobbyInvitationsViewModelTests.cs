@@ -100,7 +100,8 @@ public sealed class LobbyInvitationsViewModelTests
         UiServices uiServices = new(errors, text, guard);
         UiNavigationContext ui = new(navigator, uiServices);
         FakeLobbyClient lobbyClient = new();
-        LobbyViewModel lobby = new(lobbyClient, new FakeChatClient(), new LobbyContext(sessions, ui));
+        LobbyContext lobbyContext = new(sessions, ui, new MatchViewModel(text));
+        LobbyViewModel lobby = new(lobbyClient, new FakeChatClient(), lobbyContext);
         SocialOperation operation = new(sessions, guard, errors);
         LobbyInvitationsViewModel invitations = new(new FakeInvitationClient(), operation, new LobbyInvitationContext(lobby, text));
         return new TestContext(sessions, navigator, lobbyClient, invitations);
@@ -156,6 +157,26 @@ public sealed class LobbyInvitationsViewModelTests
                 throw JoinFailure;
             }
             return OnJoin?.Invoke(lobbyCode) ?? new LobbyAdmission { LobbyCode = lobbyCode, HostPlayerId = Guid.NewGuid() };
+        }
+
+        public LobbyPreparation? GetCurrentLobby(string sessionToken)
+        {
+            return null;
+        }
+
+        public MatchBoardSnapshot PlaceMatchCard(MatchPlaceRequest request)
+        {
+            throw new NotSupportedException();
+        }
+
+        public MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken)
+        {
+            throw new NotSupportedException();
+        }
+
+        public MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken)
+        {
+            throw new NotSupportedException();
         }
 
         public LobbyPreparation GetPreparation(string lobbyCode, string sessionToken)

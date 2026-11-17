@@ -18,6 +18,15 @@ public static class MatchLifecycleServiceCollectionExtensions
         services.AddSingleton<IMatchPresence>(provider =>
             provider.GetRequiredService<InMemoryMatchSessionStarter>());
 
+        services.AddSingleton<IMatchBoardReader>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchPrivateHandReader>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchPlacementService>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
         return services;
     }
 }
