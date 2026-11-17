@@ -1,0 +1,12 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="Border.vertigo-card">
+        <Setter Property="Background" Value="{DynamicResource ColorSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusCard}"/>
+        <Setter Property="Padding" Value="{DynamicResource PaddingCard}"/>
+    </Style>
+    <Style Selector="Border.vertigo-card.muted">
+        <Setter Property="Background" Value="{DynamicResource ColorSurfaceMuted}"/>
+    </Style>
+</Styles>

@@ -1,0 +1,22 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="Border.vertigo-status">
+        <Setter Property="Padding" Value="{DynamicResource PaddingStatus}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusBadge}"/>
+        <Setter Property="Background" Value="{DynamicResource ColorSurfaceMuted}"/>
+    </Style>
+    <Style Selector="Border.vertigo-status.ready">
+        <Setter Property="Background" Value="{DynamicResource ColorSuccessBackground}"/>
+    </Style>
+    <Style Selector="Border.vertigo-status.warning">
+        <Setter Property="Background" Value="{DynamicResource ColorWarningBackground}"/>
+    </Style>
+    <Style Selector="Border.vertigo-status.error">
+        <Setter Property="Background" Value="{DynamicResource ColorErrorBackground}"/>
+    </Style>
+    <Style Selector="TextBlock.vertigo-status-text">
+        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
+    </Style>
+</Styles>

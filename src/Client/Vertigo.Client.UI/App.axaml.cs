@@ -1,3 +1,4 @@
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -21,6 +22,9 @@ public partial class App : Application
 
     public override void Initialize()
     {
+        CultureInfo spanish = CultureInfo.GetCultureInfo("es");
+        CultureInfo.DefaultThreadCurrentUICulture = spanish;
+        CultureInfo.CurrentUICulture = spanish;
         AvaloniaXamlLoader.Load(this);
     }
 

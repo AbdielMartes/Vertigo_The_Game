@@ -37,6 +37,10 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     public SocialViewModel Social { get; }
 
     public NavigationPage CurrentPage => _navigation.CurrentPage;
+    public bool IsAccessPage => CurrentPage == NavigationPage.Access;
+
+    public AccessViewModel? AccessContent => IsAccessPage ? Access : null;
+
     public object CurrentViewModel => CurrentPage switch
     {
         NavigationPage.Home => Home,
@@ -71,6 +75,8 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         }
         GetPage(page)?.OnNavigatedTo();
         OnPropertyChanged(nameof(CurrentPage));
+        OnPropertyChanged(nameof(IsAccessPage));
+        OnPropertyChanged(nameof(AccessContent));
         OnPropertyChanged(nameof(CurrentViewModel));
         OnPropertyChanged(nameof(Greeting));
     }

@@ -1,0 +1,20 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="TextBox.vertigo-input">
+        <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusInput}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+        <Setter Property="Background" Value="{DynamicResource ColorInputBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+    </Style>
+    <Style Selector="TextBox.vertigo-input:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+    </Style>
+    <Style Selector="TextBox.vertigo-input.invalid">
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorError}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+    </Style>
+</Styles>

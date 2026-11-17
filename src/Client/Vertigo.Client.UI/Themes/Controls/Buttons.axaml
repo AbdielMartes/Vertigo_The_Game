@@ -1,0 +1,54 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="Button.vertigo-button">
+        <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}"/>
+        <Setter Property="Padding" Value="{DynamicResource PaddingControl}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.primary">
+        <Setter Property="Background" Value="{DynamicResource ColorSuccess}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextOnSuccess}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderNone}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.primary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ColorSuccessHover}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.primary:pressed">
+        <Setter Property="Background" Value="{DynamicResource ColorSuccessPressed}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.secondary">
+        <Setter Property="Background" Value="{DynamicResource ColorAccent}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextOnAccent}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderNone}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.secondary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ColorAccentHover}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.secondary:pressed">
+        <Setter Property="Background" Value="{DynamicResource ColorAccentPressed}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.danger">
+        <Setter Property="Background" Value="{DynamicResource ColorError}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextOnDanger}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderNone}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.danger:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ColorDangerHover}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.danger:pressed">
+        <Setter Property="Background" Value="{DynamicResource ColorDangerPressed}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button.neutral">
+        <Setter Property="Background" Value="{DynamicResource ColorSurface}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorderStrong}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+    </Style>
+    <Style Selector="Button.vertigo-button:disabled">
+        <Setter Property="Background" Value="{DynamicResource ColorDisabledBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorDisabledForeground}"/>
+    </Style>
+</Styles>

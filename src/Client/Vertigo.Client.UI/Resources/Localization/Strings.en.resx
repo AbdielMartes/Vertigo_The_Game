@@ -49,4 +49,127 @@
   <data name="Lobby.AlreadyInGame" xml:space="preserve"><value>The match has already started.</value></data>
   <data name="Lobby.ReadyFailed" xml:space="preserve"><value>Could not change ready status.</value></data>
   <data name="Lobby.StartFailed" xml:space="preserve"><value>Could not start the match.</value></data>
+  <data name="Access.BrandTagline" xml:space="preserve">
+        <value>Building to new heights</value>
+    </data>
+  <data name="Access.Title" xml:space="preserve">
+        <value>Welcome</value>
+    </data>
+  <data name="Access.Description" xml:space="preserve">
+        <value>Build, collaborate, and reach new heights.</value>
+    </data>
+  <data name="Access.Username" xml:space="preserve">
+        <value>Username</value>
+    </data>
+  <data name="Access.Password" xml:space="preserve">
+        <value>Password</value>
+    </data>
+  <data name="Access.Login" xml:space="preserve">
+        <value>Sign in</value>
+    </data>
+  <data name="Access.Guest" xml:space="preserve">
+        <value>Continue as guest</value>
+    </data>
+  <data name="Access.ResumeSection" xml:space="preserve">
+        <value>Resume a session</value>
+    </data>
+  <data name="Access.Token" xml:space="preserve">
+        <value>Session token</value>
+    </data>
+  <data name="Access.Resume" xml:space="preserve">
+        <value>Resume session</value>
+    </data>
+  <data name="Access.Progress" xml:space="preserve">
+        <value>Processing request…</value>
+    </data>
+  <data name="Access.ErrorHeading" xml:space="preserve">
+        <value>The action could not be completed</value>
+    </data>
+  <data name="Access.Help" xml:space="preserve">
+        <value>Use Tab to navigate and Enter to confirm.</value>
+    </data>
+  <data name="Access.VisualCaption" xml:space="preserve">
+        <value>A TOWER IS BUILT ONE FLOOR AT A TIME</value>
+    </data>
+  <data name="Access.SecurityNote" xml:space="preserve">
+        <value>Do not share your session token.</value>
+    </data>
+  <data name="Access.NetworkNote" xml:space="preserve">
+        <value>Communication with the server is secured.</value>
+    </data>
+  <data name="Access.Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Access.RegisterHeading" xml:space="preserve">
+    <value>Create an account</value>
+  </data>
+  <data name="Access.CreateAccount" xml:space="preserve">
+    <value>Create account</value>
+  </data>
+  <data name="Access.Email" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="Access.ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="Access.Back" xml:space="preserve">
+    <value>Back to sign in</value>
+  </data>
+  <data name="Access.ChangeLanguage" xml:space="preserve">
+    <value>Switch language to Spanish</value>
+  </data>
+  <data name="Access.RegistrationInvalid" xml:space="preserve">
+    <value>Complete the fields and check that the passwords match.</value>
+  </data>
+  <data name="Access.RegistrationFailed" xml:space="preserve">
+    <value>The account could not be registered.</value>
+  </data>
+  <data name="Access.RegistrationSuccess" xml:space="preserve">
+    <value>Account created. You can now sign in.</value>
+  </data>
+  <data name="Access.UsernameHint" xml:space="preserve">
+    <value>3 to 20 letters or digits; include at least one A-Z letter, without spaces or symbols.</value>
+  </data>
+  <data name="Access.PasswordHint" xml:space="preserve">
+    <value>8 to 20 characters, including an uppercase letter, digit and allowed symbol (!, #, etc.).</value>
+  </data>
+  <data name="Access.Validation.Username.Required" xml:space="preserve">
+    <value>Enter a username.</value>
+  </data>
+  <data name="Access.Validation.Username.TooShort" xml:space="preserve">
+    <value>Username must have at least 3 characters.</value>
+  </data>
+  <data name="Access.Validation.Username.TooLong" xml:space="preserve">
+    <value>Username cannot exceed 20 characters.</value>
+  </data>
+  <data name="Access.Validation.Username.InvalidFormat" xml:space="preserve">
+    <value>Use letters and digits with at least one A-Z letter; no spaces or symbols.</value>
+  </data>
+  <data name="Access.Validation.Email.Required" xml:space="preserve">
+    <value>Enter an email address.</value>
+  </data>
+  <data name="Access.Validation.Email.TooLong" xml:space="preserve">
+    <value>Email cannot exceed 60 characters.</value>
+  </data>
+  <data name="Access.Validation.Email.InvalidFormat" xml:space="preserve">
+    <value>Enter an email with @ and a domain; before @ use letters, digits, dot, hyphen, underscore, + or %.</value>
+  </data>
+  <data name="Access.Validation.Password.Required" xml:space="preserve">
+    <value>Enter a password.</value>
+  </data>
+  <data name="Access.Validation.Password.TooShort" xml:space="preserve">
+    <value>Password must have at least 8 characters.</value>
+  </data>
+  <data name="Access.Validation.Password.TooLong" xml:space="preserve">
+    <value>Password cannot exceed 20 characters.</value>
+  </data>
+  <data name="Access.Validation.Password.PasswordRequirementsNotMet" xml:space="preserve">
+    <value>Include an uppercase letter, digit and allowed symbol (!@#$%&amp;*?_+-.); no spaces, quotes or &lt; or &gt;.</value>
+  </data>
+  <data name="Access.Validation.ConfirmPassword.Required" xml:space="preserve">
+    <value>Confirm the password.</value>
+  </data>
+  <data name="Access.Validation.ConfirmPassword.PasswordsDoNotMatch" xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
 </root>

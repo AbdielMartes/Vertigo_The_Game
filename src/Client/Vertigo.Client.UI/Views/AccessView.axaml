@@ -1,0 +1,206 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:validation="using:Vertigo.Client.UI.Utilities.Validation"
+             x:Class="Vertigo.Client.UI.Views.AccessView"
+             x:DataType="vm:AccessViewModel"
+             x:CompileBindings="True">
+    <UserControl.Styles>
+        <Style Selector="Button.vertigo-button:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto"
+                  Background="{DynamicResource ColorCanvas}">
+        <Grid RowDefinitions="Auto,*" MinHeight="560">
+            <Border Grid.Row="0"
+                    Background="{DynamicResource ColorCoal}"
+                    Padding="{DynamicResource PaddingPanel}">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Path Width="24"
+                          Height="28"
+                          Fill="{DynamicResource ColorWhite}"
+                          Stretch="Uniform"
+                          Data="M1,28 L1,13 8,13 8,4 15,4 15,19 22,19 22,28 Z 
+                                M4,16 L4,19 6,19 6,16 Z M11,8 L11,11 13,11 13,8 Z"/>
+                    <TextBlock Grid.Column="1"
+                               Margin="12,0,0,0"
+                               VerticalAlignment="Center"
+                               Classes="vertigo-section"
+                               Foreground="{DynamicResource ColorWhite}"
+                               Text="VÉRTIGO"/>
+                    <Button Grid.Column="2"
+                            Classes="vertigo-button neutral"
+                            TabIndex="0"
+                            IsEnabled="{Binding !IsBusy}"
+                            Command="{Binding ToggleLanguageCommand}"
+                            Content="{Binding LanguageButtonText}"
+                            AutomationProperties.Name="{Binding LanguageButtonHelp}"/>
+                </Grid>
+            </Border>
+            <Grid Grid.Row="1"
+                  MaxWidth="1100"
+                  HorizontalAlignment="Center"
+                  Margin="{DynamicResource MarginScreen}"
+                  ColumnDefinitions="*,Auto">
+                <Border Grid.Column="0"
+                        MinWidth="300"
+                        MaxWidth="420"
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource ColorSurface}"
+                        BorderBrush="{DynamicResource ColorBorder}"
+                        BorderThickness="{DynamicResource BorderThin}"
+                        CornerRadius="{DynamicResource RadiusCard}"
+                        Padding="{DynamicResource PaddingCard}">
+                    <StackPanel Spacing="{DynamicResource Space12}">
+                        <TextBlock Classes="vertigo-title"
+                                   Text="{Binding TitleText}"/>
+                        <TextBlock Text="{Binding DescriptionText}"
+                                   Foreground="{DynamicResource ColorTextSecondary}"
+                                   TextWrapping="Wrap"/>
+                        <StackPanel IsVisible="{Binding !IsRegistering}" Spacing="{DynamicResource Space12}">
+                            <TextBlock Text="{Binding UsernameLabel}"
+                                       FontWeight="SemiBold"/>
+                            <TextBox
+                                     Classes="vertigo-input"
+                                     TabIndex="1"
+                                     Text="{Binding Username, Mode=TwoWay}"
+                                     PlaceholderText="{Binding UsernameLabel}"
+                                     AutomationProperties.Name="{Binding UsernameLabel}"/>
+                            <TextBlock Text="{Binding PasswordLabel}"
+                                       FontWeight="SemiBold"/>
+                            <TextBox Classes="vertigo-input"
+                                     TabIndex="2"
+                                     PasswordChar="●"
+                                     Text="{Binding Password, Mode=TwoWay}"
+                                     PlaceholderText="{Binding PasswordLabel}"
+                                     AutomationProperties.Name="{Binding PasswordLabel}"/>
+                            <Button Classes="vertigo-button primary"
+                                    TabIndex="3"
+                                    IsEnabled="{Binding !IsBusy}"
+                                    Command="{Binding LoginCommand}"
+                                    Content="{Binding LoginText}"/>
+                            <Button Classes="vertigo-button secondary"
+                                    TabIndex="4"
+                                    IsEnabled="{Binding !IsBusy}"
+                                    Command="{Binding GuestCommand}"
+                                    Content="{Binding GuestText}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="{DynamicResource ColorError}"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"
+                                   AutomationProperties.HelpText="{Binding ErrorHeadingText}"/>
+                        <TextBlock IsVisible="{Binding IsBusy}"
+                                   Text="{Binding ProgressText}"
+                                   Foreground="{DynamicResource ColorTextSecondary}"/>
+                        <Button Classes="vertigo-button neutral"
+                                TabIndex="5"
+                                IsEnabled="{Binding !IsBusy}"
+                                IsVisible="{Binding !IsRegistering}"
+                                Command="{Binding ShowRegistrationCommand}"
+                                Content="{Binding RegisterText}"/>
+                        <Button Classes="vertigo-button neutral"
+                                TabIndex="6"
+                                IsVisible="{Binding IsRegistering}"
+                                Command="{Binding CancelRegistrationCommand}"
+                                Content="{Binding BackText}"/>
+                        <StackPanel IsVisible="{Binding IsRegistering}" Spacing="{DynamicResource Space12}">
+                            <TextBlock Text="{Binding RegisterHeadingText}"
+                                       Classes="vertigo-section"/>
+                            <TextBlock Text="{Binding UsernameLabel}"/>
+                            <TextBox Classes="vertigo-input"
+                                     TabIndex="7"
+                                     Text="{Binding RegisterUsername, Mode=TwoWay}"
+                                     MaxLength="{x:Static validation:RegistrationRules.UsernameMaximumLength}"
+                                     AutomationProperties.Name="{Binding UsernameLabel}"/>
+                            <TextBlock Text="{Binding RegisterUsernameError}"
+                                       Foreground="{DynamicResource ColorError}"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding UsernameHint}"
+                                       Foreground="{DynamicResource ColorTextSecondary}"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding EmailLabel}"/>
+                            <TextBox Classes="vertigo-input"
+                                     TabIndex="8"
+                                     Text="{Binding RegisterEmail, Mode=TwoWay}"
+                                     MaxLength="{x:Static validation:RegistrationRules.EmailMaximumLength}"
+                                     AutomationProperties.Name="{Binding EmailLabel}"/>
+                            <TextBlock Text="{Binding RegisterEmailError}"
+                                       Foreground="{DynamicResource ColorError}"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding PasswordLabel}"/>
+                            <TextBox Classes="vertigo-input"
+                                     TabIndex="9"
+                                     PasswordChar="●"
+                                     Text="{Binding RegisterPassword, Mode=TwoWay}"
+                                     MaxLength="{x:Static validation:RegistrationRules.PasswordMaximumLength}"
+                                     AutomationProperties.Name="{Binding PasswordLabel}"/>
+                            <TextBlock Text="{Binding RegisterPasswordError}"
+                                       Foreground="{DynamicResource ColorError}"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding PasswordHint}"
+                                       Foreground="{DynamicResource ColorTextSecondary}"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding ConfirmPasswordLabel}"/>
+                            <TextBox Classes="vertigo-input"
+                                     TabIndex="10"
+                                     PasswordChar="●"
+                                     Text="{Binding ConfirmPassword, Mode=TwoWay}"
+                                     MaxLength="{x:Static validation:RegistrationRules.PasswordMaximumLength}"
+                                     AutomationProperties.Name="{Binding ConfirmPasswordLabel}"/>
+                            <TextBlock Text="{Binding ConfirmPasswordError}"
+                                       Foreground="{DynamicResource ColorError}"
+                                       TextWrapping="Wrap"/>
+                            <Button Classes="vertigo-button primary"
+                                    TabIndex="11"
+                                    IsEnabled="{Binding !IsBusy}"
+                                    Command="{Binding RegisterCommand}"
+                                    Content="{Binding CreateAccountText}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding RegistrationMessage}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource ColorSuccess}"/>
+                        <TextBlock Text="{Binding HelpText}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource ColorTextMuted}"/>
+                    </StackPanel>
+                </Border>
+                <Grid Grid.Column="1" Width="300" Margin="48,0,0,0"
+                      VerticalAlignment="Center" RowDefinitions="Auto,Auto">
+                    <Canvas Height="330" Width="280" IsHitTestVisible="False">
+                        <Rectangle Canvas.Left="5" Canvas.Top="210" Width="92" Height="115"
+                                   Fill="{DynamicResource ColorShellGray}"/>
+                        <Rectangle Canvas.Left="101" Canvas.Top="116" Width="86" Height="209"
+                                   Fill="{DynamicResource ColorSnesBlue}"/>
+                        <Rectangle Canvas.Left="192" Canvas.Top="165" Width="83" Height="160"
+                                   Fill="{DynamicResource ColorCoal}"/>
+                        <Rectangle Canvas.Left="119" Canvas.Top="82" Width="50" Height="34"
+                                   Fill="{DynamicResource ColorSnesGreen}"/>
+                        <Rectangle Canvas.Left="28" Canvas.Top="235" Width="14" Height="20"
+                                   Fill="{DynamicResource ColorWhite}"/>
+                        <Rectangle Canvas.Left="60" Canvas.Top="235" Width="14" Height="20"
+                                   Fill="{DynamicResource ColorWhite}"/>
+                        <Rectangle Canvas.Left="121" Canvas.Top="143" Width="16" Height="20"
+                                   Fill="{DynamicResource ColorWhite}"/>
+                        <Rectangle Canvas.Left="151" Canvas.Top="143" Width="16" Height="20"
+                                   Fill="{DynamicResource ColorWhite}"/>
+                        <Rectangle Canvas.Left="121" Canvas.Top="183" Width="16" Height="20"
+                                   Fill="{DynamicResource ColorWhite}"/>
+                        <Rectangle Canvas.Left="151" Canvas.Top="183" Width="16" Height="20"
+                                   Fill="{DynamicResource ColorWhite}"/>
+                        <Rectangle Canvas.Left="212" Canvas.Top="191" Width="15" Height="20"
+                                   Fill="{DynamicResource ColorWhite}"/>
+                        <Rectangle Canvas.Left="244" Canvas.Top="191" Width="15" Height="20"
+                                   Fill="{DynamicResource ColorWhite}"/>
+                        <Rectangle Canvas.Left="0" Canvas.Top="324" Width="280" Height="6"
+                                   Fill="{DynamicResource ColorBorderStrong}"/>
+                    </Canvas>
+
+                </Grid>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Vertigo.Client.UI/Themes/Tokens/Colors.axaml"/>
+                <ResourceInclude Source="avares://Vertigo.Client.UI/Themes/Tokens/Typography.axaml"/>
+                <ResourceInclude Source="avares://Vertigo.Client.UI/Themes/Tokens/Spacing.axaml"/>
+                <ResourceInclude Source="avares://Vertigo.Client.UI/Themes/Tokens/Shapes.axaml"/>
+                <ResourceInclude Source="avares://Vertigo.Client.UI/Themes/Tokens/Icons.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+    <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Controls/Buttons.axaml"/>
+    <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Controls/TextInputs.axaml"/>
+    <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Controls/Cards.axaml"/>
+    <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Controls/StatusIndicators.axaml"/>
+    <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Controls/Lists.axaml"/>
+    <StyleInclude Source="avares://Vertigo.Client.UI/Themes/Layouts/Panels.axaml"/>
+</Styles>

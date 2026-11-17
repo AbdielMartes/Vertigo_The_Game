@@ -1,0 +1,28 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StreamGeometry x:Key="IconBuilding">
+        M 5,21 L 5,5 L 15,5 L 15,21 M 15,10 L 20,10 L 20,21 M 3,21 L 22,21 M 8,9 L 11,9 M 8,13 L
+        11,13 M 8,17 L 11,17 M 17,14 L 18,14 M 17,18 L 18,18
+    </StreamGeometry>
+    <StreamGeometry x:Key="IconFloors">
+        M 4,20 L 20,20 M 5,15 L 19,15 M 6,10 L 18,10 M 7,5 L 17,5
+    </StreamGeometry>
+    <StreamGeometry x:Key="IconReady">
+        M 4,12 L 9,17 L 20,6
+    </StreamGeometry>
+    <StreamGeometry x:Key="IconArrowUp">
+        M 12,20 L 12,4 M 5,11 L 12,4 L 19,11
+    </StreamGeometry>
+    <StreamGeometry x:Key="IconChat">
+        M 4,5 L 20,5 L 20,17 L 9,17 L 4,21 Z
+    </StreamGeometry>
+    <StreamGeometry x:Key="IconPeople">
+        M 12,11 A 3,3 0 1 0 12,5 A 3,3 0 1 0 12,11 Z M 5,20 C 5,15 8,13 12,13 C 16,13 19,15 19,20
+        M 18,7 C 21,8 21,11 18,12
+    </StreamGeometry>
+    <StreamGeometry x:Key="IconWarning">
+        M 12,3 L 22,21 L 2,21 Z M 12,9 L 12,15 M 12,18 L 12,18.5
+    </StreamGeometry>
+    <StreamGeometry x:Key="IconLock">
+        M 5,11 L 19,11 L 19,21 L 5,21 Z M 8,11 L 8,8 A 4,4 0 0 1 16,8 L 16,11
+    </StreamGeometry>
+</ResourceDictionary>

@@ -1,0 +1,36 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="Border.vertigo-screen">
+        <Setter Property="Background" Value="{DynamicResource ColorCanvas}"/>
+    </Style>
+    <Style Selector="TextBlock.vertigo-title">
+        <Setter Property="FontFamily" Value="{DynamicResource FontTitleDisplay}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
+    </Style>
+    <Style Selector="TextBlock.vertigo-section">
+        <Setter Property="FontFamily" Value="{DynamicResource FontSection}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeSection}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
+    </Style>
+    <Style Selector="TextBlock.vertigo-body">
+        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
+    </Style>
+    <Style Selector="TextBlock.vertigo-code">
+        <Setter Property="FontFamily" Value="{DynamicResource FontMono}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeMono}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
+    </Style>
+    <Style Selector="Path.vertigo-icon">
+        <Setter Property="Width" Value="{DynamicResource IconSize}"/>
+        <Setter Property="Height" Value="{DynamicResource IconSize}"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="Stroke" Value="{DynamicResource ColorTextPrimary}"/>
+        <Setter Property="StrokeThickness" Value="{DynamicResource StrokeStrong}"/>
+        <Setter Property="StrokeLineCap" Value="Round"/>
+    </Style>
+</Styles>
