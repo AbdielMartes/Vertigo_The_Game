@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vertigo.Client.Core.Sessions;
+using Vertigo.Client.UI.ViewModels.Dependencies;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 using Vertigo.Client.Networking.Interfaces;
@@ -16,29 +17,35 @@ namespace Vertigo.Client.UI.ViewModels.Social;
 public sealed class LobbyInvitationsViewModel : SocialViewModelBase
 {
     private readonly ILobbyInvitationClient _client;
+    private readonly Vertigo.Client.UI.ViewModels.LobbyViewModel _lobby;
     private string _lobbyCode = string.Empty;
     private string _declinedCode = string.Empty;
+    private string _acceptedCode = string.Empty;
     private Guid _targetPlayerId;
 
     public LobbyInvitationsViewModel(ILobbyInvitationClient client, SocialOperation operation,
-        ITextLocalizer text) : base(operation, text)
+        LobbyInvitationContext context) : base(operation, context.Text)
     {
         _client = client;
+        _lobby = context.Lobby;
         RefreshCommand = new AsyncRelayCommand(RefreshAsync);
         GetInvitableCommand = new AsyncRelayCommand(GetInvitableAsync);
         InviteCommand = new AsyncRelayCommand(InviteAsync);
         DeclineCommand = new AsyncRelayCommand(DeclineAsync);
+        AcceptCommand = new AsyncRelayCommand(AcceptAsync);
     }
 
     public ObservableCollection<LobbyInvitationEntry> PendingInvitations { get; } = new();
     public ObservableCollection<FriendEntry> InvitableFriends { get; } = new();
     public string LobbyCode { get => _lobbyCode; set => SetProperty(ref _lobbyCode, value); }
     public string DeclinedCode { get => _declinedCode; set => SetProperty(ref _declinedCode, value); }
+    public string AcceptedCode { get => _acceptedCode; set => SetProperty(ref _acceptedCode, value); }
     public Guid TargetPlayerId { get => _targetPlayerId; set => SetProperty(ref _targetPlayerId, value); }
     public IAsyncRelayCommand RefreshCommand { get; }
     public IAsyncRelayCommand GetInvitableCommand { get; }
     public IAsyncRelayCommand InviteCommand { get; }
     public IAsyncRelayCommand DeclineCommand { get; }
+    public IAsyncRelayCommand AcceptCommand { get; }
 
     public async Task RefreshAsync()
     {
@@ -125,6 +132,70 @@ public sealed class LobbyInvitationsViewModel : SocialViewModelBase
         finally { IsBusy = false; }
     }
 
+    // Joining the lobby is the server-side acceptance of an invitation.
+    // The server checks the invitation, room capacity and session before admitting the player.
+    public async Task<bool> AcceptInvitationAsync(string code)
+    {
+        bool accepted = false;
+        SessionSnapshot? session = null;
+        string normalizedCode = code?.Trim() ?? string.Empty;
+
+        if (!IsBusy && !string.IsNullOrWhiteSpace(normalizedCode))
+        {
+            session = Operation.GetRegisteredSession();
+            if (session is not null)
+            {
+                bool isPending = PendingInvitations.Any(invitation =>
+                    string.Equals(invitation.LobbyCode, normalizedCode, StringComparison.OrdinalIgnoreCase));
+
+                if (!isPending)
+                {
+                    ErrorMessage = Text.Get("Social.InvitationUnavailable");
+                }
+                else
+                {
+                    IsBusy = true;
+                    ClearError();
+                    try
+                    {
+                        if (Operation.IsCurrent(session))
+                        {
+                            bool joined = await _lobby.JoinAsync(normalizedCode);
+                            if (Operation.IsCurrent(session))
+                            {
+                                if (joined)
+                                {
+                                    LobbyInvitationEntry? acceptedInvitation = PendingInvitations.FirstOrDefault(invitation =>
+                                        string.Equals(invitation.LobbyCode, normalizedCode, StringComparison.OrdinalIgnoreCase));
+                                    if (acceptedInvitation is not null)
+                                    {
+                                        PendingInvitations.Remove(acceptedInvitation);
+                                    }
+                                    accepted = true;
+                                }
+                                else
+                                {
+                                    ErrorMessage = _lobby.ErrorMessage;
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        IsBusy = false;
+                    }
+                }
+            }
+        }
+
+        return accepted;
+    }
+
+    private async Task AcceptAsync()
+    {
+        await AcceptInvitationAsync(AcceptedCode);
+    }
+
     private async Task DeclineAsync()
     {
         if (IsBusy || string.IsNullOrWhiteSpace(DeclinedCode)) return;
@@ -158,7 +229,7 @@ public sealed class LobbyInvitationsViewModel : SocialViewModelBase
     public void Reset()
     {
         PendingInvitations.Clear(); InvitableFriends.Clear();
-        LobbyCode = string.Empty; DeclinedCode = string.Empty;
+        LobbyCode = string.Empty; DeclinedCode = string.Empty; AcceptedCode = string.Empty;
         TargetPlayerId = Guid.Empty; ClearError();
     }
 }

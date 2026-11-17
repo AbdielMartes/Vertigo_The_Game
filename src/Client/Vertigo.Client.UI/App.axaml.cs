@@ -45,6 +45,7 @@ public partial class App : Application
             registrations.AddSingleton<SocialOperation>();
             registrations.AddSingleton<FriendsViewModel>();
             registrations.AddSingleton<BlockedPlayersViewModel>();
+            registrations.AddTransient<LobbyInvitationContext>();
             registrations.AddSingleton<LobbyInvitationsViewModel>();
             registrations.AddTransient<SocialNavigationContext>();
             registrations.AddTransient<SocialViewModelContext>();

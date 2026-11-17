@@ -42,4 +42,5 @@
   <data name="Social.BlockFailed" xml:space="preserve"><value>No se pudo actualizar la lista de bloqueos.</value></data>
   <data name="Social.InvitationFailed" xml:space="preserve"><value>No se pudieron gestionar las invitaciones.</value></data>
   <data name="Social.NotificationsFailed" xml:space="preserve"><value>No se pudo conectar a las notificaciones.</value></data>
+  <data name="Social.InvitationUnavailable" xml:space="preserve"><value>La invitación ya no está disponible. Actualiza la lista.</value></data>
 </root>

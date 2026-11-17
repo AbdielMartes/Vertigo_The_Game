@@ -42,4 +42,5 @@
   <data name="Social.BlockFailed" xml:space="preserve"><value>Could not update blocked players.</value></data>
   <data name="Social.InvitationFailed" xml:space="preserve"><value>Could not manage invitations.</value></data>
   <data name="Social.NotificationsFailed" xml:space="preserve"><value>Could not connect to notifications.</value></data>
+  <data name="Social.InvitationUnavailable" xml:space="preserve"><value>The invitation is no longer available. Refresh the list.</value></data>
 </root>

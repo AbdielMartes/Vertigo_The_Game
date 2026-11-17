@@ -10,5 +10,9 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Vertigo.Client.Networking.Smoke/Vertigo.Client.Networking.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.Multiplayer.Smoke/Vertigo.Client.Multiplayer.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.PrivateInvitations.Smoke/Vertigo.Client.PrivateInvitations.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.UnitTests/Vertigo.Client.UnitTests.csproj" />
+    <Project Path="tests/Vertigo.Client.TestAccounts.Setup/Vertigo.Client.TestAccounts.Setup.csproj" />
   </Folder>
 </Solution>
