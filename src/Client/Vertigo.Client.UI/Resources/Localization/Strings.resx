@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Error.Unknown" xml:space="preserve"><value>Ocurrió un error. Inténtalo de nuevo.</value></data>
+  <data name="Error.Timeout" xml:space="preserve"><value>El servidor tardó demasiado en responder.</value></data>
+  <data name="Error.Connection" xml:space="preserve"><value>No se pudo conectar con el servidor.</value></data>
+  <data name="Access.MissingCredentials" xml:space="preserve"><value>Ingresa usuario y contraseña.</value></data>
+  <data name="Access.LoginFailed" xml:space="preserve"><value>No se pudo iniciar sesión.</value></data>
+  <data name="Access.GuestFailed" xml:space="preserve"><value>No se pudo ingresar como invitado.</value></data>
+  <data name="Access.MissingToken" xml:space="preserve"><value>Se requiere un token de sesión previo.</value></data>
+  <data name="Access.ResumeFailed" xml:space="preserve"><value>No se pudo recuperar la sesión.</value></data>
+  <data name="Home.LogoutFailed" xml:space="preserve"><value>No se pudo cerrar sesión.</value></data>
+  <data name="Lobby.SessionRequired" xml:space="preserve"><value>Tu sesión caducó. Inicia sesión nuevamente.</value></data>
+  <data name="Lobby.CodeRequired" xml:space="preserve"><value>Ingresa el código de sala.</value></data>
+  <data name="Lobby.CreateFailed" xml:space="preserve"><value>No se pudo crear la sala.</value></data>
+  <data name="Lobby.JoinFailed" xml:space="preserve"><value>No se pudo entrar a la sala.</value></data>
+  <data name="Lobby.MessageFailed" xml:space="preserve"><value>No se pudo enviar el mensaje.</value></data>
+  <data name="Lobby.LeaveFailed" xml:space="preserve"><value>No se pudo salir de la sala.</value></data>
+  <data name="Authentication.Unauthorized" xml:space="preserve"><value>Tu sesión ya no es válida. Inicia sesión nuevamente.</value></data>
+  <data name="Lobby.ChatNotAllowed" xml:space="preserve"><value>No puedes enviar mensajes en esta sala.</value></data>
+  <data name="RegisterAccount.UsernameAlreadyRegistered" xml:space="preserve"><value>Ese nombre de usuario ya está registrado.</value></data>
+  <data name="RegisterAccount.EmailAlreadyRegistered" xml:space="preserve"><value>Ese correo ya está registrado.</value></data>
+  <data name="RegisterAccount.ValidationSummary" xml:space="preserve"><value>Revisa los datos de registro.</value></data>
+  <data name="ROOM_NOT_FOUND" xml:space="preserve"><value>No se encontró la sala.</value></data>
+  <data name="ROOM_FULL" xml:space="preserve"><value>La sala está llena.</value></data>
+  <data name="MSG-ROOM-009" xml:space="preserve"><value>La partida de esa sala ya comenzó.</value></data>
+  <data name="MSG-ROOM-011" xml:space="preserve"><value>La capacidad de la sala no es válida.</value></data>
+  <data name="ErrorInvalidData" xml:space="preserve"><value>Los datos proporcionados no son válidos.</value></data>
+  <data name="ErrorUserNotFound" xml:space="preserve"><value>No se encontró el jugador.</value></data>
+  <data name="ErrorInvalidCode" xml:space="preserve"><value>El código no es válido.</value></data>
+  <data name="ErrorInvalidCredentials" xml:space="preserve"><value>Usuario o contraseña incorrectos.</value></data>
+  <data name="AccessMenu.SessionAlreadyActive" xml:space="preserve"><value>Ya existe una sesión activa.</value></data>
+  <data name="Friends.RequestSent" xml:space="preserve"><value>La solicitud ya fue enviada.</value></data>
+  <data name="Friends.AlreadyFriends" xml:space="preserve"><value>Ya son amigos.</value></data>
+  <data name="Friends.RequestBlocked" xml:space="preserve"><value>La solicitud está bloqueada.</value></data>
+  <data name="Notifications.FriendRequestNotFound" xml:space="preserve"><value>No se encontró la solicitud de amistad.</value></data>
+  <data name="InviteFriends.NotAllowed" xml:space="preserve"><value>No está permitido invitar a este jugador.</value></data>
+  <data name="Social.RegisteredOnly" xml:space="preserve"><value>Las funciones sociales requieren una cuenta registrada.</value></data>
+  <data name="Social.FriendsFailed" xml:space="preserve"><value>No se pudieron cargar las amistades.</value></data>
+  <data name="Social.SearchLength" xml:space="preserve"><value>Escribe al menos tres caracteres.</value></data>
+  <data name="Social.SearchFailed" xml:space="preserve"><value>No se pudieron buscar jugadores.</value></data>
+  <data name="Social.RequestFailed" xml:space="preserve"><value>No se pudo completar la solicitud.</value></data>
+  <data name="Social.BlockFailed" xml:space="preserve"><value>No se pudo actualizar la lista de bloqueos.</value></data>
+  <data name="Social.InvitationFailed" xml:space="preserve"><value>No se pudieron gestionar las invitaciones.</value></data>
+  <data name="Social.NotificationsFailed" xml:space="preserve"><value>No se pudo conectar a las notificaciones.</value></data>
+</root>

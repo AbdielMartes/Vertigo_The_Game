@@ -59,7 +59,7 @@ public class PlayerRepository : IPlayerRepository
         _context.Players.Add(player);
         int affectedRows = _context.SaveChanges();
 
-        return affectedRows == ExpectedAffectedRows;
+        return affectedRows >= ExpectedAffectedRows;
     }
 
     public bool UpdateLastLogin(Guid playerId, DateTime lastLoginAt)
@@ -67,6 +67,26 @@ public class PlayerRepository : IPlayerRepository
         int affectedRows = _context.Players
             .Where(p => p.PlayerId == playerId)
             .ExecuteUpdate(setters => setters.SetProperty(p => p.LastLoginAt, lastLoginAt));
+
+        return affectedRows == ExpectedAffectedRows;
+    }
+
+    public List<Player> SearchPlayersByUsername(string searchTerm, Guid excludedPlayerId, int maximumResults)
+    {
+        return _context.Players.AsNoTracking()
+            .Where(player => player.PlayerId != excludedPlayerId && player.Username.Contains(searchTerm))
+            .OrderBy(player => player.Username)
+            .Take(maximumResults)
+            .ToList();
+    }
+
+    public bool UpdatePassword(Guid playerId, string passwordHash, string passwordSalt)
+    {
+        int affectedRows = _context.Players
+            .Where(player => player.PlayerId == playerId)
+            .ExecuteUpdate(setters => setters
+                .SetProperty(player => player.PasswordHash, passwordHash)
+                .SetProperty(player => player.PasswordSalt, passwordSalt));
 
         return affectedRows == ExpectedAffectedRows;
     }

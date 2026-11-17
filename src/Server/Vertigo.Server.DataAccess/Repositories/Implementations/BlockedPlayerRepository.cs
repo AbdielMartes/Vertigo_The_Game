@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Vertigo.Server.DataAccess.Contexts;
 using Vertigo.Server.DataAccess.Entities.Identity;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
@@ -45,8 +46,18 @@ public class BlockedPlayerRepository : IBlockedPlayerRepository
             PlayerBlockedId = otherPlayerId
         };
 
+        using IDbContextTransaction transaction = _context.Database.BeginTransaction();
+
+        _context.Friendships
+            .Where(friendship => (friendship.PlayerRequesterId == playerId
+                                  && friendship.PlayerAddresseeId == otherPlayerId)
+                                 || (friendship.PlayerRequesterId == otherPlayerId
+                                     && friendship.PlayerAddresseeId == playerId))
+            .ExecuteDelete();
+
         _context.BlockedPlayers.Add(blockedPlayer);
         int affectedRows = _context.SaveChanges();
+        transaction.Commit();
 
         return affectedRows == ExpectedAffectedRows;
     }
@@ -58,5 +69,13 @@ public class BlockedPlayerRepository : IBlockedPlayerRepository
             .ExecuteDelete();
 
         return affectedRows == ExpectedAffectedRows;
+    }
+
+    public List<BlockedPlayer> GetBlocksBetween(Guid playerId, List<Guid> otherPlayerIds)
+    {
+        return _context.BlockedPlayers.AsNoTracking()
+            .Where(block => (block.PlayerBlockerId == playerId && otherPlayerIds.Contains(block.PlayerBlockedId))
+                            || (block.PlayerBlockedId == playerId && otherPlayerIds.Contains(block.PlayerBlockerId)))
+            .ToList();
     }
 }

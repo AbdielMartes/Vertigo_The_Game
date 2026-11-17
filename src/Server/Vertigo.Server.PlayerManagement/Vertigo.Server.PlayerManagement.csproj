@@ -6,6 +6,10 @@
     <ProjectReference Include="..\Vertigo.Server.CrossCutting\Vertigo.Server.CrossCutting.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CoreWCF.Primitives" Version="1.9.1" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net11.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

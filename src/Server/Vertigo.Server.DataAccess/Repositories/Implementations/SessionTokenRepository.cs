@@ -54,4 +54,5 @@ public class SessionTokenRepository : ISessionTokenRepository
 
         return affectedRows;
     }
+
 }

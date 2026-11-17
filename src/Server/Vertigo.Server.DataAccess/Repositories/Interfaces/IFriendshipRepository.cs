@@ -10,5 +10,6 @@ public interface IFriendshipRepository
     List<Friendship> GetPendingRequestsReceivedBy(Guid addresseeId);
     bool CreatePendingFriendship(Guid requesterId, Guid addresseeId);
     bool AcceptPendingFriendship(Guid requesterId, Guid addresseeId);
+    bool DeleteFriendshipBetween(Guid playerId, Guid otherPlayerId);
     bool DeletePendingFriendship(Guid requesterId, Guid addresseeId);
 }

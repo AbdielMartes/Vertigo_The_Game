@@ -1,11 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Vertigo.Contracts\Vertigo.Contracts.csproj" />
+    <ProjectReference Include="..\Vertigo.Client.Core\Vertigo.Client.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.ServiceModel.NetTcp" Version="10.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
 
   <PropertyGroup>

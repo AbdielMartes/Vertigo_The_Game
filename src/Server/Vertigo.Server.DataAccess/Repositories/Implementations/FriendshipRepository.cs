@@ -99,4 +99,16 @@ public class FriendshipRepository : IFriendshipRepository
 
         return affectedRows == ExpectedAffectedRows;
     }
+    public bool DeleteFriendshipBetween(Guid playerId, Guid otherPlayerId)
+    {
+        int affectedRows = _context.Friendships
+            .Where(friendship => (friendship.PlayerRequesterId == playerId
+                                  && friendship.PlayerAddresseeId == otherPlayerId)
+                                 || (friendship.PlayerRequesterId == otherPlayerId
+                                     && friendship.PlayerAddresseeId == playerId))
+            .ExecuteDelete();
+
+        return affectedRows == ExpectedAffectedRows;
+    }
+
 }
