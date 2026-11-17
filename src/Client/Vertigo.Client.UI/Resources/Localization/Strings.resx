@@ -43,4 +43,10 @@
   <data name="Social.InvitationFailed" xml:space="preserve"><value>No se pudieron gestionar las invitaciones.</value></data>
   <data name="Social.NotificationsFailed" xml:space="preserve"><value>No se pudo conectar a las notificaciones.</value></data>
   <data name="Social.InvitationUnavailable" xml:space="preserve"><value>La invitación ya no está disponible. Actualiza la lista.</value></data>
+  <data name="Lobby.NotMember" xml:space="preserve"><value>No perteneces a esta sala.</value></data>
+  <data name="Lobby.NotHost" xml:space="preserve"><value>Solo el anfitrión puede iniciar la partida.</value></data>
+  <data name="Lobby.NotReady" xml:space="preserve"><value>Se necesitan al menos dos jugadores y todos deben estar preparados.</value></data>
+  <data name="Lobby.AlreadyInGame" xml:space="preserve"><value>La partida ya ha comenzado.</value></data>
+  <data name="Lobby.ReadyFailed" xml:space="preserve"><value>No se pudo cambiar el estado de preparación.</value></data>
+  <data name="Lobby.StartFailed" xml:space="preserve"><value>No se pudo iniciar la partida.</value></data>
 </root>

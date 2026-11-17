@@ -13,6 +13,15 @@ public sealed class LobbyState
 {
     private readonly List<LobbyConnection> _connections = new();
     private readonly Dictionary<Guid, Guid> _invitations = new();
+    private readonly HashSet<Guid> _readyPlayerIds = new();
+    private long _revision;
+    private Guid _matchId;
+
+    public Guid LobbyInstanceId { get; } = Guid.NewGuid();
+
+    public Guid MatchId => _matchId;
+
+    public long Revision => _revision;
 
     public LobbyState(LobbySettings settings)
     {
@@ -53,16 +62,24 @@ public sealed class LobbyState
         if (index >= 0)
         {
             _connections[index] = connection;
+            _revision++;
         }
         else
         {
             _connections.Add(connection);
+            _readyPlayerIds.Clear(); // Joining changes the preparation quorum.
+            _revision++;
         }
     }
 
     public bool Remove(Guid playerId)
     {
         int removedCount = _connections.RemoveAll(connection => connection.Member.PlayerId == playerId);
+        if (removedCount > 0)
+        {
+            _readyPlayerIds.Remove(playerId);
+            _revision++;
+        }
 
         // The role passes to the participant who has been longest in the lobby (CU-014 FA-04).
         if (removedCount > 0 && playerId == HostPlayerId && _connections.Count > 0)
@@ -129,9 +146,58 @@ public sealed class LobbyState
         return overview;
     }
 
-    public void StartMatch()
+    public bool SetReady(Guid playerId, bool isReady)
     {
+        if (Status != LobbyStatus.Waiting || !Contains(playerId))
+        {
+            return false;
+        }
+
+        bool changed = isReady ? _readyPlayerIds.Add(playerId) : _readyPlayerIds.Remove(playerId);
+        if (changed)
+        {
+            _revision++;
+        }
+
+        return true;
+    }
+
+    public bool CanStartMatch(Guid requesterId)
+    {
+        return Status == LobbyStatus.Waiting
+            && requesterId == HostPlayerId
+            && _connections.Count >= 2
+            && _connections.All(connection => _readyPlayerIds.Contains(connection.Member.PlayerId));
+    }
+
+    public LobbyPreparation ToPreparation()
+    {
+        return new LobbyPreparation
+        {
+            LobbyCode = LobbyCode,
+            Revision = _revision,
+            HostPlayerId = HostPlayerId,
+            IsInGame = Status == LobbyStatus.InGame,
+            MatchId = _matchId,
+            ReadyPlayerIds = _readyPlayerIds.ToList()
+        };
+    }
+
+    public void StartMatch(Guid matchId)
+    {
+        if (matchId == Guid.Empty)
+        {
+            throw new ArgumentException("A created match identifier is required.", nameof(matchId));
+        }
+
+        if (Status != LobbyStatus.Waiting || _matchId != Guid.Empty)
+        {
+            throw new InvalidOperationException("The lobby has already started a match.");
+        }
+
+        _matchId = matchId;
         Status = LobbyStatus.InGame;
+        _revision++;
     }
 
     public List<LobbyMember> GetMembersExcept(Guid playerId)

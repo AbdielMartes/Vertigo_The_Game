@@ -30,7 +30,11 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
     private string _messageText = string.Empty;
     private string _errorMessage = string.Empty;
     private bool _isBusy;
+    private Guid _hostPlayerId;
+    private bool _isMatchStarted;
     private bool _disposed;
+    private long _lobbyGeneration;
+    private readonly LobbyPreparationRevision _preparationRevision = new();
 
     public LobbyViewModel(ILobbyClient lobbyClient, IChatClient chatClient, LobbyContext context)
     {
@@ -44,12 +48,31 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         _lobbyClient.PlayerJoined += OnPlayerJoined;
         _lobbyClient.PlayerLeft += OnPlayerLeft;
         _lobbyClient.MessageReceived += OnMessageReceived;
+        _lobbyClient.PreparationChanged += OnPreparationChanged;
         SendMessageCommand = new AsyncRelayCommand(SendMessageAsync);
         LeaveCommand = new AsyncRelayCommand(LeaveAsync);
+        ToggleReadyCommand = new AsyncRelayCommand(ToggleReadyAsync);
+        StartMatchCommand = new AsyncRelayCommand(StartMatchAsync);
     }
 
     public ObservableCollection<LobbyMember> Members { get; } = new();
     public ObservableCollection<LobbyChatMessage> Messages { get; } = new();
+    public ObservableCollection<Guid> ReadyPlayerIds { get; } = new();
+
+    public Guid HostPlayerId
+    {
+        get => _hostPlayerId;
+        private set => SetProperty(ref _hostPlayerId, value);
+    }
+
+    public bool IsMatchStarted
+    {
+        get => _isMatchStarted;
+        private set => SetProperty(ref _isMatchStarted, value);
+    }
+
+    public bool IsHost => _playerSession.GetActiveSession()?.PlayerId == HostPlayerId;
+    public bool IsReady => _playerSession.GetActiveSession() is { } active && ReadyPlayerIds.Contains(active.PlayerId);
 
     public string LobbyCode
     {
@@ -77,6 +100,8 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
 
     public IAsyncRelayCommand SendMessageCommand { get; }
     public IAsyncRelayCommand LeaveCommand { get; }
+    public IAsyncRelayCommand ToggleReadyCommand { get; }
+    public IAsyncRelayCommand StartMatchCommand { get; }
 
     public async Task<bool> CreateAsync(bool isPublic, int maxPlayers)
     {
@@ -98,8 +123,13 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
             Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
                 IsGuest = session.IsGuest });
             LobbyCode = code;
+            HostPlayerId = session.PlayerId;
+            ReadyPlayerIds.Clear();
+            _preparationRevision.Reset();
+            IsMatchStarted = false;
             _navigation.NavigateTo(NavigationPage.Lobby);
             _lobbyClient.ReplayPendingEvents();
+            await RefreshPreparationAsync(session);
             return true;
         }
         catch (Exception exception)
@@ -131,8 +161,13 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
             Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
                 IsGuest = session.IsGuest });
             LobbyCode = admission.LobbyCode;
+            HostPlayerId = admission.HostPlayerId;
+            ReadyPlayerIds.Clear();
+            _preparationRevision.Reset();
+            IsMatchStarted = false;
             _navigation.NavigateTo(NavigationPage.Lobby);
             _lobbyClient.ReplayPendingEvents();
+            await RefreshPreparationAsync(session);
             return true;
         }
         catch (Exception exception)
@@ -140,6 +175,125 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
             return HandleServiceFailure(exception, session, "Lobby.JoinFailed");
         }
         finally { IsBusy = false; }
+    }
+
+    private async Task RefreshPreparationAsync(SessionSnapshot session)
+    {
+        string code = LobbyCode;
+        try
+        {
+            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.GetPreparation(code, session.Token));
+            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyPreparation(preparation);
+            }
+        }
+        catch (Exception exception)
+        {
+            // Creation/join already succeeded; do not report a failed admission.
+            if (_errors.IsUnauthorized(exception))
+            {
+                _coordinator.Invalidate(session);
+            }
+        }
+    }
+
+    private async Task ToggleReadyAsync()
+    {
+        if (IsBusy || string.IsNullOrEmpty(LobbyCode) || IsMatchStarted)
+        {
+            return;
+        }
+        SessionSnapshot? session = _playerSession.GetActiveSession();
+        if (session is null)
+        {
+            _coordinator.Invalidate();
+            return;
+        }
+        IsBusy = true;
+        string code = LobbyCode;
+        bool ready = !IsReady;
+        try
+        {
+            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.SetReady(code, ready, session.Token));
+            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyPreparation(preparation);
+            }
+        }
+        catch (Exception exception)
+        {
+            HandleServiceFailure(exception, session, "Lobby.ReadyFailed");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task StartMatchAsync()
+    {
+        if (IsBusy || !IsHost || IsMatchStarted || string.IsNullOrEmpty(LobbyCode))
+        {
+            return;
+        }
+        SessionSnapshot? session = _playerSession.GetActiveSession();
+        if (session is null)
+        {
+            _coordinator.Invalidate();
+            return;
+        }
+        IsBusy = true;
+        string code = LobbyCode;
+        try
+        {
+            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.StartMatch(code, session.Token));
+            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyPreparation(preparation);
+            }
+        }
+        catch (Exception exception)
+        {
+            HandleServiceFailure(exception, session, "Lobby.StartFailed");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void OnPreparationChanged(object? sender, LobbyPreparation preparation)
+    {
+        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
+        string eventLobby = LobbyCode;
+        long eventGeneration = _lobbyGeneration;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_disposed && eventSession is not null && IsCurrentSession(eventSession)
+                && eventGeneration == _lobbyGeneration
+                && string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyPreparation(preparation);
+            }
+        });
+    }
+
+    private void ApplyPreparation(LobbyPreparation preparation)
+    {
+        if (!_preparationRevision.TryAdvance(preparation, LobbyCode))
+        {
+            return;
+        }
+        HostPlayerId = preparation.HostPlayerId;
+        IsMatchStarted = preparation.IsInGame;
+        ReadyPlayerIds.Clear();
+        foreach (Guid playerId in preparation.ReadyPlayerIds)
+        {
+            ReadyPlayerIds.Add(playerId);
+        }
+        OnPropertyChanged(nameof(IsHost));
+        OnPropertyChanged(nameof(IsReady));
     }
 
     private async Task SendMessageAsync()
@@ -254,11 +408,18 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
 
     public void ResetState()
     {
+        _lobbyGeneration++;
+        _preparationRevision.Reset();
         LobbyCode = string.Empty;
         MessageText = string.Empty;
         ErrorMessage = string.Empty;
         Members.Clear();
         Messages.Clear();
+        ReadyPlayerIds.Clear();
+        HostPlayerId = Guid.Empty;
+        IsMatchStarted = false;
+        OnPropertyChanged(nameof(IsHost));
+        OnPropertyChanged(nameof(IsReady));
     }
 
     private bool IsCurrentSession(SessionSnapshot previous)
@@ -292,5 +453,6 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         _lobbyClient.PlayerJoined -= OnPlayerJoined;
         _lobbyClient.PlayerLeft -= OnPlayerLeft;
         _lobbyClient.MessageReceived -= OnMessageReceived;
+        _lobbyClient.PreparationChanged -= OnPreparationChanged;
     }
 }

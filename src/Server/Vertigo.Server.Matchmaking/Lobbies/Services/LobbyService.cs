@@ -26,12 +26,15 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     private readonly TimeProvider _timeProvider;
     private readonly IFriendshipNotifier _notifier;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly LobbyMatchActivation _matchActivation;
 
-    public LobbyService(TimeProvider timeProvider, IFriendshipNotifier notifier, IServiceScopeFactory scopeFactory)
+    public LobbyService(TimeProvider timeProvider, IFriendshipNotifier notifier, IServiceScopeFactory scopeFactory,
+        LobbyMatchActivation matchActivation)
     {
         _timeProvider = timeProvider;
         _notifier = notifier;
         _scopeFactory = scopeFactory;
+        _matchActivation = matchActivation;
     }
 
     public string CreateLobby(bool isPublic, int maxPlayers, string sessionToken)
@@ -71,6 +74,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         LobbyConnection connection = new(player, GetCurrentCallback(), WatchCurrentSession());
         string normalizedCode = lobbyCode?.Trim() ?? string.Empty;
         List<ILobbyCallback> callbacksToNotify = new();
+        List<ILobbyCallback> preparationCallbacks = new();
+        LobbyPreparation? preparation = null;
         LobbyAdmission response;
 
         lock (_lobbyLock)
@@ -110,9 +115,12 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 lobby.CancelInvitation(player.PlayerId);
                 lobby.AddOrReplace(connection);
             }
+            preparationCallbacks = lobby.GetCallbacksExcept(Guid.Empty);
+            preparation = lobby.ToPreparation();
         }
 
         Notify(callbacksToNotify, SendPlayerJoined, player);
+        Notify(preparationCallbacks, SendPreparationChanged, preparation);
 
         return response;
     }
@@ -125,6 +133,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         string normalizedCode = lobbyCode?.Trim() ?? string.Empty;
         List<ILobbyCallback> callbacksToNotify = new();
         List<Guid> withdrawnInvitedIds = new();
+        LobbyPreparation? preparation = null;
         bool wasRemoved = false;
 
         lock (_lobbyLock)
@@ -140,13 +149,98 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 else
                 {
                     callbacksToNotify = lobby.GetCallbacksExcept(playerId);
+                    preparation = lobby.ToPreparation();
                 }
             }
         }
 
         Notify(callbacksToNotify, SendPlayerLeft, playerId);
+        if (preparation is not null)
+        {
+            Notify(callbacksToNotify, SendPreparationChanged, preparation);
+        }
         WithdrawInvitations(normalizedCode, withdrawnInvitedIds);
         return wasRemoved;
+    }
+
+    public LobbyPreparation GetPreparation(string lobbyCode, string sessionToken)
+    {
+        SessionIdentity identity = ResolveIdentity(sessionToken);
+        lock (_lobbyLock)
+        {
+            LobbyState lobby = RequireLobbyMember(lobbyCode, identity.PlayerId);
+            return lobby.ToPreparation();
+        }
+    }
+
+    public LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken)
+    {
+        SessionIdentity identity = ResolveIdentity(sessionToken);
+        List<ILobbyCallback> callbacks;
+        LobbyPreparation preparation;
+
+        lock (_lobbyLock)
+        {
+            LobbyState lobby = RequireLobbyMember(lobbyCode, identity.PlayerId);
+            if (lobby.Status != LobbyStatus.Waiting)
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyAlreadyInGame, ServiceMessageKeys.LobbyAlreadyInGame);
+            }
+            lobby.SetReady(identity.PlayerId, isReady);
+            preparation = lobby.ToPreparation();
+            callbacks = lobby.GetCallbacksExcept(Guid.Empty);
+        }
+
+        Notify(callbacks, SendPreparationChanged, preparation);
+        return preparation;
+    }
+
+    public LobbyPreparation StartMatch(string lobbyCode, string sessionToken)
+    {
+        SessionIdentity identity = ResolveIdentity(sessionToken);
+        List<ILobbyCallback> callbacks;
+        LobbyPreparation preparation;
+
+        lock (_lobbyLock)
+        {
+            LobbyState lobby = RequireLobbyMember(lobbyCode, identity.PlayerId);
+            if (lobby.Status != LobbyStatus.Waiting)
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyAlreadyInGame, ServiceMessageKeys.LobbyAlreadyInGame);
+            }
+            if (lobby.HostPlayerId != identity.PlayerId)
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyNotHost, ServiceMessageKeys.LobbyNotHost);
+            }
+            if (!lobby.CanStartMatch(identity.PlayerId))
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyNotReady, ServiceMessageKeys.LobbyNotReady);
+            }
+
+            // Entire transition is serialized with other lobby mutations.
+            // No InGame state is committed if Game rejects initialization.
+            _matchActivation.Activate(lobby);
+            preparation = lobby.ToPreparation();
+            callbacks = lobby.GetCallbacksExcept(Guid.Empty);
+        }
+
+        Notify(callbacks, SendPreparationChanged, preparation);
+        return preparation;
+    }
+
+    // Callers already hold the lobby lock.
+    private LobbyState RequireLobbyMember(string lobbyCode, Guid playerId)
+    {
+        string normalizedCode = lobbyCode?.Trim() ?? string.Empty;
+        if (!_lobbies.TryGetValue(normalizedCode, out LobbyState? lobby))
+        {
+            throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+        }
+        if (!lobby.Contains(playerId))
+        {
+            throw CreateFault(ServiceErrorCodes.LobbyNotMember, ServiceMessageKeys.LobbyNotMember);
+        }
+        return lobby;
     }
 
     public List<LobbySummary> GetPublicLobbies()
@@ -279,6 +373,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         };
     }
 
+    private static void SendPreparationChanged(ILobbyCallback callback, LobbyPreparation preparation)
+    {
+        callback.PreparationChanged(preparation);
+    }
+
     private static void SendChatMessage(ILobbyCallback callback, LobbyChatMessage message)
     {
         callback.MessageReceived(message);
@@ -312,7 +411,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     private void OnChannelClosed(object? sender, EventArgs eventArgs)
     {
         string sessionId = (sender as IContextChannel)?.SessionId ?? string.Empty;
-        List<(List<ILobbyCallback> Callbacks, List<Guid> LeftIds)> notifications = new();
+        List<(List<ILobbyCallback> Callbacks, List<Guid> LeftIds, LobbyPreparation State)> notifications = new();
         List<(string LobbyCode, List<Guid> InvitedIds)> withdrawals = new();
 
         lock (_lobbyLock)
@@ -330,17 +429,18 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 }
                 else if (leftIds.Count > 0)
                 {
-                    notifications.Add((lobby.GetCallbacksExcept(Guid.Empty), leftIds));
+                    notifications.Add((lobby.GetCallbacksExcept(Guid.Empty), leftIds, lobby.ToPreparation()));
                 }
             }
         }
 
-        foreach ((List<ILobbyCallback> callbacks, List<Guid> leftIds) in notifications)
+        foreach ((List<ILobbyCallback> callbacks, List<Guid> leftIds, LobbyPreparation state) in notifications)
         {
             foreach (Guid leftId in leftIds)
             {
                 Notify(callbacks, SendPlayerLeft, leftId);
             }
+            Notify(callbacks, SendPreparationChanged, state);
         }
 
         foreach ((string lobbyCode, List<Guid> invitedIds) in withdrawals)

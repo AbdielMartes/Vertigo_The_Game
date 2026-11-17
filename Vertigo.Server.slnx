@@ -14,4 +14,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/Vertigo.Server.Game.Tests/Vertigo.Server.Game.Tests.csproj" />
   </Folder>
+  <Folder Name="/tests/Phase5/">
+    <Project Path="tests/Vertigo.Server.Matchmaking.Tests/Vertigo.Server.Matchmaking.Tests.csproj" />
+  </Folder>
 </Solution>

@@ -16,4 +16,7 @@ public interface ILobbyCallback
 
     [OperationContract(IsOneWay = true)]
     void MessageReceived(LobbyChatMessage message);
+
+    [OperationContract(IsOneWay = true)]
+    void PreparationChanged(LobbyPreparation preparation);
 }

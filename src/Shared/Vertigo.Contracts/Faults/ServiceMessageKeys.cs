@@ -20,6 +20,11 @@ public static class ServiceMessageKeys
     public const string FriendRequestNotFound = "Notifications.FriendRequestNotFound";
     public const string LobbyInviteNotAllowed = "InviteFriends.NotAllowed";
     
+    public const string LobbyNotMember = "Lobby.NotMember";
+    public const string LobbyNotHost = "Lobby.NotHost";
+    public const string LobbyNotReady = "Lobby.NotReady";
+    public const string LobbyAlreadyInGame = "Lobby.AlreadyInGame";
+
     public const string Unauthorized = "Authentication.Unauthorized";
     public const string LobbyChatNotAllowed = "Lobby.ChatNotAllowed";
 }

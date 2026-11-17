@@ -21,6 +21,7 @@ public sealed class LobbyClient : ILobbyClient
     private EventHandler<LobbyMember>? _playerJoined;
     private EventHandler<Guid>? _playerLeft;
     private EventHandler<LobbyChatMessage>? _messageReceived;
+    private EventHandler<LobbyPreparation>? _preparationChanged;
     private ILobbyService? _channel;
     private bool _isDisposed;
 
@@ -78,6 +79,24 @@ public sealed class LobbyClient : ILobbyClient
             lock (_eventLock)
             {
                 _messageReceived -= value;
+            }
+        }
+    }
+
+    public event EventHandler<LobbyPreparation>? PreparationChanged
+    {
+        add
+        {
+            lock (_eventLock)
+            {
+                _preparationChanged += value;
+            }
+        }
+        remove
+        {
+            lock (_eventLock)
+            {
+                _preparationChanged -= value;
             }
         }
     }
@@ -144,6 +163,48 @@ public sealed class LobbyClient : ILobbyClient
         return lobbies;
     }
 
+    public LobbyPreparation GetPreparation(string lobbyCode, string sessionToken)
+    {
+        ILobbyService channel = GetOrCreateChannel();
+        try
+        {
+            return channel.GetPreparation(lobbyCode, sessionToken);
+        }
+        catch (Exception exception) when (IsTransportFailure(exception))
+        {
+            AbortChannel(channel);
+            throw;
+        }
+    }
+
+    public LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken)
+    {
+        ILobbyService channel = GetOrCreateChannel();
+        try
+        {
+            return channel.SetReady(lobbyCode, isReady, sessionToken);
+        }
+        catch (Exception exception) when (IsTransportFailure(exception))
+        {
+            AbortChannel(channel);
+            throw;
+        }
+    }
+
+    public LobbyPreparation StartMatch(string lobbyCode, string sessionToken)
+    {
+        ILobbyService channel = GetOrCreateChannel();
+        try
+        {
+            return channel.StartMatch(lobbyCode, sessionToken);
+        }
+        catch (Exception exception) when (IsTransportFailure(exception))
+        {
+            AbortChannel(channel);
+            throw;
+        }
+    }
+
     public void ReplayPendingEvents()
     {
         lock (_eventLock)
@@ -155,6 +216,10 @@ public sealed class LobbyClient : ILobbyClient
                 if (pending.Joined is not null)
                 {
                     _playerJoined?.Invoke(this, pending.Joined);
+                }
+                else if (pending.Preparation is not null)
+                {
+                    _preparationChanged?.Invoke(this, pending.Preparation);
                 }
                 else if (pending.Chat is not null)
                 {
@@ -230,6 +295,13 @@ public sealed class LobbyClient : ILobbyClient
                 if (ReferenceEquals(_callbackHandler, handler))
                 {
                     OnPlayerLeft(sender, playerId);
+                }
+            };
+            handler.PreparationChanged += (sender, preparation) =>
+            {
+                if (ReferenceEquals(_callbackHandler, handler))
+                {
+                    OnPreparationChanged(sender, preparation);
                 }
             };
             handler.MessageReceived += (sender, message) =>
@@ -329,6 +401,21 @@ public sealed class LobbyClient : ILobbyClient
             }
         }
     }
+    private void OnPreparationChanged(object? sender, LobbyPreparation preparation)
+    {
+        lock (_eventLock)
+        {
+            if (_preparationChanged is null)
+            {
+                _pendingEvents.Enqueue(new PendingLobbyEvent(null, Guid.Empty, null, preparation));
+            }
+            else
+            {
+                _preparationChanged.Invoke(this, preparation);
+            }
+        }
+    }
+
     private void OnChatReceived(object? sender, LobbyChatMessage message)
     {
         lock (_eventLock)

@@ -43,4 +43,10 @@
   <data name="Social.InvitationFailed" xml:space="preserve"><value>Could not manage invitations.</value></data>
   <data name="Social.NotificationsFailed" xml:space="preserve"><value>Could not connect to notifications.</value></data>
   <data name="Social.InvitationUnavailable" xml:space="preserve"><value>The invitation is no longer available. Refresh the list.</value></data>
+  <data name="Lobby.NotMember" xml:space="preserve"><value>You are not a member of this lobby.</value></data>
+  <data name="Lobby.NotHost" xml:space="preserve"><value>Only the host can start the match.</value></data>
+  <data name="Lobby.NotReady" xml:space="preserve"><value>At least two players are required and all must be ready.</value></data>
+  <data name="Lobby.AlreadyInGame" xml:space="preserve"><value>The match has already started.</value></data>
+  <data name="Lobby.ReadyFailed" xml:space="preserve"><value>Could not change ready status.</value></data>
+  <data name="Lobby.StartFailed" xml:space="preserve"><value>Could not start the match.</value></data>
 </root>

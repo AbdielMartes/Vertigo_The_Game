@@ -20,6 +20,11 @@ public static class ServiceErrorCodes
     public const string FriendRequestNotFound = "FRIEND_REQUEST_NOT_FOUND";
     public const string LobbyInviteNotAllowed = "LOBBY_INVITE_NOT_ALLOWED";
     
+    public const string LobbyNotMember = "LOBBY_NOT_MEMBER";
+    public const string LobbyNotHost = "LOBBY_NOT_HOST";
+    public const string LobbyNotReady = "LOBBY_NOT_READY";
+    public const string LobbyAlreadyInGame = "LOBBY_ALREADY_IN_GAME";
+
     public const string Unauthorized = "UNAUTHORIZED";
     public const string LobbyChatNotAllowed = "LOBBY_CHAT_NOT_ALLOWED";
 }
