@@ -1,0 +1,250 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             x:Class="Vertigo.Client.UI.Views.HomeView"
+             x:DataType="vm:HomeViewModel"
+             x:CompileBindings="True">
+    <UserControl.Styles>
+        <Style Selector="Button.vertigo-home-action">
+            <Setter Property="MinHeight" Value="62"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Background" Value="{DynamicResource ColorWhite}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ColorCoal}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorCoal}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+            <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
+        </Style>
+        <Style Selector="Button.vertigo-home-action:pointerover">
+            <Setter Property="Background" Value="{DynamicResource ColorInfoBackground}"/>
+        </Style>
+        <Style Selector="Button.vertigo-home-action:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+        <Style Selector="Button.vertigo-home-action:disabled">
+            <Setter Property="Foreground" Value="{DynamicResource ColorDisabledForeground}"/>
+            <Setter Property="Background" Value="{DynamicResource ColorDisabledBackground}"/>
+        </Style>
+        <Style Selector="Button.vertigo-home-utility:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  Background="{DynamicResource ColorCanvas}">
+        <Grid MinHeight="720" MinWidth="900" RowDefinitions="Auto,Auto,*,Auto" Margin="30">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                <Border Grid.Column="0"
+                        Background="{DynamicResource ColorWhite}"
+                        BorderBrush="{DynamicResource ColorCoal}"
+                        BorderThickness="{DynamicResource BorderThin}"
+                        CornerRadius="{DynamicResource RadiusSmall}"
+                        Padding="12,10">
+                    <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                        <Path Width="45" Height="45" Stretch="Uniform"
+                              Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.7"
+                              Data="{StaticResource IconPeople}"/>
+                        <StackPanel Spacing="2" VerticalAlignment="Center" MinWidth="132">
+                            <TextBlock Text="{Binding PlayerTag}" FontWeight="Bold" FontSize="17"/>
+                            <TextBlock Text="{Binding AccountKindText}" FontSize="12"
+                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                        </StackPanel>
+                        <Button Classes="vertigo-button neutral vertigo-home-utility"
+                                TabIndex="0" Command="{Binding OpenProfileCommand}"
+                                Content="{Binding ProfileText}"
+                                AutomationProperties.Name="{Binding ProfileText}"/>
+                    </StackPanel>
+                </Border>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12"
+                            VerticalAlignment="Center">
+                    <Button Classes="vertigo-button neutral vertigo-home-utility"
+                            TabIndex="2" Command="{Binding ToggleNotificationsCommand}"
+                            AutomationProperties.Name="{Binding NotificationsText}">
+                        <Path Width="22" Height="22" Stretch="Uniform"
+                              Stroke="{DynamicResource ColorCoal}" StrokeThickness="2"
+                              Data="M 12,2 C 8,2 7,5 7,9 L 7,15 L 4,18 L 20,18 L 17,15 L 17,9 C 17,5 16,2 12,2 Z M
+                                    10,21 L 14,21"/>
+                    </Button>
+                    <Button Classes="vertigo-button neutral vertigo-home-utility"
+                            TabIndex="3" Command="{Binding LogoutCommand}"
+                            IsEnabled="{Binding !IsBusy}" Content="{Binding LogoutText}"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" Margin="0,14,0,0">
+                <Border Grid.Column="2" IsVisible="{Binding IsNotificationsOpen}"
+                        Background="{DynamicResource ColorWhite}"
+                        BorderBrush="{DynamicResource ColorBorderStrong}"
+                        BorderThickness="{DynamicResource BorderThin}"
+                        Padding="16" CornerRadius="{DynamicResource RadiusSmall}"
+                        MinWidth="230">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="{Binding NotificationsText}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding NoNotificationsText}" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource ColorTextSecondary}"/>
+                        <Button Classes="vertigo-button secondary vertigo-home-utility"
+                                TabIndex="4" Command="{Binding OpenSocialCommand}"
+                                Content="{Binding OpenSocialNotificationsText}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Grid Grid.Row="2" ColumnDefinitions="420,*" ColumnSpacing="48" Margin="25,30,0,0">
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="14">
+                    <TextBlock Text="VÉRTIGO" FontSize="62" FontWeight="ExtraBold"
+                               Foreground="{DynamicResource ColorCoal}"
+                               FontFamily="{DynamicResource FontTitleDisplay}"/>
+                    <TextBlock Text="{Binding BrandSubtitle}" FontSize="18"
+                               Margin="0,-10,0,24"
+                               Foreground="{DynamicResource ColorTextSecondary}"/>
+                    <Button Classes="vertigo-home-action" TabIndex="5"
+                            Command="{Binding TogglePlayCommand}"
+                            AutomationProperties.Name="{Binding PlayText}">
+                        <StackPanel Orientation="Horizontal" Spacing="18">
+                            <Path Width="32" Height="32" Stretch="Uniform"
+                                  Fill="{DynamicResource ColorSnesGreen}"
+                                  Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.6"
+                                  Data="M 6,2 L 24,16 L 6,30 Z"/>
+                            <TextBlock Text="{Binding PlayText}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="vertigo-home-action" TabIndex="6"
+                            Command="{Binding OpenSocialCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="18">
+                            <Path Width="32" Height="32" Stretch="Uniform"
+                                  Fill="{DynamicResource ColorSnesBlue}"
+                                  Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.5"
+                                  Data="{StaticResource IconPeople}"/>
+                            <TextBlock Text="{Binding SocialText}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="vertigo-home-action" TabIndex="7"
+                            IsEnabled="False" AutomationProperties.HelpText="{Binding NotAvailableText}">
+                        <StackPanel Orientation="Horizontal" Spacing="18">
+                            <Path Width="32" Height="32" Stretch="Uniform"
+                                  Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.6"
+                                  Fill="{DynamicResource ColorSnesYellow}"
+                                  Data="M 4,4 L 20,4 L 20,12 Q 20,19 12,21 Q 4,19 4,12 Z M 7,21 L 17,21 M 12,21 L
+                                        12,28 M 6,28 L 18,28"/>
+                            <TextBlock Text="{Binding RankingText}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="vertigo-home-action" TabIndex="8"
+                            Command="{Binding OpenSettingsCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="18">
+                            <Path Width="32" Height="32" Stretch="Uniform"
+                                  Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.7"
+                                  Data="M 12,3 L 17,3 L 18,7 L 22,9 L 25,6 L 28,10 L 25,13 L 26,18 L 30,19 L 28,24 L
+                                        24,24 L 21,28 L 18,25 L 13,26 L 11,30 L 6,28 L 7,24 L 3,21 L 6,17 L 3,14 L
+                                        6,9 L 10,11 Z"/>
+                            <TextBlock Text="{Binding SettingsText}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Border IsVisible="{Binding IsPlayPanelOpen}"
+                            Background="{DynamicResource ColorSurface}"
+                            BorderBrush="{DynamicResource ColorBorderStrong}"
+                            BorderThickness="{DynamicResource BorderThin}"
+                            CornerRadius="{DynamicResource RadiusSmall}" Padding="16">
+                        <StackPanel Spacing="12">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <TextBlock Text="{Binding PublicText}" VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding IsPublic, Mode=TwoWay}"
+                                          TabIndex="9" AutomationProperties.Name="{Binding PublicText}"/>
+                                <TextBlock Text="{Binding MaxPlayersText}" VerticalAlignment="Center"/>
+                                <NumericUpDown Value="{Binding MaxPlayers, Mode=TwoWay}"
+                                               Minimum="2" Maximum="6" Increment="1"
+                                               Width="75" TabIndex="10"/>
+                            </StackPanel>
+                            <Button Classes="vertigo-button primary" TabIndex="11"
+                                    IsEnabled="{Binding !IsBusy}" Command="{Binding CreateLobbyCommand}"
+                                    Content="{Binding CreateText}"/>
+                            <TextBlock Text="{Binding CodeText}"/>
+                            <TextBox Classes="vertigo-input" TabIndex="12"
+                                     Text="{Binding LobbyCode, Mode=TwoWay}" MaxLength="6"
+                                     AutomationProperties.Name="{Binding CodeText}"/>
+                            <Button Classes="vertigo-button secondary" TabIndex="13"
+                                    IsEnabled="{Binding !IsBusy}" Command="{Binding JoinLobbyCommand}"
+                                    Content="{Binding JoinText}"/>
+                        </StackPanel>
+                    </Border>
+                    <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+                               Foreground="{DynamicResource ColorError}"/>
+                </StackPanel>
+                <Border Grid.Column="1" VerticalAlignment="Center"
+                        Background="{DynamicResource ColorWhite}"
+                        BorderBrush="{DynamicResource ColorCoal}"
+                        BorderThickness="{DynamicResource BorderThin}"
+                        CornerRadius="{DynamicResource RadiusSmall}"
+                        ClipToBounds="True">
+                    <Viewbox Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Canvas Width="590" Height="470" IsHitTestVisible="False">
+                            <Path Fill="{DynamicResource ColorInfoBackground}"
+                                  Data="M 0,350 L 65,310 L 92,330 L 92,455 L 0,455 Z M 85,320 L 145,240 L 190,305 L
+                                        190,455 L 85,455 Z M 415,345 L 460,280 L 510,320 L 510,455 L 415,455 Z M
+                                        505,315 L 545,260 L 590,290 L 590,455 L 505,455 Z"/>
+                            <Path Fill="{DynamicResource ColorShellGray}"
+                                  Data="M 150,455 L 150,355 L 215,355 L 215,455 Z M 375,455 L 375,345 L 420,345 L
+                                        420,455 Z"/>
+                            <Path Stroke="{DynamicResource ColorSnesBlue}" StrokeThickness="2" Fill="Transparent"
+                                  Data="M 22,98 C 25,78 53,80 60,95 C 75,85 93,94 94,105 L 112,105"/>
+                            <Path Stroke="{DynamicResource ColorSnesBlue}" StrokeThickness="2" Fill="Transparent"
+                                  Data="M 450,145 C 460,124 485,125 494,141 C 506,132 526,141 532,152 L 560,152"/>
+                            <Path Stroke="{DynamicResource ColorCoal}" StrokeThickness="3" Fill="Transparent"
+                                  Data="M 473,455 L 473,95 L 490,95 L 490,455 M 468,110 L 495,137 L 468,164 L
+                                        495,191 L 468,218 L 495,245 L 468,272 L 495,299 L 468,326 L 495,353 L
+                                        468,380"/>
+                            <Path Stroke="{DynamicResource ColorCoal}" StrokeThickness="3" Fill="Transparent"
+                                  Data="M 300,95 L 545,95 L 475,48 L 300,95 L 545,95 M 475,48 L 475,95 L 547,95 M
+                                        313,95 L 327,80 L 343,95 L 359,80 L 375,95 L 391,80 L 407,95 L 423,80 L
+                                        439,95"/>
+                            <Path Stroke="{DynamicResource ColorSnesBlue}" StrokeThickness="6"
+                                  Data="M 300,97 L 544,97"/>
+                            <Path Stroke="{DynamicResource ColorCoal}" StrokeThickness="2" Fill="Transparent"
+                                  Data="M 390,99 L 390,138 M 383,138 L 397,138 L 397,145 L 390,154 L 383,145 Z M
+                                        390,154 L 365,177 L 415,177 Z"/>
+                            <Path Fill="{DynamicResource ColorSnesYellow}"
+                                  Data="M 384,132 L 396,132 L 396,145 L 390,150 L 384,145 Z"/>
+                            <Path Fill="{DynamicResource ColorWhite}" Stroke="{DynamicResource ColorCoal}"
+                                  StrokeThickness="2"
+                                  Data="M 338,179 L 424,179 L 424,220 L 338,220 Z"/>
+                            <Path Fill="{DynamicResource ColorSnesBlue}"
+                                  Data="M 345,185 L 412,185 L 412,214 L 345,214 Z"/>
+                            <Path Fill="{DynamicResource ColorSnesGreen}"
+                                  Data="M 413,185 L 421,182 L 421,215 L 413,214 Z"/>
+                            <Path Fill="{DynamicResource ColorCoal}"
+                                  Data="M 220,455 L 220,280 L 265,265 L 415,265 L 430,280 L 430,455 Z"/>
+                            <Path Fill="{DynamicResource ColorShellGray}"
+                                  Data="M 225,285 L 270,271 L 410,271 L 424,285 L 424,453 L 225,453 Z"/>
+                            <Path Fill="{DynamicResource ColorWhite}" Stroke="{DynamicResource ColorCoal}"
+                                  StrokeThickness="2"
+                                  Data="M 205,302 L 440,302 L 440,320 L 205,320 Z M 205,363 L 440,363 L 440,381 L
+                                        205,381 Z M 205,425 L 440,425 L 440,443 L 205,443 Z"/>
+                            <Path Fill="{DynamicResource ColorSnesBlue}"
+                                  Data="M 235,326 L 305,326 L 305,359 L 235,359 Z M 312,326 L 415,326 L 415,359 L
+                                        312,359 Z M 235,387 L 305,387 L 305,421 L 235,421 Z M 312,387 L 415,387 L
+                                        415,421 L 312,421 Z M 235,445 L 415,445 L 415,455 L 235,455 Z"/>
+                            <Path Fill="{DynamicResource ColorSnesGreen}"
+                                  Data="M 306,326 L 314,326 L 314,359 L 306,359 Z M 306,387 L 314,387 L 314,421 L
+                                        306,421 Z"/>
+                            <Path Stroke="{DynamicResource ColorSnesYellow}" StrokeThickness="4"
+                                  Data="M 228,278 L 228,255 L 315,255 M 340,255 L 420,255 L 420,278"/>
+                            <Path Stroke="{DynamicResource ColorCoal}" StrokeThickness="2"
+                                  Data="M 250,255 L 250,229 M 300,255 L 300,229 M 368,255 L 368,229 M 405,255 L
+                                        405,229"/>
+                            <Path Stroke="{DynamicResource ColorCoal}" StrokeThickness="3"
+                                  Data="M 0,458 L 590,458"/>
+                        </Canvas>
+                    </Viewbox>
+                </Border>
+            </Grid>
+            <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,24,0,0">
+                <TextBlock Text="{Binding VersionText}" Foreground="{DynamicResource ColorTextSecondary}"/>
+                <Button Grid.Column="1" Classes="vertigo-button neutral"
+                        Content="{Binding GlossaryText}" IsEnabled="False"
+                        AutomationProperties.HelpText="{Binding NotAvailableText}"/>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             x:Class="Vertigo.Client.UI.Views.ProfileView" x:DataType="vm:ProfileViewModel"
+             x:CompileBindings="True">
+    <UserControl.Styles>
+        <Style Selector="Button:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer Background="{DynamicResource ColorCanvas}">
+        <StackPanel Margin="32" MaxWidth="660" HorizontalAlignment="Center" Spacing="24">
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Left" Classes="vertigo-button neutral"
+                        Command="{Binding BackCommand}" TabIndex="0"
+                        AutomationProperties.Name="{Binding BackText}">
+                    <Path Width="22" Height="22" Stroke="{DynamicResource ColorCoal}"
+                          StrokeThickness="2" Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
+                </Button>
+                <TextBlock Text="{Binding HeadingText}" Margin="24,0,0,0" FontSize="32"
+                           FontWeight="Bold" VerticalAlignment="Center"/>
+            </DockPanel>
+            <Border Background="{DynamicResource ColorWhite}" BorderBrush="{DynamicResource ColorBorderStrong}"
+                    BorderThickness="{DynamicResource BorderThin}" CornerRadius="4" Padding="24">
+                <StackPanel Spacing="16">
+                    <Path Width="60" Height="60" Stroke="{DynamicResource ColorSnesBlue}"
+                          StrokeThickness="2" Data="M 30,7 C 20,7 18,15 18,21 C 18,29 23,34 30,34 C 37,34 42,29 42,21 C 42,15 40,7 30,7 Z M 8,55 C 9,40 19,36 30,36 C 41,36 51,40 52,55"/>
+                    <TextBlock Text="{Binding UsernameText}" Foreground="{DynamicResource ColorTextSecondary}"/>
+                    <TextBlock Text="{Binding Username}" FontSize="22" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding AccountText}" Foreground="{DynamicResource ColorTextSecondary}"/>
+                    <TextBlock Text="{Binding AccountType}" FontSize="18"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

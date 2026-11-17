@@ -20,7 +20,8 @@
                 </DataTemplate>
             </ContentControl.ContentTemplate>
         </ContentControl>
-        <TextBlock IsVisible="{Binding !IsAccessPage}"
+        <ContentControl Content="{Binding TemplatedContent}"/>
+        <TextBlock IsVisible="{Binding IsPlaceholderPage}"
                    Text="{Binding Greeting}"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>

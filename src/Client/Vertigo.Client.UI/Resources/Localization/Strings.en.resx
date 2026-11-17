@@ -172,4 +172,136 @@
   <data name="Access.Validation.ConfirmPassword.PasswordsDoNotMatch" xml:space="preserve">
     <value>Passwords do not match.</value>
   </data>
+  <data name="Home.BrandSubtitle" xml:space="preserve">
+      <value>Building to New Heights</value>
+  </data>
+  <data name="Home.Play" xml:space="preserve">
+      <value>PLAY</value>
+  </data>
+  <data name="Home.Social" xml:space="preserve">
+      <value>SOCIAL</value>
+  </data>
+  <data name="Home.Ranking" xml:space="preserve">
+      <value>LEADERBOARD</value>
+  </data>
+  <data name="Home.Settings" xml:space="preserve">
+      <value>SETTINGS</value>
+  </data>
+  <data name="Home.Profile" xml:space="preserve">
+      <value>Profile</value>
+  </data>
+  <data name="Home.GuestAccount" xml:space="preserve">
+      <value>Guest account</value>
+  </data>
+  <data name="Home.RegisteredAccount" xml:space="preserve">
+      <value>Registered account</value>
+  </data>
+  <data name="Home.Notifications" xml:space="preserve">
+      <value>Notifications</value>
+  </data>
+  <data name="Home.NotificationsHelp" xml:space="preserve">
+      <value>Check your requests and invitations in Social.</value>
+  </data>
+  <data name="Home.OpenSocialNotifications" xml:space="preserve">
+      <value>Open Social</value>
+  </data>
+  <data name="Home.Logout" xml:space="preserve">
+      <value>Log out</value>
+  </data>
+  <data name="Home.Create" xml:space="preserve">
+      <value>Create lobby</value>
+  </data>
+  <data name="Home.Join" xml:space="preserve">
+      <value>Join lobby</value>
+  </data>
+  <data name="Home.Code" xml:space="preserve">
+      <value>Lobby code</value>
+  </data>
+  <data name="Home.Public" xml:space="preserve">
+      <value>Public</value>
+  </data>
+  <data name="Home.MaxPlayers" xml:space="preserve">
+      <value>Max players</value>
+  </data>
+  <data name="Home.Close" xml:space="preserve">
+      <value>Close</value>
+  </data>
+  <data name="Home.Glossary" xml:space="preserve">
+      <value>Glossary and game rules</value>
+  </data>
+  <data name="Home.NotAvailable" xml:space="preserve">
+      <value>Available in a later phase</value>
+  </data>
+  <data name="Navigation.Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Settings.Title" xml:space="preserve">
+    <value>SETTINGS</value>
+  </data>
+  <data name="Settings.Language" xml:space="preserve">
+    <value>Interface language</value>
+  </data>
+  <data name="Settings.Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="Settings.English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Settings.Save" xml:space="preserve">
+    <value>Save preferences</value>
+  </data>
+  <data name="Settings.SaveFailed" xml:space="preserve">
+    <value>Could not save preferences on this device.</value>
+  </data>
+  <data name="Settings.LanguageInvalid" xml:space="preserve">
+    <value>Select a supported language.</value>
+  </data>
+  <data name="Profile.Title" xml:space="preserve">
+    <value>PROFILE</value>
+  </data>
+  <data name="Profile.Username" xml:space="preserve">
+    <value>Player name</value>
+  </data>
+  <data name="Profile.Account" xml:space="preserve">
+    <value>Account type</value>
+  </data>
+  <data name="SocialUi.Title" xml:space="preserve">
+    <value>SOCIAL</value>
+  </data>
+  <data name="SocialUi.Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="SocialUi.Friends" xml:space="preserve">
+    <value>Friends</value>
+  </data>
+  <data name="SocialUi.Requests" xml:space="preserve">
+    <value>Requests</value>
+  </data>
+  <data name="SocialUi.Invitations" xml:space="preserve">
+    <value>Invitations</value>
+  </data>
+  <data name="SocialUi.Blocked" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
+  <data name="SocialUi.Search" xml:space="preserve">
+    <value>Search players</value>
+  </data>
+  <data name="SocialUi.SearchResults" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="SocialUi.RemoveFriend" xml:space="preserve">
+    <value>Remove friend</value>
+  </data>
+  <data name="SocialUi.SendRequest" xml:space="preserve">
+    <value>Send request</value>
+  </data>
+  <data name="SocialUi.Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="SocialUi.Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="SocialUi.Unblock" xml:space="preserve">
+    <value>Unblock</value>
+  </data>
 </root>

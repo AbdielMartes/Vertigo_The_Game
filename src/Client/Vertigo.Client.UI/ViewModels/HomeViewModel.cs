@@ -27,6 +27,8 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     private bool _isPublic = true;
     private int _maxPlayers = 4;
     private bool _isBusy;
+    private bool _isPlayPanelOpen;
+    private bool _isNotificationsOpen;
 
     public HomeViewModel(HomeContext context, LobbyViewModel lobby)
     {
@@ -41,6 +43,10 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
         JoinLobbyCommand = new AsyncRelayCommand(JoinLobbyAsync);
         LogoutCommand = new AsyncRelayCommand(LogoutAsync);
         OpenSocialCommand = new RelayCommand(OpenSocial);
+        TogglePlayCommand = new RelayCommand(TogglePlay);
+        ToggleNotificationsCommand = new RelayCommand(ToggleNotifications);
+        OpenProfileCommand = new RelayCommand(OpenProfile);
+        OpenSettingsCommand = new RelayCommand(OpenSettings);
     }
 
     public string Username => _playerSession.GetActiveSession()?.Username ?? string.Empty;
@@ -80,23 +86,124 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     public IAsyncRelayCommand JoinLobbyCommand { get; }
     public IAsyncRelayCommand LogoutCommand { get; }
     public IRelayCommand OpenSocialCommand { get; }
+    public IRelayCommand TogglePlayCommand { get; }
+    public IRelayCommand ToggleNotificationsCommand { get; }
+    public IRelayCommand OpenProfileCommand { get; }
+    public IRelayCommand OpenSettingsCommand { get; }
+
+    public bool IsPlayPanelOpen
+    {
+        get => _isPlayPanelOpen;
+        private set => SetProperty(ref _isPlayPanelOpen, value);
+    }
+
+    public bool IsNotificationsOpen
+    {
+        get => _isNotificationsOpen;
+        private set => SetProperty(ref _isNotificationsOpen, value);
+    }
+
+    public string PlayerTag => string.IsNullOrEmpty(Username) ? string.Empty : "@" + Username;
+    public string AccountKindText => _text.Get(IsGuest ? "Home.GuestAccount" : "Home.RegisteredAccount");
+    public string BrandSubtitle => _text.Get("Home.BrandSubtitle");
+    public string PlayText => _text.Get("Home.Play");
+    public string SocialText => _text.Get("Home.Social");
+    public string RankingText => _text.Get("Home.Ranking");
+    public string SettingsText => _text.Get("Home.Settings");
+    public string ProfileText => _text.Get("Home.Profile");
+    public string NotificationsText => _text.Get("Home.Notifications");
+    public string NoNotificationsText => _text.Get("Home.NotificationsHelp");
+    public string OpenSocialNotificationsText => _text.Get("Home.OpenSocialNotifications");
+    public string GlossaryText => _text.Get("Home.Glossary");
+    public string LogoutText => _text.Get("Home.Logout");
+    public string CreateText => _text.Get("Home.Create");
+    public string JoinText => _text.Get("Home.Join");
+    public string CodeText => _text.Get("Home.Code");
+    public string PublicText => _text.Get("Home.Public");
+    public string MaxPlayersText => _text.Get("Home.MaxPlayers");
+    public string CloseText => _text.Get("Home.Close");
+    public string NotAvailableText => _text.Get("Home.NotAvailable");
+    public string VersionText => "v0.1.0";
+
 
     public void OnNavigatedTo()
     {
         ErrorMessage = string.Empty;
-        if (!_coordinator.HasActiveSession()) return;
-        RefreshIdentity();
+        IsNotificationsOpen = false;
+        IsPlayPanelOpen = false;
+        if (_coordinator.HasActiveSession())
+        {
+            RefreshIdentity();
+            NotifyLanguageChanged();
+        }
     }
 
     public void OnNavigatedFrom()
     {
         ErrorMessage = string.Empty;
+        IsNotificationsOpen = false;
+        IsPlayPanelOpen = false;
     }
 
     public void RefreshIdentity()
     {
         OnPropertyChanged(nameof(Username));
         OnPropertyChanged(nameof(IsGuest));
+        OnPropertyChanged(nameof(PlayerTag));
+        OnPropertyChanged(nameof(AccountKindText));
+    }
+
+    private void TogglePlay()
+    {
+        if (!IsBusy)
+        {
+            IsPlayPanelOpen = !IsPlayPanelOpen;
+            IsNotificationsOpen = false;
+        }
+    }
+
+    private void ToggleNotifications()
+    {
+        IsNotificationsOpen = !IsNotificationsOpen;
+    }
+
+    private void OpenProfile()
+    {
+        if (!IsBusy && _coordinator.HasActiveSession())
+        {
+            _navigation.NavigateTo(NavigationPage.Profile);
+        }
+    }
+
+    private void OpenSettings()
+    {
+        if (!IsBusy && _coordinator.HasActiveSession())
+        {
+            _navigation.NavigateTo(NavigationPage.Settings);
+        }
+    }
+
+    private void NotifyLanguageChanged()
+    {
+        OnPropertyChanged(nameof(AccountKindText));
+        OnPropertyChanged(nameof(BrandSubtitle));
+        OnPropertyChanged(nameof(PlayText));
+        OnPropertyChanged(nameof(SocialText));
+        OnPropertyChanged(nameof(RankingText));
+        OnPropertyChanged(nameof(SettingsText));
+        OnPropertyChanged(nameof(ProfileText));
+        OnPropertyChanged(nameof(NotificationsText));
+        OnPropertyChanged(nameof(NoNotificationsText));
+        OnPropertyChanged(nameof(OpenSocialNotificationsText));
+        OnPropertyChanged(nameof(LogoutText));
+        OnPropertyChanged(nameof(GlossaryText));
+        OnPropertyChanged(nameof(CreateText));
+        OnPropertyChanged(nameof(JoinText));
+        OnPropertyChanged(nameof(CodeText));
+        OnPropertyChanged(nameof(PublicText));
+        OnPropertyChanged(nameof(MaxPlayersText));
+        OnPropertyChanged(nameof(CloseText));
+        OnPropertyChanged(nameof(NotAvailableText));
     }
 
     private async Task CreateLobbyAsync()

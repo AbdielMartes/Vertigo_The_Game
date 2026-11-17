@@ -1,3 +1,6 @@
+using Vertigo.Client.UI.Utilities.Settings.Interfaces;
+using Vertigo.Client.UI.Utilities.Settings.Models;
+using Vertigo.Client.UI.Utilities.Settings.Services;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -17,6 +20,7 @@ namespace Vertigo.Client.UI.ViewModels;
 
 public sealed class AccessViewModel : ObservableObject, INavigationAware
 {
+    private readonly IUserSettingsStore _preferences;
     private readonly ISessionCoordinator _sessions;
     private readonly IAccountClient _accounts;
     private readonly INavigator _navigation;
@@ -37,10 +41,11 @@ public sealed class AccessViewModel : ObservableObject, INavigationAware
     private string _registerPasswordError = string.Empty;
     private string _confirmPasswordError = string.Empty;
 
-    public AccessViewModel(AccessContext context, IAccountClient accounts)
+    public AccessViewModel(AccessContext context, IAccountClient accounts, IUserSettingsStore preferences)
     {
         _sessions = context.Sessions;
         _accounts = accounts;
+        _preferences = preferences;
         _navigation = context.Ui.Navigation;
         _errors = context.Ui.Services.Errors;
         _text = context.Ui.Services.Text;
@@ -172,9 +177,13 @@ public sealed class AccessViewModel : ObservableObject, INavigationAware
         if (!IsBusy)
         {
             string targetLanguage = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "es" ? "en" : "es";
-            CultureInfo target = CultureInfo.GetCultureInfo(targetLanguage);
-            CultureInfo.CurrentUICulture = target;
-            CultureInfo.DefaultThreadCurrentUICulture = target;
+            if (!_preferences.TrySave(new UserSettings { Language = targetLanguage }))
+            {
+                ErrorMessage = _text.Get("Settings.SaveFailed");
+                return;
+            }
+
+            UiLanguage.Apply(targetLanguage);
             ErrorMessage = string.Empty;
             RegistrationMessage = string.Empty;
             ClearRegistrationErrors();
@@ -401,6 +410,7 @@ public sealed class AccessViewModel : ObservableObject, INavigationAware
         ClearRegistrationErrors();
         RegistrationMessage = string.Empty;
         IsRegistering = false;
+        NotifyLocalizationChanged();
     }
 
     public void OnNavigatedFrom()

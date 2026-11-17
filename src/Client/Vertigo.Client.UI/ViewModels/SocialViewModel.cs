@@ -19,6 +19,12 @@ namespace Vertigo.Client.UI.ViewModels;
 
 public sealed class SocialViewModel : ObservableObject, INavigationAware, IDisposable
 {
+    private readonly ITextLocalizer _text;
+    private FriendEntry? _selectedFriend;
+    private PlayerSearchEntry? _selectedSearch;
+    private FriendshipInvitationEntry? _selectedRequest;
+    private LobbyInvitationEntry? _selectedInvitation;
+    private BlockedPlayerSummary? _selectedBlocked;
     private readonly IFriendshipNotificationClient _notifications;
     private readonly PlayerSession _session;
     private readonly INavigator _navigation;
@@ -38,6 +44,7 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
         Friends = friends;
         Blocked = blocked;
         Invitations = context.Invitations;
+        _text = context.NavigationContext.Services.Text;
         _notifications = context.Notifications;
         _session = context.NavigationContext.Session;
         _navigation = context.NavigationContext.Navigation;
@@ -51,6 +58,101 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
         _notifications.LobbyInvitationWithdrawn += OnInvitationWithdrawn;
     }
 
+    public string HeadingText => _text.Get("SocialUi.Title");
+    public string BackText => _text.Get("Navigation.Back");
+    public string RefreshText => _text.Get("SocialUi.Refresh");
+    public string FriendsTabText => _text.Get("SocialUi.Friends");
+    public string RequestsTabText => _text.Get("SocialUi.Requests");
+    public string InvitationsTabText => _text.Get("SocialUi.Invitations");
+    public string BlockedTabText => _text.Get("SocialUi.Blocked");
+    public string SearchText => _text.Get("SocialUi.Search");
+    public string SearchResultsText => _text.Get("SocialUi.SearchResults");
+    public string RemoveFriendText => _text.Get("SocialUi.RemoveFriend");
+    public string SendRequestText => _text.Get("SocialUi.SendRequest");
+    public string AcceptText => _text.Get("SocialUi.Accept");
+    public string RejectText => _text.Get("SocialUi.Reject");
+    public string UnblockText => _text.Get("SocialUi.Unblock");
+
+    public FriendEntry? SelectedFriend
+    {
+        get => _selectedFriend;
+        set
+        {
+            if (SetProperty(ref _selectedFriend, value))
+            {
+                Friends.SelectedPlayerId = value?.PlayerId ?? Guid.Empty;
+            }
+        }
+    }
+
+    public PlayerSearchEntry? SelectedSearch
+    {
+        get => _selectedSearch;
+        set
+        {
+            if (SetProperty(ref _selectedSearch, value))
+            {
+                Friends.SelectedSearchPlayerId = value?.PlayerId ?? Guid.Empty;
+            }
+        }
+    }
+
+    public FriendshipInvitationEntry? SelectedRequest
+    {
+        get => _selectedRequest;
+        set
+        {
+            if (SetProperty(ref _selectedRequest, value))
+            {
+                Friends.PendingSenderId = value?.SenderId ?? Guid.Empty;
+            }
+        }
+    }
+
+    public LobbyInvitationEntry? SelectedInvitation
+    {
+        get => _selectedInvitation;
+        set
+        {
+            if (SetProperty(ref _selectedInvitation, value))
+            {
+                string code = value?.LobbyCode ?? string.Empty;
+                Invitations.AcceptedCode = code;
+                Invitations.DeclinedCode = code;
+            }
+        }
+    }
+
+    public BlockedPlayerSummary? SelectedBlocked
+    {
+        get => _selectedBlocked;
+        set
+        {
+            if (SetProperty(ref _selectedBlocked, value))
+            {
+                Blocked.SelectedPlayerId = value?.PlayerId ?? Guid.Empty;
+            }
+        }
+    }
+
+    private void RefreshViewText()
+    {
+        OnPropertyChanged(nameof(HeadingText));
+        OnPropertyChanged(nameof(BackText));
+        OnPropertyChanged(nameof(RefreshText));
+        OnPropertyChanged(nameof(FriendsTabText));
+        OnPropertyChanged(nameof(RequestsTabText));
+        OnPropertyChanged(nameof(InvitationsTabText));
+        OnPropertyChanged(nameof(BlockedTabText));
+        OnPropertyChanged(nameof(SearchText));
+        OnPropertyChanged(nameof(SearchResultsText));
+        OnPropertyChanged(nameof(RemoveFriendText));
+        OnPropertyChanged(nameof(SendRequestText));
+        OnPropertyChanged(nameof(AcceptText));
+        OnPropertyChanged(nameof(RejectText));
+        OnPropertyChanged(nameof(UnblockText));
+    }
+
     public FriendsViewModel Friends { get; }
     public BlockedPlayersViewModel Blocked { get; }
     public LobbyInvitationsViewModel Invitations { get; }
@@ -60,12 +162,18 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
 
     public void OnNavigatedTo()
     {
+        RefreshViewText();
         _active = true;
         _ = RefreshAsync(); // Every exception is handled inside RefreshAsync.
     }
 
     public void OnNavigatedFrom()
     {
+        SelectedFriend = null;
+        SelectedSearch = null;
+        SelectedRequest = null;
+        SelectedInvitation = null;
+        SelectedBlocked = null;
         _active = false;
         _generation++;
         _isRefreshing = false;

@@ -5,5 +5,7 @@ public enum NavigationPage
     Access,
     Home,
     Lobby,
-    Social
+    Social,
+    Settings,
+    Profile
 }

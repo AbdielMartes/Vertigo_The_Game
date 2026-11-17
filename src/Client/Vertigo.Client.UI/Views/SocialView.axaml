@@ -1,0 +1,129 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:models="using:Vertigo.Contracts.Models"
+             x:Class="Vertigo.Client.UI.Views.SocialView"
+             x:DataType="vm:SocialViewModel" x:CompileBindings="True">
+    <UserControl.Styles>
+        <Style Selector="Button:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer Background="{DynamicResource ColorCanvas}" HorizontalScrollBarVisibility="Auto">
+        <StackPanel MinWidth="760" Margin="28" Spacing="20">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="18">
+                <Button Grid.Column="0" Classes="vertigo-button neutral" Command="{Binding BackCommand}"
+                        AutomationProperties.Name="{Binding BackText}" TabIndex="0">
+                    <Path Width="22" Height="22" Stroke="{DynamicResource ColorCoal}" StrokeThickness="2"
+                          Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
+                </Button>
+                <TextBlock Grid.Column="1" Text="{Binding HeadingText}" FontSize="34"
+                           FontFamily="{DynamicResource FontTitleDisplay}" FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="2" Classes="vertigo-button neutral" TabIndex="1"
+                        Command="{Binding RefreshCommand}" Content="{Binding RefreshText}"/>
+            </Grid>
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ColorError}"
+                       TextWrapping="Wrap"/>
+            <TabControl SelectedIndex="0" TabIndex="2">
+                <TabItem Header="{Binding FriendsTabText}">
+                    <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14" Margin="16">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBox Classes="vertigo-input" Width="260" MaxLength="20" TabIndex="3"
+                                     PlaceholderText="{Binding SearchText}" Text="{Binding Friends.SearchTerm, Mode=TwoWay}"
+                                     AutomationProperties.Name="{Binding SearchText}"/>
+                            <Button Classes="vertigo-button secondary" TabIndex="4"
+                                    Content="{Binding SearchText}" Command="{Binding Friends.SearchCommand}"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="1" Text="{Binding Friends.ErrorMessage}"
+                                   Foreground="{DynamicResource ColorError}" TextWrapping="Wrap"/>
+                        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="18">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="{Binding FriendsTabText}" FontWeight="Bold"/>
+                                <ListBox ItemsSource="{Binding Friends.Friends}"
+                                         SelectedItem="{Binding SelectedFriend, Mode=TwoWay}" TabIndex="5"
+                                         MinHeight="180" MaxHeight="320">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:FriendEntry">
+                                            <TextBlock Text="{Binding Username}" Margin="8"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <Button Classes="vertigo-button neutral" Command="{Binding Friends.RemoveCommand}"
+                                        Content="{Binding RemoveFriendText}" TabIndex="6"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="8">
+                                <TextBlock Text="{Binding SearchResultsText}" FontWeight="Bold"/>
+                                <ListBox ItemsSource="{Binding Friends.SearchResults}"
+                                         SelectedItem="{Binding SelectedSearch, Mode=TwoWay}" TabIndex="7"
+                                         MinHeight="180" MaxHeight="320">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:PlayerSearchEntry">
+                                            <TextBlock Text="{Binding Username}" Margin="8"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <Button Classes="vertigo-button primary" TabIndex="8"
+                                        Content="{Binding SendRequestText}" Command="{Binding Friends.SendRequestCommand}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="{Binding RequestsTabText}">
+                    <StackPanel Margin="16" Spacing="12">
+                        <ListBox ItemsSource="{Binding Friends.PendingRequests}" TabIndex="9"
+                                 SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" MinHeight="200">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:FriendshipInvitationEntry">
+                                    <TextBlock Text="{Binding SenderUsername}" Margin="8"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBlock Text="{Binding Friends.ErrorMessage}" Foreground="{DynamicResource ColorError}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Button Classes="vertigo-button primary" Content="{Binding AcceptText}" TabIndex="10"
+                                    Command="{Binding Friends.AcceptCommand}"/>
+                            <Button Classes="vertigo-button neutral" Content="{Binding RejectText}" TabIndex="11"
+                                    Command="{Binding Friends.RejectCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="{Binding InvitationsTabText}">
+                    <StackPanel Margin="16" Spacing="12">
+                        <ListBox ItemsSource="{Binding Invitations.PendingInvitations}" TabIndex="12"
+                                 SelectedItem="{Binding SelectedInvitation, Mode=TwoWay}" MinHeight="200">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:LobbyInvitationEntry">
+                                    <TextBlock Text="{Binding LobbyCode}" Margin="8"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBlock Text="{Binding Invitations.ErrorMessage}" Foreground="{DynamicResource ColorError}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Button Classes="vertigo-button primary" Content="{Binding AcceptText}" TabIndex="13"
+                                    Command="{Binding Invitations.AcceptCommand}"/>
+                            <Button Classes="vertigo-button neutral" Content="{Binding RejectText}" TabIndex="14"
+                                    Command="{Binding Invitations.DeclineCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="{Binding BlockedTabText}">
+                    <StackPanel Margin="16" Spacing="12">
+                        <ListBox ItemsSource="{Binding Blocked.BlockedPlayers}" TabIndex="15"
+                                 SelectedItem="{Binding SelectedBlocked, Mode=TwoWay}" MinHeight="200">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:BlockedPlayerSummary">
+                                    <TextBlock Text="{Binding Username}" Margin="8"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <TextBlock Text="{Binding Blocked.ErrorMessage}" Foreground="{DynamicResource ColorError}"/>
+                        <Button Classes="vertigo-button neutral" Content="{Binding UnblockText}"
+                                TabIndex="16" Command="{Binding Blocked.UnblockCommand}"/>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -24,6 +24,8 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         Home = context.Home;
         Lobby = context.Lobby;
         Social = context.SocialContext.Social;
+        Settings = context.Settings;
+        Profile = context.Profile;
         _home = context.Home;
         _previousPage = _navigation.CurrentPage;
         _navigation.PageChanged += OnPageChanged;
@@ -35,17 +37,25 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     public HomeViewModel Home { get; }
     public LobbyViewModel Lobby { get; }
     public SocialViewModel Social { get; }
+    public SettingsViewModel Settings { get; }
+    public ProfileViewModel Profile { get; }
 
     public NavigationPage CurrentPage => _navigation.CurrentPage;
     public bool IsAccessPage => CurrentPage == NavigationPage.Access;
 
     public AccessViewModel? AccessContent => IsAccessPage ? Access : null;
 
+    public object? TemplatedContent => IsAccessPage || IsPlaceholderPage ? null : CurrentViewModel;
+
+    public bool IsPlaceholderPage => CurrentPage == NavigationPage.Lobby;
+
     public object CurrentViewModel => CurrentPage switch
     {
         NavigationPage.Home => Home,
         NavigationPage.Lobby => Lobby,
         NavigationPage.Social => Social,
+        NavigationPage.Settings => Settings,
+        NavigationPage.Profile => Profile,
         _ => Access
     };
 
@@ -77,6 +87,8 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(CurrentPage));
         OnPropertyChanged(nameof(IsAccessPage));
         OnPropertyChanged(nameof(AccessContent));
+        OnPropertyChanged(nameof(TemplatedContent));
+        OnPropertyChanged(nameof(IsPlaceholderPage));
         OnPropertyChanged(nameof(CurrentViewModel));
         OnPropertyChanged(nameof(Greeting));
     }
@@ -88,7 +100,9 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             NavigationPage.Access => Access,
             NavigationPage.Home => Home,
             NavigationPage.Lobby => Lobby,
-        NavigationPage.Social => Social,
+            NavigationPage.Social => Social,
+            NavigationPage.Settings => Settings,
+            NavigationPage.Profile => Profile,
             _ => null
         };
     }

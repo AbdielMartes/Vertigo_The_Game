@@ -18,6 +18,7 @@ public sealed class FriendsViewModel : SocialViewModelBase
     private readonly IFriendshipClient _client;
     private string _searchTerm = string.Empty;
     private Guid _selectedPlayerId;
+    private Guid _selectedSearchPlayerId;
     private Guid _pendingSenderId;
 
     public FriendsViewModel(IFriendshipClient client, SocialOperation operation, ITextLocalizer text)
@@ -36,6 +37,12 @@ public sealed class FriendsViewModel : SocialViewModelBase
     public ObservableCollection<PlayerSearchEntry> SearchResults { get; } = new();
     public ObservableCollection<FriendshipInvitationEntry> PendingRequests { get; } = new();
     public string SearchTerm { get => _searchTerm; set => SetProperty(ref _searchTerm, value); }
+    public Guid SelectedSearchPlayerId
+    {
+        get => _selectedSearchPlayerId;
+        set => SetProperty(ref _selectedSearchPlayerId, value);
+    }
+
     public Guid SelectedPlayerId { get => _selectedPlayerId; set => SetProperty(ref _selectedPlayerId, value); }
     public Guid PendingSenderId { get => _pendingSenderId; set => SetProperty(ref _pendingSenderId, value); }
     public IAsyncRelayCommand RefreshCommand { get; }
@@ -110,17 +117,18 @@ public sealed class FriendsViewModel : SocialViewModelBase
 
     private async Task SendRequestAsync()
     {
-        if (IsBusy || SelectedPlayerId == Guid.Empty) return;
+        if (IsBusy || SelectedSearchPlayerId == Guid.Empty) return;
         SessionSnapshot? session = Operation.GetRegisteredSession();
         if (session is null)
         {
             return;
         }
         string token = session.Token;
+        Guid targetPlayerId = SelectedSearchPlayerId;
         IsBusy = true;
         try
         {
-            ClientResult<PlayerRelation> result = await Task.Run(() => _client.SendFriendRequest(SelectedPlayerId, token));
+            ClientResult<PlayerRelation> result = await Task.Run(() => _client.SendFriendRequest(targetPlayerId, token));
             if (!Operation.Check(result, session)) return;
             ErrorMessage = result.IsSuccess ? string.Empty : Operation.Error(result, "Social.RequestFailed");
         }
@@ -197,7 +205,9 @@ public sealed class FriendsViewModel : SocialViewModelBase
     public void Reset()
     {
         Friends.Clear(); SearchResults.Clear(); PendingRequests.Clear();
-        SelectedPlayerId = Guid.Empty; PendingSenderId = Guid.Empty;
+        SelectedPlayerId = Guid.Empty;
+        SelectedSearchPlayerId = Guid.Empty;
+        PendingSenderId = Guid.Empty;
         SearchTerm = string.Empty; ClearError();
     }
 }

@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             x:Class="Vertigo.Client.UI.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel"
+             x:CompileBindings="True">
+    <UserControl.Styles>
+        <Style Selector="Button:focus-visible">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer Background="{DynamicResource ColorCanvas}">
+        <StackPanel Margin="32" Spacing="24" MaxWidth="660" HorizontalAlignment="Center">
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Left" Classes="vertigo-button neutral"
+                        Command="{Binding BackCommand}" TabIndex="0"
+                        AutomationProperties.Name="{Binding BackText}">
+                    <Path Width="22" Height="22" Stroke="{DynamicResource ColorCoal}"
+                          StrokeThickness="2" Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
+                </Button>
+                <TextBlock Text="{Binding HeadingText}" Margin="24,0,0,0" FontSize="32"
+                           FontWeight="Bold" VerticalAlignment="Center"/>
+            </DockPanel>
+            <Border Background="{DynamicResource ColorWhite}" BorderBrush="{DynamicResource ColorBorderStrong}"
+                    BorderThickness="{DynamicResource BorderThin}" CornerRadius="4" Padding="24">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="{Binding LanguageText}" FontSize="18" FontWeight="SemiBold"/>
+                    <ComboBox SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}" TabIndex="1"
+                              AutomationProperties.Name="{Binding LanguageText}">
+                        <ComboBoxItem Content="{Binding SpanishText}"/>
+                        <ComboBoxItem Content="{Binding EnglishText}"/>
+                    </ComboBox>
+                    <Button Classes="vertigo-button primary" Command="{Binding SaveCommand}"
+                            Content="{Binding SaveText}" TabIndex="2"/>
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ColorError}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

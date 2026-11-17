@@ -1,4 +1,5 @@
-using System.Globalization;
+using Vertigo.Client.UI.Utilities.Settings.Interfaces;
+using Vertigo.Client.UI.Utilities.Settings.Services;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -22,9 +23,6 @@ public partial class App : Application
 
     public override void Initialize()
     {
-        CultureInfo spanish = CultureInfo.GetCultureInfo("es");
-        CultureInfo.DefaultThreadCurrentUICulture = spanish;
-        CultureInfo.CurrentUICulture = spanish;
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -42,6 +40,10 @@ public partial class App : Application
             registrations.AddTransient<AccessContext>();
             registrations.AddTransient<LobbyContext>();
             registrations.AddTransient<HomeContext>();
+            registrations.AddSingleton<IUserSettingsStore, JsonUserSettingsStore>();
+            registrations.AddSingleton<SettingsViewModel>();
+            registrations.AddSingleton<ProfileViewModel>();
+            registrations.AddTransient<MainScreensContext>();
             registrations.AddTransient<MainContext>();
             registrations.AddSingleton<AccessViewModel>();
             registrations.AddSingleton<HomeViewModel>();
@@ -57,6 +59,7 @@ public partial class App : Application
             registrations.AddSingleton<SocialViewModel>();
             registrations.AddSingleton<MainViewModel>();
             _services = registrations.BuildServiceProvider();
+            UiLanguage.Apply(_services.GetRequiredService<IUserSettingsStore>().Load().Language);
             desktop.MainWindow = new MainWindow
             {
                 DataContext = _services.GetRequiredService<MainViewModel>()
