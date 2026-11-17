@@ -22,6 +22,7 @@ public sealed class LobbyClient : ILobbyClient
     private EventHandler<Guid>? _playerLeft;
     private EventHandler<LobbyChatMessage>? _messageReceived;
     private EventHandler<LobbyPreparation>? _preparationChanged;
+    private EventHandler<MatchBoardChanged>? _matchBoardUpdated;
     private ILobbyService? _channel;
     private bool _isDisposed;
 
@@ -97,6 +98,24 @@ public sealed class LobbyClient : ILobbyClient
             lock (_eventLock)
             {
                 _preparationChanged -= value;
+            }
+        }
+    }
+
+    public event EventHandler<MatchBoardChanged>? MatchBoardUpdated
+    {
+        add
+        {
+            lock (_eventLock)
+            {
+                _matchBoardUpdated += value;
+            }
+        }
+        remove
+        {
+            lock (_eventLock)
+            {
+                _matchBoardUpdated -= value;
             }
         }
     }
@@ -365,6 +384,13 @@ public sealed class LobbyClient : ILobbyClient
                     OnChatReceived(sender, message);
                 }
             };
+            handler.MatchBoardUpdated += (sender, change) =>
+            {
+                if (ReferenceEquals(_callbackHandler, handler))
+                {
+                    OnMatchBoardUpdated(change);
+                }
+            };
             NetTcpBinding binding = new(SecurityMode.None)
             {
                 OpenTimeout = OperationTimeout,
@@ -467,6 +493,14 @@ public sealed class LobbyClient : ILobbyClient
             {
                 _preparationChanged.Invoke(this, preparation);
             }
+        }
+    }
+
+    private void OnMatchBoardUpdated(MatchBoardChanged change)
+    {
+        lock (_eventLock)
+        {
+            _matchBoardUpdated?.Invoke(this, change);
         }
     }
 

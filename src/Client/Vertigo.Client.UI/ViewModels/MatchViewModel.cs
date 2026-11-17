@@ -36,6 +36,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private MatchPileRow? _selectedPile;
     private long _currentBoardRevision;
     private bool _isPlacingCard;
+    private bool _pendingBoardRefresh;
+    private long _notifiedRevision;
+    private string _lastMoveLabel = string.Empty;
     private Guid _matchId;
     private string _lobbyCode = string.Empty;
 
@@ -67,6 +70,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     {
         get => _isLoadingBoard;
         private set => SetProperty(ref _isLoadingBoard, value);
+    }
+
+    public string LastMoveLabel
+    {
+        get => _lastMoveLabel;
+        private set => SetProperty(ref _lastMoveLabel, value);
     }
 
     public Guid MatchId => _matchId;
@@ -105,6 +114,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         SelectedCard = null;
         SelectedPile = null;
         _currentBoardRevision = 0;
+        _pendingBoardRefresh = false;
+        _notifiedRevision = 0;
+        LastMoveLabel = string.Empty;
         RoundLabel = "—";
         CurrentTurnLabel = "—";
         ErrorMessage = string.Empty;
@@ -116,14 +128,49 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     public void OnNavigatedTo()
     {
+        if (_lobbies is not null)
+        {
+            _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
+            _lobbies.MatchBoardUpdated += OnMatchBoardUpdated;
+        }
         RefreshLocalization();
         _ = RefreshBoardAsync();
     }
 
     public void OnNavigatedFrom()
     {
+        if (_lobbies is not null)
+        {
+            _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
+        }
         _generation++;
+        _pendingBoardRefresh = false;
         IsExitConfirmationOpen = false;
+    }
+
+    private void OnMatchBoardUpdated(object? sender, MatchBoardChanged change)
+    {
+        // The duplex callback must return immediately: never call NetTCP from this thread.
+        int generation = _generation;
+        SessionSnapshot? session = _session?.GetActiveSession();
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (session is not null && IsCurrent(session, change.MatchId, generation)
+                && MatchBoardNotificationRules.ShouldRefresh(
+                    change, _lobbyCode, _matchId, Math.Max(_currentBoardRevision, _notifiedRevision)))
+            {
+                _notifiedRevision = Math.Max(_notifiedRevision, change.Revision);
+                LastMoveLabel = $"{change.PlayerUsername}: {change.CardNumber} → {change.PilePosition}";
+                if (IsLoadingBoard)
+                {
+                    _pendingBoardRefresh = true;
+                }
+                else
+                {
+                    _ = RefreshBoardAsync();
+                }
+            }
+        });
     }
 
     public async Task RefreshBoardAsync()
@@ -190,6 +237,15 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     if (generation == _generation)
                     {
                         IsLoadingBoard = false;
+                        bool needsRefresh = _pendingBoardRefresh && _notifiedRevision > _currentBoardRevision;
+                        _pendingBoardRefresh = false;
+                        if (needsRefresh)
+                        {
+                            if (IsCurrent(original, matchId, generation))
+                            {
+                                _ = RefreshBoardAsync();
+                            }
+                        }
                     }
                 });
             }
@@ -285,7 +341,11 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             {
                 if (IsCurrent(original, matchId, generation))
                 {
-                    ApplyBoard(board);
+                    if (ApplyBoard(board) && board.Revision >= _notifiedRevision)
+                    {
+                        _notifiedRevision = board.Revision;
+                        LastMoveLabel = $"{original.Username}: {cardNumber} → {pilePosition}";
+                    }
                 }
             });
             // Read the hand only after the accepted move, never optimistically remove cards.

@@ -171,5 +171,6 @@ public sealed class LobbyStateTests
         public void PlayerLeft(Guid playerId) { }
         public void MessageReceived(LobbyChatMessage message) { }
         public void PreparationChanged(LobbyPreparation preparation) { }
+        public void MatchBoardUpdated(MatchBoardChanged change) { }
     }
 }

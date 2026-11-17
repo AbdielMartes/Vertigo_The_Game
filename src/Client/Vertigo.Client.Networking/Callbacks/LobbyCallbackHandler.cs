@@ -18,6 +18,8 @@ public sealed class LobbyCallbackHandler : ILobbyCallback
 
     public event EventHandler<LobbyPreparation>? PreparationChanged;
 
+    public event EventHandler<MatchBoardChanged>? MatchBoardUpdated;
+
     void ILobbyCallback.PlayerJoined(LobbyMember player)
     {
         PlayerJoined?.Invoke(this, player);
@@ -31,6 +33,11 @@ public sealed class LobbyCallbackHandler : ILobbyCallback
     void ILobbyCallback.PreparationChanged(LobbyPreparation preparation)
     {
         PreparationChanged?.Invoke(this, preparation);
+    }
+
+    void ILobbyCallback.MatchBoardUpdated(MatchBoardChanged change)
+    {
+        MatchBoardUpdated?.Invoke(this, change);
     }
 
     void ILobbyCallback.MessageReceived(LobbyChatMessage message)

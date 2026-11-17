@@ -12,6 +12,8 @@ public interface ILobbyClient : IDisposable
 
     event EventHandler<LobbyPreparation>? PreparationChanged;
 
+    event EventHandler<MatchBoardChanged>? MatchBoardUpdated;
+
     string CreateLobby(bool isPublic, int maxPlayers, string sessionToken);
 
     LobbyAdmission JoinLobby(string lobbyCode, string sessionToken);

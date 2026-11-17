@@ -19,4 +19,7 @@ public interface ILobbyCallback
 
     [OperationContract(IsOneWay = true)]
     void PreparationChanged(LobbyPreparation preparation);
+
+    [OperationContract(IsOneWay = true)]
+    void MatchBoardUpdated(MatchBoardChanged change);
 }

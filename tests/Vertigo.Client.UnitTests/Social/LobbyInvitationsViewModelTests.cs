@@ -144,6 +144,7 @@ public sealed class LobbyInvitationsViewModelTests
         public event EventHandler<Guid>? PlayerLeft;
         public event EventHandler<LobbyChatMessage>? MessageReceived;
         public event EventHandler<LobbyPreparation>? PreparationChanged;
+        public event EventHandler<MatchBoardChanged>? MatchBoardUpdated { add { } remove { } }
 
         public string CreateLobby(bool isPublic, int maxPlayers, string sessionToken)
         {

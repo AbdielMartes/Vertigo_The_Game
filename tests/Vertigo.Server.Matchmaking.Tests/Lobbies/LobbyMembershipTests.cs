@@ -54,6 +54,7 @@ public sealed class LobbyMembershipTests
         public void PlayerJoined(LobbyMember player) { }
         public void PlayerLeft(Guid playerId) { }
         public void PreparationChanged(LobbyPreparation preparation) { }
+        public void MatchBoardUpdated(MatchBoardChanged change) { }
         public void MessageReceived(LobbyChatMessage message) { }
     }
 }

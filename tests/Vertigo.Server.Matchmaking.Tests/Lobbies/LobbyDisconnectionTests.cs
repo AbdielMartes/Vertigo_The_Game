@@ -114,5 +114,6 @@ public sealed class LobbyDisconnectionTests
         public void PlayerLeft(Guid playerId) { }
         public void MessageReceived(LobbyChatMessage message) { }
         public void PreparationChanged(LobbyPreparation preparation) { }
+        public void MatchBoardUpdated(MatchBoardChanged change) { }
     }
 }

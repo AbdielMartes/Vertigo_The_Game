@@ -241,6 +241,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     {
         ArgumentNullException.ThrowIfNull(request);
         SessionIdentity identity = ResolveIdentity(request.SessionToken);
+        MatchBoardSnapshot board;
+        List<ILobbyCallback> callbacks;
         lock (_lobbyLock)
         {
             LobbyState lobby = RequireLobbyMember(request.LobbyCode, identity.PlayerId);
@@ -256,7 +258,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 throw CreateFault(PlacementError(result), PlacementMessage(result));
             }
 
-            MatchBoardSnapshot board = _gameOperations.GetBoard(lobby.MatchId)
+            board = _gameOperations.GetBoard(lobby.MatchId)
                 ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
             Dictionary<Guid, string> names = lobby.GetMembersExcept(Guid.Empty)
                 .ToDictionary(member => member.PlayerId, member => member.Username);
@@ -268,8 +270,20 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 }
             }
 
-            return board;
+            callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
+
+        MatchBoardChanged changed = new()
+        {
+            LobbyCode = request.LobbyCode,
+            MatchId = board.MatchId,
+            Revision = board.Revision,
+            PlayerUsername = identity.Username,
+            CardNumber = request.CardNumber,
+            PilePosition = request.PilePosition
+        };
+        Notify(callbacks, SendMatchBoardUpdated, changed);
+        return board;
     }
 
     private static string PlacementError(MatchPlacementResult result)
@@ -501,6 +515,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     private static void SendPreparationChanged(ILobbyCallback callback, LobbyPreparation preparation)
     {
         callback.PreparationChanged(preparation);
+    }
+
+    private static void SendMatchBoardUpdated(ILobbyCallback callback, MatchBoardChanged change)
+    {
+        callback.MatchBoardUpdated(change);
     }
 
     private static void SendChatMessage(ILobbyCallback callback, LobbyChatMessage message)
