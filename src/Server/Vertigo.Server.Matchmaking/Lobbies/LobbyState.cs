@@ -14,6 +14,7 @@ public sealed class LobbyState
     private readonly List<LobbyConnection> _connections = new();
     private readonly Dictionary<Guid, Guid> _invitations = new();
     private readonly HashSet<Guid> _readyPlayerIds = new();
+    private readonly HashSet<Guid> _disconnectedPlayerIds = new();
     private long _revision;
     private Guid _matchId;
 
@@ -62,6 +63,7 @@ public sealed class LobbyState
         if (index >= 0)
         {
             _connections[index] = connection;
+            _disconnectedPlayerIds.Remove(connection.Member.PlayerId);
             _revision++;
         }
         else
@@ -78,6 +80,7 @@ public sealed class LobbyState
         if (removedCount > 0)
         {
             _readyPlayerIds.Remove(playerId);
+            _disconnectedPlayerIds.Remove(playerId);
             _revision++;
         }
 
@@ -88,6 +91,24 @@ public sealed class LobbyState
         }
 
         return removedCount > 0;
+    }
+
+    // In-game transport loss does not remove a player or transfer the host role.
+    // A delayed Closed event from the old channel cannot disconnect a new channel.
+    public List<Guid> DisconnectSession(string sessionId)
+    {
+        List<Guid> changed = new();
+        foreach (LobbyConnection connection in _connections)
+        {
+            if (connection.SessionId == sessionId
+                && _disconnectedPlayerIds.Add(connection.Member.PlayerId))
+            {
+                changed.Add(connection.Member.PlayerId);
+                _revision++;
+            }
+        }
+
+        return changed;
     }
 
     public List<Guid> RemoveSession(string sessionId)
@@ -178,6 +199,9 @@ public sealed class LobbyState
             Revision = _revision,
             HostPlayerId = HostPlayerId,
             IsInGame = Status == LobbyStatus.InGame,
+            IsSuspended = Status == LobbyStatus.InGame && _connections.Count > 0
+                && _disconnectedPlayerIds.Count == _connections.Count,
+            DisconnectedPlayerIds = _disconnectedPlayerIds.OrderBy(id => id).ToList(),
             MatchId = _matchId,
             ReadyPlayerIds = _readyPlayerIds.ToList()
         };
@@ -213,7 +237,8 @@ public sealed class LobbyState
     public List<ILobbyCallback> GetCallbacksExcept(Guid playerId)
     {
         List<ILobbyCallback> callbacks = _connections
-            .Where(connection => connection.Member.PlayerId != playerId)
+            .Where(connection => connection.Member.PlayerId != playerId
+                && !_disconnectedPlayerIds.Contains(connection.Member.PlayerId))
             .Select(connection => connection.Callback)
             .ToList();
 

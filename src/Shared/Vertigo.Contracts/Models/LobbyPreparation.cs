@@ -22,4 +22,10 @@ public sealed class LobbyPreparation
 
     [DataMember]
     public List<Guid> ReadyPlayerIds { get; set; } = new();
+
+    [DataMember]
+    public List<Guid> DisconnectedPlayerIds { get; set; } = new();
+
+    [DataMember]
+    public bool IsSuspended { get; set; }
 }

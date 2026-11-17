@@ -26,15 +26,15 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     private readonly TimeProvider _timeProvider;
     private readonly IFriendshipNotifier _notifier;
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly LobbyMatchActivation _matchActivation;
+    private readonly LobbyGameOperations _gameOperations;
 
     public LobbyService(TimeProvider timeProvider, IFriendshipNotifier notifier, IServiceScopeFactory scopeFactory,
-        LobbyMatchActivation matchActivation)
+        LobbyGameOperations gameOperations)
     {
         _timeProvider = timeProvider;
         _notifier = notifier;
         _scopeFactory = scopeFactory;
-        _matchActivation = matchActivation;
+        _gameOperations = gameOperations;
     }
 
     public string CreateLobby(bool isPublic, int maxPlayers, string sessionToken)
@@ -85,13 +85,20 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
             }
 
-            if (lobby.Status != LobbyStatus.Waiting)
+            if (lobby.Status != LobbyStatus.Waiting && !lobby.Contains(player.PlayerId))
             {
                 throw CreateFault(ServiceErrorCodes.LobbyAlreadyStarted, ServiceMessageKeys.LobbyAlreadyStarted);
             }
 
             if (lobby.Contains(player.PlayerId))
             {
+                if (lobby.Status == LobbyStatus.InGame)
+                {
+                    if (!_gameOperations.TryReconnect(lobby, player.PlayerId))
+                    {
+                        throw CreateFault(ServiceErrorCodes.LobbyAlreadyStarted, ServiceMessageKeys.LobbyAlreadyStarted);
+                    }
+                }
                 lobby.CancelInvitation(player.PlayerId);
                 lobby.AddOrReplace(connection);
                 response = CreateJoinResponse(lobby, player.PlayerId);
@@ -125,7 +132,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return response;
     }
 
-    // One-way operation: it cannot return a fault, so leaving an unknown lobby is ignored.
+    // Leaving an active match is explicitly rejected without changing either module.
+    // bool=false is used here because this method already returns bool.
     public bool LeaveLobby(string lobbyCode, string sessionToken)
     {
         SessionIdentity identity = ResolveIdentity(sessionToken);
@@ -138,7 +146,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
         lock (_lobbyLock)
         {
-            if (_lobbies.TryGetValue(normalizedCode, out LobbyState? lobby) && lobby.Remove(playerId))
+            if (_lobbies.TryGetValue(normalizedCode, out LobbyState? lobby)
+                && lobby.Status == LobbyStatus.Waiting && lobby.Remove(playerId))
             {
                 wasRemoved = true;
                 if (lobby.IsEmpty)
@@ -219,7 +228,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
             // Entire transition is serialized with other lobby mutations.
             // No InGame state is committed if Game rejects initialization.
-            _matchActivation.Activate(lobby);
+            _gameOperations.Activate(lobby);
             preparation = lobby.ToPreparation();
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
@@ -420,7 +429,19 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
             foreach (LobbyState lobby in _lobbies.Values.ToList())
             {
-                List<Guid> leftIds = lobby.RemoveSession(sessionId);
+                List<Guid> leftIds;
+                if (lobby.Status == LobbyStatus.InGame)
+                {
+                    leftIds = lobby.DisconnectSession(sessionId);
+                    foreach (Guid playerId in leftIds)
+                    {
+                        _gameOperations.Disconnect(lobby, playerId);
+                    }
+                }
+                else
+                {
+                    leftIds = lobby.RemoveSession(sessionId);
+                }
 
                 if (lobby.IsEmpty)
                 {
@@ -436,9 +457,14 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
         foreach ((List<ILobbyCallback> callbacks, List<Guid> leftIds, LobbyPreparation state) in notifications)
         {
-            foreach (Guid leftId in leftIds)
+            // During a match, disconnected players retain their participant identity.
+            // PlayerLeft is reserved for actual removals during the waiting phase.
+            if (!state.IsInGame)
             {
-                Notify(callbacks, SendPlayerLeft, leftId);
+                foreach (Guid leftId in leftIds)
+                {
+                    Notify(callbacks, SendPlayerLeft, leftId);
+                }
             }
             Notify(callbacks, SendPreparationChanged, state);
         }
