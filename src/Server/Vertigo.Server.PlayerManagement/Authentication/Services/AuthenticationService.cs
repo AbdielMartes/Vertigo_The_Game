@@ -1,4 +1,5 @@
 using CoreWCF;
+using Microsoft.Extensions.Logging;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Contracts.Models;
@@ -8,11 +9,21 @@ namespace Vertigo.Server.PlayerManagement.Authentication.Services;
 
 public class AuthenticationService : IAuthService
 {
-    private readonly AuthService _authentication;
+    private const string EventCategoryProperty = "EventCategory";
+    private const string SecurityCategory = "Security";
+    private const string AuthenticationSucceededResult = "Succeeded";
+    private const string AuthenticationFailedResult = "Failed";
 
-    public AuthenticationService(AuthService authentication)
+    private static readonly EventId AuthenticationFailedEvent = new(2001, "AuthenticationFailed");
+    private static readonly EventId AuthenticationSucceededEvent = new(2002, "AuthenticationSucceeded");
+
+    private readonly AuthService _authentication;
+    private readonly ILogger<AuthenticationService> _logger;
+
+    public AuthenticationService(AuthService authentication, ILogger<AuthenticationService> logger)
     {
         _authentication = authentication;
+        _logger = logger;
     }
 
     public UserSession Login(LoginCredentials credentials)
@@ -26,9 +37,11 @@ public class AuthenticationService : IAuthService
         AuthenticatedSession? session = _authentication.Login(credentials.Username, credentials.Password);
         if (session is null)
         {
+            LogAuthenticationResult(false, null);
             throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
         }
 
+        LogAuthenticationResult(true, session.PlayerId);
         return ConvertSession(session);
     }
 
@@ -51,6 +64,21 @@ public class AuthenticationService : IAuthService
     public bool Logout(SessionLogout logout)
     {
         return logout is not null && _authentication.Logout(logout.SessionToken);
+    }
+
+    private void LogAuthenticationResult(bool isSucceeded, Guid? playerId)
+    {
+        EventId eventId = isSucceeded ? AuthenticationSucceededEvent : AuthenticationFailedEvent;
+        string result = isSucceeded ? AuthenticationSucceededResult : AuthenticationFailedResult;
+        Dictionary<string, object> properties = new()
+        {
+            [EventCategoryProperty] = SecurityCategory
+        };
+
+        using (IDisposable? scope = _logger.BeginScope(properties))
+        {
+            _logger.LogInformation(eventId, "Authentication {Result}. PlayerId: {PlayerId}", result, playerId);
+        }
     }
 
     private static UserSession ConvertSession(AuthenticatedSession session)

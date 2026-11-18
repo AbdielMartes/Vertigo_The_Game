@@ -1,9 +1,11 @@
 using CoreWCF;
+using Microsoft.Extensions.Logging.Abstractions;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
 using Vertigo.Server.CrossCutting.Security.Interfaces;
 using Vertigo.Server.DataAccess.Entities.Identity;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
 using Vertigo.Server.PlayerManagement.Authentication.Services;
 
 namespace Vertigo.Server.Matchmaking.Tests.Authentication;
@@ -43,7 +45,8 @@ public sealed class GuestSessionTests
         FakeTokenGenerator tokens = new();
         GuestSessionRegistry registry = new(tokens, clock);
         string raw = registry.Create().Token;
-        SessionIdentityResolver resolver = new(new FakeSessionTokenRepository(), tokens, registry);
+        SessionIdentityResolverDependencies dependencies = new(new FakeSessionTokenRepository(), tokens, registry);
+        SessionIdentityResolver resolver = new(dependencies, NullLogger<SessionIdentityResolver>.Instance);
 
         FaultException<ServiceFault> fault = Assert.Throws<FaultException<ServiceFault>>(
             () => resolver.RequireRegistered(raw));
@@ -59,7 +62,8 @@ public sealed class GuestSessionTests
         GuestSessionRegistry registry = new(tokens, clock);
         string raw = registry.Create().Token;
         registry.Revoke(tokens.HashSessionToken(raw));
-        SessionIdentityResolver resolver = new(new FakeSessionTokenRepository(), tokens, registry);
+        SessionIdentityResolverDependencies dependencies = new(new FakeSessionTokenRepository(), tokens, registry);
+        SessionIdentityResolver resolver = new(dependencies, NullLogger<SessionIdentityResolver>.Instance);
 
         FaultException<ServiceFault> fault = Assert.Throws<FaultException<ServiceFault>>(
             () => resolver.Require(raw));

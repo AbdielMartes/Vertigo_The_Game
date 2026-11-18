@@ -1,9 +1,11 @@
 using CoreWCF;
+using Microsoft.Extensions.Logging;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
 using Vertigo.Server.CrossCutting.Security.Interfaces;
 using Vertigo.Server.DataAccess.Entities.Identity;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
 using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
 using Vertigo.Server.PlayerManagement.Authentication.Models;
 
@@ -12,19 +14,27 @@ namespace Vertigo.Server.PlayerManagement.Authentication.Services;
 public sealed class SessionIdentityResolver : ISessionIdentityResolver
 {
     private const int SessionTokenLength = 64;
+    private const string EventCategoryProperty = "EventCategory";
+    private const string SecurityCategory = "Security";
+    private const string FailedResult = "Failed";
+    private const string DeniedResult = "Denied";
+
+    private static readonly EventId SessionValidationFailedEvent = new(2003, "SessionValidationFailed");
+    private static readonly EventId UnauthorizedAccessEvent = new(2005, "UnauthorizedAccess");
 
     private readonly ISessionTokenRepository _sessionTokenRepository;
     private readonly ITokenGenerator _tokenGenerator;
     private readonly IGuestSessionRegistry _guests;
+    private readonly ILogger<SessionIdentityResolver> _logger;
 
     public SessionIdentityResolver(
-        ISessionTokenRepository sessionTokenRepository,
-        ITokenGenerator tokenGenerator,
-        IGuestSessionRegistry guests)
+        SessionIdentityResolverDependencies dependencies,
+        ILogger<SessionIdentityResolver> logger)
     {
-        _sessionTokenRepository = sessionTokenRepository;
-        _tokenGenerator = tokenGenerator;
-        _guests = guests;
+        _sessionTokenRepository = dependencies.SessionTokenRepository;
+        _tokenGenerator = dependencies.TokenGenerator;
+        _guests = dependencies.Guests;
+        _logger = logger;
     }
 
     public SessionIdentity? Resolve(string token)
@@ -49,7 +59,14 @@ public sealed class SessionIdentityResolver : ISessionIdentityResolver
 
     public SessionIdentity Require(string token)
     {
-        return Resolve(token) ?? throw CreateUnauthorizedFault();
+        SessionIdentity? identity = Resolve(token);
+        if (identity is null)
+        {
+            LogSecurityEvent(SessionValidationFailedEvent, FailedResult, null);
+            throw CreateUnauthorizedFault();
+        }
+
+        return identity;
     }
 
     public SessionIdentity RequireRegistered(string token)
@@ -57,10 +74,24 @@ public sealed class SessionIdentityResolver : ISessionIdentityResolver
         SessionIdentity identity = Require(token);
         if (identity.IsGuest)
         {
+            LogSecurityEvent(UnauthorizedAccessEvent, DeniedResult, identity.PlayerId);
             throw CreateUnauthorizedFault();
         }
 
         return identity;
+    }
+
+    private void LogSecurityEvent(EventId eventId, string result, Guid? playerId)
+    {
+        Dictionary<string, object> properties = new()
+        {
+            [EventCategoryProperty] = SecurityCategory
+        };
+
+        using (IDisposable? scope = _logger.BeginScope(properties))
+        {
+            _logger.LogWarning(eventId, "Session access {Result}. PlayerId: {PlayerId}", result, playerId);
+        }
     }
 
     private static FaultException<ServiceFault> CreateUnauthorizedFault()

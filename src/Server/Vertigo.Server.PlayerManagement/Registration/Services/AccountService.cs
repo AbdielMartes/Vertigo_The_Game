@@ -1,4 +1,5 @@
 using CoreWCF;
+using Microsoft.Extensions.Logging;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Contracts.Models;
@@ -13,17 +14,27 @@ namespace Vertigo.Server.PlayerManagement.Registration.Services;
 
 public class AccountService : IAccountService
 {
+    private const string EventCategoryProperty = "EventCategory";
+    private const string SecurityCategory = "Security";
+    private const string SucceededResult = "Succeeded";
+    private const string RejectedResult = "Rejected";
+
+    private static readonly EventId PasswordChangeSucceededEvent = new(2101, "PasswordChangeSucceeded");
+    private static readonly EventId PasswordChangeRejectedEvent = new(2102, "PasswordChangeRejected");
+
     private readonly IPlayerRepository _playerRepository;
     private readonly ISessionTokenRepository _sessionTokenRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ISessionIdentityResolver _sessions;
+    private readonly ILogger<AccountService> _logger;
 
-    public AccountService(AccountServiceDependencies dependencies)
+    public AccountService(AccountServiceDependencies dependencies, ILogger<AccountService> logger)
     {
         _playerRepository = dependencies.PlayerRepository;
         _sessionTokenRepository = dependencies.SessionTokenRepository;
         _passwordHasher = dependencies.PasswordHasher;
         _sessions = dependencies.Sessions;
+        _logger = logger;
     }
 
     public bool RegisterAccount(AccountRegistration registration)
@@ -72,9 +83,11 @@ public class AccountService : IAccountService
 
         SessionIdentity identity = _sessions.RequireRegistered(sessionToken);
         Player? player = _playerRepository.GetPlayerById(identity.PlayerId);
-        if (player is null || !string.Equals(player.Username, change.Username, StringComparison.OrdinalIgnoreCase) || !_passwordHasher.VerifyPassword(
-                change.CurrentPassword, player.PasswordHash, player.PasswordSalt))
+        if (player is null
+            || !string.Equals(player.Username, change.Username, StringComparison.OrdinalIgnoreCase)
+            || !_passwordHasher.VerifyPassword(change.CurrentPassword, player.PasswordHash, player.PasswordSalt))
         {
+            LogPasswordChange(PasswordChangeRejectedEvent, RejectedResult, identity.PlayerId);
             throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
         }
 
@@ -84,9 +97,23 @@ public class AccountService : IAccountService
         if (isChanged)
         {
             _sessionTokenRepository.RevokePlayerSessions(player.PlayerId);
+            LogPasswordChange(PasswordChangeSucceededEvent, SucceededResult, identity.PlayerId);
         }
 
         return isChanged;
+    }
+
+    private void LogPasswordChange(EventId eventId, string result, Guid playerId)
+    {
+        Dictionary<string, object> properties = new()
+        {
+            [EventCategoryProperty] = SecurityCategory
+        };
+
+        using (IDisposable? scope = _logger.BeginScope(properties))
+        {
+            _logger.LogInformation(eventId, "Password change {Result}. PlayerId: {PlayerId}", result, playerId);
+        }
     }
 
     private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)

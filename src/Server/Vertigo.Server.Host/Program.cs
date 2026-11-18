@@ -1,62 +1,85 @@
 using System.Net;
+using CoreWCF.Configuration;
+using CoreWCF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Vertigo.Server.DataAccess;
-using CoreWCF;
-using CoreWCF.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using Vertigo.Contracts.Endpoints;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Contracts.Internal;
-using Vertigo.Server.Game.Matches.DependencyInjection;
 using Vertigo.Server.CrossCutting.Security.Implementations;
 using Vertigo.Server.CrossCutting.Security.Interfaces;
+using Vertigo.Server.DataAccess;
+using Vertigo.Server.Game.Matches.DependencyInjection;
+using Vertigo.Server.Host.Logging;
+using Vertigo.Server.Matchmaking.Chat.Services;
 using Vertigo.Server.Matchmaking.Invitations.Dependencies;
 using Vertigo.Server.Matchmaking.Invitations.Services;
 using Vertigo.Server.Matchmaking.Lobbies.Services;
 using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
 using Vertigo.Server.PlayerManagement.Authentication.Services;
+using Vertigo.Server.PlayerManagement.Blocking.Services;
 using Vertigo.Server.PlayerManagement.Friendships.Dependencies;
 using Vertigo.Server.PlayerManagement.Friendships.Services;
-using Vertigo.Server.PlayerManagement.Registration.Services;
-using Vertigo.Server.PlayerManagement.Blocking.Services;
-using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
-using Vertigo.Server.Matchmaking.Chat.Services;
 using Vertigo.Server.PlayerManagement.Registration.Dependencies;
+using Vertigo.Server.PlayerManagement.Registration.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
-builder.WebHost.UseNetTcp(IPAddress.Loopback, ServiceEndpoints.TcpPort);
-builder.Services.AddServiceModelServices();
-builder.Services.AddVertigoDataAccess(builder.Configuration);
+builder.Logging.ClearProviders();
+Serilog.Core.Logger logger = ServerLoggingConfiguration.CreateLogger(builder.Configuration, builder.Environment);
+builder.Services.AddSerilog(logger, dispose: false);
 
-builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
-builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>();
+try
+{
+    builder.WebHost.UseNetTcp(IPAddress.Loopback, ServiceEndpoints.TcpPort);
+    builder.Services.AddServiceModelServices();
+    builder.Services.AddVertigoDataAccess(builder.Configuration);
 
-builder.Services.AddSingleton<IGuestSessionRegistry, GuestSessionRegistry>();
-builder.Services.AddScoped<ISessionIdentityResolver, SessionIdentityResolver>();
-builder.Services.AddTransient<AccountServiceDependencies>();
-builder.Services.AddTransient<AuthenticationDependencies>();
-builder.Services.AddTransient<AuthService>();
-builder.Services.AddTransient<AuthenticationService>();
-builder.Services.AddTransient<AccountService>();
-builder.Services.AddTransient<BlockedPlayerService>();
-builder.Services.AddSingleton<IFriendshipNotifier, FriendshipNotifier>();
-builder.Services.AddTransient<FriendshipServiceDependencies>();
-builder.Services.AddTransient<FriendshipService>();
-builder.Services.AddSingleton<FriendshipNotificationService>();
-builder.Services.AddMatchLifecycleServices();
-builder.Services.AddSingleton<LobbyMatchActivation>();
-builder.Services.AddSingleton<MatchReadServices>();
-builder.Services.AddSingleton<LobbyGameOperations>();
-builder.Services.AddSingleton<LobbyService>();
-builder.Services.AddSingleton<ILobbyDirectory>(services => services.GetRequiredService<LobbyService>());
-builder.Services.AddTransient<LobbyInvitationServiceDependencies>();
-builder.Services.AddTransient<LobbyInvitationService>();
-builder.Services.AddTransient<ChatService>();
+    builder.Services.AddSingleton(TimeProvider.System);
+    builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+    builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
-WebApplication app = builder.Build();
-((IApplicationBuilder)app).UseServiceModel(ConfigureServices);
-app.Run();
+    builder.Services.AddSingleton<IGuestSessionRegistry, GuestSessionRegistry>();
+    builder.Services.AddScoped<SessionIdentityResolverDependencies>();
+    builder.Services.AddScoped<ISessionIdentityResolver, SessionIdentityResolver>();
+    builder.Services.AddTransient<AccountServiceDependencies>();
+    builder.Services.AddTransient<AuthenticationDependencies>();
+    builder.Services.AddTransient<AuthService>();
+    builder.Services.AddTransient<AuthenticationService>();
+    builder.Services.AddTransient<AccountService>();
+    builder.Services.AddTransient<BlockedPlayerService>();
+    builder.Services.AddSingleton<IFriendshipNotifier, FriendshipNotifier>();
+    builder.Services.AddTransient<FriendshipServiceDependencies>();
+    builder.Services.AddTransient<FriendshipService>();
+    builder.Services.AddSingleton<FriendshipNotificationService>();
+    builder.Services.AddMatchLifecycleServices();
+    builder.Services.AddSingleton<LobbyMatchActivation>();
+    builder.Services.AddSingleton<MatchReadServices>();
+    builder.Services.AddSingleton<LobbyGameOperations>();
+    builder.Services.AddSingleton<LobbyService>();
+    builder.Services.AddSingleton<ILobbyDirectory>(services => services.GetRequiredService<LobbyService>());
+    builder.Services.AddTransient<LobbyInvitationServiceDependencies>();
+    builder.Services.AddTransient<LobbyInvitationService>();
+    builder.Services.AddTransient<ChatService>();
+
+    WebApplication app = builder.Build();
+    ((IApplicationBuilder)app).UseServiceModel(ConfigureServices);
+    app.Run();
+}
+finally
+{
+    try
+    {
+        logger.Dispose();
+    }
+    // At the Host shutdown boundary, sink disposal must not mask a startup or runtime failure.
+    catch (Exception)
+    {
+        Console.Error.WriteLine("Logging shutdown failed; some events may be missing.");
+    }
+}
 
 static void ConfigureServices(IServiceBuilder services)
 {
