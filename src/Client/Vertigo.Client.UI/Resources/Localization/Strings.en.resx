@@ -515,4 +515,22 @@
   <data name="Match.Error.TurnExpired" xml:space="preserve">
     <value>The turn has already expired.</value>
   </data>
+  <data name="Match.Move.ExpelledByVote" xml:space="preserve">
+    <value>{0} was expelled by vote.</value>
+  </data>
+  <data name="Match.Error.InvalidVoter" xml:space="preserve">
+    <value>Only active players can vote.</value>
+  </data>
+  <data name="Match.Error.InvalidVoteTarget" xml:space="preserve">
+    <value>Choose another active player.</value>
+  </data>
+  <data name="Match.Error.TooFewPlayersToVote" xml:space="preserve">
+    <value>There are not enough players for an expulsion vote.</value>
+  </data>
+  <data name="Match.Error.AlreadyVoted" xml:space="preserve">
+    <value>You already voted to expel this player.</value>
+  </data>
+  <data name="Match.Error.StaleVote" xml:space="preserve">
+    <value>The player list changed. Vote again.</value>
+  </data>
 </root>

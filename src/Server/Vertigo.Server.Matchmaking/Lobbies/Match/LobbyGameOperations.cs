@@ -72,6 +72,11 @@ public sealed class LobbyGameOperations
         return _readers.Dismantles.TryDismantle(matchId, playerId, move);
     }
 
+    public MatchExpulsionVoteResult TryVoteToExpel(Guid matchId, Guid voterId, MatchExpulsionVote vote)
+    {
+        return _readers.ExpulsionVotes.TryVoteToExpel(matchId, voterId, vote);
+    }
+
     public Guid? TryExpireTurn(Guid matchId)
     {
         return _readers.TurnClock.TryExpireTurn(matchId);

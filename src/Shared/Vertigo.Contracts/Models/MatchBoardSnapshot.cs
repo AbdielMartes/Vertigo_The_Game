@@ -27,6 +27,15 @@ public sealed class MatchBoardSnapshot
     public List<Guid> ExpelledPlayerIds { get; set; } = new();
 
     [DataMember]
+    public long VotingRevision { get; set; }
+
+    [DataMember]
+    public int ExpulsionVotesRequired { get; set; }
+
+    [DataMember]
+    public List<MatchExpulsionVoteSummary> ExpulsionVotes { get; set; } = new();
+
+    [DataMember]
     public List<MatchBoardPlayer> Players { get; set; } = new();
 
     [DataMember]
@@ -47,5 +56,6 @@ public sealed class MatchBoardSnapshot
         RoundSummaries = new List<MatchRoundSummary>();
         RecentMoves = new List<MatchBoardMove>();
         ExpelledPlayerIds = new List<Guid>();
+        ExpulsionVotes = new List<MatchExpulsionVoteSummary>();
     }
 }

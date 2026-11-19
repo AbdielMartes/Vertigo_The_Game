@@ -49,6 +49,10 @@ public interface ILobbyService
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
+    MatchBoardSnapshot VoteToExpelMatchPlayer(MatchExpulsionVoteRequest request);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
     MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken);
 
     [OperationContract]

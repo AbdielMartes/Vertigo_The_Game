@@ -41,6 +41,22 @@ internal static class LobbyMatchFault
         return fault;
     }
 
+    public static FaultException<ServiceFault> Create(MatchExpulsionVoteResult result)
+    {
+        (string code, string key) = result switch
+        {
+            MatchExpulsionVoteResult.InvalidVoter => ("MATCH_INVALID_VOTER", "Match.Error.InvalidVoter"),
+            MatchExpulsionVoteResult.InvalidTarget => ("MATCH_INVALID_VOTE_TARGET", "Match.Error.InvalidVoteTarget"),
+            MatchExpulsionVoteResult.TooFewPlayers => ("MATCH_VOTE_TOO_FEW_PLAYERS", "Match.Error.TooFewPlayersToVote"),
+            MatchExpulsionVoteResult.AlreadyVoted => ("MATCH_ALREADY_VOTED", "Match.Error.AlreadyVoted"),
+            MatchExpulsionVoteResult.StaleVotingRevision => ("MATCH_STALE_VOTE", "Match.Error.StaleVote"),
+            MatchExpulsionVoteResult.TurnExpired => ("MATCH_TURN_EXPIRED", "Match.Error.TurnExpired"),
+            _ => ("MATCH_UNAVAILABLE", "Match.Error.Unavailable")
+        };
+
+        return Create(code, key);
+    }
+
     private static FaultException<ServiceFault> Create(string errorCode, string messageKey)
     {
         ServiceFault fault = new()

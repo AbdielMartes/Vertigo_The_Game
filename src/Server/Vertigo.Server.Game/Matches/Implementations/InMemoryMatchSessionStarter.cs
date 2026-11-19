@@ -7,7 +7,8 @@ namespace Vertigo.Server.Game.Matches.Implementations;
 // One synchronized in-memory registry for idempotent starts and terminal transitions.
 // Deliberately no automatic cancellation when lobby connections disappear (Phase 7B).
 public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLifecycle, IMatchPresence,
-    IMatchBoardReader, IMatchPrivateHandReader, IMatchPlacementService, IMatchDismantleService, IMatchTurnClock
+    IMatchBoardReader, IMatchPrivateHandReader, IMatchPlacementService, IMatchDismantleService, IMatchTurnClock,
+    IMatchExpulsionVoteService
 {
     private const int MinimumPlayerCount = 2;
     private const int MaximumPlayerCount = 6;
@@ -114,6 +115,21 @@ public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLi
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
                 result = record.TryDismantle(playerId, move, _timeProvider.GetUtcNow());
+            }
+        }
+
+        return result;
+    }
+
+    public MatchExpulsionVoteResult TryVoteToExpel(Guid matchId, Guid voterId, MatchExpulsionVote vote)
+    {
+        ArgumentNullException.ThrowIfNull(vote);
+        MatchExpulsionVoteResult result = MatchExpulsionVoteResult.MatchUnavailable;
+        lock (_syncRoot)
+        {
+            if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
+            {
+                result = record.TryVoteToExpel(voterId, vote, _timeProvider.GetUtcNow());
             }
         }
 

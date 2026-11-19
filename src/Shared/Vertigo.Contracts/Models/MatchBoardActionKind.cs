@@ -15,5 +15,11 @@ public enum MatchBoardActionKind
     MasterPlan,
 
     [EnumMember]
-    TurnExpired
+    TurnExpired,
+
+    [EnumMember]
+    ExpulsionVoteRecorded,
+
+    [EnumMember]
+    ExpelledByVote
 }

@@ -224,6 +224,12 @@ public sealed class LobbyClient : ILobbyClient
         return ReadOnIndependentChannel(channel => channel.UseMatchMasterPlan(request));
     }
 
+    public MatchBoardSnapshot VoteToExpelMatchPlayer(MatchExpulsionVoteRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ReadOnIndependentChannel(channel => channel.VoteToExpelMatchPlayer(request));
+    }
+
     public LobbyPreparation? GetCurrentLobby(string sessionToken)
     {
         return ReadOnIndependentChannel(channel => channel.GetCurrentLobby(sessionToken));

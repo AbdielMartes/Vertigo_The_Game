@@ -538,6 +538,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             label = string.Format(_text.Get("Match.Move.TurnExpired"), move.PlayerUsername);
         }
+        else if (move.ActionKind == MatchBoardActionKind.ExpelledByVote)
+        {
+            label = string.Format(_text.Get("Match.Move.ExpelledByVote"), move.PlayerUsername);
+        }
         else
         {
             string key = move.ActionKind == MatchBoardActionKind.MasterPlan

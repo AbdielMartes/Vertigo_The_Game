@@ -19,6 +19,7 @@ internal sealed class MatchRecord
 
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
     private readonly HashSet<Guid> _activePlayerIds;
+    private readonly Dictionary<Guid, HashSet<Guid>> _expulsionVotes = new();
     private readonly Dictionary<Guid, IReadOnlyList<int>> _hands = new();
     private readonly Dictionary<Guid, int> _personalFloors = new();
     private readonly Dictionary<Guid, int> _masterPlans = new();
@@ -34,6 +35,10 @@ internal sealed class MatchRecord
     private MatchEndReason _endReason;
     private Guid[] _winnerIds = Array.Empty<Guid>();
     private long _boardRevision = InitialBoardRevision;
+    private long _latestGameplayRevision = InitialBoardRevision;
+    private long _votingRevision;
+
+    private int ExpulsionVotesRequired => _activePlayerIds.Count / 2 + 1;
 
     public MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc)
         : this(session, createdAtUtc, () => new MatchDeck())
@@ -98,6 +103,10 @@ internal sealed class MatchRecord
             TurnDeadlineUtc = _turnDeadlineUtc,
             EndReason = _endReason,
             ExpelledPlayerIds = Session.PlayerIds.Where(id => !_activePlayerIds.Contains(id)).ToList(),
+            VotingRevision = _votingRevision,
+            ExpulsionVotesRequired = ExpulsionVotesRequired,
+            ExpulsionVotes = Session.PlayerIds.Where(_expulsionVotes.ContainsKey).Select(id =>
+                new MatchExpulsionVoteSummary { TargetPlayerId = id, VoteCount = _expulsionVotes[id].Count }).ToList(),
             WinnerIds = _winnerIds.ToList(),
             RoundSummaries = _scoring.ToRoundSummaries(),
             RecentMoves = _recentMoves.Select(move => new MatchBoardMove
@@ -140,7 +149,7 @@ internal sealed class MatchRecord
         {
             rejection = MatchPlacementResult.TurnExpired;
         }
-        else if (expectedRevision != _boardRevision)
+        else if (expectedRevision < _latestGameplayRevision || expectedRevision > _boardRevision)
         {
             rejection = MatchPlacementResult.StaleRevision;
         }
@@ -348,12 +357,72 @@ internal sealed class MatchRecord
         if (IsTurnExpired(now))
         {
             Guid playerId = _currentTurnPlayerId;
-            RecordMove(playerId, (MatchBoardActionKind.TurnExpired, 0, null), Array.Empty<int>());
-            ExpelPlayer(playerId, now);
+            ExpelPlayer(playerId, MatchBoardActionKind.TurnExpired, now);
             expelledPlayerId = playerId;
         }
 
         return expelledPlayerId;
+    }
+
+    public MatchExpulsionVoteResult TryVoteToExpel(Guid voterId, MatchExpulsionVote vote, DateTimeOffset now)
+    {
+        MatchExpulsionVoteResult result;
+        if (Lifecycle.Status != MatchLifecycleStatus.Running)
+        {
+            result = MatchExpulsionVoteResult.MatchUnavailable;
+        }
+        else if (IsTurnExpired(now))
+        {
+            result = MatchExpulsionVoteResult.TurnExpired;
+        }
+        else if (vote.ExpectedVotingRevision != _votingRevision)
+        {
+            result = MatchExpulsionVoteResult.StaleVotingRevision;
+        }
+        else if (!_activePlayerIds.Contains(voterId))
+        {
+            result = MatchExpulsionVoteResult.InvalidVoter;
+        }
+        else if (vote.TargetPlayerId == voterId || !_activePlayerIds.Contains(vote.TargetPlayerId))
+        {
+            result = MatchExpulsionVoteResult.InvalidTarget;
+        }
+        else if (_activePlayerIds.Count <= ExpulsionVotesRequired)
+        {
+            result = MatchExpulsionVoteResult.TooFewPlayers;
+        }
+        else
+        {
+            result = RecordExpulsionVote(voterId, vote.TargetPlayerId, now);
+        }
+
+        return result;
+    }
+
+    private MatchExpulsionVoteResult RecordExpulsionVote(Guid voterId, Guid targetId, DateTimeOffset now)
+    {
+        if (!_expulsionVotes.TryGetValue(targetId, out HashSet<Guid>? voters))
+        {
+            voters = new HashSet<Guid>();
+            _expulsionVotes.Add(targetId, voters);
+        }
+
+        MatchExpulsionVoteResult result = MatchExpulsionVoteResult.AlreadyVoted;
+        if (voters.Add(voterId))
+        {
+            if (voters.Count >= ExpulsionVotesRequired)
+            {
+                ExpelPlayer(targetId, MatchBoardActionKind.ExpelledByVote, now);
+                result = MatchExpulsionVoteResult.Expelled;
+            }
+            else
+            {
+                _boardRevision++;
+                result = MatchExpulsionVoteResult.Recorded;
+            }
+        }
+
+        return result;
     }
 
     private bool IsTurnExpired(DateTimeOffset now)
@@ -361,13 +430,17 @@ internal sealed class MatchRecord
         return !IsTerminal && _turnDeadlineUtc is DateTimeOffset deadline && now >= deadline;
     }
 
-    private void ExpelPlayer(Guid playerId, DateTimeOffset now)
+    private void ExpelPlayer(Guid playerId, MatchBoardActionKind kind, DateTimeOffset now)
     {
+        bool wasCurrentPlayer = _currentTurnPlayerId == playerId;
+        RecordMove(playerId, (kind, 0, null), Array.Empty<int>());
         _deck.ReturnToBottom(_hands[playerId]);
         _hands.Remove(playerId);
         _activePlayerIds.Remove(playerId);
         _disconnectedPlayerIds.Remove(playerId);
-        _boardRevision++;
+        _expulsionVotes.Clear();
+        _votingRevision++;
+        AdvanceGameplayRevision();
 
         if (_activePlayerIds.Count == 1)
         {
@@ -375,7 +448,7 @@ internal sealed class MatchRecord
         }
         else
         {
-            ContinueRound(playerId, now);
+            ContinueRound(playerId, now, advanceTurn: wasCurrentPlayer);
             if (!IsTerminal)
             {
                 Lifecycle = Lifecycle with
@@ -389,9 +462,15 @@ internal sealed class MatchRecord
         }
     }
 
-    private void CompleteTurn(Guid playerId, DateTimeOffset now)
+    private void AdvanceGameplayRevision()
     {
         _boardRevision++;
+        _latestGameplayRevision = _boardRevision;
+    }
+
+    private void CompleteTurn(Guid playerId, DateTimeOffset now)
+    {
+        AdvanceGameplayRevision();
         if (_hands[playerId].Count == 0)
         {
             CloseRound(playerId, now);
@@ -402,13 +481,13 @@ internal sealed class MatchRecord
         }
     }
 
-    private void ContinueRound(Guid after, DateTimeOffset now)
+    private void ContinueRound(Guid after, DateTimeOffset now, bool advanceTurn = true)
     {
         if (_deck.RemainingCount == 0 && !_activePlayerIds.Any(CanPlaceAnyModule))
         {
             CloseRound(null, now);
         }
-        else
+        else if (advanceTurn)
         {
             BeginTurn(GetActivePlayersAfter(after).First(), now);
         }
@@ -541,6 +620,7 @@ internal sealed class MatchRecord
         if (!IsTerminal && (next is MatchLifecycleStatus.Finished or MatchLifecycleStatus.Cancelled))
         {
             _turnDeadlineUtc = null;
+            _expulsionVotes.Clear();
             Lifecycle = Lifecycle with
             {
                 Status = next,

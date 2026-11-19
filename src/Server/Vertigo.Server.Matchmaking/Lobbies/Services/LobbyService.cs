@@ -244,15 +244,17 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         MatchPlacement move = new(request.CardNumber, request.PilePosition, request.ExpectedRevision);
 
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
-            (MatchBoardActionKind.Placement, move.PilePosition, move.CardNumber), ApplyPlacement);
+            (move.PilePosition, move.CardNumber), ApplyPlacement);
 
-        void ApplyPlacement(Guid matchId, Guid playerId)
+        MatchBoardActionKind ApplyPlacement(Guid matchId, Guid playerId)
         {
             MatchPlacementResult result = _gameOperations.TryPlace(matchId, playerId, move);
             if (result != MatchPlacementResult.Applied)
             {
                 throw LobbyMatchFault.Create(result);
             }
+
+            return MatchBoardActionKind.Placement;
         }
     }
 
@@ -262,15 +264,17 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         MatchDismantle move = new(request.PilePosition, request.ExpectedRevision);
 
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
-            (MatchBoardActionKind.Dismantle, move.PilePosition, 0), ApplyDismantle);
+            (move.PilePosition, 0), ApplyDismantle);
 
-        void ApplyDismantle(Guid matchId, Guid playerId)
+        MatchBoardActionKind ApplyDismantle(Guid matchId, Guid playerId)
         {
             MatchDismantleResult result = _gameOperations.TryDismantle(matchId, playerId, move);
             if (result != MatchDismantleResult.Applied)
             {
                 throw LobbyMatchFault.Create(result);
             }
+
+            return MatchBoardActionKind.Dismantle;
         }
     }
 
@@ -281,25 +285,51 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         MatchMasterPlan move = new(modules, request.PilePosition, request.ExpectedRevision);
 
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
-            (MatchBoardActionKind.MasterPlan, move.PilePosition, modules.LastOrDefault()), ApplyMasterPlan);
+            (move.PilePosition, modules.LastOrDefault()), ApplyMasterPlan);
 
-        void ApplyMasterPlan(Guid matchId, Guid playerId)
+        MatchBoardActionKind ApplyMasterPlan(Guid matchId, Guid playerId)
         {
             MatchPlacementResult result = _gameOperations.TryUseMasterPlan(matchId, playerId, move);
             if (result != MatchPlacementResult.Applied)
             {
                 throw LobbyMatchFault.Create(result);
             }
+
+            return MatchBoardActionKind.MasterPlan;
+        }
+    }
+
+    public MatchBoardSnapshot VoteToExpelMatchPlayer(MatchExpulsionVoteRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        Guid matchToVote = request.MatchId;
+        MatchExpulsionVote vote = new(request.TargetPlayerId, request.ExpectedVotingRevision);
+
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken), (0, 0), ApplyVote);
+
+        MatchBoardActionKind ApplyVote(Guid matchId, Guid voterId)
+        {
+            MatchExpulsionVoteResult result = matchId == matchToVote
+                ? _gameOperations.TryVoteToExpel(matchId, voterId, vote)
+                : MatchExpulsionVoteResult.MatchUnavailable;
+
+            return result switch
+            {
+                MatchExpulsionVoteResult.Recorded => MatchBoardActionKind.ExpulsionVoteRecorded,
+                MatchExpulsionVoteResult.Expelled => MatchBoardActionKind.ExpelledByVote,
+                _ => throw LobbyMatchFault.Create(result)
+            };
         }
     }
 
     private MatchBoardSnapshot ApplyMatchBoardAction(
         (string LobbyCode, string SessionToken) access,
-        (MatchBoardActionKind Kind, int PilePosition, int CardNumber) action,
-        Action<Guid, Guid> apply)
+        (int PilePosition, int CardNumber) action,
+        Func<Guid, Guid, MatchBoardActionKind> apply)
     {
         SessionIdentity identity = ResolveIdentity(access.SessionToken);
         MatchBoardSnapshot board;
+        MatchBoardActionKind kind;
         List<ILobbyCallback> callbacks;
         lock (_lobbyLock)
         {
@@ -309,7 +339,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 throw CreateFault(ServiceErrorCodes.LobbyNotReady, ServiceMessageKeys.LobbyNotReady);
             }
 
-            apply(lobby.MatchId, identity.PlayerId);
+            kind = apply(lobby.MatchId, identity.PlayerId);
             board = _gameOperations.GetBoard(lobby)
                 ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
@@ -320,8 +350,13 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             LobbyCode = access.LobbyCode,
             MatchId = board.MatchId,
             Revision = board.Revision,
-            PlayerUsername = identity.Username,
-            ActionKind = action.Kind,
+            PlayerUsername = kind switch
+            {
+                MatchBoardActionKind.ExpelledByVote => board.RecentMoves.Last().PlayerUsername,
+                MatchBoardActionKind.ExpulsionVoteRecorded => string.Empty,
+                _ => identity.Username
+            },
+            ActionKind = kind,
             CardNumber = action.CardNumber,
             PilePosition = action.PilePosition
         };

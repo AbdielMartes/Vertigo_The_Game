@@ -99,6 +99,7 @@ public sealed class MatchViewModelTests
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.RoundSummaries))!.Remove();
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.RecentMoves))!.Remove();
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.ExpelledPlayerIds))!.Remove();
+        payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.ExpulsionVotes))!.Remove();
         using System.Xml.XmlReader reader = payload.CreateReader();
         MatchBoardSnapshot board = Assert.IsType<MatchBoardSnapshot>(serializer.ReadObject(reader));
 
@@ -108,6 +109,7 @@ public sealed class MatchViewModelTests
         Assert.Empty(model.RoundSummaries);
         Assert.Empty(model.RecentMoves);
         Assert.Empty(board.ExpelledPlayerIds);
+        Assert.Empty(board.ExpulsionVotes);
     }
 
     [Fact]

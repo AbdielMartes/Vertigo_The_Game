@@ -1,4 +1,5 @@
 using System.ServiceModel;
+using System.Threading.Channels;
 using Microsoft.Extensions.DependencyInjection;
 using Vertigo.Client.Networking;
 using Vertigo.Client.Networking.Interfaces;
@@ -17,6 +18,7 @@ try
     }
 
     Require(played, "No attempt exercised both an opening placement and a dismantle before round two.");
+    await RunExpulsionVoteAsync();
     return 0;
 }
 catch (FaultException<ServiceFault> exception)
@@ -210,6 +212,112 @@ static async Task<bool> RunMatchAsync()
         member.GetRequiredService<ISessionCoordinator>().Logout();
         outsider.GetRequiredService<ISessionCoordinator>().Logout();
     }
+}
+
+static async Task RunExpulsionVoteAsync()
+{
+    using ServiceProvider first = CreateClient();
+    using ServiceProvider second = CreateClient();
+    using ServiceProvider third = CreateClient();
+    using ServiceProvider outsider = CreateClient();
+    using ILobbyClient outsiderLobby = outsider.GetRequiredService<ILobbyClient>();
+    string outsiderToken = CreateGuest(outsider).Token;
+    (ILobbyClient Lobby, UserSession Session)[] clients = new[] { first, second, third }.Select(provider =>
+        (provider.GetRequiredService<ILobbyClient>(), CreateGuest(provider))).ToArray();
+
+    ILobbyClient host = clients[0].Lobby;
+    string hostToken = clients[0].Session.Token;
+    string lobbyCode = host.CreateLobby(true, 3, hostToken);
+    foreach ((ILobbyClient Lobby, UserSession Session) client in clients.Skip(1))
+    {
+        client.Lobby.JoinLobby(lobbyCode, client.Session.Token);
+    }
+
+    foreach ((ILobbyClient Lobby, UserSession Session) client in clients)
+    {
+        client.Lobby.SetReady(lobbyCode, true, client.Session.Token);
+    }
+
+    host.StartMatch(lobbyCode, hostToken);
+    MatchBoardSnapshot initial = host.GetMatchBoard(lobbyCode, hostToken);
+    (ILobbyClient Lobby, UserSession Session) target = clients.First(client =>
+        client.Session.PlayerId != initial.CurrentTurnPlayerId);
+    (ILobbyClient Lobby, UserSession Session)[] voters = clients.Where(client =>
+        client.Session.PlayerId != target.Session.PlayerId).ToArray();
+    Channel<MatchBoardChanged> notices = Channel.CreateUnbounded<MatchBoardChanged>();
+    target.Lobby.MatchBoardUpdated += ObserveVote;
+    try
+    {
+        MatchExpulsionVoteRequest request = new()
+        {
+            LobbyCode = lobbyCode,
+            MatchId = initial.MatchId,
+            SessionToken = voters[0].Session.Token,
+            TargetPlayerId = target.Session.PlayerId,
+            ExpectedVotingRevision = initial.VotingRevision
+        };
+        request.MatchId = Guid.NewGuid();
+        VerifyRejectedVote(voters[0].Lobby, request, "MATCH_UNAVAILABLE");
+        request.MatchId = initial.MatchId;
+        request.SessionToken = outsiderToken;
+        VerifyRejectedVote(outsiderLobby, request, ServiceErrorCodes.LobbyNotMember);
+        request.SessionToken = voters[0].Session.Token;
+        MatchBoardSnapshot unchanged = host.GetMatchBoard(lobbyCode, hostToken);
+        Require(unchanged.Revision == initial.Revision && unchanged.ExpulsionVotes.Count == 0,
+            "A rejected vote changed the board.");
+        MatchBoardSnapshot recorded = voters[0].Lobby.VoteToExpelMatchPlayer(request);
+        Require(recorded.ExpulsionVotesRequired == 2 && recorded.ExpulsionVotes.Single().VoteCount == 1,
+            "The first vote did not produce a pending tally.");
+        VerifyRejectedVote(voters[0].Lobby, request, "MATCH_ALREADY_VOTED");
+        request.SessionToken = voters[1].Session.Token;
+        MatchBoardSnapshot expelled = voters[1].Lobby.VoteToExpelMatchPlayer(request);
+        Require(expelled.ExpelledPlayerIds.SequenceEqual(new[] { target.Session.PlayerId })
+            && expelled.ExpulsionVotes.Count == 0 && initial.CurrentTurnPlayerId == expelled.CurrentTurnPlayerId
+            && initial.TurnDeadlineUtc == expelled.TurnDeadlineUtc,
+            "A vote against a waiting player did not preserve the active turn.");
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(15));
+        MatchBoardChanged firstNotice = await notices.Reader.ReadAsync(timeout.Token);
+        MatchBoardChanged secondNotice = await notices.Reader.ReadAsync(timeout.Token);
+        Require(firstNotice.ActionKind == MatchBoardActionKind.ExpulsionVoteRecorded
+            && firstNotice.Revision == recorded.Revision && firstNotice.PlayerUsername == string.Empty
+            && secondNotice.ActionKind == MatchBoardActionKind.ExpelledByVote
+            && secondNotice.Revision == expelled.Revision && secondNotice.PlayerUsername == target.Session.Username,
+            "The expelled client did not receive the expected vote notifications.");
+        Console.WriteLine("PASS: EXPULSION VOTE OVER NETTCP PRESERVES THE ACTIVE TURN");
+    }
+    finally
+    {
+        target.Lobby.MatchBoardUpdated -= ObserveVote;
+        foreach ((ILobbyClient Lobby, UserSession Session) client in clients)
+        {
+            client.Lobby.Disconnect();
+        }
+
+        foreach (ServiceProvider provider in new[] { first, second, third, outsider })
+        {
+            provider.GetRequiredService<ISessionCoordinator>().Logout();
+        }
+    }
+
+    void ObserveVote(object? sender, MatchBoardChanged notice)
+    {
+        notices.Writer.TryWrite(notice);
+    }
+}
+
+static void VerifyRejectedVote(ILobbyClient client, MatchExpulsionVoteRequest request, string expectedError)
+{
+    bool rejected = false;
+    try
+    {
+        client.VoteToExpelMatchPlayer(request);
+    }
+    catch (FaultException<ServiceFault> exception)
+    {
+        rejected = exception.Detail.ErrorCode == expectedError;
+    }
+
+    Require(rejected, $"The server did not reject the vote with {expectedError}.");
 }
 
 static (int CardNumber, int PilePosition) FindPlacement(MatchBoardSnapshot board, MatchPrivateHand hand)

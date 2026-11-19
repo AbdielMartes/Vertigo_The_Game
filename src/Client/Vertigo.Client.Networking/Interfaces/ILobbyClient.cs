@@ -34,6 +34,8 @@ public interface ILobbyClient : IDisposable
 
     MatchBoardSnapshot UseMatchMasterPlan(MatchMasterPlanRequest request);
 
+    MatchBoardSnapshot VoteToExpelMatchPlayer(MatchExpulsionVoteRequest request);
+
     LobbyPreparation? GetCurrentLobby(string sessionToken);
 
     LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken);
