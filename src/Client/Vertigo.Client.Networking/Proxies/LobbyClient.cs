@@ -212,6 +212,12 @@ public sealed class LobbyClient : ILobbyClient
         return ReadOnIndependentChannel(channel => channel.PlaceMatchCard(request));
     }
 
+    public MatchBoardSnapshot DismantleMatchTower(MatchDismantleRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ReadOnIndependentChannel(channel => channel.DismantleMatchTower(request));
+    }
+
     public LobbyPreparation? GetCurrentLobby(string sessionToken)
     {
         return ReadOnIndependentChannel(channel => channel.GetCurrentLobby(sessionToken));

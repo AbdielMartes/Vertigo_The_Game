@@ -30,6 +30,8 @@ public interface ILobbyClient : IDisposable
 
     MatchBoardSnapshot PlaceMatchCard(MatchPlaceRequest request);
 
+    MatchBoardSnapshot DismantleMatchTower(MatchDismantleRequest request);
+
     LobbyPreparation? GetCurrentLobby(string sessionToken);
 
     LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken);

@@ -233,6 +233,10 @@ public sealed class MatchDismantleTests
         Assert.Equal(20, next.Revision);
         Assert.Equal(match.Session.PlayerIds.Single(playerId => playerId != opener), next.CurrentTurnPlayerId);
         Assert.All(next.Players, player => Assert.Equal(0, player.GlobalFloors));
+        MatchRoundSummary closure = Assert.Single(next.RoundSummaries);
+        Assert.Equal(1, closure.RoundNumber);
+        Assert.Equal(opener, closure.ClosedByPlayerId);
+        Assert.All(closure.Players, player => Assert.Equal(0, player.BonusFloors));
         Assert.All(match.Session.PlayerIds, playerId => Assert.Equal(10, match.ToPrivateHand(playerId)!.Cards.Count));
     }
 

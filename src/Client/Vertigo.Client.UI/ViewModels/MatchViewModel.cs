@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.ServiceModel;
@@ -39,6 +40,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private bool _pendingBoardRefresh;
     private long _notifiedRevision;
     private string _lastMoveLabel = string.Empty;
+    private IReadOnlyList<MatchRoundSummary> _roundSummaries = Array.Empty<MatchRoundSummary>();
     private Guid _matchId;
     private string _lobbyCode = string.Empty;
 
@@ -76,6 +78,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     {
         get => _lastMoveLabel;
         private set => SetProperty(ref _lastMoveLabel, value);
+    }
+
+    public IReadOnlyList<MatchRoundSummary> RoundSummaries
+    {
+        get => _roundSummaries;
+        private set => SetProperty(ref _roundSummaries, value);
     }
 
     public Guid MatchId => _matchId;
@@ -117,6 +125,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         _pendingBoardRefresh = false;
         _notifiedRevision = 0;
         LastMoveLabel = string.Empty;
+        RoundSummaries = Array.Empty<MatchRoundSummary>();
         RoundLabel = "—";
         CurrentTurnLabel = "—";
         ErrorMessage = string.Empty;
@@ -160,7 +169,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     change, _lobbyCode, _matchId, Math.Max(_currentBoardRevision, _notifiedRevision)))
             {
                 _notifiedRevision = Math.Max(_notifiedRevision, change.Revision);
-                LastMoveLabel = $"{change.PlayerUsername}: {change.CardNumber} → {change.PilePosition}";
+                LastMoveLabel = change.ActionKind == MatchBoardActionKind.Dismantle
+                    ? string.Format(_text.Get("Match.Move.Dismantle"), change.PlayerUsername, change.PilePosition)
+                    : $"{change.PlayerUsername}: {change.CardNumber} → {change.PilePosition}";
                 if (IsLoadingBoard)
                 {
                     _pendingBoardRefresh = true;
@@ -294,6 +305,11 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     Count = pile.CardCount,
                     TopCardText = pile.TopCardNumber?.ToString() ?? string.Empty
                 });
+            }
+
+            if (RoundSummaries.Count != board.RoundSummaries.Count)
+            {
+                RoundSummaries = board.RoundSummaries;
             }
 
             RoundLabel = board.RoundNumber?.ToString() ?? "—";

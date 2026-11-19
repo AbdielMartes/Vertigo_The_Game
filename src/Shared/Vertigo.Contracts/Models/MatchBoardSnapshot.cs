@@ -25,4 +25,13 @@ public sealed class MatchBoardSnapshot
 
     [DataMember]
     public List<Guid> WinnerIds { get; set; } = new();
+
+    [DataMember]
+    public List<MatchRoundSummary> RoundSummaries { get; set; } = new();
+
+    [OnDeserializing]
+    private void InitializeRoundSummaries(StreamingContext context)
+    {
+        RoundSummaries = new List<MatchRoundSummary>();
+    }
 }

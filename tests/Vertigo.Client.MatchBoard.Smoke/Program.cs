@@ -16,7 +16,7 @@ try
         played = await RunMatchAsync();
     }
 
-    Require(played, "No legal opening placement found in the allotted match attempts.");
+    Require(played, "No attempt exercised both an opening placement and a dismantle before round two.");
     return 0;
 }
 catch (FaultException<ServiceFault> exception)
@@ -141,13 +141,37 @@ static async Task<bool> RunMatchAsync()
         }
 
         Require(outsiderDenied, "An outsider was able to read the private hand.");
+        bool outsiderDismantleDenied = false;
+        try
+        {
+            outsiderLobby.DismantleMatchTower(new MatchDismantleRequest
+            {
+                LobbyCode = lobbyCode,
+                SessionToken = outsiderToken,
+                PilePosition = 1,
+                ExpectedRevision = first.Revision + 1
+            });
+        }
+        catch (FaultException<ServiceFault> exception)
+        {
+            outsiderDismantleDenied = exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotMember;
+        }
+
+        Require(outsiderDismantleDenied, "An outsider was able to request a dismantle.");
         memberLobby.Disconnect();
         memberLobby.JoinLobby(lobbyCode, memberToken);
         MatchPrivateHand resumedHand = memberLobby.GetMatchPrivateHand(lobbyCode, memberToken);
         Require(resumedHand.MatchId == memberHand.MatchId && resumedHand.PlayerId == memberHand.PlayerId
             && resumedHand.Cards.SequenceEqual(expectedMemberCards), "Private hand changed after reconnecting.");
         Console.WriteLine("PASS: PRIVATE HANDS, OUTSIDER DENIAL AND RECONNECTION");
-        return true;
+        bool dismantled = await RoundClosureSmoke.VerifyAsync((hostLobby, hostSession), (memberLobby, memberSession),
+            lobbyCode);
+        if (dismantled)
+        {
+            Console.WriteLine("PASS: DISMANTLE CALLBACKS AND ROUND SUMMARY FOR BOTH CLIENTS AND AFTER RECONNECTION");
+        }
+
+        return dismantled;
     }
     finally
     {

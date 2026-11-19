@@ -489,4 +489,9 @@
   <data name="Match.Error.Unstable" xml:space="preserve"><value>La carta debe superar el tope entre 1 y 10.</value></data>
   <data name="Match.Error.Stale" xml:space="preserve"><value>El tablero cambió. Actualízalo e inténtalo de nuevo.</value></data>
   <data name="Match.Error.Unavailable" xml:space="preserve"><value>No es posible jugar en este momento.</value></data>
+  <data name="Match.Move.Dismantle" xml:space="preserve"><value>{0} desmontó la torre {1}.</value></data>
+  <data name="Match.Error.EmptyTower" xml:space="preserve"><value>La torre está vacía.</value></data>
+  <data name="Match.Error.PlacementAvailable" xml:space="preserve">
+    <value>Todavía puedes colocar un módulo en una torre.</value>
+  </data>
 </root>

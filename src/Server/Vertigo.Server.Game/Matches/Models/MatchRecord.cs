@@ -88,6 +88,7 @@ internal sealed class MatchRecord
             RoundNumber = _roundNumber,
             CurrentTurnPlayerId = _currentTurnPlayerId,
             WinnerIds = _winnerIds.ToList(),
+            RoundSummaries = _scoring.ToRoundSummaries(),
             Players = Session.PlayerIds.Select(id => new MatchBoardPlayer
             {
                 PlayerId = id,

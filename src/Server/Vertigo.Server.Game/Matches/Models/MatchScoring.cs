@@ -1,3 +1,5 @@
+using Vertigo.Contracts.Models;
+
 namespace Vertigo.Server.Game.Matches.Models;
 
 internal sealed class MatchScoring
@@ -13,7 +15,39 @@ internal sealed class MatchScoring
 
     public int GetGlobalFloors(Guid playerId)
     {
-        return _rounds.Sum(round => GetRoundScore(round, playerId));
+        return _rounds.Sum(round => round.Floors[playerId] + GetBonus(round, playerId));
+    }
+
+    public List<MatchRoundSummary> ToRoundSummaries()
+    {
+        List<MatchRoundSummary> summaries = new();
+        Dictionary<Guid, int> totals = new();
+
+        foreach (RoundScore round in _rounds)
+        {
+            MatchRoundSummary summary = new()
+            {
+                RoundNumber = summaries.Count + 1,
+                ClosedByPlayerId = round.ClosedBy
+            };
+            foreach ((Guid playerId, int floors) in round.Floors)
+            {
+                int bonus = GetBonus(round, playerId);
+                int total = totals.GetValueOrDefault(playerId) + floors + bonus;
+                totals[playerId] = total;
+                summary.Players.Add(new MatchRoundPlayerScore
+                {
+                    PlayerId = playerId,
+                    FloorsBuilt = floors,
+                    BonusFloors = bonus,
+                    TotalFloors = total
+                });
+            }
+
+            summaries.Add(summary);
+        }
+
+        return summaries;
     }
 
     public Guid[] GetWinners(IReadOnlyList<Guid> players)
@@ -31,12 +65,12 @@ internal sealed class MatchScoring
             _rounds.Max(round => round.Floors[playerId]));
     }
 
-    private static int GetRoundScore(RoundScore round, Guid playerId)
+    private static int GetBonus(RoundScore round, Guid playerId)
     {
         int floors = round.Floors[playerId];
         int bonus = floors > 0 && floors == round.Highest ? HighestTowerBonus : 0;
 
-        return floors + bonus;
+        return bonus;
     }
 
     private sealed record RoundScore(IReadOnlyDictionary<Guid, int> Floors, Guid? ClosedBy, int Highest);

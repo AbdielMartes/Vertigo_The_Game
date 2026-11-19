@@ -54,6 +54,11 @@ public sealed class LobbyGameOperations
         return _readers.Placements.TryPlace(matchId, playerId, move);
     }
 
+    public MatchDismantleResult TryDismantle(Guid matchId, Guid playerId, MatchDismantle move)
+    {
+        return _readers.Dismantles.TryDismantle(matchId, playerId, move);
+    }
+
     public bool TryReconnect(LobbyState lobby, Guid playerId)
     {
         MatchReconnectResult result = _presence.TryReconnect(lobby.MatchId, playerId);

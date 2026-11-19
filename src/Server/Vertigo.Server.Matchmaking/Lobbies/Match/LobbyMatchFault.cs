@@ -4,7 +4,7 @@ using Vertigo.Contracts.Models;
 
 namespace Vertigo.Server.Matchmaking.Lobbies.Match;
 
-internal static class LobbyPlacementFault
+internal static class LobbyMatchFault
 {
     public static FaultException<ServiceFault> Create(MatchPlacementResult result)
     {
@@ -17,6 +17,27 @@ internal static class LobbyPlacementFault
             MatchPlacementResult.StaleRevision => ("MATCH_STALE_REVISION", "Match.Error.Stale"),
             _ => ("MATCH_UNAVAILABLE", "Match.Error.Unavailable")
         };
+        return Create(errorCode, messageKey);
+    }
+
+    public static FaultException<ServiceFault> Create(MatchDismantleResult result)
+    {
+        FaultException<ServiceFault> fault = result switch
+        {
+            MatchDismantleResult.NotYourTurn => Create(MatchPlacementResult.NotYourTurn),
+            MatchDismantleResult.InvalidPile => Create(MatchPlacementResult.InvalidPile),
+            MatchDismantleResult.StaleRevision => Create(MatchPlacementResult.StaleRevision),
+            MatchDismantleResult.EmptyPile => Create("MATCH_EMPTY_TOWER", "Match.Error.EmptyTower"),
+            MatchDismantleResult.PlacementAvailable =>
+                Create("MATCH_PLACEMENT_AVAILABLE", "Match.Error.PlacementAvailable"),
+            _ => Create(MatchPlacementResult.MatchUnavailable)
+        };
+
+        return fault;
+    }
+
+    private static FaultException<ServiceFault> Create(string errorCode, string messageKey)
+    {
         ServiceFault fault = new()
         {
             ErrorCode = errorCode,

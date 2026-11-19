@@ -41,6 +41,10 @@ public interface ILobbyService
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
+    MatchBoardSnapshot DismantleMatchTower(MatchDismantleRequest request);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
     MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken);
 
     [OperationContract]

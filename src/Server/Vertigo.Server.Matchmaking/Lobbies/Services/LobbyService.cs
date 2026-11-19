@@ -232,38 +232,70 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     public MatchBoardSnapshot PlaceMatchCard(MatchPlaceRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
-        SessionIdentity identity = ResolveIdentity(request.SessionToken);
+        MatchPlacement move = new(request.CardNumber, request.PilePosition, request.ExpectedRevision);
+
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
+            (MatchBoardActionKind.Placement, move.PilePosition, move.CardNumber), ApplyPlacement);
+
+        void ApplyPlacement(Guid matchId, Guid playerId)
+        {
+            MatchPlacementResult result = _gameOperations.TryPlace(matchId, playerId, move);
+            if (result != MatchPlacementResult.Applied)
+            {
+                throw LobbyMatchFault.Create(result);
+            }
+        }
+    }
+
+    public MatchBoardSnapshot DismantleMatchTower(MatchDismantleRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        MatchDismantle move = new(request.PilePosition, request.ExpectedRevision);
+
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
+            (MatchBoardActionKind.Dismantle, move.PilePosition, 0), ApplyDismantle);
+
+        void ApplyDismantle(Guid matchId, Guid playerId)
+        {
+            MatchDismantleResult result = _gameOperations.TryDismantle(matchId, playerId, move);
+            if (result != MatchDismantleResult.Applied)
+            {
+                throw LobbyMatchFault.Create(result);
+            }
+        }
+    }
+
+    private MatchBoardSnapshot ApplyMatchBoardAction(
+        (string LobbyCode, string SessionToken) access,
+        (MatchBoardActionKind Kind, int PilePosition, int CardNumber) action,
+        Action<Guid, Guid> apply)
+    {
+        SessionIdentity identity = ResolveIdentity(access.SessionToken);
         MatchBoardSnapshot board;
         List<ILobbyCallback> callbacks;
         lock (_lobbyLock)
         {
-            LobbyState lobby = RequireLobbyMember(request.LobbyCode, identity.PlayerId);
+            LobbyState lobby = RequireLobbyMember(access.LobbyCode, identity.PlayerId);
             if (lobby.Status != LobbyStatus.InGame || lobby.MatchId == Guid.Empty)
             {
                 throw CreateFault(ServiceErrorCodes.LobbyNotReady, ServiceMessageKeys.LobbyNotReady);
             }
 
-            MatchPlacement move = new(request.CardNumber, request.PilePosition, request.ExpectedRevision);
-            MatchPlacementResult result = _gameOperations.TryPlace(lobby.MatchId, identity.PlayerId, move);
-            if (result != MatchPlacementResult.Applied)
-            {
-                throw LobbyPlacementFault.Create(result);
-            }
-
+            apply(lobby.MatchId, identity.PlayerId);
             board = _gameOperations.GetBoard(lobby)
                 ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
-
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
 
         MatchBoardChanged changed = new()
         {
-            LobbyCode = request.LobbyCode,
+            LobbyCode = access.LobbyCode,
             MatchId = board.MatchId,
             Revision = board.Revision,
             PlayerUsername = identity.Username,
-            CardNumber = request.CardNumber,
-            PilePosition = request.PilePosition
+            ActionKind = action.Kind,
+            CardNumber = action.CardNumber,
+            PilePosition = action.PilePosition
         };
         Notify(callbacks, SendMatchBoardUpdated, changed);
         return board;
