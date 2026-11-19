@@ -165,6 +165,11 @@ public sealed class LobbyInvitationsViewModelTests
             return null;
         }
 
+        public MatchBoardSnapshot UseMatchMasterPlan(MatchMasterPlanRequest request)
+        {
+            throw new NotSupportedException();
+        }
+
         public MatchBoardSnapshot DismantleMatchTower(MatchDismantleRequest request)
         {
             throw new NotSupportedException();

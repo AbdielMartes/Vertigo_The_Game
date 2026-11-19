@@ -116,6 +116,30 @@ static async Task<bool> RunMatchAsync()
             "Rejected placement changed the board revision.");
         Console.WriteLine("PASS: WRONG TURN REJECTED WITHOUT CHANGING BOARD");
 
+        bool planRequired = false;
+        try
+        {
+            opening.Lobby.UseMatchMasterPlan(new MatchMasterPlanRequest
+            {
+                LobbyCode = lobbyCode,
+                SessionToken = opening.Session.Token,
+                CardNumbers = opening.Hand.Cards.Take(2).ToList(),
+                PilePosition = 1,
+                ExpectedRevision = first.Revision
+            });
+        }
+        catch (FaultException<ServiceFault> exception)
+        {
+            planRequired = exception.Detail.ErrorCode == "MATCH_MASTER_PLAN_REQUIRED"
+                && exception.Detail.MessageKey == "Match.Error.MasterPlanRequired";
+        }
+
+        Require(planRequired, "Using a master plan without earning one did not return the expected fault.");
+        MatchBoardSnapshot afterRejectedPlan = opening.Lobby.GetMatchBoard(lobbyCode, opening.Session.Token);
+        Require(afterRejectedPlan.Revision == first.Revision && afterRejectedPlan.RecentMoves.Count == 0,
+            "The rejected master plan changed the revision or added a move.");
+        Console.WriteLine("PASS: MASTER PLAN REQUIRED FAULT LEAVES HISTORY UNCHANGED");
+
         (int CardNumber, int PilePosition) move = FindPlacement(first, opening.Hand);
         if (move.PilePosition == 0)
         {
@@ -163,7 +187,12 @@ static async Task<bool> RunMatchAsync()
         MatchPrivateHand resumedHand = memberLobby.GetMatchPrivateHand(lobbyCode, memberToken);
         Require(resumedHand.MatchId == memberHand.MatchId && resumedHand.PlayerId == memberHand.PlayerId
             && resumedHand.Cards.SequenceEqual(expectedMemberCards), "Private hand changed after reconnecting.");
-        Console.WriteLine("PASS: PRIVATE HANDS, OUTSIDER DENIAL AND RECONNECTION");
+        MatchBoardMove latest = memberLobby.GetMatchBoard(lobbyCode, memberToken).RecentMoves.Last();
+        Require(latest.ActionKind == MatchBoardActionKind.Placement && latest.PlayerId == opening.Session.PlayerId
+            && latest.PlayerUsername == opening.Session.Username && latest.PilePosition == move.PilePosition
+            && latest.CardNumbers.SequenceEqual(new[] { move.CardNumber }),
+            "The reconnected client did not recover the last public move.");
+        Console.WriteLine("PASS: PRIVATE HANDS, OUTSIDER DENIAL, RECONNECTION AND RECENT MOVES");
         bool dismantled = await RoundClosureSmoke.VerifyAsync((hostLobby, hostSession), (memberLobby, memberSession),
             lobbyCode);
         if (dismantled)

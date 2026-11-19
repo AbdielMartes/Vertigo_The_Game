@@ -218,6 +218,12 @@ public sealed class LobbyClient : ILobbyClient
         return ReadOnIndependentChannel(channel => channel.DismantleMatchTower(request));
     }
 
+    public MatchBoardSnapshot UseMatchMasterPlan(MatchMasterPlanRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ReadOnIndependentChannel(channel => channel.UseMatchMasterPlan(request));
+    }
+
     public LobbyPreparation? GetCurrentLobby(string sessionToken)
     {
         return ReadOnIndependentChannel(channel => channel.GetCurrentLobby(sessionToken));

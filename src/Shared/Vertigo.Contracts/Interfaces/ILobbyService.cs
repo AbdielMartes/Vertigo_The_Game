@@ -45,6 +45,10 @@ public interface ILobbyService
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
+    MatchBoardSnapshot UseMatchMasterPlan(MatchMasterPlanRequest request);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
     MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken);
 
     [OperationContract]

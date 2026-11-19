@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using Avalonia.Threading;
@@ -39,7 +40,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private bool _isPlacingCard;
     private bool _pendingBoardRefresh;
     private long _notifiedRevision;
-    private string _lastMoveLabel = string.Empty;
+    private IReadOnlyList<MatchBoardMove> _recentMoves = Array.Empty<MatchBoardMove>();
     private IReadOnlyList<MatchRoundSummary> _roundSummaries = Array.Empty<MatchRoundSummary>();
     private Guid _matchId;
     private string _lobbyCode = string.Empty;
@@ -74,11 +75,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         private set => SetProperty(ref _isLoadingBoard, value);
     }
 
-    public string LastMoveLabel
-    {
-        get => _lastMoveLabel;
-        private set => SetProperty(ref _lastMoveLabel, value);
-    }
+    public ObservableCollection<MatchMoveRow> RecentMoves { get; } = new();
 
     public IReadOnlyList<MatchRoundSummary> RoundSummaries
     {
@@ -124,7 +121,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         _currentBoardRevision = 0;
         _pendingBoardRefresh = false;
         _notifiedRevision = 0;
-        LastMoveLabel = string.Empty;
+        _recentMoves = Array.Empty<MatchBoardMove>();
+        RecentMoves.Clear();
         RoundSummaries = Array.Empty<MatchRoundSummary>();
         RoundLabel = "—";
         CurrentTurnLabel = "—";
@@ -169,9 +167,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     change, _lobbyCode, _matchId, Math.Max(_currentBoardRevision, _notifiedRevision)))
             {
                 _notifiedRevision = Math.Max(_notifiedRevision, change.Revision);
-                LastMoveLabel = change.ActionKind == MatchBoardActionKind.Dismantle
-                    ? string.Format(_text.Get("Match.Move.Dismantle"), change.PlayerUsername, change.PilePosition)
-                    : $"{change.PlayerUsername}: {change.CardNumber} → {change.PilePosition}";
                 if (IsLoadingBoard)
                 {
                     _pendingBoardRefresh = true;
@@ -312,6 +307,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                 RoundSummaries = board.RoundSummaries;
             }
 
+            _recentMoves = board.RecentMoves;
+            RefreshMoveHistory();
             RoundLabel = board.RoundNumber?.ToString() ?? "—";
             MatchBoardPlayer? current = board.Players.Find(player =>
                 player.PlayerId == board.CurrentTurnPlayerId);
@@ -357,7 +354,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     if (ApplyBoard(board) && board.Revision >= _notifiedRevision)
                     {
                         _notifiedRevision = board.Revision;
-                        LastMoveLabel = $"{original.Username}: {cardNumber} → {pilePosition}";
                     }
                 }
             });
@@ -482,6 +478,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public string BoardHintText => _text.Get("Match.BoardHint");
     public string HandText => _text.Get("Match.Hand");
     public string WildcardText => _text.Get("Match.Wildcards");
+    public string RecentMovesText => _text.Get("Match.RecentMoves");
     public string ChatText => _text.Get("Match.Chat");
     public string MessageHintText => _text.Get("Match.MessageHint");
     public string SendText => _text.Get("Match.Send");
@@ -508,6 +505,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(HandText));
         OnPropertyChanged(nameof(WildcardText));
         OnPropertyChanged(nameof(ChatText));
+        OnPropertyChanged(nameof(RecentMovesText));
+        RefreshMoveHistory();
         OnPropertyChanged(nameof(MessageHintText));
         OnPropertyChanged(nameof(SendText));
         OnPropertyChanged(nameof(PlayCardText));
@@ -517,6 +516,34 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(CancelText));
         OnPropertyChanged(nameof(ConfirmText));
         OnPropertyChanged(nameof(ErrorTitleText));
+    }
+
+    private void RefreshMoveHistory()
+    {
+        RecentMoves.Clear();
+        foreach (MatchBoardMove move in _recentMoves.Reverse())
+        {
+            RecentMoves.Add(new MatchMoveRow(FormatMove(move)));
+        }
+    }
+
+    private string FormatMove(MatchBoardMove move)
+    {
+        string label;
+        if (move.ActionKind == MatchBoardActionKind.Dismantle)
+        {
+            label = string.Format(_text.Get("Match.Move.Dismantle"), move.PlayerUsername, move.PilePosition);
+        }
+        else
+        {
+            string key = move.ActionKind == MatchBoardActionKind.MasterPlan
+                ? "Match.Move.MasterPlan" : "Match.Move.Placement";
+            IEnumerable<int> chain = move.PreviousTop is int top
+                ? move.CardNumbers.Prepend(top) : move.CardNumbers;
+            label = string.Format(_text.Get(key), move.PlayerUsername, string.Join(" → ", chain), move.PilePosition);
+        }
+
+        return label;
     }
 
     private void RequestExit()

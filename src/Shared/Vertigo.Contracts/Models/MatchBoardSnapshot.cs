@@ -29,9 +29,13 @@ public sealed class MatchBoardSnapshot
     [DataMember]
     public List<MatchRoundSummary> RoundSummaries { get; set; } = new();
 
+    [DataMember]
+    public List<MatchBoardMove> RecentMoves { get; set; } = new();
+
     [OnDeserializing]
-    private void InitializeRoundSummaries(StreamingContext context)
+    private void InitializeCollections(StreamingContext context)
     {
         RoundSummaries = new List<MatchRoundSummary>();
+        RecentMoves = new List<MatchBoardMove>();
     }
 }

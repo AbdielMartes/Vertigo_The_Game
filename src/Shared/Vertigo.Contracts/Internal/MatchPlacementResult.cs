@@ -8,5 +8,7 @@ public enum MatchPlacementResult
     CardNotOwned,
     InvalidPile,
     InvalidPlacement,
-    StaleRevision
+    StaleRevision,
+    MasterPlanRequired,
+    InvalidMasterPlanChain
 }

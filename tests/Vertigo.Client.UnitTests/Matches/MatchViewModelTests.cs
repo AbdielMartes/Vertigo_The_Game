@@ -86,7 +86,7 @@ public sealed class MatchViewModelTests
     }
 
     [Fact]
-    public void ApplyBoard_SnapshotWithoutRoundSummaries_AcceptsLegacyPayload()
+    public void ApplyBoard_SnapshotWithoutRoundSummariesOrMoves_AcceptsLegacyPayload()
     {
         MatchViewModel model = CreateModel();
         Guid matchId = Guid.NewGuid();
@@ -97,6 +97,7 @@ public sealed class MatchViewModelTests
         stream.Position = 0;
         XElement payload = XElement.Load(stream);
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.RoundSummaries))!.Remove();
+        payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.RecentMoves))!.Remove();
         using System.Xml.XmlReader reader = payload.CreateReader();
         MatchBoardSnapshot board = Assert.IsType<MatchBoardSnapshot>(serializer.ReadObject(reader));
 
@@ -104,6 +105,37 @@ public sealed class MatchViewModelTests
 
         Assert.True(accepted);
         Assert.Empty(model.RoundSummaries);
+        Assert.Empty(model.RecentMoves);
+    }
+
+    [Fact]
+    public void ApplyBoard_WithRecentMoves_ShowsMostRecentFirst()
+    {
+        MatchViewModel model = CreateModel();
+        Guid matchId = Guid.NewGuid();
+        model.Activate(matchId, "ABC234");
+        MatchBoardSnapshot board = new()
+        {
+            MatchId = matchId,
+            Revision = 5,
+            RecentMoves =
+            {
+                new MatchBoardMove { PlayerUsername = "Ana", PilePosition = 1, PreviousTop = 12, CardNumbers = { 15 } },
+                new MatchBoardMove { PlayerUsername = "Beto", PilePosition = 2,
+                    ActionKind = MatchBoardActionKind.Dismantle },
+                new MatchBoardMove { PlayerUsername = "Ana", PilePosition = 3, PreviousTop = 20,
+                    ActionKind = MatchBoardActionKind.MasterPlan, CardNumbers = { 24, 30 } }
+            }
+        };
+
+        Assert.True(model.ApplyBoard(board));
+        Assert.False(model.ApplyBoard(new MatchBoardSnapshot { MatchId = matchId, Revision = 4 }));
+
+        string[] expected = { "Ana usó un Plano Maestro: 20 → 24 → 30 · torre 3",
+            "Beto desmontó la torre 2.", "Ana jugó 12 → 15 · torre 1" };
+        Assert.Equal(expected, model.RecentMoves.Select(move => move.Text));
+        model.Reset();
+        Assert.Empty(model.RecentMoves);
     }
 
     private static MatchViewModel CreateModel()
@@ -115,7 +147,13 @@ public sealed class MatchViewModelTests
     {
         public string Get(string key)
         {
-            return key;
+            return key switch
+            {
+                "Match.Move.Placement" => "{0} jugó {1} · torre {2}",
+                "Match.Move.MasterPlan" => "{0} usó un Plano Maestro: {1} · torre {2}",
+                "Match.Move.Dismantle" => "{0} desmontó la torre {1}.",
+                _ => key
+            };
         }
     }
 }

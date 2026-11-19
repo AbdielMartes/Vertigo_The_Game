@@ -9,5 +9,8 @@ public enum MatchBoardActionKind
     Placement,
 
     [EnumMember]
-    Dismantle
+    Dismantle,
+
+    [EnumMember]
+    MasterPlan
 }

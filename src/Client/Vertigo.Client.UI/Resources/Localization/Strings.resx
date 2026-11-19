@@ -494,4 +494,19 @@
   <data name="Match.Error.PlacementAvailable" xml:space="preserve">
     <value>Todavía puedes colocar un módulo en una torre.</value>
   </data>
+  <data name="Match.RecentMoves" xml:space="preserve">
+    <value>Últimas jugadas</value>
+  </data>
+  <data name="Match.Move.Placement" xml:space="preserve">
+    <value>{0} jugó {1} · torre {2}</value>
+  </data>
+  <data name="Match.Move.MasterPlan" xml:space="preserve">
+    <value>{0} usó un Plano Maestro: {1} · torre {2}</value>
+  </data>
+  <data name="Match.Error.MasterPlanRequired" xml:space="preserve">
+    <value>Necesitas un Plano Maestro.</value>
+  </data>
+  <data name="Match.Error.InvalidMasterPlanChain" xml:space="preserve">
+    <value>Elige al menos dos módulos distintos que formen una cadena válida.</value>
+  </data>
 </root>

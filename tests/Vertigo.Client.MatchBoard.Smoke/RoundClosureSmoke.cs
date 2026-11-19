@@ -85,9 +85,50 @@ internal static class RoundClosureSmoke
             ExpectedRevision = board.Revision
         };
 
-        return placement.Pile == 0
-            ? PlayDismantle(active.Lobby, request)
-            : PlayPlacement(active.Lobby, request, placement);
+        TurnResult result;
+        (int First, int Second, int Pile) chain = FindMasterPlan(board, hand);
+        if (chain.Pile != 0)
+        {
+            MatchBoardSnapshot updated = active.Lobby.UseMatchMasterPlan(new MatchMasterPlanRequest
+            {
+                LobbyCode = lobbyCode,
+                SessionToken = active.Session.Token,
+                CardNumbers = new List<int> { chain.First, chain.Second },
+                PilePosition = chain.Pile,
+                ExpectedRevision = board.Revision
+            });
+            MatchBoardMove latest = updated.RecentMoves.Last();
+            Check(latest.ActionKind == MatchBoardActionKind.MasterPlan && latest.Revision == updated.Revision
+                && latest.PlayerId == active.Session.PlayerId && latest.PlayerUsername == active.Session.Username
+                && latest.PilePosition == chain.Pile
+                && latest.CardNumbers.SequenceEqual(new[] { chain.First, chain.Second }),
+                "The master plan did not produce one history entry with the expected chain.");
+            Console.WriteLine("PASS: MASTER PLAN CHAIN IN PUBLIC MOVE HISTORY");
+            result = new TurnResult(updated, MatchBoardActionKind.MasterPlan, chain.Pile);
+        }
+        else
+        {
+            result = placement.Pile == 0 ? PlayDismantle(active.Lobby, request)
+                : PlayPlacement(active.Lobby, request, placement);
+        }
+
+        return result;
+    }
+
+    private static (int First, int Second, int Pile) FindMasterPlan(MatchBoardSnapshot board, MatchPrivateHand hand)
+    {
+        (int First, int Second, int Pile) chain = default;
+        if (hand.MasterPlans > 0)
+        {
+            chain = (from pile in board.Piles
+                     from first in hand.Cards
+                     from second in hand.Cards
+                     where pile.TopCardNumber is int top && first - top is >= 1 and <= MaximumPlacementDifference
+                         && second - first is >= 1 and <= MaximumPlacementDifference
+                     select (first, second, pile.Position)).FirstOrDefault();
+        }
+
+        return chain;
     }
 
     private static TurnResult PlayDismantle(ILobbyClient lobby, MatchDismantleRequest request)

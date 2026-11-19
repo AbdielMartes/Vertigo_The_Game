@@ -90,6 +90,21 @@ public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLi
         return result;
     }
 
+    public MatchPlacementResult TryUseMasterPlan(Guid matchId, Guid playerId, MatchMasterPlan move)
+    {
+        ArgumentNullException.ThrowIfNull(move);
+        MatchPlacementResult result = MatchPlacementResult.MatchUnavailable;
+        lock (_syncRoot)
+        {
+            if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
+            {
+                result = record.TryUseMasterPlan(playerId, move, _timeProvider.GetUtcNow());
+            }
+        }
+
+        return result;
+    }
+
     public MatchDismantleResult TryDismantle(Guid matchId, Guid playerId, MatchDismantle move)
     {
         ArgumentNullException.ThrowIfNull(move);

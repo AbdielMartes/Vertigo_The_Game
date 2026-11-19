@@ -494,4 +494,19 @@
   <data name="Match.Error.PlacementAvailable" xml:space="preserve">
     <value>You can still place a module on a tower.</value>
   </data>
+  <data name="Match.RecentMoves" xml:space="preserve">
+    <value>Recent moves</value>
+  </data>
+  <data name="Match.Move.Placement" xml:space="preserve">
+    <value>{0} played {1} · tower {2}</value>
+  </data>
+  <data name="Match.Move.MasterPlan" xml:space="preserve">
+    <value>{0} used a Master Plan: {1} · tower {2}</value>
+  </data>
+  <data name="Match.Error.MasterPlanRequired" xml:space="preserve">
+    <value>You need a Master Plan.</value>
+  </data>
+  <data name="Match.Error.InvalidMasterPlanChain" xml:space="preserve">
+    <value>Choose at least two different modules that form a valid chain.</value>
+  </data>
 </root>

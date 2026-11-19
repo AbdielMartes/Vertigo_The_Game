@@ -12,6 +12,7 @@ internal sealed class MatchRecord
     private const int FinalRoundNumber = 3;
     private const int MaximumFloorsPerDismantle = 10;
     private const int MinimumBlocksForMasterPlan = 3;
+    private const int MaximumRecentMoves = 4;
     private const long InitialBoardRevision = 1;
 
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
@@ -21,6 +22,7 @@ internal sealed class MatchRecord
     private readonly MatchScoring _scoring = new();
     private readonly Func<MatchDeck> _createDeck;
     private readonly List<MatchBoardPile> _piles = new();
+    private readonly Queue<MatchBoardMove> _recentMoves = new();
     private MatchDeck _deck;
     private int _roundNumber = FirstRoundNumber;
     private Guid _roundOpenerId;
@@ -89,6 +91,15 @@ internal sealed class MatchRecord
             CurrentTurnPlayerId = _currentTurnPlayerId,
             WinnerIds = _winnerIds.ToList(),
             RoundSummaries = _scoring.ToRoundSummaries(),
+            RecentMoves = _recentMoves.Select(move => new MatchBoardMove
+            {
+                Revision = move.Revision,
+                PlayerId = move.PlayerId,
+                ActionKind = move.ActionKind,
+                PilePosition = move.PilePosition,
+                PreviousTop = move.PreviousTop,
+                CardNumbers = move.CardNumbers.ToList()
+            }).ToList(),
             Players = Session.PlayerIds.Select(id => new MatchBoardPlayer
             {
                 PlayerId = id,
@@ -149,15 +160,107 @@ internal sealed class MatchRecord
             }
             else
             {
-                _hands[playerId] = cards.Where(card => card != move.CardNumber).ToArray();
-                pile.TopCardNumber = move.CardNumber;
-                pile.CardCount++;
+                ApplyModules(playerId, pile, new[] { move.CardNumber });
                 CompleteTurn(playerId, now);
                 result = MatchPlacementResult.Applied;
             }
         }
 
         return result;
+    }
+
+    public MatchPlacementResult TryUseMasterPlan(Guid playerId, MatchMasterPlan move, DateTimeOffset now)
+    {
+        return GetTurnRejection(playerId, move.ExpectedRevision) ?? TryApplyMasterPlan(playerId, move, now);
+    }
+
+    private MatchPlacementResult TryApplyMasterPlan(Guid playerId, MatchMasterPlan move, DateTimeOffset now)
+    {
+        IReadOnlyList<int> hand = _hands[playerId];
+        IReadOnlyList<int> modules = move.CardNumbers;
+        MatchPlacementResult result;
+        if (_masterPlans[playerId] == 0)
+        {
+            result = MatchPlacementResult.MasterPlanRequired;
+        }
+        else if (modules is null || modules.Count < 2 || modules.Count > hand.Count
+            || modules.Distinct().Count() != modules.Count)
+        {
+            result = MatchPlacementResult.InvalidMasterPlanChain;
+        }
+        else if (!modules.All(module => hand.Contains(module)))
+        {
+            result = MatchPlacementResult.CardNotOwned;
+        }
+        else if (move.PilePosition < 1 || move.PilePosition > _piles.Count)
+        {
+            result = MatchPlacementResult.InvalidPile;
+        }
+        else
+        {
+            result = PlayMasterPlan(playerId, _piles[move.PilePosition - 1], modules);
+            if (result == MatchPlacementResult.Applied)
+            {
+                CompleteTurn(playerId, now);
+            }
+        }
+
+        return result;
+    }
+
+    private MatchPlacementResult PlayMasterPlan(Guid playerId, MatchBoardPile pile, IReadOnlyList<int> modules)
+    {
+        MatchPlacementResult result = MatchPlacementResult.InvalidMasterPlanChain;
+        if (pile.TopCardNumber is int top && IsValidChain(top, modules))
+        {
+            ApplyModules(playerId, pile, modules);
+            _masterPlans[playerId]--;
+            result = MatchPlacementResult.Applied;
+        }
+
+        return result;
+    }
+
+    private static bool IsValidChain(int top, IReadOnlyList<int> modules)
+    {
+        bool valid = true;
+        for (int index = 0; index < modules.Count && valid; index++)
+        {
+            int module = modules[index];
+            valid = MatchPlacementRules.IsValid(top, module);
+            top = module;
+        }
+
+        return valid;
+    }
+
+    private void ApplyModules(Guid playerId, MatchBoardPile pile, IReadOnlyList<int> modules)
+    {
+        MatchBoardActionKind kind = modules.Count == 1
+            ? MatchBoardActionKind.Placement : MatchBoardActionKind.MasterPlan;
+        RecordMove(playerId, (kind, pile.Position, pile.TopCardNumber), modules);
+        _hands[playerId] = _hands[playerId].Where(card => !modules.Contains(card)).ToArray();
+        pile.TopCardNumber = modules[^1];
+        pile.CardCount += modules.Count;
+    }
+
+    private void RecordMove(Guid playerId, (MatchBoardActionKind Kind, int PilePosition, int? PreviousTop) action,
+        IReadOnlyList<int> modules)
+    {
+        if (_recentMoves.Count == MaximumRecentMoves)
+        {
+            _recentMoves.Dequeue();
+        }
+
+        _recentMoves.Enqueue(new MatchBoardMove
+        {
+            Revision = _boardRevision + 1,
+            PlayerId = playerId,
+            ActionKind = action.Kind,
+            PilePosition = action.PilePosition,
+            PreviousTop = action.PreviousTop,
+            CardNumbers = modules.ToList()
+        });
     }
 
     public MatchDismantleResult TryDismantle(Guid playerId, MatchDismantle move, DateTimeOffset now)
@@ -194,6 +297,8 @@ internal sealed class MatchRecord
             }
             else
             {
+                RecordMove(playerId, (MatchBoardActionKind.Dismantle, pile.Position, pile.TopCardNumber),
+                    Array.Empty<int>());
                 DismantleTower(playerId, pile);
                 CompleteTurn(playerId, now);
                 result = MatchDismantleResult.Applied;

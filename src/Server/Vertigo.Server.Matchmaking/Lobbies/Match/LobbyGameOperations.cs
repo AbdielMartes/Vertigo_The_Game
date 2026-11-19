@@ -32,6 +32,14 @@ public sealed class LobbyGameOperations
         {
             Dictionary<Guid, string> names = lobby.GetMembersExcept(Guid.Empty)
                 .ToDictionary(member => member.PlayerId, member => member.Username);
+            foreach (MatchBoardMove move in board.RecentMoves)
+            {
+                if (names.TryGetValue(move.PlayerId, out string? username))
+                {
+                    move.PlayerUsername = username;
+                }
+            }
+
             foreach (MatchBoardPlayer player in board.Players)
             {
                 if (names.TryGetValue(player.PlayerId, out string? username))
@@ -52,6 +60,11 @@ public sealed class LobbyGameOperations
     public MatchPlacementResult TryPlace(Guid matchId, Guid playerId, MatchPlacement move)
     {
         return _readers.Placements.TryPlace(matchId, playerId, move);
+    }
+
+    public MatchPlacementResult TryUseMasterPlan(Guid matchId, Guid playerId, MatchMasterPlan move)
+    {
+        return _readers.Placements.TryUseMasterPlan(matchId, playerId, move);
     }
 
     public MatchDismantleResult TryDismantle(Guid matchId, Guid playerId, MatchDismantle move)

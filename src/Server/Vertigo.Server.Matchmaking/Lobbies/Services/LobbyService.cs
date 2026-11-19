@@ -265,6 +265,25 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         }
     }
 
+    public MatchBoardSnapshot UseMatchMasterPlan(MatchMasterPlanRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        int[] modules = request.CardNumbers?.ToArray() ?? Array.Empty<int>();
+        MatchMasterPlan move = new(modules, request.PilePosition, request.ExpectedRevision);
+
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
+            (MatchBoardActionKind.MasterPlan, move.PilePosition, modules.LastOrDefault()), ApplyMasterPlan);
+
+        void ApplyMasterPlan(Guid matchId, Guid playerId)
+        {
+            MatchPlacementResult result = _gameOperations.TryUseMasterPlan(matchId, playerId, move);
+            if (result != MatchPlacementResult.Applied)
+            {
+                throw LobbyMatchFault.Create(result);
+            }
+        }
+    }
+
     private MatchBoardSnapshot ApplyMatchBoardAction(
         (string LobbyCode, string SessionToken) access,
         (MatchBoardActionKind Kind, int PilePosition, int CardNumber) action,

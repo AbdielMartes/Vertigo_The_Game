@@ -14,6 +14,9 @@ internal static class LobbyMatchFault
             MatchPlacementResult.CardNotOwned => ("MATCH_CARD_NOT_OWNED", "Match.Error.CardNotOwned"),
             MatchPlacementResult.InvalidPile => ("MATCH_INVALID_PILE", "Match.Error.InvalidPile"),
             MatchPlacementResult.InvalidPlacement => ("MATCH_UNSTABLE_PLACEMENT", "Match.Error.Unstable"),
+            MatchPlacementResult.MasterPlanRequired => ("MATCH_MASTER_PLAN_REQUIRED", "Match.Error.MasterPlanRequired"),
+            MatchPlacementResult.InvalidMasterPlanChain =>
+                ("MATCH_INVALID_MASTER_PLAN_CHAIN", "Match.Error.InvalidMasterPlanChain"),
             MatchPlacementResult.StaleRevision => ("MATCH_STALE_REVISION", "Match.Error.Stale"),
             _ => ("MATCH_UNAVAILABLE", "Match.Error.Unavailable")
         };

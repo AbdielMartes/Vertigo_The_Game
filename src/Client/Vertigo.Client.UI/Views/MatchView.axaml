@@ -55,8 +55,6 @@
                                    Foreground="{DynamicResource ColorSnesBlue}"/>
                         <TextBlock Text="{Binding TurnText}" FontWeight="SemiBold" Margin="12,0,0,0"/>
                         <TextBlock Text="{Binding CurrentTurnLabel}"/>
-                        <TextBlock Text="{Binding LastMoveLabel}"
-                                   Foreground="{DynamicResource ColorTextSecondary}"/>
                     </StackPanel>
                     <Button Grid.Column="2" Classes="vertigo-button danger" TabIndex="0"
                             Content="{Binding ExitText}" Command="{Binding RequestExitCommand}"/>
@@ -139,9 +137,24 @@
                         </Grid>
                     </Border>
                     <Border Grid.Column="2" Classes="match-panel">
-                        <Grid RowDefinitions="Auto,*,Auto,Auto,Auto" RowSpacing="10">
-                            <TextBlock Text="{Binding ChatText}" FontSize="18" FontWeight="Bold"/>
-                            <ListBox Grid.Row="1" TabIndex="2" MinHeight="240"
+                        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10">
+                            <Border BorderBrush="{DynamicResource ColorDivider}"
+                                    BorderThickness="0,0,0,1" Padding="0,0,0,10">
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="{Binding RecentMovesText}" FontSize="15" FontWeight="SemiBold"/>
+                                    <ItemsControl ItemsSource="{Binding RecentMoves}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="rows:MatchMoveRow">
+                                                <TextBlock Text="{Binding Text}" FontSize="12" Margin="0,0,0,3"
+                                                           TextWrapping="Wrap"
+                                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                            <TextBlock Grid.Row="1" Text="{Binding ChatText}" FontSize="18" FontWeight="Bold"/>
+                            <ListBox Grid.Row="2" TabIndex="2" MinHeight="240"
                                      ItemsSource="{Binding ChatMessages}"
                                      AutomationProperties.Name="{Binding ChatText}">
                                 <ListBox.ItemTemplate>
@@ -154,14 +167,15 @@
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
-                            <TextBox Grid.Row="2" TabIndex="3" MaxLength="{x:Static validation:MatchChatRules.MaximumLength}"
+                            <TextBox Grid.Row="3" TabIndex="3"
+                                     MaxLength="{x:Static validation:MatchChatRules.MaximumLength}"
                                      Text="{Binding DraftMessage, Mode=TwoWay}"
                                      PlaceholderText="{Binding MessageHintText}" AcceptsReturn="False"
                                      AutomationProperties.Name="{Binding MessageHintText}"/>
-                            <TextBlock Grid.Row="3" Text="{Binding ChatLengthLabel}"
+                            <TextBlock Grid.Row="4" Text="{Binding ChatLengthLabel}"
                                        HorizontalAlignment="Right" FontSize="11"
                                        Foreground="{DynamicResource ColorTextSecondary}"/>
-                            <Button Grid.Row="4" Classes="vertigo-button primary" TabIndex="4"
+                            <Button Grid.Row="5" Classes="vertigo-button primary" TabIndex="4"
                                     Content="{Binding SendText}" IsEnabled="False"/>
                         </Grid>
                     </Border>
