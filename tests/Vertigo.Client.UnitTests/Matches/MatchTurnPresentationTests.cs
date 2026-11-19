@@ -176,6 +176,91 @@ public sealed class MatchTurnPresentationTests
         Assert.Equal("16", turn.Model.TurnSecondsLabel);
     }
 
+    [Fact]
+    public void MasterPlanDraft_PendingVoteAndUnchangedHand_PreservesChain()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Board.ExpulsionVotes.Add(new MatchExpulsionVoteSummary { TargetPlayerId = Guid.NewGuid(), VoteCount = 1 });
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Equal("12 → 15 → 22", turn.Model.MasterPlanPreview);
+        Assert.True(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        turn.Model.SelectedCard = turn.Model.Hand[0];
+        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_ChangedTower_ClearsChainAndRejectsOldSelection()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        MatchPileRow oldPile = turn.Model.Piles[1];
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Board.Piles[1].TopCardNumber = 14;
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Null(turn.Model.SelectedPile);
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        turn.Model.SelectedPile = oldPile;
+        turn.Model.SelectedCard = turn.Model.Hand[0];
+        Assert.False(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_MissingModule_ClearsDraftAndRejectsOldCard()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        MatchCardRow oldCard = turn.Model.Hand[0];
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Hand.Cards.Remove(15);
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        Assert.False(turn.Model.RemoveMasterPlanModuleCommand.CanExecute(null));
+        turn.Model.SelectedCard = oldCard;
+        Assert.False(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_ExpiredTurn_DisablesPlayAndClearsDraftOnRefresh()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
+
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        turn.Board.ServerTimeUtc = turn.Board.TurnDeadlineUtc;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.False(turn.Model.RemoveMasterPlanModuleCommand.CanExecute(null));
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+    }
+
+    private static TurnFixture CreateTurnWithDraft()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Hand.MasterPlans = 1;
+        turn.Hand.Cards.Add(22);
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        turn.Model.SelectedPile = turn.Model.Piles[1];
+
+        foreach (MatchCardRow card in turn.Model.Hand)
+        {
+            turn.Model.SelectedCard = card;
+            Assert.True(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
+            turn.Model.AddMasterPlanModuleCommand.Execute(null);
+        }
+
+        Assert.True(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+
+        return turn;
+    }
+
     private static TurnFixture CreateTurn()
     {
         ManualClock clock = new();

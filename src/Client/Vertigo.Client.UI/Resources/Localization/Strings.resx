@@ -537,4 +537,19 @@
   <data name="Match.Turn.OtherPlayer" xml:space="preserve"><value>Turno de {0}</value></data>
   <data name="Match.Turn.Seconds" xml:space="preserve"><value>{0} s</value></data>
   <data name="Match.DismantleTower" xml:space="preserve"><value>Desmontar torre</value></data>
+  <data name="Match.MasterPlan.Count" xml:space="preserve">
+    <value>Planos Maestros disponibles · {0}</value>
+  </data>
+  <data name="Match.MasterPlan.Hint" xml:space="preserve">
+    <value>Elige una torre y añade dos o más módulos en orden.</value>
+  </data>
+  <data name="Match.MasterPlan.AddModule" xml:space="preserve">
+    <value>Añadir módulo seleccionado</value>
+  </data>
+  <data name="Match.MasterPlan.RemoveModule" xml:space="preserve">
+    <value>Quitar último módulo</value>
+  </data>
+  <data name="Match.MasterPlan.Play" xml:space="preserve">
+    <value>Jugar Plano Maestro</value>
+  </data>
 </root>

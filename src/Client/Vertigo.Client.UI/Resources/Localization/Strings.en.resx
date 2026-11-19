@@ -537,4 +537,19 @@
   <data name="Match.Turn.OtherPlayer" xml:space="preserve"><value>{0}’s turn</value></data>
   <data name="Match.Turn.Seconds" xml:space="preserve"><value>{0} s</value></data>
   <data name="Match.DismantleTower" xml:space="preserve"><value>Dismantle tower</value></data>
+  <data name="Match.MasterPlan.Count" xml:space="preserve">
+    <value>Master Plans available · {0}</value>
+  </data>
+  <data name="Match.MasterPlan.Hint" xml:space="preserve">
+    <value>Choose a tower and add two or more modules in order.</value>
+  </data>
+  <data name="Match.MasterPlan.AddModule" xml:space="preserve">
+    <value>Add selected module</value>
+  </data>
+  <data name="Match.MasterPlan.RemoveModule" xml:space="preserve">
+    <value>Remove last module</value>
+  </data>
+  <data name="Match.MasterPlan.Play" xml:space="preserve">
+    <value>Play Master Plan</value>
+  </data>
 </root>

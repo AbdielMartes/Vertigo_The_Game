@@ -30,6 +30,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private static readonly TimeSpan CountdownInterval = TimeSpan.FromMilliseconds(200);
     private readonly MatchBoardRevision _boardRevision = new();
     private readonly MatchTurnClock _turnClock;
+    private readonly MatchMasterPlanDraft _masterPlanDraft = new();
+    private DateTimeOffset? _turnDeadlineUtc;
+    private int _masterPlanCount;
     private int _generation;
     private bool _isLoadingBoard;
     private bool _isExitConfirmationOpen;
@@ -65,6 +68,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         RefreshBoardCommand = new AsyncRelayCommand(RefreshBoardAsync);
         PlaceCardCommand = new AsyncRelayCommand(PlaceCardAsync, CanPlaceSelectedCard);
         DismantleTowerCommand = new AsyncRelayCommand(DismantleTowerAsync, CanDismantleSelectedTower);
+        AddMasterPlanModuleCommand = new RelayCommand(AddMasterPlanModule, CanAddMasterPlanModule);
+        RemoveMasterPlanModuleCommand = new RelayCommand(RemoveMasterPlanModule, CanRemoveMasterPlanModule);
+        PlayMasterPlanCommand = new AsyncRelayCommand(PlayMasterPlanAsync, CanPlayMasterPlan);
         RequestExitCommand = new RelayCommand(RequestExit);
         CancelExitCommand = new RelayCommand(CancelExit);
     }
@@ -79,6 +85,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public IAsyncRelayCommand RefreshBoardCommand { get; }
     public IAsyncRelayCommand PlaceCardCommand { get; }
     public IAsyncRelayCommand DismantleTowerCommand { get; }
+    public IRelayCommand AddMasterPlanModuleCommand { get; }
+    public IRelayCommand RemoveMasterPlanModuleCommand { get; }
+    public IAsyncRelayCommand PlayMasterPlanCommand { get; }
     public MatchPileRow? SelectedPile
     {
         get => _selectedPile;
@@ -86,6 +95,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             if (SetProperty(ref _selectedPile, value))
             {
+                ClearMasterPlanDraft();
                 RefreshTurnCommands();
             }
         }
@@ -140,7 +150,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         Players.Clear();
         Piles.Clear();
         Hand.Clear();
-        Wildcards.Clear();
         ChatMessages.Clear();
         DraftMessage = string.Empty;
         SelectedCard = null;
@@ -157,6 +166,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         _hasCurrentHand = false;
         _hasLegalPlacement = false;
         _isSubmittingTurn = false;
+        _turnDeadlineUtc = null;
+        SetMasterPlanCount(0);
+        ClearMasterPlanDraft();
         _turnClock.SetDeadline(null, null);
         RefreshTurnCountdown();
         OnPropertyChanged(nameof(CurrentTurnLabel));
@@ -187,6 +199,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
         }
         StopCountdownTimer();
+        ClearMasterPlanDraft();
         _generation++;
         _pendingBoardRefresh = false;
         _hasCurrentHand = false;
@@ -381,19 +394,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             }
 
             _currentBoardRevision = board.Revision;
-            Piles.Clear();
-            SelectedPile = null;
-            foreach (MatchBoardPile pile in board.Piles)
-            {
-                Piles.Add(new MatchPileRow
-                {
-                    Position = pile.Position,
-                    TopCardNumber = pile.TopCardNumber,
-                    Label = pile.Position.ToString(),
-                    Count = pile.CardCount,
-                    TopCardText = pile.TopCardNumber?.ToString() ?? string.Empty
-                });
-            }
+            UpdatePiles(board.Piles);
 
             if (RoundSummaries.Count != board.RoundSummaries.Count)
             {
@@ -407,6 +408,13 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                 player.PlayerId == board.CurrentTurnPlayerId);
             _turnPlayerName = current?.Username;
             _isMyTurn = current is not null && current.PlayerId == localPlayerId;
+            if (!_isMyTurn || _turnDeadlineUtc != board.TurnDeadlineUtc)
+            {
+                SelectedPile = null;
+                ClearMasterPlanDraft();
+            }
+
+            _turnDeadlineUtc = board.TurnDeadlineUtc;
             _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
             RefreshTurnCountdown();
             OnPropertyChanged(nameof(CurrentTurnLabel));
@@ -417,6 +425,28 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         return accepted;
     }
 
+    private void UpdatePiles(IReadOnlyList<MatchBoardPile> piles)
+    {
+        bool unchanged = Piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.Count))
+            .SequenceEqual(piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.CardCount)));
+        if (!unchanged)
+        {
+            SelectedPile = null;
+            Piles.Clear();
+            foreach (MatchBoardPile pile in piles)
+            {
+                Piles.Add(new MatchPileRow
+                {
+                    Position = pile.Position,
+                    TopCardNumber = pile.TopCardNumber,
+                    Label = pile.Position.ToString(),
+                    Count = pile.CardCount,
+                    TopCardText = pile.TopCardNumber?.ToString() ?? string.Empty
+                });
+            }
+        }
+    }
+
     private bool CanSubmitTurn()
     {
         return _isMyTurn && _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn
@@ -425,7 +455,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private bool CanPlaceSelectedCard()
     {
-        return CanSubmitTurn() && SelectedPile is { } pile && Piles.Contains(pile)
+        return CanSubmitTurn() && _masterPlanDraft.Modules.Count == 0
+            && SelectedPile is { } pile && Piles.Contains(pile)
             && SelectedCard is { } card && Hand.Contains(card)
             && MatchTurnRules.CanPlace(pile.TopCardNumber, card.CardNumber);
     }
@@ -464,6 +495,61 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             {
                 LobbyCode = lobbyCode,
                 SessionToken = token,
+                PilePosition = pile.Position,
+                ExpectedRevision = revision
+            }))
+            : Task.CompletedTask;
+    }
+
+    private bool CanAddMasterPlanModule()
+    {
+        return CanSubmitTurn() && HasMasterPlans
+            && SelectedPile is { } pile && Piles.Contains(pile)
+            && SelectedCard is { } card && Hand.Contains(card)
+            && _masterPlanDraft.CanAppend(pile.TopCardNumber, card.CardNumber);
+    }
+
+    private void AddMasterPlanModule()
+    {
+        if (CanAddMasterPlanModule() && SelectedCard?.CardNumber is int card
+            && _masterPlanDraft.TryAppend(SelectedPile?.TopCardNumber, card))
+        {
+            OnMasterPlanDraftChanged();
+        }
+    }
+
+    private bool CanRemoveMasterPlanModule()
+    {
+        return !_isSubmittingTurn && _masterPlanDraft.Modules.Count > 0;
+    }
+
+    private void RemoveMasterPlanModule()
+    {
+        if (CanRemoveMasterPlanModule() && _masterPlanDraft.RemoveLast())
+        {
+            OnMasterPlanDraftChanged();
+        }
+    }
+
+    private bool CanPlayMasterPlan()
+    {
+        return CanSubmitTurn() && HasMasterPlans && _masterPlanDraft.CanPlay
+            && SelectedPile is { TopCardNumber: not null } pile && Piles.Contains(pile);
+    }
+
+    private Task PlayMasterPlanAsync()
+    {
+        MatchPileRow? pile = SelectedPile;
+        string lobbyCode = _lobbyCode;
+        long revision = _currentBoardRevision;
+        List<int> modules = new(_masterPlanDraft.Modules);
+
+        return CanPlayMasterPlan() && pile is not null
+            ? SubmitTurnAsync((lobbies, token) => lobbies.UseMatchMasterPlan(new MatchMasterPlanRequest
+            {
+                LobbyCode = lobbyCode,
+                SessionToken = token,
+                CardNumbers = modules,
                 PilePosition = pile.Position,
                 ExpectedRevision = revision
             }))
@@ -543,6 +629,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         Hand.Clear();
         SelectedCard = null;
         _hasCurrentHand = hand is not null;
+        SetMasterPlanCount(hand?.MasterPlans ?? 0);
+        if (hand is null || !HasMasterPlans || !_masterPlanDraft.IsStillInHand(hand.Cards))
+        {
+            ClearMasterPlanDraft();
+        }
+
         _hasLegalPlacement = hand is not null
             && MatchTurnRules.HasLegalPlacement(Piles.Select(pile => pile.TopCardNumber), hand.Cards);
         if (hand is not null)
@@ -560,6 +652,32 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     {
         PlaceCardCommand.NotifyCanExecuteChanged();
         DismantleTowerCommand.NotifyCanExecuteChanged();
+        AddMasterPlanModuleCommand.NotifyCanExecuteChanged();
+        RemoveMasterPlanModuleCommand.NotifyCanExecuteChanged();
+        PlayMasterPlanCommand.NotifyCanExecuteChanged();
+    }
+
+    private void SetMasterPlanCount(int count)
+    {
+        if (SetProperty(ref _masterPlanCount, count, nameof(MasterPlanCountLabel)))
+        {
+            OnPropertyChanged(nameof(HasMasterPlans));
+        }
+    }
+
+    private void ClearMasterPlanDraft()
+    {
+        if (_masterPlanDraft.Modules.Count > 0)
+        {
+            _masterPlanDraft.Clear();
+            OnMasterPlanDraftChanged();
+        }
+    }
+
+    private void OnMasterPlanDraftChanged()
+    {
+        OnPropertyChanged(nameof(MasterPlanPreview));
+        RefreshTurnCommands();
     }
 
     private void StartCountdownTimer()
@@ -594,6 +712,11 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         if (SetProperty(ref _turnSeconds, _turnClock.GetRemainingSeconds(), nameof(TurnSecondsLabel)))
         {
             OnPropertyChanged(nameof(HasTurnCountdown));
+            if (_turnSeconds == 0)
+            {
+                ClearMasterPlanDraft();
+            }
+
             RefreshTurnCommands();
         }
     }
@@ -609,7 +732,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public ObservableCollection<MatchPlayerRow> Players { get; } = new();
     public ObservableCollection<MatchPileRow> Piles { get; } = new();
     public ObservableCollection<MatchCardRow> Hand { get; } = new();
-    public ObservableCollection<MatchCardRow> Wildcards { get; } = new();
     public ObservableCollection<MatchChatRow> ChatMessages { get; } = new();
 
     public string RoundLabel
@@ -682,7 +804,13 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public string BoardText => _text.Get("Match.Board");
     public string BoardHintText => _text.Get("Match.BoardHint");
     public string HandText => _text.Get("Match.Hand");
-    public string WildcardText => _text.Get("Match.Wildcards");
+    public bool HasMasterPlans => _masterPlanCount > 0;
+    public string MasterPlanCountLabel => string.Format(_text.Get("Match.MasterPlan.Count"), _masterPlanCount);
+    public string MasterPlanPreview => SelectedPile?.TopCardNumber is int top && _masterPlanDraft.Modules.Count > 0
+        ? string.Join(" → ", _masterPlanDraft.Modules.Prepend(top)) : _text.Get("Match.MasterPlan.Hint");
+    public string AddMasterPlanModuleText => _text.Get("Match.MasterPlan.AddModule");
+    public string RemoveMasterPlanModuleText => _text.Get("Match.MasterPlan.RemoveModule");
+    public string PlayMasterPlanText => _text.Get("Match.MasterPlan.Play");
     public string RecentMovesText => _text.Get("Match.RecentMoves");
     public string ChatText => _text.Get("Match.Chat");
     public string MessageHintText => _text.Get("Match.MessageHint");
@@ -710,7 +838,11 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(BoardText));
         OnPropertyChanged(nameof(BoardHintText));
         OnPropertyChanged(nameof(HandText));
-        OnPropertyChanged(nameof(WildcardText));
+        OnPropertyChanged(nameof(MasterPlanCountLabel));
+        OnPropertyChanged(nameof(MasterPlanPreview));
+        OnPropertyChanged(nameof(AddMasterPlanModuleText));
+        OnPropertyChanged(nameof(RemoveMasterPlanModuleText));
+        OnPropertyChanged(nameof(PlayMasterPlanText));
         OnPropertyChanged(nameof(ChatText));
         OnPropertyChanged(nameof(RecentMovesText));
         RefreshMoveHistory();
