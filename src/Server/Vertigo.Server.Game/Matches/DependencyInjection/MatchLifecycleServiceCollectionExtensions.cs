@@ -30,6 +30,9 @@ public static class MatchLifecycleServiceCollectionExtensions
         services.AddSingleton<IMatchDismantleService>(provider =>
             provider.GetRequiredService<InMemoryMatchSessionStarter>());
 
+        services.AddSingleton<IMatchTurnClock>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
         return services;
     }
 }

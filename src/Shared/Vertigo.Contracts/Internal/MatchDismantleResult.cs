@@ -8,5 +8,6 @@ public enum MatchDismantleResult
     NotYourTurn,
     InvalidPile,
     EmptyPile,
-    PlacementAvailable
+    PlacementAvailable,
+    TurnExpired
 }

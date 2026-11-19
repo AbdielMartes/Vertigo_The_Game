@@ -8,6 +8,7 @@ internal static class RoundClosureSmoke
     private const int MaximumRoundActions = 100;
     private const int MaximumPlacementDifference = 10;
     private static readonly TimeSpan NotificationTimeout = TimeSpan.FromSeconds(15);
+    private static readonly TimeSpan TurnExpiryTimeout = TimeSpan.FromSeconds(30);
 
     public static async Task<bool> VerifyAsync(
         (ILobbyClient Lobby, UserSession Session) first,
@@ -47,6 +48,24 @@ internal static class RoundClosureSmoke
             second.Lobby.Disconnect();
             second.Lobby.JoinLobby(lobbyCode, second.Session.Token);
             VerifySummary(board, second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token));
+
+            if (dismantled)
+            {
+                using CancellationTokenSource timeout = new(TurnExpiryTimeout);
+                MatchBoardChanged timedOutForFirst = await firstChanges.Reader.ReadAsync(timeout.Token);
+                MatchBoardChanged timedOutForSecond = await secondChanges.Reader.ReadAsync(timeout.Token);
+                CheckTimeout(timedOutForFirst, board);
+                CheckTimeout(timedOutForSecond, board);
+                CheckAbandonment(first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token), board);
+                CheckAbandonment(second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token), board);
+
+                (ILobbyClient Lobby, UserSession Session) expelled =
+                    board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
+                MatchPrivateHand hand = expelled.Lobby.GetMatchPrivateHand(lobbyCode, expelled.Session.Token);
+                Check(hand.MatchId == board.MatchId && hand.PlayerId == expelled.Session.PlayerId
+                    && hand.Cards.Count == 0 && hand.MasterPlans == 0,
+                    "The expelled client could not refresh its board with an empty private hand.");
+            }
 
             return dismantled;
         }
@@ -180,6 +199,24 @@ internal static class RoundClosureSmoke
         Check(notice.MatchId == turn.Board.MatchId && notice.Revision == turn.Board.Revision
             && notice.ActionKind == turn.Kind && notice.PilePosition == turn.Pile && notice.PlayerUsername == username,
             "A client received the wrong action notification.");
+    }
+
+    private static void CheckTimeout(MatchBoardChanged notice, MatchBoardSnapshot before)
+    {
+        Check(notice.MatchId == before.MatchId && notice.Revision == before.Revision + 1
+            && notice.ActionKind == MatchBoardActionKind.TurnExpired,
+            "A client did not receive the turn-expiry notification.");
+    }
+
+    private static void CheckAbandonment(MatchBoardSnapshot after, MatchBoardSnapshot before)
+    {
+        Guid expelled = before.CurrentTurnPlayerId;
+        Guid winner = before.Players.Single(player => player.PlayerId != expelled).PlayerId;
+        Check(after.EndReason == MatchEndReason.Abandonment && after.CurrentTurnPlayerId == Guid.Empty
+            && after.TurnDeadlineUtc is null && after.Revision == before.Revision + 1
+            && after.WinnerIds.SequenceEqual(new[] { winner })
+            && after.ExpelledPlayerIds.SequenceEqual(new[] { expelled }),
+            "The timed-out match did not end with the expected winner and expelled player.");
     }
 
     private static void VerifySummary(MatchBoardSnapshot expected, MatchBoardSnapshot received)

@@ -72,6 +72,11 @@ public sealed class LobbyGameOperations
         return _readers.Dismantles.TryDismantle(matchId, playerId, move);
     }
 
+    public Guid? TryExpireTurn(Guid matchId)
+    {
+        return _readers.TurnClock.TryExpireTurn(matchId);
+    }
+
     public bool TryReconnect(LobbyState lobby, Guid playerId)
     {
         MatchReconnectResult result = _presence.TryReconnect(lobby.MatchId, playerId);

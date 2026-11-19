@@ -197,7 +197,7 @@ static async Task<bool> RunMatchAsync()
             lobbyCode);
         if (dismantled)
         {
-            Console.WriteLine("PASS: DISMANTLE CALLBACKS AND ROUND SUMMARY FOR BOTH CLIENTS AND AFTER RECONNECTION");
+            Console.WriteLine("PASS: ROUND SUMMARY AFTER RECONNECTION, TURN EXPIRY AND ABANDONMENT FOR BOTH CLIENTS");
         }
 
         return dismantled;

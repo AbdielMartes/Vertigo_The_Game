@@ -204,8 +204,17 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 throw CreateFault(ServiceErrorCodes.LobbyAlreadyInGame, ServiceMessageKeys.LobbyAlreadyInGame);
             }
 
-            return _gameOperations.GetPrivateHand(lobby.MatchId, identity.PlayerId)
-                ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+            MatchPrivateHand? hand = _gameOperations.GetPrivateHand(lobby.MatchId, identity.PlayerId);
+            if (hand is null)
+            {
+                MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
+                if (board is not null && board.ExpelledPlayerIds.Contains(identity.PlayerId))
+                {
+                    hand = new MatchPrivateHand { MatchId = lobby.MatchId, PlayerId = identity.PlayerId };
+                }
+            }
+
+            return hand ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
         }
     }
 
@@ -318,6 +327,40 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         };
         Notify(callbacks, SendMatchBoardUpdated, changed);
         return board;
+    }
+
+    public void ProcessExpiredMatchTurns()
+    {
+        List<(List<ILobbyCallback> Callbacks, MatchBoardChanged Notice)> notifications = new();
+        lock (_lobbyLock)
+        {
+            foreach (LobbyState lobby in _lobbies.Values)
+            {
+                if (lobby.Status == LobbyStatus.InGame
+                    && _gameOperations.TryExpireTurn(lobby.MatchId) is Guid expelledId)
+                {
+                    MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
+                    MatchBoardMove? move = board?.RecentMoves.LastOrDefault();
+                    if (board is not null && move is not null && move.PlayerId == expelledId)
+                    {
+                        MatchBoardChanged notice = new()
+                        {
+                            LobbyCode = lobby.LobbyCode,
+                            MatchId = board.MatchId,
+                            Revision = board.Revision,
+                            PlayerUsername = move.PlayerUsername,
+                            ActionKind = MatchBoardActionKind.TurnExpired
+                        };
+                        notifications.Add((lobby.GetCallbacksExcept(Guid.Empty), notice));
+                    }
+                }
+            }
+        }
+
+        foreach ((List<ILobbyCallback> callbacks, MatchBoardChanged notice) in notifications)
+        {
+            Notify(callbacks, SendMatchBoardUpdated, notice);
+        }
     }
 
     public LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken)

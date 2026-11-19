@@ -15,7 +15,10 @@ internal sealed class MatchRecord
     private const int MaximumRecentMoves = 4;
     private const long InitialBoardRevision = 1;
 
+    private static readonly TimeSpan TurnDuration = TimeSpan.FromSeconds(20);
+
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
+    private readonly HashSet<Guid> _activePlayerIds;
     private readonly Dictionary<Guid, IReadOnlyList<int>> _hands = new();
     private readonly Dictionary<Guid, int> _personalFloors = new();
     private readonly Dictionary<Guid, int> _masterPlans = new();
@@ -27,6 +30,8 @@ internal sealed class MatchRecord
     private int _roundNumber = FirstRoundNumber;
     private Guid _roundOpenerId;
     private Guid _currentTurnPlayerId;
+    private DateTimeOffset? _turnDeadlineUtc;
+    private MatchEndReason _endReason;
     private Guid[] _winnerIds = Array.Empty<Guid>();
     private long _boardRevision = InitialBoardRevision;
 
@@ -38,10 +43,11 @@ internal sealed class MatchRecord
     internal MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc, Func<MatchDeck> createDeck)
     {
         Session = session;
+        _activePlayerIds = new HashSet<Guid>(session.PlayerIds);
         _createDeck = createDeck;
         _deck = _createDeck();
         Guid opener = session.PlayerIds[RandomNumberGenerator.GetInt32(session.PlayerIds.Count)];
-        DealRound(opener);
+        DealRound(opener, createdAtUtc);
         Lifecycle = new MatchLifecycleSnapshot
         {
             MatchId = session.MatchId,
@@ -52,9 +58,9 @@ internal sealed class MatchRecord
         };
     }
 
-    private void DealRound(Guid opener)
+    private void DealRound(Guid opener, DateTimeOffset now)
     {
-        foreach (Guid playerId in Session.PlayerIds)
+        foreach (Guid playerId in Session.PlayerIds.Where(_activePlayerIds.Contains))
         {
             _hands[playerId] = _deck.Draw(MatchDeck.InitialHandSize);
             _personalFloors[playerId] = 0;
@@ -74,7 +80,7 @@ internal sealed class MatchRecord
         }
 
         _roundOpenerId = opener;
-        _currentTurnPlayerId = opener;
+        BeginTurn(opener, now);
     }
 
     public MatchSessionSnapshot Session { get; }
@@ -89,6 +95,9 @@ internal sealed class MatchRecord
             Revision = _boardRevision,
             RoundNumber = _roundNumber,
             CurrentTurnPlayerId = _currentTurnPlayerId,
+            TurnDeadlineUtc = _turnDeadlineUtc,
+            EndReason = _endReason,
+            ExpelledPlayerIds = Session.PlayerIds.Where(id => !_activePlayerIds.Contains(id)).ToList(),
             WinnerIds = _winnerIds.ToList(),
             RoundSummaries = _scoring.ToRoundSummaries(),
             RecentMoves = _recentMoves.Select(move => new MatchBoardMove
@@ -100,7 +109,7 @@ internal sealed class MatchRecord
                 PreviousTop = move.PreviousTop,
                 CardNumbers = move.CardNumbers.ToList()
             }).ToList(),
-            Players = Session.PlayerIds.Select(id => new MatchBoardPlayer
+            Players = Session.PlayerIds.Where(_activePlayerIds.Contains).Select(id => new MatchBoardPlayer
             {
                 PlayerId = id,
                 FloorsBuilt = _personalFloors[id],
@@ -117,15 +126,19 @@ internal sealed class MatchRecord
 
     public MatchPlacementResult TryPlace(Guid playerId, MatchPlacement move, DateTimeOffset now)
     {
-        return GetTurnRejection(playerId, move.ExpectedRevision) ?? TryApplyPlacement(playerId, move, now);
+        return GetTurnRejection(playerId, move.ExpectedRevision, now) ?? TryApplyPlacement(playerId, move, now);
     }
 
-    private MatchPlacementResult? GetTurnRejection(Guid playerId, long expectedRevision)
+    private MatchPlacementResult? GetTurnRejection(Guid playerId, long expectedRevision, DateTimeOffset now)
     {
         MatchPlacementResult? rejection = null;
         if (Lifecycle.Status != MatchLifecycleStatus.Running)
         {
             rejection = MatchPlacementResult.MatchUnavailable;
+        }
+        else if (IsTurnExpired(now))
+        {
+            rejection = MatchPlacementResult.TurnExpired;
         }
         else if (expectedRevision != _boardRevision)
         {
@@ -171,7 +184,7 @@ internal sealed class MatchRecord
 
     public MatchPlacementResult TryUseMasterPlan(Guid playerId, MatchMasterPlan move, DateTimeOffset now)
     {
-        return GetTurnRejection(playerId, move.ExpectedRevision) ?? TryApplyMasterPlan(playerId, move, now);
+        return GetTurnRejection(playerId, move.ExpectedRevision, now) ?? TryApplyMasterPlan(playerId, move, now);
     }
 
     private MatchPlacementResult TryApplyMasterPlan(Guid playerId, MatchMasterPlan move, DateTimeOffset now)
@@ -265,10 +278,11 @@ internal sealed class MatchRecord
 
     public MatchDismantleResult TryDismantle(Guid playerId, MatchDismantle move, DateTimeOffset now)
     {
-        MatchDismantleResult result = GetTurnRejection(playerId, move.ExpectedRevision) switch
+        MatchDismantleResult result = GetTurnRejection(playerId, move.ExpectedRevision, now) switch
         {
             MatchPlacementResult.MatchUnavailable => MatchDismantleResult.MatchUnavailable,
             MatchPlacementResult.StaleRevision => MatchDismantleResult.StaleRevision,
+            MatchPlacementResult.TurnExpired => MatchDismantleResult.TurnExpired,
             MatchPlacementResult.NotYourTurn => MatchDismantleResult.NotYourTurn,
             null => TryApplyDismantle(playerId, move, now),
             _ => throw new InvalidOperationException("Unexpected turn rejection.")
@@ -328,6 +342,53 @@ internal sealed class MatchRecord
         pile.CardCount = pile.TopCardNumber.HasValue ? 1 : 0;
     }
 
+    public Guid? TryExpireTurn(DateTimeOffset now)
+    {
+        Guid? expelledPlayerId = null;
+        if (IsTurnExpired(now))
+        {
+            Guid playerId = _currentTurnPlayerId;
+            RecordMove(playerId, (MatchBoardActionKind.TurnExpired, 0, null), Array.Empty<int>());
+            ExpelPlayer(playerId, now);
+            expelledPlayerId = playerId;
+        }
+
+        return expelledPlayerId;
+    }
+
+    private bool IsTurnExpired(DateTimeOffset now)
+    {
+        return !IsTerminal && _turnDeadlineUtc is DateTimeOffset deadline && now >= deadline;
+    }
+
+    private void ExpelPlayer(Guid playerId, DateTimeOffset now)
+    {
+        _deck.ReturnToBottom(_hands[playerId]);
+        _hands.Remove(playerId);
+        _activePlayerIds.Remove(playerId);
+        _disconnectedPlayerIds.Remove(playerId);
+        _boardRevision++;
+
+        if (_activePlayerIds.Count == 1)
+        {
+            FinishMatch(_activePlayerIds.ToArray(), MatchEndReason.Abandonment, now);
+        }
+        else
+        {
+            ContinueRound(playerId, now);
+            if (!IsTerminal)
+            {
+                Lifecycle = Lifecycle with
+                {
+                    Status = _disconnectedPlayerIds.Count == _activePlayerIds.Count
+                        ? MatchLifecycleStatus.Suspended : MatchLifecycleStatus.Running,
+                    Revision = Lifecycle.Revision + 1,
+                    UpdatedAtUtc = now
+                };
+            }
+        }
+    }
+
     private void CompleteTurn(Guid playerId, DateTimeOffset now)
     {
         _boardRevision++;
@@ -335,43 +396,65 @@ internal sealed class MatchRecord
         {
             CloseRound(playerId, now);
         }
-        else if (_deck.RemainingCount == 0 && !Session.PlayerIds.Any(CanPlaceAnyModule))
+        else
+        {
+            ContinueRound(playerId, now);
+        }
+    }
+
+    private void ContinueRound(Guid after, DateTimeOffset now)
+    {
+        if (_deck.RemainingCount == 0 && !_activePlayerIds.Any(CanPlaceAnyModule))
         {
             CloseRound(null, now);
         }
         else
         {
-            int index = Session.PlayerIds.ToList().IndexOf(playerId);
-            _currentTurnPlayerId = Session.PlayerIds[(index + 1) % Session.PlayerIds.Count];
+            BeginTurn(GetActivePlayersAfter(after).First(), now);
         }
+    }
+
+    private void BeginTurn(Guid playerId, DateTimeOffset now)
+    {
+        _currentTurnPlayerId = playerId;
+        _turnDeadlineUtc = now + TurnDuration;
     }
 
     private void CloseRound(Guid? closedBy, DateTimeOffset now)
     {
-        _scoring.AddRound(_personalFloors, closedBy);
+        Dictionary<Guid, int> floors = _activePlayerIds.ToDictionary(playerId => playerId,
+            playerId => _personalFloors[playerId]);
+        _scoring.AddRound(floors, closedBy);
         if (_roundNumber == FinalRoundNumber)
         {
-            _winnerIds = _scoring.GetWinners(Session.PlayerIds);
-            _currentTurnPlayerId = Guid.Empty;
-            TryTransition(MatchLifecycleStatus.Finished, now);
+            IReadOnlyList<Guid> players = Session.PlayerIds.Where(_activePlayerIds.Contains).ToArray();
+            FinishMatch(_scoring.GetWinners(players), MatchEndReason.Completed, now);
         }
         else
         {
-            Guid opener = GetNextRoundOpener();
+            Guid opener = GetActivePlayersAfter(_roundOpenerId).MinBy(_scoring.GetGlobalFloors);
             _roundNumber++;
             _deck = _createDeck();
-            DealRound(opener);
+            DealRound(opener, now);
         }
     }
 
-    private Guid GetNextRoundOpener()
+    private IEnumerable<Guid> GetActivePlayersAfter(Guid playerId)
     {
         IReadOnlyList<Guid> players = Session.PlayerIds;
-        int previous = players.ToList().IndexOf(_roundOpenerId);
-        IEnumerable<Guid> order = Enumerable.Range(1, players.Count)
-            .Select(offset => players[(previous + offset) % players.Count]);
+        int previous = players.ToList().IndexOf(playerId);
 
-        return order.MinBy(_scoring.GetGlobalFloors);
+        return Enumerable.Range(1, players.Count)
+            .Select(offset => players[(previous + offset) % players.Count])
+            .Where(_activePlayerIds.Contains);
+    }
+
+    private void FinishMatch(Guid[] winnerIds, MatchEndReason reason, DateTimeOffset now)
+    {
+        _winnerIds = winnerIds;
+        _endReason = reason;
+        _currentTurnPlayerId = Guid.Empty;
+        TryTransition(MatchLifecycleStatus.Finished, now);
     }
 
     public MatchPrivateHand? ToPrivateHand(Guid playerId)
@@ -405,14 +488,14 @@ internal sealed class MatchRecord
     public bool TrySetConnected(Guid playerId, bool isConnected, DateTimeOffset now)
     {
         bool changed = false;
-        if (!IsTerminal && Session.PlayerIds.Contains(playerId))
+        if (!IsTerminal && _activePlayerIds.Contains(playerId))
         {
             changed = isConnected
                 ? _disconnectedPlayerIds.Remove(playerId)
                 : _disconnectedPlayerIds.Add(playerId);
             if (changed)
             {
-                MatchLifecycleStatus status = _disconnectedPlayerIds.Count == Session.PlayerIds.Count
+                MatchLifecycleStatus status = _disconnectedPlayerIds.Count == _activePlayerIds.Count
                     ? MatchLifecycleStatus.Suspended : MatchLifecycleStatus.Running;
                 Lifecycle = Lifecycle with
                 {
@@ -429,7 +512,7 @@ internal sealed class MatchRecord
     public MatchReconnectResult TryReconnect(Guid playerId, DateTimeOffset now)
     {
         MatchReconnectResult result = MatchReconnectResult.Rejected;
-        if (!IsTerminal && Session.PlayerIds.Contains(playerId))
+        if (!IsTerminal && _activePlayerIds.Contains(playerId))
         {
             if (_disconnectedPlayerIds.Remove(playerId))
             {
@@ -457,6 +540,7 @@ internal sealed class MatchRecord
         bool changed = false;
         if (!IsTerminal && (next is MatchLifecycleStatus.Finished or MatchLifecycleStatus.Cancelled))
         {
+            _turnDeadlineUtc = null;
             Lifecycle = Lifecycle with
             {
                 Status = next,

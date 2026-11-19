@@ -86,7 +86,7 @@ public sealed class MatchViewModelTests
     }
 
     [Fact]
-    public void ApplyBoard_SnapshotWithoutRoundSummariesOrMoves_AcceptsLegacyPayload()
+    public void ApplyBoard_SnapshotWithoutNewFields_AcceptsLegacyPayload()
     {
         MatchViewModel model = CreateModel();
         Guid matchId = Guid.NewGuid();
@@ -98,6 +98,7 @@ public sealed class MatchViewModelTests
         XElement payload = XElement.Load(stream);
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.RoundSummaries))!.Remove();
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.RecentMoves))!.Remove();
+        payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.ExpelledPlayerIds))!.Remove();
         using System.Xml.XmlReader reader = payload.CreateReader();
         MatchBoardSnapshot board = Assert.IsType<MatchBoardSnapshot>(serializer.ReadObject(reader));
 
@@ -106,6 +107,7 @@ public sealed class MatchViewModelTests
         Assert.True(accepted);
         Assert.Empty(model.RoundSummaries);
         Assert.Empty(model.RecentMoves);
+        Assert.Empty(board.ExpelledPlayerIds);
     }
 
     [Fact]

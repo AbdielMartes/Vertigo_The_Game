@@ -509,4 +509,10 @@
   <data name="Match.Error.InvalidMasterPlanChain" xml:space="preserve">
     <value>Elige al menos dos módulos distintos que formen una cadena válida.</value>
   </data>
+  <data name="Match.Move.TurnExpired" xml:space="preserve">
+    <value>{0} agotó su tiempo.</value>
+  </data>
+  <data name="Match.Error.TurnExpired" xml:space="preserve">
+    <value>El tiempo del turno ya terminó.</value>
+  </data>
 </root>

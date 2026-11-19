@@ -18,6 +18,15 @@ public sealed class MatchBoardSnapshot
     public Guid CurrentTurnPlayerId { get; set; }
 
     [DataMember]
+    public DateTimeOffset? TurnDeadlineUtc { get; set; }
+
+    [DataMember]
+    public MatchEndReason EndReason { get; set; }
+
+    [DataMember]
+    public List<Guid> ExpelledPlayerIds { get; set; } = new();
+
+    [DataMember]
     public List<MatchBoardPlayer> Players { get; set; } = new();
 
     [DataMember]
@@ -37,5 +46,6 @@ public sealed class MatchBoardSnapshot
     {
         RoundSummaries = new List<MatchRoundSummary>();
         RecentMoves = new List<MatchBoardMove>();
+        ExpelledPlayerIds = new List<Guid>();
     }
 }

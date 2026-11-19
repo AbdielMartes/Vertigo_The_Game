@@ -13,6 +13,7 @@ using Vertigo.Server.CrossCutting.Security.Interfaces;
 using Vertigo.Server.DataAccess;
 using Vertigo.Server.Game.Matches.DependencyInjection;
 using Vertigo.Server.Host.Logging;
+using Vertigo.Server.Host.Matches;
 using Vertigo.Server.Matchmaking.Chat.Services;
 using Vertigo.Server.Matchmaking.Invitations.Dependencies;
 using Vertigo.Server.Matchmaking.Invitations.Services;
@@ -60,6 +61,7 @@ try
     builder.Services.AddSingleton<MatchReadServices>();
     builder.Services.AddSingleton<LobbyGameOperations>();
     builder.Services.AddSingleton<LobbyService>();
+    builder.Services.AddHostedService<MatchTurnClockWorker>();
     builder.Services.AddSingleton<ILobbyDirectory>(services => services.GetRequiredService<LobbyService>());
     builder.Services.AddTransient<LobbyInvitationServiceDependencies>();
     builder.Services.AddTransient<LobbyInvitationService>();

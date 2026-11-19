@@ -12,5 +12,8 @@ public enum MatchBoardActionKind
     Dismantle,
 
     [EnumMember]
-    MasterPlan
+    MasterPlan,
+
+    [EnumMember]
+    TurnExpired
 }

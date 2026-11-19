@@ -534,6 +534,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             label = string.Format(_text.Get("Match.Move.Dismantle"), move.PlayerUsername, move.PilePosition);
         }
+        else if (move.ActionKind == MatchBoardActionKind.TurnExpired)
+        {
+            label = string.Format(_text.Get("Match.Move.TurnExpired"), move.PlayerUsername);
+        }
         else
         {
             string key = move.ActionKind == MatchBoardActionKind.MasterPlan

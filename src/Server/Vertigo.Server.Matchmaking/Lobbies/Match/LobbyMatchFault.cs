@@ -17,6 +17,7 @@ internal static class LobbyMatchFault
             MatchPlacementResult.MasterPlanRequired => ("MATCH_MASTER_PLAN_REQUIRED", "Match.Error.MasterPlanRequired"),
             MatchPlacementResult.InvalidMasterPlanChain =>
                 ("MATCH_INVALID_MASTER_PLAN_CHAIN", "Match.Error.InvalidMasterPlanChain"),
+            MatchPlacementResult.TurnExpired => ("MATCH_TURN_EXPIRED", "Match.Error.TurnExpired"),
             MatchPlacementResult.StaleRevision => ("MATCH_STALE_REVISION", "Match.Error.Stale"),
             _ => ("MATCH_UNAVAILABLE", "Match.Error.Unavailable")
         };
@@ -30,6 +31,7 @@ internal static class LobbyMatchFault
             MatchDismantleResult.NotYourTurn => Create(MatchPlacementResult.NotYourTurn),
             MatchDismantleResult.InvalidPile => Create(MatchPlacementResult.InvalidPile),
             MatchDismantleResult.StaleRevision => Create(MatchPlacementResult.StaleRevision),
+            MatchDismantleResult.TurnExpired => Create(MatchPlacementResult.TurnExpired),
             MatchDismantleResult.EmptyPile => Create("MATCH_EMPTY_TOWER", "Match.Error.EmptyTower"),
             MatchDismantleResult.PlacementAvailable =>
                 Create("MATCH_PLACEMENT_AVAILABLE", "Match.Error.PlacementAvailable"),

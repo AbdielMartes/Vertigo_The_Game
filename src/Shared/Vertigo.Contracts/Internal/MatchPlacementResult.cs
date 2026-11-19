@@ -10,5 +10,6 @@ public enum MatchPlacementResult
     InvalidPlacement,
     StaleRevision,
     MasterPlanRequired,
-    InvalidMasterPlanChain
+    InvalidMasterPlanChain,
+    TurnExpired
 }

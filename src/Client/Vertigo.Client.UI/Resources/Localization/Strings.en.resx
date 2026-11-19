@@ -509,4 +509,10 @@
   <data name="Match.Error.InvalidMasterPlanChain" xml:space="preserve">
     <value>Choose at least two different modules that form a valid chain.</value>
   </data>
+  <data name="Match.Move.TurnExpired" xml:space="preserve">
+    <value>{0} ran out of time.</value>
+  </data>
+  <data name="Match.Error.TurnExpired" xml:space="preserve">
+    <value>The turn has already expired.</value>
+  </data>
 </root>

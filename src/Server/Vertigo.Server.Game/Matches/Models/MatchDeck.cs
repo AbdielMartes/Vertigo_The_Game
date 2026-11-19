@@ -32,6 +32,14 @@ internal sealed class MatchDeck
 
     public int RemainingCount => _remaining.Count;
 
+    public void ReturnToBottom(IReadOnlyList<int> modules)
+    {
+        foreach (int module in modules)
+        {
+            _remaining.Enqueue(module);
+        }
+    }
+
     public IReadOnlyList<int> Draw(int count)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(count);
