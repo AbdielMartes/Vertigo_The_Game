@@ -7,6 +7,7 @@
   </Folder>
   <Folder Name="/src/Shared/">
     <Project Path="src/Shared/Vertigo.Contracts/Vertigo.Contracts.csproj" />
+    <Project Path="src/Shared/Vertigo.Registration/Vertigo.Registration.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Vertigo.Client.Networking.Smoke/Vertigo.Client.Networking.Smoke.csproj" />

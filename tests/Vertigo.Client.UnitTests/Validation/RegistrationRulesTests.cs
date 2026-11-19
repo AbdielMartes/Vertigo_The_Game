@@ -1,4 +1,4 @@
-using Vertigo.Client.UI.Utilities.Validation;
+using Vertigo.Registration;
 
 namespace Vertigo.Client.UnitTests.Validation;
 
@@ -23,7 +23,7 @@ public sealed class RegistrationRulesTests
     }
 
     [Fact]
-    public void ValidateUsername_Boundaries_EnforcesServerMaximum()
+    public void ValidateUsername_Boundaries_EnforcesMaximum()
     {
         Assert.Equal(FieldValidationError.None, RegistrationRules.ValidateUsername(new string('A', 20)));
         Assert.Equal(FieldValidationError.TooLong, RegistrationRules.ValidateUsername(new string('A', 21)));
@@ -48,10 +48,10 @@ public sealed class RegistrationRulesTests
     }
 
     [Fact]
-    public void ValidateEmail_OverServerLimit_ReturnsTooLong()
+    public void ValidateEmail_OverMaximumLength_ReturnsTooLong()
     {
         string suffix = "@example.com";
-        string maximum = new string('a', 60 - suffix.Length) + suffix;
+        string maximum = new string('a', 70 - suffix.Length) + suffix;
         Assert.Equal(FieldValidationError.None, RegistrationRules.ValidateEmail(maximum));
         Assert.Equal(FieldValidationError.TooLong, RegistrationRules.ValidateEmail("a" + maximum));
     }

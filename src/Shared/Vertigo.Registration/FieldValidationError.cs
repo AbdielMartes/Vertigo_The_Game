@@ -1,4 +1,4 @@
-namespace Vertigo.Client.UI.Utilities.Validation;
+namespace Vertigo.Registration;
 
 public enum FieldValidationError
 {

@@ -2,7 +2,7 @@ using Vertigo.Contracts.Callbacks;
 using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
 using Vertigo.Server.Matchmaking.Lobbies;
-using Vertigo.Server.Matchmaking.Lobbies.Services;
+using Vertigo.Server.Matchmaking.Lobbies.Match;
 
 namespace Vertigo.Server.Matchmaking.Tests.Lobbies;
 

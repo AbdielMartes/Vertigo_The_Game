@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Contracts.Models;
+using Vertigo.Registration;
 using Vertigo.Server.CrossCutting.Security.Interfaces;
 using Vertigo.Server.DataAccess.Entities.Identity;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
@@ -39,21 +40,24 @@ public class AccountService : IAccountService
 
     public bool RegisterAccount(AccountRegistration registration)
     {
-        if (registration is null || string.IsNullOrWhiteSpace(registration.Username)
-            || string.IsNullOrWhiteSpace(registration.Email)
-            || string.IsNullOrWhiteSpace(registration.Password)
-            || registration.Username.Length > 32 || registration.Email.Length > 120)
+        if (registration is null
+            || RegistrationRules.ValidateUsername(registration.Username) != FieldValidationError.None
+            || RegistrationRules.ValidateEmail(registration.Email) != FieldValidationError.None
+            || RegistrationRules.ValidatePassword(registration.Password) != FieldValidationError.None)
         {
             throw CreateFault(ServiceErrorCodes.InvalidRegistrationData, ServiceMessageKeys.InvalidRegistrationData);
         }
 
-        if (_playerRepository.UsernameExists(registration.Username))
+        string username = registration.Username.Trim();
+        string email = registration.Email.Trim();
+
+        if (_playerRepository.UsernameExists(username))
         {
             throw CreateFault(ServiceErrorCodes.UsernameAlreadyRegistered,
                 ServiceMessageKeys.UsernameAlreadyRegistered);
         }
 
-        if (_playerRepository.EmailExists(registration.Email))
+        if (_playerRepository.EmailExists(email))
         {
             throw CreateFault(ServiceErrorCodes.EmailAlreadyRegistered,
                 ServiceMessageKeys.EmailAlreadyRegistered);
@@ -62,8 +66,8 @@ public class AccountService : IAccountService
         string salt = _passwordHasher.GenerateSalt();
         Player player = new Player
         {
-            Username = registration.Username.Trim(),
-            Email = registration.Email.Trim(),
+            Username = username,
+            Email = email,
             PasswordSalt = salt,
             PasswordHash = _passwordHasher.HashPassword(registration.Password, salt),
             Stats = new PlayerStats()

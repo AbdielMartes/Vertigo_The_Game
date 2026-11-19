@@ -1,7 +1,7 @@
 using Vertigo.Contracts.Internal;
 using Vertigo.Server.Matchmaking.Lobbies;
 
-namespace Vertigo.Server.Matchmaking.Lobbies.Services;
+namespace Vertigo.Server.Matchmaking.Lobbies.Match;
 
 // The caller must hold the lobby synchronization lock during this operation.
 // No asynchronous or network operations are performed by the in-process starter.

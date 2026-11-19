@@ -6,6 +6,7 @@ using Vertigo.Contracts.Models;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Server.Matchmaking.Lobbies;
+using Vertigo.Server.Matchmaking.Lobbies.Match;
 using Microsoft.Extensions.DependencyInjection;
 using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
 using Vertigo.Server.PlayerManagement.Authentication.Models;
@@ -221,17 +222,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 throw CreateFault(ServiceErrorCodes.LobbyAlreadyStarted, ServiceMessageKeys.LobbyAlreadyStarted);
             }
 
-            board = _gameOperations.GetBoard(lobby.MatchId)
+            board = _gameOperations.GetBoard(lobby)
                 ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
-            Dictionary<Guid, string> names = lobby.GetMembersExcept(Guid.Empty)
-                .ToDictionary(member => member.PlayerId, member => member.Username);
-            foreach (MatchBoardPlayer player in board.Players)
-            {
-                if (names.TryGetValue(player.PlayerId, out string? username))
-                {
-                    player.Username = username;
-                }
-            }
         }
 
         return board;
@@ -255,20 +247,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             MatchPlacementResult result = _gameOperations.TryPlace(lobby.MatchId, identity.PlayerId, move);
             if (result != MatchPlacementResult.Applied)
             {
-                throw CreateFault(PlacementError(result), PlacementMessage(result));
+                throw LobbyPlacementFault.Create(result);
             }
 
-            board = _gameOperations.GetBoard(lobby.MatchId)
+            board = _gameOperations.GetBoard(lobby)
                 ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
-            Dictionary<Guid, string> names = lobby.GetMembersExcept(Guid.Empty)
-                .ToDictionary(member => member.PlayerId, member => member.Username);
-            foreach (MatchBoardPlayer player in board.Players)
-            {
-                if (names.TryGetValue(player.PlayerId, out string? username))
-                {
-                    player.Username = username;
-                }
-            }
 
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
@@ -284,32 +267,6 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         };
         Notify(callbacks, SendMatchBoardUpdated, changed);
         return board;
-    }
-
-    private static string PlacementError(MatchPlacementResult result)
-    {
-        return result switch
-        {
-            MatchPlacementResult.NotYourTurn => "MATCH_NOT_YOUR_TURN",
-            MatchPlacementResult.CardNotOwned => "MATCH_CARD_NOT_OWNED",
-            MatchPlacementResult.InvalidPile => "MATCH_INVALID_PILE",
-            MatchPlacementResult.InvalidPlacement => "MATCH_UNSTABLE_PLACEMENT",
-            MatchPlacementResult.StaleRevision => "MATCH_STALE_REVISION",
-            _ => "MATCH_UNAVAILABLE"
-        };
-    }
-
-    private static string PlacementMessage(MatchPlacementResult result)
-    {
-        return result switch
-        {
-            MatchPlacementResult.NotYourTurn => "Match.Error.NotYourTurn",
-            MatchPlacementResult.CardNotOwned => "Match.Error.CardNotOwned",
-            MatchPlacementResult.InvalidPile => "Match.Error.InvalidPile",
-            MatchPlacementResult.InvalidPlacement => "Match.Error.Unstable",
-            MatchPlacementResult.StaleRevision => "Match.Error.Stale",
-            _ => "Match.Error.Unavailable"
-        };
     }
 
     public LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken)

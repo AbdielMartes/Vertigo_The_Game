@@ -149,7 +149,7 @@
     <value>Escribe un correo electrónico.</value>
   </data>
   <data name="Access.Validation.Email.TooLong" xml:space="preserve">
-    <value>El correo no puede superar 60 caracteres.</value>
+    <value>El correo no puede superar 70 caracteres.</value>
   </data>
   <data name="Access.Validation.Email.InvalidFormat" xml:space="preserve">
     <value>Introduce un correo con @ y dominio; solo letras, números, punto, guion, guion bajo, + o % antes de @.</value>

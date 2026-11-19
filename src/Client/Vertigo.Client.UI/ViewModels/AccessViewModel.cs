@@ -14,7 +14,7 @@ using Vertigo.Client.UI.ViewModels.Lifecycle;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
 using Vertigo.Client.Networking.Sessions.Interfaces;
 using Vertigo.Contracts.Models;
-using Vertigo.Client.UI.Utilities.Validation;
+using Vertigo.Registration;
 
 namespace Vertigo.Client.UI.ViewModels;
 

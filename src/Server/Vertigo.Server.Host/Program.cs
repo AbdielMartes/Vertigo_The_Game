@@ -16,6 +16,7 @@ using Vertigo.Server.Host.Logging;
 using Vertigo.Server.Matchmaking.Chat.Services;
 using Vertigo.Server.Matchmaking.Invitations.Dependencies;
 using Vertigo.Server.Matchmaking.Invitations.Services;
+using Vertigo.Server.Matchmaking.Lobbies.Match;
 using Vertigo.Server.Matchmaking.Lobbies.Services;
 using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
 using Vertigo.Server.PlayerManagement.Authentication.Interfaces;

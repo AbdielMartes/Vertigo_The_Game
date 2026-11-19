@@ -15,5 +15,6 @@
   <ItemGroup>
     <Using Include="Xunit" />
     <ProjectReference Include="../../src/Server/Vertigo.Server.Matchmaking/Vertigo.Server.Matchmaking.csproj" />
+    <ProjectReference Include="../../src/Server/Vertigo.Server.PlayerManagement/Vertigo.Server.PlayerManagement.csproj" />
   </ItemGroup>
 </Project>

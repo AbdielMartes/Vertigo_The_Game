@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Vertigo.Registration;
 using Vertigo.Server.DataAccess.Entities.Enums;
 using Vertigo.Server.DataAccess.Entities.Game;
 using Vertigo.Server.DataAccess.Entities.Identity;
@@ -36,8 +37,8 @@ public class VertigoDatabaseContext : DbContext
             player.ToTable("Players");
             player.HasKey(p => p.PlayerId);
             player.Property(p => p.PlayerId).HasDefaultValueSql("NEWID()");
-            player.Property(p => p.Username).HasMaxLength(32).IsRequired();
-            player.Property(p => p.Email).HasMaxLength(120).IsRequired();
+            player.Property(p => p.Username).HasMaxLength(RegistrationRules.UsernameMaximumLength).IsRequired();
+            player.Property(p => p.Email).HasMaxLength(RegistrationRules.EmailMaximumLength).IsRequired();
             player.Property(p => p.PasswordHash).HasMaxLength(256).IsRequired();
             player.Property(p => p.PasswordSalt).HasMaxLength(128).IsRequired();
             player.Property(p => p.IsEmailVerified).HasDefaultValue(false);

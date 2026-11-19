@@ -179,10 +179,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         Guid matchId = _matchId;
         string lobbyCode = _lobbyCode;
         int generation = _generation;
-        BoardRequestIdentity request = new(original, matchId, generation);
         if (!IsLoadingBoard && matchId != Guid.Empty && _guard is not null && _lobbies is not null
             && _guard.HasActiveSession() && original is not null)
         {
+            BoardRequestIdentity request = new(original, matchId, generation);
             IsLoadingBoard = true;
             try
             {
@@ -192,27 +192,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     MatchPrivateHand hand = _lobbies.GetMatchPrivateHand(lobbyCode, original.Token);
                     return (board, hand);
                 });
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    if (IsCurrent(original, matchId, generation))
-                    {
-                        if (state.board.MatchId == matchId && state.hand.MatchId == matchId
-                            && state.hand.PlayerId == original.PlayerId)
-                        {
-                            ApplyBoard(state.board);
-                            ErrorMessage = string.Empty;
-                            Hand.Clear();
-                            foreach (int card in state.hand.Cards)
-                            {
-                                Hand.Add(new MatchCardRow { DisplayValue = card.ToString(), IsWildcard = false });
-                            }
-                        }
-                        else
-                        {
-                            ErrorMessage = _text.Get("Error.Unknown");
-                        }
-                    }
-                });
+                await Dispatcher.UIThread.InvokeAsync(() => ApplyBoardRefresh(state.board, state.hand, request));
             }
             catch (FaultException<ServiceFault> exception)
             {
@@ -232,22 +212,39 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             }
             finally
             {
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    if (generation == _generation)
-                    {
-                        IsLoadingBoard = false;
-                        bool needsRefresh = _pendingBoardRefresh && _notifiedRevision > _currentBoardRevision;
-                        _pendingBoardRefresh = false;
-                        if (needsRefresh)
-                        {
-                            if (IsCurrent(original, matchId, generation))
-                            {
-                                _ = RefreshBoardAsync();
-                            }
-                        }
-                    }
-                });
+                await Dispatcher.UIThread.InvokeAsync(() => CompleteBoardRefresh(request));
+            }
+        }
+    }
+
+    private void ApplyBoardRefresh(MatchBoardSnapshot board, MatchPrivateHand hand, BoardRequestIdentity request)
+    {
+        if (IsCurrent(request.Session, request.MatchId, request.Generation))
+        {
+            if (board.MatchId == request.MatchId && hand.MatchId == request.MatchId
+                && hand.PlayerId == request.Session.PlayerId)
+            {
+                ApplyBoard(board);
+                ErrorMessage = string.Empty;
+                ReplacePrivateHand(hand);
+            }
+            else
+            {
+                ErrorMessage = _text.Get("Error.Unknown");
+            }
+        }
+    }
+
+    private void CompleteBoardRefresh(BoardRequestIdentity request)
+    {
+        if (request.Generation == _generation)
+        {
+            IsLoadingBoard = false;
+            bool needsRefresh = _pendingBoardRefresh && _notifiedRevision > _currentBoardRevision;
+            _pendingBoardRefresh = false;
+            if (needsRefresh && IsCurrent(request.Session, request.MatchId, request.Generation))
+            {
+                _ = RefreshBoardAsync();
             }
         }
     }
@@ -257,7 +254,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         Debug.WriteLine($"Match operation failed: {exception.GetType().Name} (0x{exception.HResult:X8}).");
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (request.Session is not null && IsCurrent(request.Session, request.MatchId, request.Generation))
+            if (IsCurrent(request.Session, request.MatchId, request.Generation))
             {
                 ErrorMessage = _errors?.FromException(exception, "Error.Unknown")
                     ?? _text.Get("Error.Unknown");
@@ -372,17 +369,26 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             if (IsCurrent(session, matchId, generation) && hand.MatchId == matchId
                 && hand.PlayerId == session.PlayerId)
             {
-                Hand.Clear();
-                SelectedCard = null;
-                foreach (int card in hand.Cards)
-                {
-                    Hand.Add(new MatchCardRow { DisplayValue = card.ToString(), IsWildcard = false });
-                }
+                ReplacePrivateHand(hand, clearSelection: true);
             }
         });
     }
 
-    private sealed record BoardRequestIdentity(SessionSnapshot? Session, Guid MatchId, int Generation);
+    private void ReplacePrivateHand(MatchPrivateHand hand, bool clearSelection = false)
+    {
+        Hand.Clear();
+        if (clearSelection)
+        {
+            SelectedCard = null;
+        }
+
+        foreach (int card in hand.Cards)
+        {
+            Hand.Add(new MatchCardRow { DisplayValue = card.ToString(), IsWildcard = false });
+        }
+    }
+
+    private sealed record BoardRequestIdentity(SessionSnapshot Session, Guid MatchId, int Generation);
 
     private bool IsCurrent(SessionSnapshot original, Guid matchId, int generation)
     {

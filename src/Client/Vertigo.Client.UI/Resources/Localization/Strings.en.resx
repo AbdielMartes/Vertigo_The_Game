@@ -149,7 +149,7 @@
     <value>Enter an email address.</value>
   </data>
   <data name="Access.Validation.Email.TooLong" xml:space="preserve">
-    <value>Email cannot exceed 60 characters.</value>
+    <value>Email cannot exceed 70 characters.</value>
   </data>
   <data name="Access.Validation.Email.InvalidFormat" xml:space="preserve">
     <value>Enter an email with @ and a domain; before @ use letters, digits, dot, hyphen, underscore, + or %.</value>

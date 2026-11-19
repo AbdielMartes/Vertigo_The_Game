@@ -2,7 +2,7 @@ using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
 using Vertigo.Server.Matchmaking.Lobbies;
 
-namespace Vertigo.Server.Matchmaking.Lobbies.Services;
+namespace Vertigo.Server.Matchmaking.Lobbies.Match;
 
 // One dependency for Matchmaking's internal Game interactions.
 // All methods are invoked while the owning LobbyService holds its lobby lock.
@@ -25,9 +25,23 @@ public sealed class LobbyGameOperations
         _activation.Activate(lobby);
     }
 
-    public MatchBoardSnapshot? GetBoard(Guid matchId)
+    public MatchBoardSnapshot? GetBoard(LobbyState lobby)
     {
-        return _readers.Board.GetBoard(matchId);
+        MatchBoardSnapshot? board = _readers.Board.GetBoard(lobby.MatchId);
+        if (board is not null)
+        {
+            Dictionary<Guid, string> names = lobby.GetMembersExcept(Guid.Empty)
+                .ToDictionary(member => member.PlayerId, member => member.Username);
+            foreach (MatchBoardPlayer player in board.Players)
+            {
+                if (names.TryGetValue(player.PlayerId, out string? username))
+                {
+                    player.Username = username;
+                }
+            }
+        }
+
+        return board;
     }
 
     public MatchPrivateHand? GetPrivateHand(Guid matchId, Guid playerId)

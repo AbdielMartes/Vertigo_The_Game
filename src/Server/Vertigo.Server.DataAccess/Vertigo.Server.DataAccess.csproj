@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertigo.Server.CrossCutting\Vertigo.Server.CrossCutting.csproj" />
+    <ProjectReference Include="..\..\Shared\Vertigo.Registration\Vertigo.Registration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

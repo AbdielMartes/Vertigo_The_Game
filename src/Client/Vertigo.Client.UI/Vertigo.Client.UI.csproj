@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Vertigo.Client.Networking/Vertigo.Client.Networking.csproj" />
+    <ProjectReference Include="../../Shared/Vertigo.Registration/Vertigo.Registration.csproj" />
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 

@@ -3,13 +3,13 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 
-namespace Vertigo.Client.UI.Utilities.Validation;
+namespace Vertigo.Registration;
 
 public static class RegistrationRules
 {
     public const int UsernameMinimumLength = 3;
     public const int UsernameMaximumLength = 20;
-    public const int EmailMaximumLength = 60;
+    public const int EmailMaximumLength = 70;
     public const int PasswordMinimumLength = 8;
     public const int PasswordMaximumLength = 20;
 
