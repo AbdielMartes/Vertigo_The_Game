@@ -8,7 +8,7 @@ namespace Vertigo.Server.Game.Tests.Matches;
 public sealed class MatchInitialBoardTests
 {
     [Fact]
-    public void GetBoard_AfterStart_InitializesRoundAndHostTurn()
+    public void GetBoard_AfterStart_InitializesRoundAndSelectsParticipant()
     {
         InMemoryMatchSessionStarter game = new(TimeProvider.System);
         MatchStartRequest request = CreateRequest();
@@ -19,7 +19,7 @@ public sealed class MatchInitialBoardTests
         Assert.NotNull(board);
         Assert.Equal(1, board.Revision);
         Assert.Equal(1, board.RoundNumber);
-        Assert.Equal(request.HostPlayerId, board.CurrentTurnPlayerId);
+        Assert.Contains(board.CurrentTurnPlayerId, request.PlayerIds);
         Assert.Equal(request.PlayerIds, board.Players.Select(player => player.PlayerId));
         Assert.All(board.Players, player => Assert.Equal(0, player.FloorsBuilt));
     }
@@ -42,17 +42,51 @@ public sealed class MatchInitialBoardTests
     }
 
     [Fact]
+    public void Start_SixParticipants_DealsTenUniqueModulesPerPlayerAndFourFoundations()
+    {
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid[] players = Enumerable.Range(0, 6).Select(index => Guid.NewGuid()).ToArray();
+        MatchStartRequest request = new()
+        {
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            HostPlayerId = players[0],
+            PlayerIds = players
+        };
+
+        Guid matchId = game.Start(request).MatchId;
+
+        MatchBoardSnapshot? board = game.GetBoard(matchId);
+        Assert.NotNull(board);
+        List<int> dealt = board.Piles.Select(pile => pile.TopCardNumber!.Value).ToList();
+        Assert.Equal(4, dealt.Count);
+        foreach (Guid player in players)
+        {
+            MatchPrivateHand? hand = game.GetPrivateHand(matchId, player);
+            Assert.NotNull(hand);
+            Assert.Equal(10, hand.Cards.Count);
+            dealt.AddRange(hand.Cards);
+        }
+
+        Assert.Equal(64, dealt.Distinct().Count());
+        Assert.All(dealt, module => Assert.InRange(module, 1, 100));
+    }
+
+    [Fact]
     public void Start_SameLobbyRequest_ReusesMatchAndInitialBoard()
     {
         InMemoryMatchSessionStarter game = new(TimeProvider.System);
         MatchStartRequest request = CreateRequest();
 
         Guid firstId = game.Start(request).MatchId;
+        MatchBoardSnapshot? initial = game.GetBoard(firstId);
         Guid secondId = game.Start(request).MatchId;
         MatchBoardSnapshot? board = game.GetBoard(secondId);
 
         Assert.Equal(firstId, secondId);
+        Assert.NotNull(initial);
         Assert.NotNull(board);
+        Assert.Equal(initial.CurrentTurnPlayerId, board.CurrentTurnPlayerId);
         Assert.Equal(1, board.Revision);
         Assert.Equal(1, board.RoundNumber);
     }
@@ -97,8 +131,8 @@ public sealed class MatchInitialBoardTests
         Assert.NotEqual(firstId, secondId);
         Assert.NotNull(first);
         Assert.NotNull(second);
-        Assert.Equal(firstRequest.HostPlayerId, first.CurrentTurnPlayerId);
-        Assert.Equal(secondRequest.HostPlayerId, second.CurrentTurnPlayerId);
+        Assert.Contains(first.CurrentTurnPlayerId, firstRequest.PlayerIds);
+        Assert.Contains(second.CurrentTurnPlayerId, secondRequest.PlayerIds);
         Assert.Equal(4, first.Piles.Count);
         Assert.Equal(4, second.Piles.Count);
     }
@@ -110,13 +144,16 @@ public sealed class MatchInitialBoardTests
         MatchStartRequest request = CreateRequest();
         Guid matchId = game.Start(request).MatchId;
 
-        Assert.True(game.TryDisconnect(matchId, request.HostPlayerId));
-        Assert.Equal(MatchReconnectResult.Reconnected, game.TryReconnect(matchId, request.HostPlayerId));
+        MatchBoardSnapshot? initial = game.GetBoard(matchId);
+        Assert.NotNull(initial);
+        Guid openingPlayer = initial.CurrentTurnPlayerId;
+        Assert.True(game.TryDisconnect(matchId, openingPlayer));
+        Assert.Equal(MatchReconnectResult.Reconnected, game.TryReconnect(matchId, openingPlayer));
         MatchBoardSnapshot? board = game.GetBoard(matchId);
 
         Assert.NotNull(board);
         Assert.Equal(1, board.RoundNumber);
-        Assert.Equal(request.HostPlayerId, board.CurrentTurnPlayerId);
+        Assert.Equal(openingPlayer, board.CurrentTurnPlayerId);
         Assert.Equal(1, board.Revision);
     }
 

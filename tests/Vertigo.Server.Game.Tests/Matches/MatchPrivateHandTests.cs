@@ -29,8 +29,8 @@ public sealed class MatchPrivateHandTests
         var hand = state.Game.GetPrivateHand(state.MatchId, state.Host);
 
         Assert.NotNull(hand);
-        Assert.Equal(6, hand.Cards.Count);
-        Assert.Equal(6, hand.Cards.Distinct().Count());
+        Assert.Equal(10, hand.Cards.Count);
+        Assert.Equal(10, hand.Cards.Distinct().Count());
         Assert.All(hand.Cards, card => Assert.InRange(card, 1, 100));
     }
 
@@ -70,7 +70,7 @@ public sealed class MatchPrivateHandTests
         var again = state.Game.GetPrivateHand(state.MatchId, state.Host);
 
         Assert.NotNull(again);
-        Assert.Equal(6, again.Cards.Count);
+        Assert.Equal(10, again.Cards.Count);
         Assert.Equal(original, again.Cards[0]);
     }
 

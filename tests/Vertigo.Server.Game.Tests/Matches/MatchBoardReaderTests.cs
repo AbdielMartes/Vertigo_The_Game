@@ -7,7 +7,7 @@ namespace Vertigo.Server.Game.Tests.Matches;
 public sealed class MatchBoardReaderTests
 {
     [Fact]
-    public void GetBoard_AfterStart_ContainsRealParticipantsAndEmptyPiles()
+    public void GetBoard_AfterStart_ContainsParticipantsAndFoundations()
     {
         InMemoryMatchSessionStarter game = new(TimeProvider.System);
         Guid host = Guid.NewGuid();
@@ -32,7 +32,7 @@ public sealed class MatchBoardReaderTests
         Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
         Assert.All(board.Piles, pile => Assert.InRange(pile.TopCardNumber!.Value, 1, 100));
         Assert.Equal(1, board.RoundNumber);
-        Assert.Equal(host, board.CurrentTurnPlayerId);
+        Assert.Contains(board.CurrentTurnPlayerId, request.PlayerIds);
     }
 
     [Fact]

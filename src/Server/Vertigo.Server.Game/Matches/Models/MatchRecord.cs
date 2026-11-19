@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
 
@@ -6,8 +7,7 @@ namespace Vertigo.Server.Game.Matches.Models;
 // Protected by the owning starter's synchronization lock.
 internal sealed class MatchRecord
 {
-    // Provisional board layout; confirm the final pile count against Vértigo's rules.
-    private const int InitialDiscardPileCount = 4;
+    private const int InitialTowerCount = 4;
     private const int FirstRoundNumber = 1;
     private const long InitialBoardRevision = 1;
 
@@ -22,17 +22,16 @@ internal sealed class MatchRecord
     public MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc)
     {
         Session = session;
-        // Four distinct foundation modules are drawn before private hands.
-        IReadOnlyList<int> foundations = _deck.Draw(InitialDiscardPileCount);
         foreach (Guid playerId in session.PlayerIds)
         {
             _hands.Add(playerId, _deck.Draw(MatchDeck.InitialHandSize));
         }
+
+        IReadOnlyList<int> foundations = _deck.Draw(InitialTowerCount);
         _roundNumber = FirstRoundNumber;
-        // Host-first is provisional until the first-player rule is confirmed.
-        _currentTurnPlayerId = session.InitialHostPlayerId;
+        _currentTurnPlayerId = session.PlayerIds[RandomNumberGenerator.GetInt32(session.PlayerIds.Count)];
         _boardRevision = InitialBoardRevision;
-        _piles = Enumerable.Range(1, InitialDiscardPileCount)
+        _piles = Enumerable.Range(1, InitialTowerCount)
             .Select(position => new MatchBoardPile
             {
                 Position = position,

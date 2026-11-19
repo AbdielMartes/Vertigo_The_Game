@@ -18,6 +18,21 @@ public sealed class InMemoryMatchSessionStarterTests
         Assert.Equal(request.PlayerIds, result.PlayerIds);
     }
 
+    [Theory]
+    [InlineData(1)]
+    [InlineData(7)]
+    [InlineData(10)]
+    public void Start_UnsupportedPlayerCount_RejectsRequest(int playerCount)
+    {
+        InMemoryMatchSessionStarter starter = new(TimeProvider.System);
+        Guid[] players = Enumerable.Range(0, playerCount).Select(_ => Guid.NewGuid()).ToArray();
+        MatchStartRequest request = CreateRequest() with { HostPlayerId = players[0], PlayerIds = players };
+
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => starter.Start(request));
+
+        Assert.Equal("request", exception.ParamName);
+    }
+
     [Fact]
     public void Start_RepeatedRequest_ReturnsSameSession()
     {

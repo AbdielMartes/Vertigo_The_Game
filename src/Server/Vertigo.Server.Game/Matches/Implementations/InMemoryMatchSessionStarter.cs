@@ -8,6 +8,9 @@ namespace Vertigo.Server.Game.Matches.Implementations;
 // Deliberately no automatic cancellation when lobby connections disappear (Phase 7B).
 public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLifecycle, IMatchPresence, IMatchBoardReader, IMatchPrivateHandReader, IMatchPlacementService
 {
+    private const int MinimumPlayerCount = 2;
+    private const int MaximumPlayerCount = 6;
+
     private readonly object _syncRoot = new();
     private readonly Dictionary<Guid, MatchRecord> _matchesByLobby = new();
     private readonly Dictionary<Guid, MatchRecord> _matchesById = new();
@@ -219,7 +222,8 @@ public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLi
     {
         if (request.LobbyInstanceId == Guid.Empty || string.IsNullOrWhiteSpace(request.LobbyCode)
             || request.HostPlayerId == Guid.Empty || request.PlayerIds is null
-            || request.PlayerIds.Count < 2 || request.PlayerIds.Distinct().Count() != request.PlayerIds.Count
+            || request.PlayerIds.Count is < MinimumPlayerCount or > MaximumPlayerCount
+            || request.PlayerIds.Distinct().Count() != request.PlayerIds.Count
             || !request.PlayerIds.Contains(request.HostPlayerId) || request.PlayerIds.Any(id => id == Guid.Empty))
         {
             throw new ArgumentException("Invalid match initialization data.", nameof(request));

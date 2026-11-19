@@ -107,12 +107,13 @@ try
     {
         Require(board.Players.Count == 2 && board.Players.All(player =>
             !string.IsNullOrWhiteSpace(player.Username) && player.FloorsBuilt == 0), "Invalid public participants");
-        Require(board.RoundNumber == 1 && board.CurrentTurnPlayerId == hostId,
+        Require(board.RoundNumber == 1 && board.Players.Any(player => player.PlayerId == board.CurrentTurnPlayerId),
             "Initial round or turn did not match the server rules");
         Require(board.Piles.Select(pile => pile.Position).SequenceEqual(new[] { 1, 2, 3, 4 })
             && board.Piles.All(pile => pile.CardCount == 1 && pile.TopCardNumber is not null),
             "Initial towers did not contain one foundation each");
     }
+    Require(hostBoard.CurrentTurnPlayerId == guestBoard.CurrentTurnPlayerId, "Clients disagree on the opening turn");
     Console.WriteLine("PASS: BOTH CLIENTS READ PUBLIC BOARD");
 
     bool repeatStartDenied = false;

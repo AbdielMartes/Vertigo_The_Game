@@ -1,4 +1,5 @@
 using Vertigo.Contracts.Internal;
+using Vertigo.Contracts.Models;
 using Vertigo.Server.Game.Matches.Implementations;
 using Vertigo.Server.Game.Matches.Models;
 using Xunit;
@@ -23,17 +24,18 @@ public sealed class MatchPlacementTests
     }
 
     [Fact]
-    public void Start_FourFoundations_AreUniqueAndNotInHands()
+    public void Start_FoundationsAndHands_UseDistinctModules()
     {
         var state = Create();
         var board = state.Game.GetBoard(state.MatchId)!;
         var host = state.Game.GetPrivateHand(state.MatchId, state.Host)!;
         var other = state.Game.GetPrivateHand(state.MatchId, state.Other)!;
         int[] foundations = board.Piles.Select(pile => pile.TopCardNumber!.Value).ToArray();
-        Assert.Equal(4, foundations.Distinct().Count());
+        Assert.Equal(4, foundations.Length);
+        Assert.Equal(10, host.Cards.Count);
+        Assert.Equal(10, other.Cards.Count);
+        Assert.Equal(24, foundations.Concat(host.Cards).Concat(other.Cards).Distinct().Count());
         Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
-        Assert.Empty(foundations.Intersect(host.Cards));
-        Assert.Empty(foundations.Intersect(other.Cards));
     }
 
     [Fact]
@@ -41,10 +43,11 @@ public sealed class MatchPlacementTests
     {
         var state = Create();
         var board = state.Game.GetBoard(state.MatchId)!;
-        var hand = state.Game.GetPrivateHand(state.MatchId, state.Other)!;
+        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
+        MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, waitingPlayer)!;
         var move = new MatchPlacement(hand.Cards[0], 1, board.Revision);
         Assert.Equal(MatchPlacementResult.NotYourTurn,
-            state.Game.TryPlace(state.MatchId, state.Other, move));
+            state.Game.TryPlace(state.MatchId, waitingPlayer, move));
         Assert.Equal(board.Revision, state.Game.GetBoard(state.MatchId)!.Revision);
     }
 
@@ -53,10 +56,11 @@ public sealed class MatchPlacementTests
     {
         var state = Create();
         var board = state.Game.GetBoard(state.MatchId)!;
-        var other = state.Game.GetPrivateHand(state.MatchId, state.Other)!;
+        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
+        MatchPrivateHand other = state.Game.GetPrivateHand(state.MatchId, waitingPlayer)!;
         var move = new MatchPlacement(other.Cards[0], 1, board.Revision);
         Assert.Equal(MatchPlacementResult.CardNotOwned,
-            state.Game.TryPlace(state.MatchId, state.Host, move));
+            state.Game.TryPlace(state.MatchId, board.CurrentTurnPlayerId, move));
         Assert.Equal(board.Revision, state.Game.GetBoard(state.MatchId)!.Revision);
     }
 
@@ -69,7 +73,9 @@ public sealed class MatchPlacementTests
         {
             var state = Create();
             var board = state.Game.GetBoard(state.MatchId)!;
-            var hand = state.Game.GetPrivateHand(state.MatchId, state.Host)!;
+            Guid openingPlayer = board.CurrentTurnPlayerId;
+            Guid waitingPlayer = board.Players.Single(player => player.PlayerId != openingPlayer).PlayerId;
+            MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
             var match = (from card in hand.Cards
                          from pile in board.Piles
                          where MatchPlacementRules.IsValid(pile.TopCardNumber!.Value, card)
@@ -80,14 +86,14 @@ public sealed class MatchPlacementTests
             }
             var move = new MatchPlacement(match.card, match.Position, board.Revision);
             Assert.Equal(MatchPlacementResult.Applied,
-                state.Game.TryPlace(state.MatchId, state.Host, move));
+                state.Game.TryPlace(state.MatchId, openingPlayer, move));
             var next = state.Game.GetBoard(state.MatchId)!;
             Assert.Equal(board.Revision + 1, next.Revision);
-            Assert.Equal(state.Other, next.CurrentTurnPlayerId);
+            Assert.Equal(waitingPlayer, next.CurrentTurnPlayerId);
             Assert.Equal(match.card, next.Piles[match.Position - 1].TopCardNumber);
-            Assert.DoesNotContain(match.card, state.Game.GetPrivateHand(state.MatchId, state.Host)!.Cards);
+            Assert.DoesNotContain(match.card, state.Game.GetPrivateHand(state.MatchId, openingPlayer)!.Cards);
             Assert.Equal(MatchPlacementResult.StaleRevision,
-                state.Game.TryPlace(state.MatchId, state.Host, move));
+                state.Game.TryPlace(state.MatchId, openingPlayer, move));
             return;
         }
         throw new InvalidOperationException("No playable test board generated in 100 attempts.");
@@ -98,8 +104,9 @@ public sealed class MatchPlacementTests
     {
         var state = Create();
         var board = state.Game.GetBoard(state.MatchId)!;
-        var hand = state.Game.GetPrivateHand(state.MatchId, state.Host)!;
+        Guid openingPlayer = board.CurrentTurnPlayerId;
+        MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
         Assert.Equal(MatchPlacementResult.InvalidPile,
-            state.Game.TryPlace(state.MatchId, state.Host, new MatchPlacement(hand.Cards[0], 5, board.Revision)));
+            state.Game.TryPlace(state.MatchId, openingPlayer, new MatchPlacement(hand.Cards[0], 5, board.Revision)));
     }
 }

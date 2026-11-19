@@ -78,17 +78,30 @@ static async Task<bool> RunMatchAsync()
         MatchPrivateHand memberHand = memberLobby.GetMatchPrivateHand(lobbyCode, memberToken);
         Require(hostHand.MatchId == started.MatchId && memberHand.MatchId == started.MatchId,
             "Private hands have the wrong match identifier.");
-        Require(hostHand.PlayerId != memberHand.PlayerId && hostHand.Cards.Count == 6 && memberHand.Cards.Count == 6
-            && hostHand.Cards.Concat(memberHand.Cards).Distinct().Count() == 12, "Private hands overlap or are invalid.");
+        Require(hostHand.PlayerId == hostSession.PlayerId && memberHand.PlayerId == memberSession.PlayerId
+            && hostHand.Cards.Count == 10 && memberHand.Cards.Count == 10
+            && hostHand.Cards.Concat(memberHand.Cards).Distinct().Count() == 20,
+            "Private hands overlap or are invalid.");
+        Require(first.CurrentTurnPlayerId == second.CurrentTurnPlayerId
+            && first.Players.Any(player => player.PlayerId == first.CurrentTurnPlayerId),
+            "Clients disagree on the opening turn or identify a non-participant.");
+
+        bool isHostOpening = first.CurrentTurnPlayerId == hostSession.PlayerId;
+        (ILobbyClient Lobby, UserSession Session, MatchPrivateHand Hand) opening = isHostOpening
+            ? (hostLobby, hostSession, hostHand)
+            : (memberLobby, memberSession, memberHand);
+        (ILobbyClient Lobby, UserSession Session, MatchPrivateHand Hand) waiting = isHostOpening
+            ? (memberLobby, memberSession, memberHand)
+            : (hostLobby, hostSession, hostHand);
 
         bool wrongTurnDenied = false;
         try
         {
-            memberLobby.PlaceMatchCard(new MatchPlaceRequest
+            waiting.Lobby.PlaceMatchCard(new MatchPlaceRequest
             {
                 LobbyCode = lobbyCode,
-                SessionToken = memberToken,
-                CardNumber = memberHand.Cards[0],
+                SessionToken = waiting.Session.Token,
+                CardNumber = waiting.Hand.Cards[0],
                 PilePosition = 1,
                 ExpectedRevision = second.Revision
             });
@@ -103,14 +116,18 @@ static async Task<bool> RunMatchAsync()
             "Rejected placement changed the board revision.");
         Console.WriteLine("PASS: WRONG TURN REJECTED WITHOUT CHANGING BOARD");
 
-        (int CardNumber, int PilePosition) move = FindPlacement(first, hostHand);
+        (int CardNumber, int PilePosition) move = FindPlacement(first, opening.Hand);
         if (move.PilePosition == 0)
         {
             return false;
         }
 
         await VerifyPlacementAsync(
-            (hostLobby, hostSession), (memberLobby, memberSession), (lobbyCode, first, hostHand, move));
+            (opening.Lobby, opening.Session), (waiting.Lobby, waiting.Session), (lobbyCode, first, opening.Hand, move));
+
+        IEnumerable<int> expectedMemberCards = isHostOpening
+            ? memberHand.Cards
+            : memberHand.Cards.Where(card => card != move.CardNumber);
 
         string outsiderToken = CreateGuest(outsider).Token;
         bool outsiderDenied = false;
@@ -128,7 +145,7 @@ static async Task<bool> RunMatchAsync()
         memberLobby.JoinLobby(lobbyCode, memberToken);
         MatchPrivateHand resumedHand = memberLobby.GetMatchPrivateHand(lobbyCode, memberToken);
         Require(resumedHand.MatchId == memberHand.MatchId && resumedHand.PlayerId == memberHand.PlayerId
-            && resumedHand.Cards.SequenceEqual(memberHand.Cards), "Private hand changed after reconnecting.");
+            && resumedHand.Cards.SequenceEqual(expectedMemberCards), "Private hand changed after reconnecting.");
         Console.WriteLine("PASS: PRIVATE HANDS, OUTSIDER DENIAL AND RECONNECTION");
         return true;
     }
@@ -154,79 +171,79 @@ static (int CardNumber, int PilePosition) FindPlacement(MatchBoardSnapshot board
 }
 
 static async Task VerifyPlacementAsync(
-    (ILobbyClient Lobby, UserSession Session) host,
-    (ILobbyClient Lobby, UserSession Session) member,
+    (ILobbyClient Lobby, UserSession Session) active,
+    (ILobbyClient Lobby, UserSession Session) waiting,
     (string LobbyCode, MatchBoardSnapshot Board, MatchPrivateHand Hand,
         (int CardNumber, int PilePosition) Move) opening)
 {
     MatchBoardSnapshot initial = opening.Board;
-    TaskCompletionSource<MatchBoardChanged> hostUpdate = new(TaskCreationOptions.RunContinuationsAsynchronously);
-    TaskCompletionSource<MatchBoardChanged> memberUpdate = new(TaskCreationOptions.RunContinuationsAsynchronously);
-    host.Lobby.MatchBoardUpdated += RecordHostUpdate;
-    member.Lobby.MatchBoardUpdated += RecordMemberUpdate;
+    TaskCompletionSource<MatchBoardChanged> activeUpdate = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    TaskCompletionSource<MatchBoardChanged> waitingUpdate = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    active.Lobby.MatchBoardUpdated += RecordActiveUpdate;
+    waiting.Lobby.MatchBoardUpdated += RecordWaitingUpdate;
 
     try
     {
         MatchPlaceRequest request = new()
         {
             LobbyCode = opening.LobbyCode,
-            SessionToken = host.Session.Token,
+            SessionToken = active.Session.Token,
             CardNumber = opening.Move.CardNumber,
             PilePosition = opening.Move.PilePosition,
             ExpectedRevision = initial.Revision
         };
-        MatchBoardSnapshot placed = host.Lobby.PlaceMatchCard(request);
-        MatchBoardChanged[] changes = await Task.WhenAll(hostUpdate.Task, memberUpdate.Task)
+        MatchBoardSnapshot placed = active.Lobby.PlaceMatchCard(request);
+        MatchBoardChanged[] changes = await Task.WhenAll(activeUpdate.Task, waitingUpdate.Task)
             .WaitAsync(TimeSpan.FromSeconds(15));
 
         Require(placed.Revision == initial.Revision + 1 && changes.All(change =>
             change.LobbyCode == opening.LobbyCode && change.Revision == placed.Revision
-            && change.PlayerUsername == host.Session.Username
+            && change.PlayerUsername == active.Session.Username
             && change.CardNumber == request.CardNumber && change.PilePosition == request.PilePosition),
             "Placement did not notify both clients of the expected move.");
 
-        MatchBoardSnapshot hostBoard = host.Lobby.GetMatchBoard(request.LobbyCode, host.Session.Token);
-        MatchBoardSnapshot memberBoard = member.Lobby.GetMatchBoard(request.LobbyCode, member.Session.Token);
-        foreach (MatchBoardSnapshot board in new[] { placed, hostBoard, memberBoard })
+        MatchBoardSnapshot activeBoard = active.Lobby.GetMatchBoard(request.LobbyCode, active.Session.Token);
+        MatchBoardSnapshot waitingBoard = waiting.Lobby.GetMatchBoard(request.LobbyCode, waiting.Session.Token);
+        foreach (MatchBoardSnapshot board in new[] { placed, activeBoard, waitingBoard })
         {
             Require(board.MatchId == initial.MatchId && board.Revision == placed.Revision
-                && board.CurrentTurnPlayerId == member.Session.PlayerId
+                && board.CurrentTurnPlayerId == waiting.Session.PlayerId
                 && board.Piles.Single(pile => pile.Position == request.PilePosition).TopCardNumber
                     == request.CardNumber,
                 "A client received an incorrect board after the move.");
             Require(board.Players.Count == 2
-                && board.Players.Any(player => player.PlayerId == host.Session.PlayerId
-                    && player.Username == host.Session.Username)
-                && board.Players.Any(player => player.PlayerId == member.Session.PlayerId
-                    && player.Username == member.Session.Username),
+                && board.Players.Any(player => player.PlayerId == active.Session.PlayerId
+                    && player.Username == active.Session.Username)
+                && board.Players.Any(player => player.PlayerId == waiting.Session.PlayerId
+                    && player.Username == waiting.Session.Username),
                 "A board snapshot did not preserve both player names.");
         }
 
-        MatchPrivateHand hand = host.Lobby.GetMatchPrivateHand(request.LobbyCode, host.Session.Token);
-        Require(hand.MatchId == initial.MatchId && hand.PlayerId == host.Session.PlayerId
+        MatchPrivateHand hand = active.Lobby.GetMatchPrivateHand(request.LobbyCode, active.Session.Token);
+        Require(hand.MatchId == initial.MatchId && hand.PlayerId == active.Session.PlayerId
             && hand.Cards.SequenceEqual(opening.Hand.Cards.Where(card => card != request.CardNumber)),
-            "The host's hand did not lose exactly the played card.");
+            "The opening player's hand did not lose exactly the played card.");
         Console.WriteLine("PASS: VALID PLACEMENT, BOARD NOTIFICATIONS, PLAYER NAMES AND PRIVATE HAND");
     }
     finally
     {
-        host.Lobby.MatchBoardUpdated -= RecordHostUpdate;
-        member.Lobby.MatchBoardUpdated -= RecordMemberUpdate;
+        active.Lobby.MatchBoardUpdated -= RecordActiveUpdate;
+        waiting.Lobby.MatchBoardUpdated -= RecordWaitingUpdate;
     }
 
-    void RecordHostUpdate(object? sender, MatchBoardChanged change)
+    void RecordActiveUpdate(object? sender, MatchBoardChanged change)
     {
         if (change.MatchId == initial.MatchId)
         {
-            hostUpdate.TrySetResult(change);
+            activeUpdate.TrySetResult(change);
         }
     }
 
-    void RecordMemberUpdate(object? sender, MatchBoardChanged change)
+    void RecordWaitingUpdate(object? sender, MatchBoardChanged change)
     {
         if (change.MatchId == initial.MatchId)
         {
-            memberUpdate.TrySetResult(change);
+            waitingUpdate.TrySetResult(change);
         }
     }
 }

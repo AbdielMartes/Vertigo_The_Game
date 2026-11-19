@@ -2,12 +2,10 @@ using System.Security.Cryptography;
 
 namespace Vertigo.Server.Game.Matches.Models;
 
-// The 100 numbered modules come from the architecture document.
-// Initial hand size remains provisional until the rules are finalized.
 internal sealed class MatchDeck
 {
     public const int ModuleCount = 100;
-    public const int InitialHandSize = 6;
+    public const int InitialHandSize = 10;
 
     private readonly Queue<int> _remaining;
 
