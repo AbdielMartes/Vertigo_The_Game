@@ -6,6 +6,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using Avalonia.Threading;
+using Vertigo.Client.Core.Navigation;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
@@ -24,6 +25,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 {
     private readonly ITextLocalizer _text;
     private readonly ILobbyClient? _lobbies;
+    private readonly INavigator? _navigation;
     private readonly PlayerSession? _session;
     private readonly ISessionGuard? _guard;
     private readonly IClientErrorText? _errors;
@@ -31,11 +33,14 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private readonly MatchBoardRevision _boardRevision = new();
     private readonly MatchTurnClock _turnClock;
     private readonly MatchMasterPlanDraft _masterPlanDraft = new();
+    private readonly MatchExpulsionVoting _voting = new();
     private DateTimeOffset? _turnDeadlineUtc;
     private int _masterPlanCount;
     private int _generation;
     private bool _isLoadingBoard;
     private bool _isExitConfirmationOpen;
+    private bool _isLeavingMatch;
+    private string _exitErrorMessage = string.Empty;
     private string _draftMessage = string.Empty;
     private string _roundLabel = "—";
     private string? _turnPlayerName;
@@ -52,7 +57,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private bool _pendingBoardRefresh;
     private long _notifiedRevision;
     private IReadOnlyList<MatchBoardMove> _recentMoves = Array.Empty<MatchBoardMove>();
-    private IReadOnlyList<MatchRoundSummary> _roundSummaries = Array.Empty<MatchRoundSummary>();
     private Guid _matchId;
     private string _lobbyCode = string.Empty;
 
@@ -63,6 +67,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     internal MatchViewModel(ITextLocalizer text, PlayerSession? session, TimeProvider timeProvider)
     {
         _text = text;
+        Results = new MatchResultsViewModel(text);
         _session = session;
         _turnClock = new MatchTurnClock(timeProvider);
         RefreshBoardCommand = new AsyncRelayCommand(RefreshBoardAsync);
@@ -72,7 +77,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         RemoveMasterPlanModuleCommand = new RelayCommand(RemoveMasterPlanModule, CanRemoveMasterPlanModule);
         PlayMasterPlanCommand = new AsyncRelayCommand(PlayMasterPlanAsync, CanPlayMasterPlan);
         RequestExitCommand = new RelayCommand(RequestExit);
-        CancelExitCommand = new RelayCommand(CancelExit);
+        CancelExitCommand = new RelayCommand(CancelExit, () => !_isLeavingMatch);
+        ConfirmExitCommand = new AsyncRelayCommand(ConfirmExitAsync, CanConfirmExit);
     }
 
     public MatchViewModel(MatchBoardContext context) : this(context.Text, context.Session, TimeProvider.System)
@@ -80,6 +86,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         _lobbies = context.Lobbies;
         _guard = context.Guard;
         _errors = context.Errors;
+        _navigation = context.Services.Navigation;
     }
 
     public IAsyncRelayCommand RefreshBoardCommand { get; }
@@ -114,11 +121,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     public ObservableCollection<MatchMoveRow> RecentMoves { get; } = new();
 
-    public IReadOnlyList<MatchRoundSummary> RoundSummaries
-    {
-        get => _roundSummaries;
-        private set => SetProperty(ref _roundSummaries, value);
-    }
+    public MatchResultsViewModel Results { get; }
+    public IReadOnlyList<MatchRoundSummary> RoundSummaries => Results.RoundSummaries;
 
     public Guid MatchId => _matchId;
     public string LobbyCode => _lobbyCode;
@@ -148,6 +152,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         _matchId = Guid.Empty;
         _lobbyCode = string.Empty;
         Players.Clear();
+        _voting.ApplyBoard(null, null);
         Piles.Clear();
         Hand.Clear();
         ChatMessages.Clear();
@@ -159,7 +164,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         _notifiedRevision = 0;
         _recentMoves = Array.Empty<MatchBoardMove>();
         RecentMoves.Clear();
-        RoundSummaries = Array.Empty<MatchRoundSummary>();
+        Results.Reset();
+        RefreshExitLabels();
+        OnPropertyChanged(nameof(RoundSummaries));
         RoundLabel = "—";
         _turnPlayerName = null;
         _isMyTurn = false;
@@ -174,7 +181,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(CurrentTurnLabel));
         RefreshTurnCommands();
         ErrorMessage = string.Empty;
+        SetLeavingMatch(false);
         IsExitConfirmationOpen = false;
+        ExitErrorMessage = string.Empty;
         IsLoadingBoard = false;
         OnPropertyChanged(nameof(MatchId));
         OnPropertyChanged(nameof(LobbyCode));
@@ -203,10 +212,13 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         _generation++;
         _pendingBoardRefresh = false;
         _hasCurrentHand = false;
+        _voting.ApplyPrivateHand(null);
         _isSubmittingTurn = false;
         IsLoadingBoard = false;
+        SetLeavingMatch(false);
         RefreshTurnCommands();
         IsExitConfirmationOpen = false;
+        ExitErrorMessage = string.Empty;
     }
 
     private void OnMatchBoardUpdated(object? sender, MatchBoardChanged change)
@@ -381,24 +393,18 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             _hasCurrentHand = false;
             Guid? localPlayerId = _session?.GetActiveSession()?.PlayerId;
-            Players.Clear();
-            foreach (MatchBoardPlayer player in board.Players)
-            {
-                Players.Add(new MatchPlayerRow
-                {
-                    Username = player.Username,
-                    FloorsBuilt = player.FloorsBuilt,
-                    IsCurrentTurn = player.PlayerId == board.CurrentTurnPlayerId,
-                    IsMe = player.PlayerId == localPlayerId
-                });
-            }
+            _voting.ApplyBoard(board, localPlayerId);
+            RefreshPlayers();
 
             _currentBoardRevision = board.Revision;
             UpdatePiles(board.Piles);
 
-            if (RoundSummaries.Count != board.RoundSummaries.Count)
+            int previousRoundCount = RoundSummaries.Count;
+            Results.ApplyBoard(board);
+            RefreshExitLabels();
+            if (previousRoundCount != RoundSummaries.Count)
             {
-                RoundSummaries = board.RoundSummaries;
+                OnPropertyChanged(nameof(RoundSummaries));
             }
 
             _recentMoves = board.RecentMoves;
@@ -425,6 +431,65 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         return accepted;
     }
 
+    private void RefreshPlayers()
+    {
+        Players.Clear();
+        if (_voting.Board is MatchBoardSnapshot board)
+        {
+            Guid? localPlayerId = _session?.GetActiveSession()?.PlayerId;
+            foreach (MatchBoardPlayer player in board.Players)
+            {
+                Players.Add(CreatePlayerRow(player, board.CurrentTurnPlayerId, localPlayerId));
+            }
+        }
+    }
+
+    private MatchPlayerRow CreatePlayerRow(MatchBoardPlayer player, Guid activePlayerId, Guid? localPlayerId)
+    {
+        Guid targetId = player.PlayerId;
+        int votes = _voting.GetVoteCount(targetId);
+        bool canShowVote = _voting.IsEligibleTarget(targetId);
+        return new MatchPlayerRow
+        {
+            Username = player.Username,
+            FloorsBuilt = player.FloorsBuilt,
+            IsCurrentTurn = targetId == activePlayerId,
+            IsMe = targetId == localPlayerId,
+            VoteText = _text.Get("Match.Expulsion.Vote"),
+            VoteCountText = canShowVote || votes > 0
+                ? string.Format(_text.Get("Match.Expulsion.Count"), votes, _voting.RequiredVotes)
+                : string.Empty,
+            VoteCommand = canShowVote
+                ? new AsyncRelayCommand(() => VoteToExpelAsync(targetId), () => CanVoteToExpel(targetId))
+                : null
+        };
+    }
+
+    private bool CanVoteToExpel(Guid targetId)
+    {
+        return _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn && !_isLeavingMatch
+            && _turnClock.GetRemainingSeconds() is > 0
+            && _voting.CanVoteFor(targetId);
+    }
+
+    private Task VoteToExpelAsync(Guid targetId)
+    {
+        string lobbyCode = _lobbyCode;
+        Guid matchId = _matchId;
+        long votingRevision = _voting.Revision;
+
+        return CanVoteToExpel(targetId)
+            ? SubmitTurnAsync((lobbies, token) => lobbies.VoteToExpelMatchPlayer(new MatchExpulsionVoteRequest
+            {
+                LobbyCode = lobbyCode,
+                SessionToken = token,
+                MatchId = matchId,
+                TargetPlayerId = targetId,
+                ExpectedVotingRevision = votingRevision
+            }))
+            : Task.CompletedTask;
+    }
+
     private void UpdatePiles(IReadOnlyList<MatchBoardPile> piles)
     {
         bool unchanged = Piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.Count))
@@ -449,7 +514,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private bool CanSubmitTurn()
     {
-        return _isMyTurn && _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn
+        return _isMyTurn && _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn && !_isLeavingMatch
             && _turnClock.GetRemainingSeconds() is > 0;
     }
 
@@ -571,7 +636,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                 await Dispatcher.UIThread.InvokeAsync(() => ApplyTurnResult(board, request));
             }
             catch (FaultException<ServiceFault> exception)
-                when (exception.Detail.ErrorCode is "MATCH_STALE_REVISION" or "MATCH_TURN_EXPIRED")
+                when (exception.Detail.ErrorCode is "MATCH_STALE_REVISION" or "MATCH_TURN_EXPIRED"
+                    or "MATCH_STALE_VOTE" or "MATCH_ALREADY_VOTED")
             {
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
@@ -629,6 +695,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         Hand.Clear();
         SelectedCard = null;
         _hasCurrentHand = hand is not null;
+        _voting.ApplyPrivateHand(hand);
         SetMasterPlanCount(hand?.MasterPlans ?? 0);
         if (hand is null || !HasMasterPlans || !_masterPlanDraft.IsStillInHand(hand.Cards))
         {
@@ -650,11 +717,16 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private void RefreshTurnCommands()
     {
+        ConfirmExitCommand.NotifyCanExecuteChanged();
         PlaceCardCommand.NotifyCanExecuteChanged();
         DismantleTowerCommand.NotifyCanExecuteChanged();
         AddMasterPlanModuleCommand.NotifyCanExecuteChanged();
         RemoveMasterPlanModuleCommand.NotifyCanExecuteChanged();
         PlayMasterPlanCommand.NotifyCanExecuteChanged();
+        foreach (MatchPlayerRow player in Players)
+        {
+            player.VoteCommand?.NotifyCanExecuteChanged();
+        }
     }
 
     private void SetMasterPlanCount(int count)
@@ -794,8 +866,28 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public bool IsExitConfirmationOpen
     {
         get => _isExitConfirmationOpen;
-        private set => SetProperty(ref _isExitConfirmationOpen, value);
+        private set
+        {
+            if (SetProperty(ref _isExitConfirmationOpen, value))
+            {
+                ConfirmExitCommand.NotifyCanExecuteChanged();
+            }
+        }
     }
+
+    public string ExitErrorMessage
+    {
+        get => _exitErrorMessage;
+        private set
+        {
+            if (SetProperty(ref _exitErrorMessage, value))
+            {
+                OnPropertyChanged(nameof(HasExitError));
+            }
+        }
+    }
+
+    public bool HasExitError => !string.IsNullOrEmpty(ExitErrorMessage);
 
     public string TitleText => _text.Get("Match.Title");
     public string RoundText => _text.Get("Match.Round");
@@ -817,18 +909,27 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public string SendText => _text.Get("Match.Send");
     public string PlayCardText => _text.Get("Match.PlayCard");
     public string DismantleTowerText => _text.Get("Match.DismantleTower");
-    public string ExitText => _text.Get("Match.Exit");
-    public string ExitConfirmTitleText => _text.Get("Match.ExitConfirmTitle");
-    public string ExitConfirmBodyText => _text.Get("Match.ExitConfirmBody");
+    private bool IsReturningToMenu => Results.HasFinalResult
+        || (_session?.GetActiveSession()?.PlayerId is Guid playerId
+            && _voting.Board?.ExpelledPlayerIds.Contains(playerId) == true);
+
+    public string ExitText => _text.Get(IsReturningToMenu ? "Match.Exit.ReturnHome" : "Match.Exit");
+    public string ExitConfirmTitleText => _text.Get(IsReturningToMenu
+        ? "Match.Exit.ReturnHome" : "Match.ExitConfirmTitle");
+    public string ExitConfirmBodyText => _text.Get(IsReturningToMenu
+        ? "Match.Exit.FinalBody" : "Match.ExitConfirmBody");
     public string CancelText => _text.Get("Match.Cancel");
     public string ConfirmText => _text.Get("Match.Confirm");
     public string ErrorTitleText => _text.Get("Room.ErrorHeading");
 
     public IRelayCommand RequestExitCommand { get; }
     public IRelayCommand CancelExitCommand { get; }
+    public IAsyncRelayCommand ConfirmExitCommand { get; }
 
     public void RefreshLocalization()
     {
+        Results.RefreshLocalization();
+        RefreshPlayers();
         OnPropertyChanged(nameof(TitleText));
         OnPropertyChanged(nameof(RoundText));
         OnPropertyChanged(nameof(CurrentTurnLabel));
@@ -850,9 +951,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(SendText));
         OnPropertyChanged(nameof(PlayCardText));
         OnPropertyChanged(nameof(DismantleTowerText));
-        OnPropertyChanged(nameof(ExitText));
-        OnPropertyChanged(nameof(ExitConfirmTitleText));
-        OnPropertyChanged(nameof(ExitConfirmBodyText));
+        RefreshExitLabels();
         OnPropertyChanged(nameof(CancelText));
         OnPropertyChanged(nameof(ConfirmText));
         OnPropertyChanged(nameof(ErrorTitleText));
@@ -878,6 +977,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             label = string.Format(_text.Get("Match.Move.TurnExpired"), move.PlayerUsername);
         }
+        else if (move.ActionKind == MatchBoardActionKind.LeftMatch)
+        {
+            label = string.Format(_text.Get("Match.Move.LeftMatch"), move.PlayerUsername);
+        }
         else if (move.ActionKind == MatchBoardActionKind.ExpelledByVote)
         {
             label = string.Format(_text.Get("Match.Move.ExpelledByVote"), move.PlayerUsername);
@@ -894,14 +997,107 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         return label;
     }
 
+    private void RefreshExitLabels()
+    {
+        OnPropertyChanged(nameof(ExitText));
+        OnPropertyChanged(nameof(ExitConfirmTitleText));
+        OnPropertyChanged(nameof(ExitConfirmBodyText));
+    }
+
     private void RequestExit()
     {
+        ExitErrorMessage = string.Empty;
         IsExitConfirmationOpen = true;
     }
 
     private void CancelExit()
     {
-        IsExitConfirmationOpen = false;
+        if (!_isLeavingMatch)
+        {
+            IsExitConfirmationOpen = false;
+        }
     }
 
+    private bool CanConfirmExit()
+    {
+        return IsExitConfirmationOpen && !_isLeavingMatch && !_isSubmittingTurn && _matchId != Guid.Empty
+            && _lobbies is not null && _navigation is not null;
+    }
+
+    private async Task ConfirmExitAsync()
+    {
+        SessionSnapshot? session = _session?.GetActiveSession();
+        if (CanConfirmExit() && session is not null && _guard?.HasActiveSession() == true && _lobbies is not null)
+        {
+            BoardRequestIdentity identity = new(session, _matchId, _generation);
+            MatchLeaveRequest request = new()
+            {
+                MatchId = _matchId,
+                LobbyCode = _lobbyCode,
+                SessionToken = session.Token
+            };
+            ExitErrorMessage = string.Empty;
+            SetLeavingMatch(true);
+            try
+            {
+                bool left = await Task.Run(() => _lobbies.LeaveMatch(request));
+                await Dispatcher.UIThread.InvokeAsync(() => ApplyExitResult(identity, left));
+            }
+            catch (Exception ex)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => ShowExitError(identity, ex));
+            }
+            finally
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    if (identity.Generation == _generation)
+                    {
+                        SetLeavingMatch(false);
+                    }
+                });
+            }
+        }
+    }
+
+    private void ApplyExitResult(BoardRequestIdentity identity, bool left)
+    {
+        if (IsCurrent(identity.Session, identity.MatchId, identity.Generation))
+        {
+            if (left)
+            {
+                try
+                {
+                    _lobbies?.Disconnect();
+                }
+                finally
+                {
+                    _navigation?.NavigateTo(NavigationPage.Home);
+                }
+            }
+            else
+            {
+                ExitErrorMessage = _text.Get("Match.Exit.Failed");
+            }
+        }
+    }
+
+    private void ShowExitError(BoardRequestIdentity identity, Exception exception)
+    {
+        if (IsCurrent(identity.Session, identity.MatchId, identity.Generation))
+        {
+            ExitErrorMessage = _errors?.FromException(exception, "Match.Exit.Failed") ?? _text.Get("Match.Exit.Failed");
+            if (_errors?.IsUnauthorized(exception) == true)
+            {
+                _guard?.Invalidate(identity.Session);
+            }
+        }
+    }
+
+    private void SetLeavingMatch(bool value)
+    {
+        _isLeavingMatch = value;
+        CancelExitCommand.NotifyCanExecuteChanged();
+        RefreshTurnCommands();
+    }
 }

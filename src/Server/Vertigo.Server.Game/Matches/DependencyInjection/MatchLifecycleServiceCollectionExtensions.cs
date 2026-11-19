@@ -36,6 +36,9 @@ public static class MatchLifecycleServiceCollectionExtensions
         services.AddSingleton<IMatchExpulsionVoteService>(provider =>
             provider.GetRequiredService<InMemoryMatchSessionStarter>());
 
+        services.AddSingleton<IMatchDepartureService>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
         return services;
     }
 }

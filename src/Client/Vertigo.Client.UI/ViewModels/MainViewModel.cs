@@ -79,8 +79,13 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             return;
         }
 
+        bool returnedFromMatch = _previousPage == NavigationPage.Match && page == NavigationPage.Home;
         GetPage(_previousPage)?.OnNavigatedFrom();
         _previousPage = page;
+        if (returnedFromMatch)
+        {
+            Lobby.ResetState();
+        }
         if (page == NavigationPage.Access)
         {
             Lobby.ResetState();

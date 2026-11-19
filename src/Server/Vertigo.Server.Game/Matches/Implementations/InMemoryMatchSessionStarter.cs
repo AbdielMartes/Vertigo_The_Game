@@ -8,7 +8,7 @@ namespace Vertigo.Server.Game.Matches.Implementations;
 // Deliberately no automatic cancellation when lobby connections disappear (Phase 7B).
 public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLifecycle, IMatchPresence,
     IMatchBoardReader, IMatchPrivateHandReader, IMatchPlacementService, IMatchDismantleService, IMatchTurnClock,
-    IMatchExpulsionVoteService
+    IMatchExpulsionVoteService, IMatchDepartureService
 {
     private const int MinimumPlayerCount = 2;
     private const int MaximumPlayerCount = 6;
@@ -131,6 +131,20 @@ public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLi
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
                 result = record.TryVoteToExpel(voterId, vote, _timeProvider.GetUtcNow());
+            }
+        }
+
+        return result;
+    }
+
+    public MatchDepartureResult TryLeaveMatch(Guid matchId, Guid playerId)
+    {
+        MatchDepartureResult result = default;
+        lock (_syncRoot)
+        {
+            if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
+            {
+                result = record.TryLeaveMatch(playerId, _timeProvider.GetUtcNow());
             }
         }
 

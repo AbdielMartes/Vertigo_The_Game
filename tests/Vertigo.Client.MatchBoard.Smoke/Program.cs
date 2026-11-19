@@ -19,6 +19,7 @@ try
 
     Require(played, "No attempt exercised both an opening placement and a dismantle before round two.");
     await RunExpulsionVoteAsync();
+    await RunMatchExitAsync();
     return 0;
 }
 catch (FaultException<ServiceFault> exception)
@@ -273,6 +274,15 @@ static async Task RunExpulsionVoteAsync()
         Require(recorded.ExpulsionVotesRequired == 2 && recorded.ExpulsionVotes.Single().VoteCount == 1,
             "The first vote did not produce a pending tally.");
         VerifyRejectedVote(voters[0].Lobby, request, "MATCH_ALREADY_VOTED");
+        voters[0].Lobby.Disconnect();
+        voters[0].Lobby.JoinLobby(lobbyCode, voters[0].Session.Token);
+        MatchPrivateHand resumedVote = voters[0].Lobby.GetMatchPrivateHand(lobbyCode, voters[0].Session.Token);
+        MatchPrivateHand otherHand = voters[1].Lobby.GetMatchPrivateHand(lobbyCode, voters[1].Session.Token);
+        Require(resumedVote.VotingRevision == recorded.VotingRevision
+            && resumedVote.VotedExpulsionTargetIds.SequenceEqual(new[] { target.Session.PlayerId })
+            && otherHand.VotedExpulsionTargetIds.Count == 0,
+            "A reconnected client did not receive its own vote, or another client received it.");
+
         request.SessionToken = voters[1].Session.Token;
         MatchBoardSnapshot expelled = voters[1].Lobby.VoteToExpelMatchPlayer(request);
         Require(expelled.ExpelledPlayerIds.SequenceEqual(new[] { target.Session.PlayerId })
@@ -287,6 +297,20 @@ static async Task RunExpulsionVoteAsync()
             && secondNotice.ActionKind == MatchBoardActionKind.ExpelledByVote
             && secondNotice.Revision == expelled.Revision && secondNotice.PlayerUsername == target.Session.Username,
             "The expelled client did not receive the expected vote notifications.");
+        MatchLeaveRequest leave = new()
+        {
+            LobbyCode = lobbyCode,
+            MatchId = expelled.MatchId,
+            SessionToken = target.Session.Token
+        };
+        Require(target.Lobby.LeaveMatch(leave) && target.Lobby.GetCurrentLobby(target.Session.Token) is null,
+            "The expelled player could not leave the match.");
+        MatchBoardSnapshot afterExit = voters[0].Lobby.GetMatchBoard(lobbyCode, voters[0].Session.Token);
+        Require(afterExit.Revision == expelled.Revision && afterExit.EndReason == MatchEndReason.None
+            && afterExit.CurrentTurnPlayerId == expelled.CurrentTurnPlayerId
+            && afterExit.TurnDeadlineUtc == expelled.TurnDeadlineUtc && afterExit.Players.Count == 2,
+            "Leaving after expulsion changed the match for the remaining players.");
+        Console.WriteLine("PASS: EXPELLED PLAYER CAN LEAVE WITHOUT CHANGING THE ONGOING MATCH");
         Console.WriteLine("PASS: EXPULSION VOTE OVER NETTCP PRESERVES THE ACTIVE TURN");
     }
     finally
@@ -322,6 +346,88 @@ static void VerifyRejectedVote(ILobbyClient client, MatchExpulsionVoteRequest re
     }
 
     Require(rejected, $"The server did not reject the vote with {expectedError}.");
+}
+
+static async Task RunMatchExitAsync()
+{
+    using ServiceProvider first = CreateClient();
+    using ServiceProvider second = CreateClient();
+    ILobbyClient leaving = first.GetRequiredService<ILobbyClient>();
+    ILobbyClient staying = second.GetRequiredService<ILobbyClient>();
+    UserSession firstSession = CreateGuest(first);
+    UserSession secondSession = CreateGuest(second);
+
+    try
+    {
+        string code = leaving.CreateLobby(true, 2, firstSession.Token);
+        staying.JoinLobby(code, secondSession.Token);
+        leaving.SetReady(code, true, firstSession.Token);
+        staying.SetReady(code, true, secondSession.Token);
+        Guid matchId = leaving.StartMatch(code, firstSession.Token).MatchId;
+        MatchLeaveRequest request = new() { MatchId = matchId, LobbyCode = code, SessionToken = firstSession.Token };
+        TaskCompletionSource<MatchBoardChanged> leftNotice = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        staying.MatchBoardUpdated += ObserveDeparture;
+        try
+        {
+            request.MatchId = Guid.NewGuid();
+            Require(!leaving.LeaveMatch(request), "An exit request was accepted for the wrong match.");
+            request.MatchId = matchId;
+            Require(leaving.LeaveMatch(request), "The active player could not leave.");
+            MatchBoardChanged notice = await leftNotice.Task.WaitAsync(TimeSpan.FromSeconds(15));
+            Require(notice.MatchId == matchId && notice.PlayerUsername == firstSession.Username,
+                "The remaining client did not receive the departure notification.");
+            Require(leaving.GetCurrentLobby(firstSession.Token) is null, "The departure did not clear membership.");
+            Require(leaving.LeaveMatch(request), "Retrying the completed departure failed.");
+            Require(staying.GetMatchBoard(code, secondSession.Token).Revision == notice.Revision,
+                "Retrying the departure changed the board.");
+
+            bool rejoinDenied = false;
+            try
+            {
+                leaving.JoinLobby(code, firstSession.Token);
+            }
+            catch (FaultException<ServiceFault> exception)
+            {
+                rejoinDenied = exception.Detail.ErrorCode == ServiceErrorCodes.LobbyAlreadyStarted;
+            }
+
+            Require(rejoinDenied, "The departed player was able to rejoin the old match.");
+            staying.Disconnect();
+            staying.JoinLobby(code, secondSession.Token);
+            MatchBoardSnapshot result = staying.GetMatchBoard(code, secondSession.Token);
+            Require(result.EndReason == MatchEndReason.Abandonment
+                && result.WinnerIds.SequenceEqual(new[] { secondSession.PlayerId })
+                && result.RecentMoves.Single().PlayerUsername == firstSession.Username,
+                "After reconnecting, the remaining client did not recover the winner and departure.");
+
+            request.SessionToken = secondSession.Token;
+            Require(staying.LeaveMatch(request) && staying.LeaveMatch(request),
+                "Leaving a finished match or retrying the request failed.");
+            Require(staying.GetCurrentLobby(secondSession.Token) is null, "Finished match membership was retained.");
+            string next = staying.CreateLobby(true, 2, secondSession.Token);
+            leaving.JoinLobby(next, firstSession.Token);
+            Console.WriteLine("PASS: VOLUNTARY DEPARTURE, FINAL RESULT AFTER RECONNECT AND NEW LOBBY");
+        }
+        finally
+        {
+            staying.MatchBoardUpdated -= ObserveDeparture;
+        }
+
+        void ObserveDeparture(object? sender, MatchBoardChanged change)
+        {
+            if (change.ActionKind == MatchBoardActionKind.LeftMatch)
+            {
+                leftNotice.TrySetResult(change);
+            }
+        }
+    }
+    finally
+    {
+        leaving.Disconnect();
+        staying.Disconnect();
+        first.GetRequiredService<ISessionCoordinator>().Logout();
+        second.GetRequiredService<ISessionCoordinator>().Logout();
+    }
 }
 
 static (int CardNumber, int PilePosition) FindPlacement(MatchBoardSnapshot board, MatchPrivateHand hand)

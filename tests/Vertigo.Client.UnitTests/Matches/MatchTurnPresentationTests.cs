@@ -261,6 +261,40 @@ public sealed class MatchTurnPresentationTests
         return turn;
     }
 
+    [Fact]
+    public void VoteCommand_RefreshedPrivateVote_DisablesOnlyThePreviouslyVotedTarget()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Board.Players.Add(new MatchBoardPlayer { PlayerId = Guid.NewGuid(), Username = "Carla" });
+        turn.Board.CurrentTurnPlayerId = turn.Board.Players[1].PlayerId;
+        turn.Board.ExpulsionVotesRequired = 2;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.Null(turn.Model.Players[0].VoteCommand);
+        Assert.True(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Hand.VotedExpulsionTargetIds.Add(turn.Board.Players[1].PlayerId);
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.False(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+        Assert.True(turn.Model.Players[2].VoteCommand!.CanExecute(null));
+    }
+
+    [Fact]
+    public void VoteCommand_AtTurnDeadline_DisablesVoteForAnotherPlayer()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Board.Players.Add(new MatchBoardPlayer { PlayerId = Guid.NewGuid() });
+        turn.Board.ExpulsionVotesRequired = 2;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.True(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+
+        turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
+
+        Assert.False(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+    }
+
     private static TurnFixture CreateTurn()
     {
         ManualClock clock = new();

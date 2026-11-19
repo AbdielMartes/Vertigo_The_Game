@@ -230,10 +230,14 @@ internal static class RoundClosureSmoke
             && actual.Players.Count == 2 && actual.Players.OrderBy(score => score.PlayerId).Select(Score)
                 .SequenceEqual(target.Players.OrderBy(score => score.PlayerId).Select(Score)),
             "The clients received different round summaries.");
-        Check(actual.Players.All(score =>
-            score.TotalFloors == score.FloorsBuilt + score.BonusFloors
-            && received.Players.Single(player => player.PlayerId == score.PlayerId).GlobalFloors == score.TotalFloors),
-            "The round summary does not add up to the board totals.");
+        foreach (MatchRoundPlayerScore score in actual.Players)
+        {
+            MatchBoardPlayer player = received.Players.Single(player => player.PlayerId == score.PlayerId);
+            Check(score.TotalFloors == score.FloorsBuilt + score.BonusFloors
+                && player.GlobalFloors == score.TotalFloors && !string.IsNullOrWhiteSpace(score.PlayerUsername)
+                && player.Username == score.PlayerUsername,
+                "The round summary does not match the player name and total on the board.");
+        }
     }
 
     private static (Guid PlayerId, int FloorsBuilt, int BonusFloors, int TotalFloors) Score(MatchRoundPlayerScore score)

@@ -473,7 +473,7 @@
     <value>¿Abandonar la partida?</value>
   </data>
   <data name="Match.ExitConfirmBody" xml:space="preserve">
-    <value>La salida definitiva todavía no está habilitada. Podrás cancelar este diálogo.</value>
+    <value>Si abandonas, perderás tu lugar en esta partida.</value>
   </data>
   <data name="Match.Cancel" xml:space="preserve">
     <value>Cancelar</value>
@@ -551,5 +551,56 @@
   </data>
   <data name="Match.MasterPlan.Play" xml:space="preserve">
     <value>Jugar Plano Maestro</value>
+  </data>
+  <data name="Match.Results.Title" xml:space="preserve">
+    <value>Resultado de la partida</value>
+  </data>
+  <data name="Match.Results.RoundClosed" xml:space="preserve">
+    <value>Ronda {0} finalizada</value>
+  </data>
+  <data name="Match.Results.RoundOption" xml:space="preserve">
+    <value>Ronda {0}</value>
+  </data>
+  <data name="Match.Results.Winner" xml:space="preserve">
+    <value>Ganó {0}</value>
+  </data>
+  <data name="Match.Results.Winners" xml:space="preserve">
+    <value>Ganaron {0}</value>
+  </data>
+  <data name="Match.Results.Abandonment" xml:space="preserve">
+    <value>Victoria por abandono</value>
+  </data>
+  <data name="Match.Results.SelectRound" xml:space="preserve">
+    <value>Elegir ronda</value>
+  </data>
+  <data name="Match.Results.Player" xml:space="preserve">
+    <value>Jugador</value>
+  </data>
+  <data name="Match.Results.Floors" xml:space="preserve">
+    <value>Pisos construidos</value>
+  </data>
+  <data name="Match.Results.Bonus" xml:space="preserve">
+    <value>Bono</value>
+  </data>
+  <data name="Match.Results.Total" xml:space="preserve">
+    <value>Total acumulado</value>
+  </data>
+  <data name="Match.Expulsion.Vote" xml:space="preserve">
+    <value>Votar expulsión</value>
+  </data>
+  <data name="Match.Expulsion.Count" xml:space="preserve">
+    <value>{0} de {1} votos</value>
+  </data>
+  <data name="Match.Exit.ReturnHome" xml:space="preserve">
+    <value>Volver al menú</value>
+  </data>
+  <data name="Match.Exit.FinalBody" xml:space="preserve">
+    <value>¿Quieres volver al menú principal?</value>
+  </data>
+  <data name="Match.Exit.Failed" xml:space="preserve">
+    <value>No se pudo salir de la partida. Inténtalo de nuevo.</value>
+  </data>
+  <data name="Match.Move.LeftMatch" xml:space="preserve">
+    <value>{0} abandonó la partida.</value>
   </data>
 </root>

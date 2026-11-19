@@ -22,6 +22,9 @@ public sealed class LobbyState
 
     public Guid MatchId => _matchId;
 
+    public IReadOnlyDictionary<Guid, string> MatchPlayerNames { get; private set; } =
+        new Dictionary<Guid, string>();
+
     public long Revision => _revision;
 
     public LobbyState(LobbySettings settings)
@@ -219,6 +222,8 @@ public sealed class LobbyState
             throw new InvalidOperationException("The lobby has already started a match.");
         }
 
+        MatchPlayerNames = _connections.ToDictionary(connection => connection.Member.PlayerId,
+            connection => connection.Member.Username);
         _matchId = matchId;
         Status = LobbyStatus.InGame;
         _revision++;

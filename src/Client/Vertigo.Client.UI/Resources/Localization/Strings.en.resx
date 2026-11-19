@@ -473,7 +473,7 @@
     <value>Leave the match?</value>
   </data>
   <data name="Match.ExitConfirmBody" xml:space="preserve">
-    <value>Leaving the match is not enabled yet. You can cancel this dialog.</value>
+    <value>If you leave now, you will lose your place in this match.</value>
   </data>
   <data name="Match.Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -551,5 +551,56 @@
   </data>
   <data name="Match.MasterPlan.Play" xml:space="preserve">
     <value>Play Master Plan</value>
+  </data>
+  <data name="Match.Results.Title" xml:space="preserve">
+    <value>Match result</value>
+  </data>
+  <data name="Match.Results.RoundClosed" xml:space="preserve">
+    <value>Round {0} complete</value>
+  </data>
+  <data name="Match.Results.RoundOption" xml:space="preserve">
+    <value>Round {0}</value>
+  </data>
+  <data name="Match.Results.Winner" xml:space="preserve">
+    <value>{0} won</value>
+  </data>
+  <data name="Match.Results.Winners" xml:space="preserve">
+    <value>{0} won</value>
+  </data>
+  <data name="Match.Results.Abandonment" xml:space="preserve">
+    <value>Win by abandonment</value>
+  </data>
+  <data name="Match.Results.SelectRound" xml:space="preserve">
+    <value>Select round</value>
+  </data>
+  <data name="Match.Results.Player" xml:space="preserve">
+    <value>Player</value>
+  </data>
+  <data name="Match.Results.Floors" xml:space="preserve">
+    <value>Floors built</value>
+  </data>
+  <data name="Match.Results.Bonus" xml:space="preserve">
+    <value>Bonus</value>
+  </data>
+  <data name="Match.Results.Total" xml:space="preserve">
+    <value>Running total</value>
+  </data>
+  <data name="Match.Expulsion.Vote" xml:space="preserve">
+    <value>Vote to expel</value>
+  </data>
+  <data name="Match.Expulsion.Count" xml:space="preserve">
+    <value>{0} of {1} votes</value>
+  </data>
+  <data name="Match.Exit.ReturnHome" xml:space="preserve">
+    <value>Return to menu</value>
+  </data>
+  <data name="Match.Exit.FinalBody" xml:space="preserve">
+    <value>Return to the main menu?</value>
+  </data>
+  <data name="Match.Exit.Failed" xml:space="preserve">
+    <value>Could not leave the match. Try again.</value>
+  </data>
+  <data name="Match.Move.LeftMatch" xml:space="preserve">
+    <value>{0} left the match.</value>
   </data>
 </root>

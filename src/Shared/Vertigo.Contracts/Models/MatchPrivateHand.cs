@@ -19,4 +19,10 @@ public sealed class MatchPrivateHand
 
     [DataMember]
     public long? Revision { get; set; }
+
+    [DataMember]
+    public long VotingRevision { get; set; }
+
+    [DataMember]
+    public List<Guid> VotedExpulsionTargetIds { get; set; } = new();
 }

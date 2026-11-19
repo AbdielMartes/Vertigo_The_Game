@@ -21,5 +21,8 @@ public enum MatchBoardActionKind
     ExpulsionVoteRecorded,
 
     [EnumMember]
-    ExpelledByVote
+    ExpelledByVote,
+
+    [EnumMember]
+    LeftMatch
 }

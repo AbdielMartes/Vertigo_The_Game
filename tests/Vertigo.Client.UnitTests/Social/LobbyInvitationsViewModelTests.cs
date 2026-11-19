@@ -170,6 +170,11 @@ public sealed class LobbyInvitationsViewModelTests
             throw new NotSupportedException();
         }
 
+        public bool LeaveMatch(MatchLeaveRequest request)
+        {
+            throw new NotSupportedException();
+        }
+
         public MatchBoardSnapshot UseMatchMasterPlan(MatchMasterPlanRequest request)
         {
             throw new NotSupportedException();

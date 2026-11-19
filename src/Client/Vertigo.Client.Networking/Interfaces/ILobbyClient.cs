@@ -20,6 +20,8 @@ public interface ILobbyClient : IDisposable
 
     bool LeaveLobby(string lobbyCode, string sessionToken);
 
+    bool LeaveMatch(MatchLeaveRequest request);
+
     List<LobbySummary> GetPublicLobbies();
 
     LobbyPreparation GetPreparation(string lobbyCode, string sessionToken);

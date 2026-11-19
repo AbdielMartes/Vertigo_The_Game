@@ -252,6 +252,10 @@ src/
           MatchRecord.cs
       Vertigo.Server.Game.csproj
     Vertigo.Server.Host/
+      Logging/
+        LoggingSettings.cs
+        README.md
+        ServerLoggingConfiguration.cs
       Program.cs
       Vertigo.Server.Host.csproj
     Vertigo.Server.Matchmaking/
@@ -278,6 +282,7 @@ src/
       Authentication/
         Dependencies/
           AuthenticationDependencies.cs
+          SessionIdentityResolverDependencies.cs
         Interfaces/
           IGuestSessionRegistry.cs
           ISessionIdentityResolver.cs
@@ -5201,6 +5206,235 @@ public static class MatchPlacementRules
 }
 ```
 
+## File: src/Server/Vertigo.Server.Host/Logging/LoggingSettings.cs
+```csharp
+namespace Vertigo.Server.Host.Logging;
+
+internal static class LoggingSettings
+{
+    public const string DirectoryKey = "Logging:Directory";
+    public const string ConsoleEnabledKey = "Logging:ConsoleEnabled";
+    public const string TechnicalMinimumLevelKey = "Logging:TechnicalMinimumLevel";
+    public const string FrameworkMinimumLevelKey = "Logging:FrameworkMinimumLevel";
+    public const string EventCategoryProperty = "EventCategory";
+    public const string SecurityCategory = "Security";
+    public const long MaximumFileSizeBytes = 10L * 1024 * 1024;
+    public const int TechnicalRetainedFileCount = 30;
+    public const int SecurityRetainedFileCount = 60;
+    public const int InitialDiagnosticLimit = 3;
+    public const int SubsequentDiagnosticInterval = 100;
+}
+```
+
+## File: src/Server/Vertigo.Server.Host/Logging/README.md
+```markdown
+# Límites del logging del servidor
+
+Los destinos Technical y Security escriben archivos JSONL mediante Serilog.
+
+- Un fallo de almacenamiento o una interrupción del proceso puede provocar la pérdida de registros.
+- Si se interrumpe una escritura, la última línea del JSONL puede quedar parcial.
+- La retención se mide por cantidad de archivos. Technical conserva hasta 30 y Security hasta 60.
+- Ambos destinos rotan por día y por tamaño. El umbral de 10 MiB por archivo es aproximado y un evento puede sobrepasarlo.
+```
+
+## File: src/Server/Vertigo.Server.Host/Logging/ServerLoggingConfiguration.cs
+```csharp
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Core;
+using Serilog.Debugging;
+using Serilog.Events;
+using Serilog.Formatting.Json;
+
+namespace Vertigo.Server.Host.Logging;
+
+internal static class ServerLoggingConfiguration
+{
+    private static int _diagnosticCount;
+
+    public static Logger CreateLogger(IConfiguration configuration, IHostEnvironment environment)
+    {
+        string directory = GetBaseDirectory(configuration, environment.ContentRootPath);
+        string technicalDirectory = Path.Combine(directory, "Technical");
+        string securityDirectory = Path.Combine(directory, "Security");
+        LogEventLevel technicalLevel = GetLevel(configuration, LoggingSettings.TechnicalMinimumLevelKey,
+            LogEventLevel.Warning);
+        LogEventLevel frameworkLevel = GetLevel(configuration, LoggingSettings.FrameworkMinimumLevelKey,
+            environment.IsDevelopment() ? LogEventLevel.Information : LogEventLevel.Warning);
+        bool consoleEnabled = configuration.GetValue(LoggingSettings.ConsoleEnabledKey, environment.IsDevelopment());
+        LogEventLevel consoleLevel = LogEventLevel.Information;
+        if (technicalLevel < consoleLevel)
+        {
+            consoleLevel = technicalLevel;
+        }
+        LogEventLevel rootLevel = consoleLevel < frameworkLevel ? consoleLevel : frameworkLevel;
+
+        SelfLog.Enable(ReportInternalFailure);
+        LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
+            .MinimumLevel.Is(rootLevel)
+            .MinimumLevel.Override("Microsoft", frameworkLevel)
+            .MinimumLevel.Override("System", frameworkLevel)
+            .Enrich.FromLogContext();
+
+        bool technicalAvailable = TryCreateDirectory(technicalDirectory);
+        if (technicalAvailable)
+        {
+            technicalAvailable = TryConfigureTechnicalFile(loggerConfiguration, technicalDirectory, technicalLevel);
+        }
+
+        if (!technicalAvailable)
+        {
+            Console.Error.WriteLine("Technical log destination unavailable; using stderr for technical events.");
+        }
+
+        if (consoleEnabled || !technicalAvailable)
+        {
+            LogEventLevel minimumLevel = technicalAvailable ? consoleLevel : technicalLevel;
+            loggerConfiguration.WriteTo.Logger(technical => technical
+                .Filter.ByExcluding(IsSecurityEvent)
+                .Filter.ByIncludingOnly(logEvent => logEvent.Level >= minimumLevel)
+                .WriteTo.Console(standardErrorFromLevel: LogEventLevel.Verbose));
+        }
+
+        if (TryCreateDirectory(securityDirectory))
+        {
+            TryConfigureSecurityFile(loggerConfiguration, securityDirectory);
+        }
+        else
+        {
+            Console.Error.WriteLine("Security log destination unavailable; security events may be missing.");
+        }
+
+        return loggerConfiguration.CreateLogger();
+    }
+
+    private static bool TryConfigureTechnicalFile(
+        LoggerConfiguration configuration, string directory, LogEventLevel minimumLevel)
+    {
+        bool success = true;
+        string path = Path.Combine(directory, "technical-.jsonl");
+
+        try
+        {
+            configuration.WriteTo.Logger(technical => technical
+                .Filter.ByExcluding(IsSecurityEvent)
+                .Filter.ByIncludingOnly(logEvent => logEvent.Level >= minimumLevel)
+                .WriteTo.File(
+                    new JsonFormatter(renderMessage: true), path,
+                    rollingInterval: RollingInterval.Day,
+                    fileSizeLimitBytes: LoggingSettings.MaximumFileSizeBytes,
+                    rollOnFileSizeLimit: true,
+                    retainedFileCountLimit: LoggingSettings.TechnicalRetainedFileCount));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            success = false;
+        }
+
+        return success;
+    }
+
+    private static void TryConfigureSecurityFile(LoggerConfiguration configuration, string directory)
+    {
+        string path = Path.Combine(directory, "security-.jsonl");
+
+        try
+        {
+            configuration.WriteTo.Logger(security => security
+                .Filter.ByIncludingOnly(IsSecurityEvent)
+                .WriteTo.File(
+                    new JsonFormatter(renderMessage: true), path,
+                    rollingInterval: RollingInterval.Day,
+                    fileSizeLimitBytes: LoggingSettings.MaximumFileSizeBytes,
+                    rollOnFileSizeLimit: true,
+                    retainedFileCountLimit: LoggingSettings.SecurityRetainedFileCount));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            Console.Error.WriteLine("Security log destination unavailable; security events may be missing.");
+        }
+    }
+
+    private static bool TryCreateDirectory(string directory)
+    {
+        bool success = true;
+
+        try
+        {
+            Directory.CreateDirectory(directory);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException
+                                   or NotSupportedException)
+        {
+            success = false;
+        }
+
+        return success;
+    }
+
+    private static string GetBaseDirectory(IConfiguration configuration, string contentRootPath)
+    {
+        string? configuredDirectory = configuration[LoggingSettings.DirectoryKey];
+        string directory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Vertigo", "Server", "Logs");
+
+        if (!string.IsNullOrWhiteSpace(configuredDirectory))
+        {
+            if (Path.IsPathRooted(configuredDirectory))
+            {
+                directory = Path.GetFullPath(configuredDirectory);
+            }
+            else
+            {
+                directory = Path.GetFullPath(configuredDirectory, contentRootPath);
+            }
+        }
+
+        return directory;
+    }
+
+    private static LogEventLevel GetLevel(
+        IConfiguration configuration, string key, LogEventLevel defaultLevel)
+    {
+        LogEventLevel level = defaultLevel;
+        string? configured = configuration[key];
+
+        if (Enum.TryParse(configured, true, out LogEventLevel parsed) && Enum.IsDefined(parsed))
+        {
+            level = parsed;
+        }
+
+        return level;
+    }
+
+    private static bool IsSecurityEvent(LogEvent logEvent)
+    {
+        bool isSecurity = false;
+
+        if (logEvent.Properties.TryGetValue(LoggingSettings.EventCategoryProperty, out LogEventPropertyValue? value)
+            && value is ScalarValue { Value: string category })
+        {
+            isSecurity = string.Equals(category, LoggingSettings.SecurityCategory, StringComparison.Ordinal);
+        }
+
+        return isSecurity;
+    }
+
+    private static void ReportInternalFailure(string message)
+    {
+        int count = Interlocked.Increment(ref _diagnosticCount);
+        if (count <= LoggingSettings.InitialDiagnosticLimit
+            || count % LoggingSettings.SubsequentDiagnosticInterval == 0)
+        {
+            Console.Error.WriteLine("Serilog reported a write or storage problem; some log events may be missing.");
+        }
+    }
+}
+```
+
 ## File: src/Server/Vertigo.Server.Matchmaking/Chat/Services/ChatService.cs
 ```csharp
 using CoreWCF;
@@ -5676,6 +5910,34 @@ public sealed class AuthenticationDependencies
 }
 ```
 
+## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Dependencies/SessionIdentityResolverDependencies.cs
+```csharp
+using Vertigo.Server.CrossCutting.Security.Interfaces;
+using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
+
+namespace Vertigo.Server.PlayerManagement.Authentication.Dependencies;
+
+public sealed class SessionIdentityResolverDependencies
+{
+    public ISessionTokenRepository SessionTokenRepository { get; }
+
+    public ITokenGenerator TokenGenerator { get; }
+
+    public IGuestSessionRegistry Guests { get; }
+
+    public SessionIdentityResolverDependencies(
+        ISessionTokenRepository sessionTokenRepository,
+        ITokenGenerator tokenGenerator,
+        IGuestSessionRegistry guests)
+    {
+        SessionTokenRepository = sessionTokenRepository;
+        TokenGenerator = tokenGenerator;
+        Guests = guests;
+    }
+}
+```
+
 ## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Interfaces/IGuestSessionRegistry.cs
 ```csharp
 using Vertigo.Server.PlayerManagement.Authentication.Models;
@@ -5733,83 +5995,6 @@ public sealed class AuthenticatedSession
 namespace Vertigo.Server.PlayerManagement.Authentication.Models;
 
 public sealed record SessionIdentity(Guid PlayerId, string Username, bool IsGuest);
-```
-
-## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthenticationService.cs
-```csharp
-using CoreWCF;
-using Vertigo.Contracts.Faults;
-using Vertigo.Contracts.Interfaces;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.PlayerManagement.Authentication.Models;
-
-namespace Vertigo.Server.PlayerManagement.Authentication.Services;
-
-public class AuthenticationService : IAuthService
-{
-    private readonly AuthService _authentication;
-
-    public AuthenticationService(AuthService authentication)
-    {
-        _authentication = authentication;
-    }
-
-    public UserSession Login(LoginCredentials credentials)
-    {
-        if (credentials is null || string.IsNullOrWhiteSpace(credentials.Username)
-            || string.IsNullOrWhiteSpace(credentials.Password))
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
-        }
-
-        AuthenticatedSession? session = _authentication.Login(credentials.Username, credentials.Password);
-        if (session is null)
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
-        }
-
-        return ConvertSession(session);
-    }
-
-    public UserSession ResumeSession(string token)
-    {
-        AuthenticatedSession? session = _authentication.ResumeSession(token);
-        if (session is null)
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
-        }
-
-        return ConvertSession(session);
-    }
-
-    public UserSession CreateGuestSession()
-    {
-        return ConvertSession(_authentication.CreateGuestSession());
-    }
-
-    public bool Logout(SessionLogout logout)
-    {
-        return logout is not null && _authentication.Logout(logout.SessionToken);
-    }
-
-    private static UserSession ConvertSession(AuthenticatedSession session)
-    {
-        return new UserSession
-        {
-            PlayerId = session.PlayerId,
-            Username = session.Username,
-            Token = session.Token,
-            ExpiresAt = session.ExpiresAt,
-            IsGuest = session.IsGuest
-        };
-    }
-
-    private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)
-    {
-        ServiceFault fault = new ServiceFault { ErrorCode = errorCode, MessageKey = messageKey };
-        return new FaultException<ServiceFault>(fault, new FaultReason(errorCode));
-    }
-}
 ```
 
 ## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/GuestSessionRegistry.cs
@@ -5886,86 +6071,6 @@ public sealed class GuestSessionRegistry : IGuestSessionRegistry
     public bool Revoke(string tokenHash)
     {
         return _sessions.TryRemove(tokenHash, out _);
-    }
-}
-```
-
-## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/SessionIdentityResolver.cs
-```csharp
-using CoreWCF;
-using Vertigo.Contracts.Faults;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.CrossCutting.Security.Interfaces;
-using Vertigo.Server.DataAccess.Entities.Identity;
-using Vertigo.Server.DataAccess.Repositories.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Models;
-
-namespace Vertigo.Server.PlayerManagement.Authentication.Services;
-
-public sealed class SessionIdentityResolver : ISessionIdentityResolver
-{
-    private const int SessionTokenLength = 64;
-
-    private readonly ISessionTokenRepository _sessionTokenRepository;
-    private readonly ITokenGenerator _tokenGenerator;
-    private readonly IGuestSessionRegistry _guests;
-
-    public SessionIdentityResolver(
-        ISessionTokenRepository sessionTokenRepository,
-        ITokenGenerator tokenGenerator,
-        IGuestSessionRegistry guests)
-    {
-        _sessionTokenRepository = sessionTokenRepository;
-        _tokenGenerator = tokenGenerator;
-        _guests = guests;
-    }
-
-    public SessionIdentity? Resolve(string token)
-    {
-        SessionIdentity? identity = null;
-        if (!string.IsNullOrWhiteSpace(token) && token.Length == SessionTokenLength)
-        {
-            string tokenHash = _tokenGenerator.HashSessionToken(token);
-            identity = _guests.Find(tokenHash);
-            if (identity is null)
-            {
-                SessionToken? session = _sessionTokenRepository.GetActiveSessionToken(tokenHash);
-                if (session is not null)
-                {
-                    identity = new SessionIdentity(session.PlayerId, session.Player.Username, false);
-                }
-            }
-        }
-
-        return identity;
-    }
-
-    public SessionIdentity Require(string token)
-    {
-        return Resolve(token) ?? throw CreateUnauthorizedFault();
-    }
-
-    public SessionIdentity RequireRegistered(string token)
-    {
-        SessionIdentity identity = Require(token);
-        if (identity.IsGuest)
-        {
-            throw CreateUnauthorizedFault();
-        }
-
-        return identity;
-    }
-
-    private static FaultException<ServiceFault> CreateUnauthorizedFault()
-    {
-        ServiceFault fault = new ServiceFault
-        {
-            ErrorCode = ServiceErrorCodes.Unauthorized,
-            MessageKey = ServiceMessageKeys.Unauthorized
-        };
-
-        return new FaultException<ServiceFault>(fault, new FaultReason(fault.ErrorCode));
     }
 }
 ```
@@ -6707,107 +6812,6 @@ public sealed record AccountServiceDependencies(
     ISessionTokenRepository SessionTokenRepository,
     IPasswordHasher PasswordHasher,
     ISessionIdentityResolver Sessions);
-```
-
-## File: src/Server/Vertigo.Server.PlayerManagement/Registration/Services/AccountService.cs
-```csharp
-using CoreWCF;
-using Vertigo.Contracts.Faults;
-using Vertigo.Contracts.Interfaces;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.CrossCutting.Security.Interfaces;
-using Vertigo.Server.DataAccess.Entities.Identity;
-using Vertigo.Server.DataAccess.Repositories.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Models;
-using Vertigo.Server.PlayerManagement.Registration.Dependencies;
-
-namespace Vertigo.Server.PlayerManagement.Registration.Services;
-
-public class AccountService : IAccountService
-{
-    private readonly IPlayerRepository _playerRepository;
-    private readonly ISessionTokenRepository _sessionTokenRepository;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly ISessionIdentityResolver _sessions;
-
-    public AccountService(AccountServiceDependencies dependencies)
-    {
-        _playerRepository = dependencies.PlayerRepository;
-        _sessionTokenRepository = dependencies.SessionTokenRepository;
-        _passwordHasher = dependencies.PasswordHasher;
-        _sessions = dependencies.Sessions;
-    }
-
-    public bool RegisterAccount(AccountRegistration registration)
-    {
-        if (registration is null || string.IsNullOrWhiteSpace(registration.Username)
-            || string.IsNullOrWhiteSpace(registration.Email)
-            || string.IsNullOrWhiteSpace(registration.Password)
-            || registration.Username.Length > 32 || registration.Email.Length > 120)
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidRegistrationData, ServiceMessageKeys.InvalidRegistrationData);
-        }
-
-        if (_playerRepository.UsernameExists(registration.Username))
-        {
-            throw CreateFault(ServiceErrorCodes.UsernameAlreadyRegistered,
-                ServiceMessageKeys.UsernameAlreadyRegistered);
-        }
-
-        if (_playerRepository.EmailExists(registration.Email))
-        {
-            throw CreateFault(ServiceErrorCodes.EmailAlreadyRegistered,
-                ServiceMessageKeys.EmailAlreadyRegistered);
-        }
-
-        string salt = _passwordHasher.GenerateSalt();
-        Player player = new Player
-        {
-            Username = registration.Username.Trim(),
-            Email = registration.Email.Trim(),
-            PasswordSalt = salt,
-            PasswordHash = _passwordHasher.HashPassword(registration.Password, salt),
-            Stats = new PlayerStats()
-        };
-
-        return _playerRepository.CreatePlayer(player);
-    }
-
-    public bool ChangePassword(PasswordChange change, string sessionToken)
-    {
-        if (change is null || string.IsNullOrWhiteSpace(change.Username)
-            || string.IsNullOrWhiteSpace(change.CurrentPassword)
-            || string.IsNullOrWhiteSpace(change.NewPassword))
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
-        }
-
-        SessionIdentity identity = _sessions.RequireRegistered(sessionToken);
-        Player? player = _playerRepository.GetPlayerById(identity.PlayerId);
-        if (player is null || !string.Equals(player.Username, change.Username, StringComparison.OrdinalIgnoreCase) || !_passwordHasher.VerifyPassword(
-                change.CurrentPassword, player.PasswordHash, player.PasswordSalt))
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
-        }
-
-        string salt = _passwordHasher.GenerateSalt();
-        string hash = _passwordHasher.HashPassword(change.NewPassword, salt);
-        bool isChanged = _playerRepository.UpdatePassword(player.PlayerId, hash, salt);
-        if (isChanged)
-        {
-            _sessionTokenRepository.RevokePlayerSessions(player.PlayerId);
-        }
-
-        return isChanged;
-    }
-
-    private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)
-    {
-        ServiceFault fault = new ServiceFault { ErrorCode = errorCode, MessageKey = messageKey };
-        return new FaultException<ServiceFault>(fault, new FaultReason(errorCode));
-    }
-}
 ```
 
 ## File: src/Shared/Vertigo.Contracts/Callbacks/IFriendshipCallback.cs
@@ -11165,140 +11169,6 @@ public sealed class MatchPrivateHandTests
 }
 ```
 
-## File: tests/Vertigo.Server.Matchmaking.Tests/Authentication/GuestSessionTests.cs
-```csharp
-using CoreWCF;
-using Vertigo.Contracts.Faults;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.CrossCutting.Security.Interfaces;
-using Vertigo.Server.DataAccess.Entities.Identity;
-using Vertigo.Server.DataAccess.Repositories.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Services;
-
-namespace Vertigo.Server.Matchmaking.Tests.Authentication;
-
-public sealed class GuestSessionTests
-{
-    [Fact]
-    public void Find_AtExactExpiration_ReturnsNull()
-    {
-        ControlledTimeProvider clock = new(new DateTimeOffset(2026, 11, 16, 12, 0, 0, TimeSpan.Zero));
-        FakeTokenGenerator tokens = new();
-        GuestSessionRegistry registry = new(tokens, clock);
-        string hash = tokens.HashSessionToken(registry.Create().Token);
-        Assert.NotNull(registry.Find(hash));
-
-        clock.Advance(TimeSpan.FromHours(12));
-
-        Assert.Null(registry.Find(hash));
-    }
-
-    [Fact]
-    public void Revoke_RemovesGuestSession()
-    {
-        ControlledTimeProvider clock = new(DateTimeOffset.UtcNow);
-        FakeTokenGenerator tokens = new();
-        GuestSessionRegistry registry = new(tokens, clock);
-        string hash = tokens.HashSessionToken(registry.Create().Token);
-
-        Assert.True(registry.Revoke(hash));
-        Assert.Null(registry.Find(hash));
-    }
-
-    [Fact]
-    public void RequireRegistered_GuestIsRejected()
-    {
-        ControlledTimeProvider clock = new(DateTimeOffset.UtcNow);
-        FakeTokenGenerator tokens = new();
-        GuestSessionRegistry registry = new(tokens, clock);
-        string raw = registry.Create().Token;
-        SessionIdentityResolver resolver = new(new FakeSessionTokenRepository(), tokens, registry);
-
-        FaultException<ServiceFault> fault = Assert.Throws<FaultException<ServiceFault>>(
-            () => resolver.RequireRegistered(raw));
-
-        Assert.Equal(ServiceErrorCodes.Unauthorized, fault.Detail.ErrorCode);
-    }
-
-    [Fact]
-    public void Require_RevokedGuestIsRejected()
-    {
-        ControlledTimeProvider clock = new(DateTimeOffset.UtcNow);
-        FakeTokenGenerator tokens = new();
-        GuestSessionRegistry registry = new(tokens, clock);
-        string raw = registry.Create().Token;
-        registry.Revoke(tokens.HashSessionToken(raw));
-        SessionIdentityResolver resolver = new(new FakeSessionTokenRepository(), tokens, registry);
-
-        FaultException<ServiceFault> fault = Assert.Throws<FaultException<ServiceFault>>(
-            () => resolver.Require(raw));
-
-        Assert.Equal(ServiceErrorCodes.Unauthorized, fault.Detail.ErrorCode);
-    }
-
-    private sealed class ControlledTimeProvider : TimeProvider
-    {
-        private DateTimeOffset _utcNow;
-
-        public ControlledTimeProvider(DateTimeOffset utcNow)
-        {
-            _utcNow = utcNow;
-        }
-
-        public override DateTimeOffset GetUtcNow()
-        {
-            return _utcNow;
-        }
-
-        public void Advance(TimeSpan amount)
-        {
-            _utcNow += amount;
-        }
-    }
-
-    private sealed class FakeTokenGenerator : ITokenGenerator
-    {
-        public string GenerateSessionToken()
-        {
-            return new string('A', 64);
-        }
-
-        public string GenerateVerificationCode()
-        {
-            return "123456";
-        }
-
-        public string HashSessionToken(string sessionToken)
-        {
-            return sessionToken;
-        }
-    }
-
-    private sealed class FakeSessionTokenRepository : ISessionTokenRepository
-    {
-        public bool CreateSessionToken(SessionToken token)
-        {
-            return false;
-        }
-
-        public SessionToken? GetActiveSessionToken(string tokenHash)
-        {
-            return null;
-        }
-
-        public bool RevokeSessionToken(string tokenHash)
-        {
-            return false;
-        }
-
-        public int RevokePlayerSessions(Guid playerId)
-        {
-            return 0;
-        }
-    }
-}
-```
-
 ## File: tests/Vertigo.Server.Matchmaking.Tests/Vertigo.Server.Matchmaking.Tests.csproj
 ```
 <Project Sdk="Microsoft.NET.Sdk">
@@ -13676,35 +13546,6 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
 </UserControl>
 ```
 
-## File: src/Client/Vertigo.Client.UI/Vertigo.Client.UI.csproj
-```
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net11.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../Vertigo.Client.Networking/Vertigo.Client.Networking.csproj" />
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.1.6" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.1.6" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.6" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.6" />
-    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
-      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
-      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-  </ItemGroup>
-</Project>
-```
-
 ## File: src/Server/Vertigo.Server.DataAccess/Repositories/Implementations/BlockedPlayerRepository.cs
 ```csharp
 using Microsoft.EntityFrameworkCore;
@@ -14380,38 +14221,6 @@ internal sealed class MatchRecord
 }
 ```
 
-## File: src/Server/Vertigo.Server.Host/Vertigo.Server.Host.csproj
-```
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Vertigo.Contracts\Vertigo.Contracts.csproj" />
-    <ProjectReference Include="..\Vertigo.Server.PlayerManagement\Vertigo.Server.PlayerManagement.csproj" />
-    <ProjectReference Include="..\Vertigo.Server.Matchmaking\Vertigo.Server.Matchmaking.csproj" />
-    <ProjectReference Include="..\Vertigo.Server.Game\Vertigo.Server.Game.csproj" />
-    <ProjectReference Include="..\Vertigo.Server.DataAccess\Vertigo.Server.DataAccess.csproj" />
-    <ProjectReference Include="..\Vertigo.Server.CrossCutting\Vertigo.Server.CrossCutting.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CoreWCF.NetTcp" Version="1.9.1" />
-    <PackageReference Include="CoreWCF.Primitives" Version="1.9.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net11.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-</Project>
-```
-
 ## File: src/Server/Vertigo.Server.Matchmaking/Lobbies/Services/LobbyGameOperations.cs
 ```csharp
 using Vertigo.Contracts.Internal;
@@ -14494,6 +14303,111 @@ public sealed class LobbyGameOperations
   </PropertyGroup>
 
 </Project>
+```
+
+## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthenticationService.cs
+```csharp
+using CoreWCF;
+using Microsoft.Extensions.Logging;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Interfaces;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.PlayerManagement.Authentication.Models;
+
+namespace Vertigo.Server.PlayerManagement.Authentication.Services;
+
+public class AuthenticationService : IAuthService
+{
+    private const string EventCategoryProperty = "EventCategory";
+    private const string SecurityCategory = "Security";
+    private const string AuthenticationSucceededResult = "Succeeded";
+    private const string AuthenticationFailedResult = "Failed";
+
+    private static readonly EventId AuthenticationFailedEvent = new(2001, "AuthenticationFailed");
+    private static readonly EventId AuthenticationSucceededEvent = new(2002, "AuthenticationSucceeded");
+
+    private readonly AuthService _authentication;
+    private readonly ILogger<AuthenticationService> _logger;
+
+    public AuthenticationService(AuthService authentication, ILogger<AuthenticationService> logger)
+    {
+        _authentication = authentication;
+        _logger = logger;
+    }
+
+    public UserSession Login(LoginCredentials credentials)
+    {
+        if (credentials is null || string.IsNullOrWhiteSpace(credentials.Username)
+            || string.IsNullOrWhiteSpace(credentials.Password))
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        AuthenticatedSession? session = _authentication.Login(credentials.Username, credentials.Password);
+        if (session is null)
+        {
+            LogAuthenticationResult(false, null);
+            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
+        }
+
+        LogAuthenticationResult(true, session.PlayerId);
+        return ConvertSession(session);
+    }
+
+    public UserSession ResumeSession(string token)
+    {
+        AuthenticatedSession? session = _authentication.ResumeSession(token);
+        if (session is null)
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
+        }
+
+        return ConvertSession(session);
+    }
+
+    public UserSession CreateGuestSession()
+    {
+        return ConvertSession(_authentication.CreateGuestSession());
+    }
+
+    public bool Logout(SessionLogout logout)
+    {
+        return logout is not null && _authentication.Logout(logout.SessionToken);
+    }
+
+    private void LogAuthenticationResult(bool isSucceeded, Guid? playerId)
+    {
+        EventId eventId = isSucceeded ? AuthenticationSucceededEvent : AuthenticationFailedEvent;
+        string result = isSucceeded ? AuthenticationSucceededResult : AuthenticationFailedResult;
+        Dictionary<string, object> properties = new()
+        {
+            [EventCategoryProperty] = SecurityCategory
+        };
+
+        using (IDisposable? scope = _logger.BeginScope(properties))
+        {
+            _logger.LogInformation(eventId, "Authentication {Result}. PlayerId: {PlayerId}", result, playerId);
+        }
+    }
+
+    private static UserSession ConvertSession(AuthenticatedSession session)
+    {
+        return new UserSession
+        {
+            PlayerId = session.PlayerId,
+            Username = session.Username,
+            Token = session.Token,
+            ExpiresAt = session.ExpiresAt,
+            IsGuest = session.IsGuest
+        };
+    }
+
+    private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)
+    {
+        ServiceFault fault = new ServiceFault { ErrorCode = errorCode, MessageKey = messageKey };
+        return new FaultException<ServiceFault>(fault, new FaultReason(errorCode));
+    }
+}
 ```
 
 ## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthService.cs
@@ -14602,6 +14516,245 @@ public class AuthService
     public AuthenticatedSession CreateGuestSession()
     {
         return _guests.Create();
+    }
+}
+```
+
+## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/SessionIdentityResolver.cs
+```csharp
+using CoreWCF;
+using Microsoft.Extensions.Logging;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.CrossCutting.Security.Interfaces;
+using Vertigo.Server.DataAccess.Entities.Identity;
+using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Models;
+
+namespace Vertigo.Server.PlayerManagement.Authentication.Services;
+
+public sealed class SessionIdentityResolver : ISessionIdentityResolver
+{
+    private const int SessionTokenLength = 64;
+    private const string EventCategoryProperty = "EventCategory";
+    private const string SecurityCategory = "Security";
+    private const string FailedResult = "Failed";
+    private const string DeniedResult = "Denied";
+
+    private static readonly EventId SessionValidationFailedEvent = new(2003, "SessionValidationFailed");
+    private static readonly EventId UnauthorizedAccessEvent = new(2005, "UnauthorizedAccess");
+
+    private readonly ISessionTokenRepository _sessionTokenRepository;
+    private readonly ITokenGenerator _tokenGenerator;
+    private readonly IGuestSessionRegistry _guests;
+    private readonly ILogger<SessionIdentityResolver> _logger;
+
+    public SessionIdentityResolver(
+        SessionIdentityResolverDependencies dependencies,
+        ILogger<SessionIdentityResolver> logger)
+    {
+        _sessionTokenRepository = dependencies.SessionTokenRepository;
+        _tokenGenerator = dependencies.TokenGenerator;
+        _guests = dependencies.Guests;
+        _logger = logger;
+    }
+
+    public SessionIdentity? Resolve(string token)
+    {
+        SessionIdentity? identity = null;
+        if (!string.IsNullOrWhiteSpace(token) && token.Length == SessionTokenLength)
+        {
+            string tokenHash = _tokenGenerator.HashSessionToken(token);
+            identity = _guests.Find(tokenHash);
+            if (identity is null)
+            {
+                SessionToken? session = _sessionTokenRepository.GetActiveSessionToken(tokenHash);
+                if (session is not null)
+                {
+                    identity = new SessionIdentity(session.PlayerId, session.Player.Username, false);
+                }
+            }
+        }
+
+        return identity;
+    }
+
+    public SessionIdentity Require(string token)
+    {
+        SessionIdentity? identity = Resolve(token);
+        if (identity is null)
+        {
+            LogSecurityEvent(SessionValidationFailedEvent, FailedResult, null);
+            throw CreateUnauthorizedFault();
+        }
+
+        return identity;
+    }
+
+    public SessionIdentity RequireRegistered(string token)
+    {
+        SessionIdentity identity = Require(token);
+        if (identity.IsGuest)
+        {
+            LogSecurityEvent(UnauthorizedAccessEvent, DeniedResult, identity.PlayerId);
+            throw CreateUnauthorizedFault();
+        }
+
+        return identity;
+    }
+
+    private void LogSecurityEvent(EventId eventId, string result, Guid? playerId)
+    {
+        Dictionary<string, object> properties = new()
+        {
+            [EventCategoryProperty] = SecurityCategory
+        };
+
+        using (IDisposable? scope = _logger.BeginScope(properties))
+        {
+            _logger.LogWarning(eventId, "Session access {Result}. PlayerId: {PlayerId}", result, playerId);
+        }
+    }
+
+    private static FaultException<ServiceFault> CreateUnauthorizedFault()
+    {
+        ServiceFault fault = new ServiceFault
+        {
+            ErrorCode = ServiceErrorCodes.Unauthorized,
+            MessageKey = ServiceMessageKeys.Unauthorized
+        };
+
+        return new FaultException<ServiceFault>(fault, new FaultReason(fault.ErrorCode));
+    }
+}
+```
+
+## File: src/Server/Vertigo.Server.PlayerManagement/Registration/Services/AccountService.cs
+```csharp
+using CoreWCF;
+using Microsoft.Extensions.Logging;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Interfaces;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.CrossCutting.Security.Interfaces;
+using Vertigo.Server.DataAccess.Entities.Identity;
+using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Models;
+using Vertigo.Server.PlayerManagement.Registration.Dependencies;
+
+namespace Vertigo.Server.PlayerManagement.Registration.Services;
+
+public class AccountService : IAccountService
+{
+    private const string EventCategoryProperty = "EventCategory";
+    private const string SecurityCategory = "Security";
+    private const string SucceededResult = "Succeeded";
+    private const string RejectedResult = "Rejected";
+
+    private static readonly EventId PasswordChangeSucceededEvent = new(2101, "PasswordChangeSucceeded");
+    private static readonly EventId PasswordChangeRejectedEvent = new(2102, "PasswordChangeRejected");
+
+    private readonly IPlayerRepository _playerRepository;
+    private readonly ISessionTokenRepository _sessionTokenRepository;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly ISessionIdentityResolver _sessions;
+    private readonly ILogger<AccountService> _logger;
+
+    public AccountService(AccountServiceDependencies dependencies, ILogger<AccountService> logger)
+    {
+        _playerRepository = dependencies.PlayerRepository;
+        _sessionTokenRepository = dependencies.SessionTokenRepository;
+        _passwordHasher = dependencies.PasswordHasher;
+        _sessions = dependencies.Sessions;
+        _logger = logger;
+    }
+
+    public bool RegisterAccount(AccountRegistration registration)
+    {
+        if (registration is null || string.IsNullOrWhiteSpace(registration.Username)
+            || string.IsNullOrWhiteSpace(registration.Email)
+            || string.IsNullOrWhiteSpace(registration.Password)
+            || registration.Username.Length > 32 || registration.Email.Length > 120)
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidRegistrationData, ServiceMessageKeys.InvalidRegistrationData);
+        }
+
+        if (_playerRepository.UsernameExists(registration.Username))
+        {
+            throw CreateFault(ServiceErrorCodes.UsernameAlreadyRegistered,
+                ServiceMessageKeys.UsernameAlreadyRegistered);
+        }
+
+        if (_playerRepository.EmailExists(registration.Email))
+        {
+            throw CreateFault(ServiceErrorCodes.EmailAlreadyRegistered,
+                ServiceMessageKeys.EmailAlreadyRegistered);
+        }
+
+        string salt = _passwordHasher.GenerateSalt();
+        Player player = new Player
+        {
+            Username = registration.Username.Trim(),
+            Email = registration.Email.Trim(),
+            PasswordSalt = salt,
+            PasswordHash = _passwordHasher.HashPassword(registration.Password, salt),
+            Stats = new PlayerStats()
+        };
+
+        return _playerRepository.CreatePlayer(player);
+    }
+
+    public bool ChangePassword(PasswordChange change, string sessionToken)
+    {
+        if (change is null || string.IsNullOrWhiteSpace(change.Username)
+            || string.IsNullOrWhiteSpace(change.CurrentPassword)
+            || string.IsNullOrWhiteSpace(change.NewPassword))
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        SessionIdentity identity = _sessions.RequireRegistered(sessionToken);
+        Player? player = _playerRepository.GetPlayerById(identity.PlayerId);
+        if (player is null
+            || !string.Equals(player.Username, change.Username, StringComparison.OrdinalIgnoreCase)
+            || !_passwordHasher.VerifyPassword(change.CurrentPassword, player.PasswordHash, player.PasswordSalt))
+        {
+            LogPasswordChange(PasswordChangeRejectedEvent, RejectedResult, identity.PlayerId);
+            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
+        }
+
+        string salt = _passwordHasher.GenerateSalt();
+        string hash = _passwordHasher.HashPassword(change.NewPassword, salt);
+        bool isChanged = _playerRepository.UpdatePassword(player.PlayerId, hash, salt);
+        if (isChanged)
+        {
+            _sessionTokenRepository.RevokePlayerSessions(player.PlayerId);
+            LogPasswordChange(PasswordChangeSucceededEvent, SucceededResult, identity.PlayerId);
+        }
+
+        return isChanged;
+    }
+
+    private void LogPasswordChange(EventId eventId, string result, Guid playerId)
+    {
+        Dictionary<string, object> properties = new()
+        {
+            [EventCategoryProperty] = SecurityCategory
+        };
+
+        using (IDisposable? scope = _logger.BeginScope(properties))
+        {
+            _logger.LogInformation(eventId, "Password change {Result}. PlayerId: {PlayerId}", result, playerId);
+        }
+    }
+
+    private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)
+    {
+        ServiceFault fault = new ServiceFault { ErrorCode = errorCode, MessageKey = messageKey };
+        return new FaultException<ServiceFault>(fault, new FaultReason(errorCode));
     }
 }
 ```
@@ -14915,6 +15068,144 @@ static void Require(bool condition, string message)
   </ItemGroup>
 
 </Project>
+```
+
+## File: tests/Vertigo.Server.Matchmaking.Tests/Authentication/GuestSessionTests.cs
+```csharp
+using CoreWCF;
+using Microsoft.Extensions.Logging.Abstractions;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.CrossCutting.Security.Interfaces;
+using Vertigo.Server.DataAccess.Entities.Identity;
+using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
+using Vertigo.Server.PlayerManagement.Authentication.Services;
+
+namespace Vertigo.Server.Matchmaking.Tests.Authentication;
+
+public sealed class GuestSessionTests
+{
+    [Fact]
+    public void Find_AtExactExpiration_ReturnsNull()
+    {
+        ControlledTimeProvider clock = new(new DateTimeOffset(2026, 11, 16, 12, 0, 0, TimeSpan.Zero));
+        FakeTokenGenerator tokens = new();
+        GuestSessionRegistry registry = new(tokens, clock);
+        string hash = tokens.HashSessionToken(registry.Create().Token);
+        Assert.NotNull(registry.Find(hash));
+
+        clock.Advance(TimeSpan.FromHours(12));
+
+        Assert.Null(registry.Find(hash));
+    }
+
+    [Fact]
+    public void Revoke_RemovesGuestSession()
+    {
+        ControlledTimeProvider clock = new(DateTimeOffset.UtcNow);
+        FakeTokenGenerator tokens = new();
+        GuestSessionRegistry registry = new(tokens, clock);
+        string hash = tokens.HashSessionToken(registry.Create().Token);
+
+        Assert.True(registry.Revoke(hash));
+        Assert.Null(registry.Find(hash));
+    }
+
+    [Fact]
+    public void RequireRegistered_GuestIsRejected()
+    {
+        ControlledTimeProvider clock = new(DateTimeOffset.UtcNow);
+        FakeTokenGenerator tokens = new();
+        GuestSessionRegistry registry = new(tokens, clock);
+        string raw = registry.Create().Token;
+        SessionIdentityResolverDependencies dependencies = new(new FakeSessionTokenRepository(), tokens, registry);
+        SessionIdentityResolver resolver = new(dependencies, NullLogger<SessionIdentityResolver>.Instance);
+
+        FaultException<ServiceFault> fault = Assert.Throws<FaultException<ServiceFault>>(
+            () => resolver.RequireRegistered(raw));
+
+        Assert.Equal(ServiceErrorCodes.Unauthorized, fault.Detail.ErrorCode);
+    }
+
+    [Fact]
+    public void Require_RevokedGuestIsRejected()
+    {
+        ControlledTimeProvider clock = new(DateTimeOffset.UtcNow);
+        FakeTokenGenerator tokens = new();
+        GuestSessionRegistry registry = new(tokens, clock);
+        string raw = registry.Create().Token;
+        registry.Revoke(tokens.HashSessionToken(raw));
+        SessionIdentityResolverDependencies dependencies = new(new FakeSessionTokenRepository(), tokens, registry);
+        SessionIdentityResolver resolver = new(dependencies, NullLogger<SessionIdentityResolver>.Instance);
+
+        FaultException<ServiceFault> fault = Assert.Throws<FaultException<ServiceFault>>(
+            () => resolver.Require(raw));
+
+        Assert.Equal(ServiceErrorCodes.Unauthorized, fault.Detail.ErrorCode);
+    }
+
+    private sealed class ControlledTimeProvider : TimeProvider
+    {
+        private DateTimeOffset _utcNow;
+
+        public ControlledTimeProvider(DateTimeOffset utcNow)
+        {
+            _utcNow = utcNow;
+        }
+
+        public override DateTimeOffset GetUtcNow()
+        {
+            return _utcNow;
+        }
+
+        public void Advance(TimeSpan amount)
+        {
+            _utcNow += amount;
+        }
+    }
+
+    private sealed class FakeTokenGenerator : ITokenGenerator
+    {
+        public string GenerateSessionToken()
+        {
+            return new string('A', 64);
+        }
+
+        public string GenerateVerificationCode()
+        {
+            return "123456";
+        }
+
+        public string HashSessionToken(string sessionToken)
+        {
+            return sessionToken;
+        }
+    }
+
+    private sealed class FakeSessionTokenRepository : ISessionTokenRepository
+    {
+        public bool CreateSessionToken(SessionToken token)
+        {
+            return false;
+        }
+
+        public SessionToken? GetActiveSessionToken(string tokenHash)
+        {
+            return null;
+        }
+
+        public bool RevokeSessionToken(string tokenHash)
+        {
+            return false;
+        }
+
+        public int RevokePlayerSessions(Guid playerId)
+        {
+            return 0;
+        }
+    }
+}
 ```
 
 ## File: tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyDisconnectionTests.cs
@@ -16713,6 +17004,35 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
 }
 ```
 
+## File: src/Client/Vertigo.Client.UI/Vertigo.Client.UI.csproj
+```
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Vertigo.Client.Networking/Vertigo.Client.Networking.csproj" />
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.6" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+</Project>
+```
+
 ## File: src/Server/Vertigo.Server.Game/Matches/Implementations/InMemoryMatchSessionStarter.cs
 ```csharp
 using Vertigo.Contracts.Internal;
@@ -16973,6 +17293,41 @@ public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLi
   <ItemGroup>
     <InternalsVisibleTo Include="Vertigo.Server.Game.Tests" />
   </ItemGroup>
+
+</Project>
+```
+
+## File: src/Server/Vertigo.Server.Host/Vertigo.Server.Host.csproj
+```
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Vertigo.Contracts\Vertigo.Contracts.csproj" />
+    <ProjectReference Include="..\Vertigo.Server.PlayerManagement\Vertigo.Server.PlayerManagement.csproj" />
+    <ProjectReference Include="..\Vertigo.Server.Matchmaking\Vertigo.Server.Matchmaking.csproj" />
+    <ProjectReference Include="..\Vertigo.Server.Game\Vertigo.Server.Game.csproj" />
+    <ProjectReference Include="..\Vertigo.Server.DataAccess\Vertigo.Server.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertigo.Server.CrossCutting\Vertigo.Server.CrossCutting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CoreWCF.NetTcp" Version="1.9.1" />
+    <PackageReference Include="CoreWCF.Primitives" Version="1.9.1" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="11.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
 </Project>
 ```
@@ -18434,93 +18789,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         _disposed = true;
         _navigation.PageChanged -= OnPageChanged;
     }
-}
-```
-
-## File: src/Server/Vertigo.Server.Host/Program.cs
-```csharp
-using System.Net;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Vertigo.Server.DataAccess;
-using CoreWCF;
-using CoreWCF.Configuration;
-using Vertigo.Contracts.Endpoints;
-using Vertigo.Contracts.Interfaces;
-using Vertigo.Contracts.Internal;
-using Vertigo.Server.Game.Matches.DependencyInjection;
-using Vertigo.Server.CrossCutting.Security.Implementations;
-using Vertigo.Server.CrossCutting.Security.Interfaces;
-using Vertigo.Server.Matchmaking.Invitations.Dependencies;
-using Vertigo.Server.Matchmaking.Invitations.Services;
-using Vertigo.Server.Matchmaking.Lobbies.Services;
-using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
-using Vertigo.Server.PlayerManagement.Authentication.Services;
-using Vertigo.Server.PlayerManagement.Friendships.Dependencies;
-using Vertigo.Server.PlayerManagement.Friendships.Services;
-using Vertigo.Server.PlayerManagement.Registration.Services;
-using Vertigo.Server.PlayerManagement.Blocking.Services;
-using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
-using Vertigo.Server.Matchmaking.Chat.Services;
-using Vertigo.Server.PlayerManagement.Registration.Dependencies;
-
-WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
-builder.WebHost.UseNetTcp(IPAddress.Loopback, ServiceEndpoints.TcpPort);
-builder.Services.AddServiceModelServices();
-builder.Services.AddVertigoDataAccess(builder.Configuration);
-
-builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
-builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>();
-
-builder.Services.AddSingleton<IGuestSessionRegistry, GuestSessionRegistry>();
-builder.Services.AddScoped<ISessionIdentityResolver, SessionIdentityResolver>();
-builder.Services.AddTransient<AccountServiceDependencies>();
-builder.Services.AddTransient<AuthenticationDependencies>();
-builder.Services.AddTransient<AuthService>();
-builder.Services.AddTransient<AuthenticationService>();
-builder.Services.AddTransient<AccountService>();
-builder.Services.AddTransient<BlockedPlayerService>();
-builder.Services.AddSingleton<IFriendshipNotifier, FriendshipNotifier>();
-builder.Services.AddTransient<FriendshipServiceDependencies>();
-builder.Services.AddTransient<FriendshipService>();
-builder.Services.AddSingleton<FriendshipNotificationService>();
-builder.Services.AddMatchLifecycleServices();
-builder.Services.AddSingleton<LobbyMatchActivation>();
-builder.Services.AddSingleton<MatchReadServices>();
-builder.Services.AddSingleton<LobbyGameOperations>();
-builder.Services.AddSingleton<LobbyService>();
-builder.Services.AddSingleton<ILobbyDirectory>(services => services.GetRequiredService<LobbyService>());
-builder.Services.AddTransient<LobbyInvitationServiceDependencies>();
-builder.Services.AddTransient<LobbyInvitationService>();
-builder.Services.AddTransient<ChatService>();
-
-WebApplication app = builder.Build();
-((IApplicationBuilder)app).UseServiceModel(ConfigureServices);
-app.Run();
-
-static void ConfigureServices(IServiceBuilder services)
-{
-    NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
-    services.AddService<AccountService>()
-        .AddServiceEndpoint<AccountService, IAccountService>(binding, ServiceEndpoints.AccountServiceAddress);
-    services.AddService<AuthenticationService>()
-        .AddServiceEndpoint<AuthenticationService, IAuthService>(binding, ServiceEndpoints.AuthServiceAddress);
-    services.AddService<BlockedPlayerService>()
-        .AddServiceEndpoint<BlockedPlayerService, IBlockedPlayerService>(
-            binding, ServiceEndpoints.BlockedPlayerServiceAddress);
-    services.AddService<FriendshipService>()
-        .AddServiceEndpoint<FriendshipService, IFriendshipService>(binding, ServiceEndpoints.FriendshipServiceAddress);
-    services.AddService<FriendshipNotificationService>()
-        .AddServiceEndpoint<FriendshipNotificationService, IFriendshipNotificationService>(
-            binding, ServiceEndpoints.FriendshipNotificationServiceAddress);
-    services.AddService<ChatService>()
-        .AddServiceEndpoint<ChatService, IChatService>(binding, ServiceEndpoints.ChatServiceAddress);
-    services.AddService<LobbyService>()
-        .AddServiceEndpoint<LobbyService, ILobbyService>(binding, ServiceEndpoints.LobbyServiceAddress);
-    services.AddService<LobbyInvitationService>()
-        .AddServiceEndpoint<LobbyInvitationService, ILobbyInvitationService>(
-            binding, ServiceEndpoints.LobbyInvitationServiceAddress);
 }
 ```
 
@@ -20305,6 +20573,116 @@ public partial class App : Application
         _services?.Dispose();
         _services = null;
     }
+}
+```
+
+## File: src/Server/Vertigo.Server.Host/Program.cs
+```csharp
+using System.Net;
+using CoreWCF.Configuration;
+using CoreWCF;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Vertigo.Contracts.Endpoints;
+using Vertigo.Contracts.Interfaces;
+using Vertigo.Contracts.Internal;
+using Vertigo.Server.CrossCutting.Security.Implementations;
+using Vertigo.Server.CrossCutting.Security.Interfaces;
+using Vertigo.Server.DataAccess;
+using Vertigo.Server.Game.Matches.DependencyInjection;
+using Vertigo.Server.Host.Logging;
+using Vertigo.Server.Matchmaking.Chat.Services;
+using Vertigo.Server.Matchmaking.Invitations.Dependencies;
+using Vertigo.Server.Matchmaking.Invitations.Services;
+using Vertigo.Server.Matchmaking.Lobbies.Services;
+using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Services;
+using Vertigo.Server.PlayerManagement.Blocking.Services;
+using Vertigo.Server.PlayerManagement.Friendships.Dependencies;
+using Vertigo.Server.PlayerManagement.Friendships.Services;
+using Vertigo.Server.PlayerManagement.Registration.Dependencies;
+using Vertigo.Server.PlayerManagement.Registration.Services;
+
+WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
+builder.Logging.ClearProviders();
+Serilog.Core.Logger logger = ServerLoggingConfiguration.CreateLogger(builder.Configuration, builder.Environment);
+builder.Services.AddSerilog(logger, dispose: false);
+
+try
+{
+    builder.WebHost.UseNetTcp(IPAddress.Loopback, ServiceEndpoints.TcpPort);
+    builder.Services.AddServiceModelServices();
+    builder.Services.AddVertigoDataAccess(builder.Configuration);
+
+    builder.Services.AddSingleton(TimeProvider.System);
+    builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+    builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>();
+
+    builder.Services.AddSingleton<IGuestSessionRegistry, GuestSessionRegistry>();
+    builder.Services.AddScoped<SessionIdentityResolverDependencies>();
+    builder.Services.AddScoped<ISessionIdentityResolver, SessionIdentityResolver>();
+    builder.Services.AddTransient<AccountServiceDependencies>();
+    builder.Services.AddTransient<AuthenticationDependencies>();
+    builder.Services.AddTransient<AuthService>();
+    builder.Services.AddTransient<AuthenticationService>();
+    builder.Services.AddTransient<AccountService>();
+    builder.Services.AddTransient<BlockedPlayerService>();
+    builder.Services.AddSingleton<IFriendshipNotifier, FriendshipNotifier>();
+    builder.Services.AddTransient<FriendshipServiceDependencies>();
+    builder.Services.AddTransient<FriendshipService>();
+    builder.Services.AddSingleton<FriendshipNotificationService>();
+    builder.Services.AddMatchLifecycleServices();
+    builder.Services.AddSingleton<LobbyMatchActivation>();
+    builder.Services.AddSingleton<MatchReadServices>();
+    builder.Services.AddSingleton<LobbyGameOperations>();
+    builder.Services.AddSingleton<LobbyService>();
+    builder.Services.AddSingleton<ILobbyDirectory>(services => services.GetRequiredService<LobbyService>());
+    builder.Services.AddTransient<LobbyInvitationServiceDependencies>();
+    builder.Services.AddTransient<LobbyInvitationService>();
+    builder.Services.AddTransient<ChatService>();
+
+    WebApplication app = builder.Build();
+    ((IApplicationBuilder)app).UseServiceModel(ConfigureServices);
+    app.Run();
+}
+finally
+{
+    try
+    {
+        logger.Dispose();
+    }
+    // At the Host shutdown boundary, sink disposal must not mask a startup or runtime failure.
+    catch (Exception)
+    {
+        Console.Error.WriteLine("Logging shutdown failed; some events may be missing.");
+    }
+}
+
+static void ConfigureServices(IServiceBuilder services)
+{
+    NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
+    services.AddService<AccountService>()
+        .AddServiceEndpoint<AccountService, IAccountService>(binding, ServiceEndpoints.AccountServiceAddress);
+    services.AddService<AuthenticationService>()
+        .AddServiceEndpoint<AuthenticationService, IAuthService>(binding, ServiceEndpoints.AuthServiceAddress);
+    services.AddService<BlockedPlayerService>()
+        .AddServiceEndpoint<BlockedPlayerService, IBlockedPlayerService>(
+            binding, ServiceEndpoints.BlockedPlayerServiceAddress);
+    services.AddService<FriendshipService>()
+        .AddServiceEndpoint<FriendshipService, IFriendshipService>(binding, ServiceEndpoints.FriendshipServiceAddress);
+    services.AddService<FriendshipNotificationService>()
+        .AddServiceEndpoint<FriendshipNotificationService, IFriendshipNotificationService>(
+            binding, ServiceEndpoints.FriendshipNotificationServiceAddress);
+    services.AddService<ChatService>()
+        .AddServiceEndpoint<ChatService, IChatService>(binding, ServiceEndpoints.ChatServiceAddress);
+    services.AddService<LobbyService>()
+        .AddServiceEndpoint<LobbyService, ILobbyService>(binding, ServiceEndpoints.LobbyServiceAddress);
+    services.AddService<LobbyInvitationService>()
+        .AddServiceEndpoint<LobbyInvitationService, ILobbyInvitationService>(
+            binding, ServiceEndpoints.LobbyInvitationServiceAddress);
 }
 ```
 

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
              xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
+             xmlns:contracts="clr-namespace:Vertigo.Contracts.Models;assembly=Vertigo.Contracts"
              x:Class="Vertigo.Client.UI.Views.MatchView"
              x:DataType="vm:MatchViewModel"
              xmlns:validation="using:Vertigo.Client.UI.Utilities.Validation"
@@ -86,6 +87,61 @@
                         <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
+                <Border Classes="match-panel" IsVisible="{Binding Results.HasResults}">
+                    <Expander Header="{Binding Results.HeaderText}" HorizontalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch"
+                              IsExpanded="{Binding Results.IsExpanded, Mode=TwoWay}">
+                        <StackPanel Spacing="10">
+                            <StackPanel Spacing="4" IsVisible="{Binding Results.HasFinalResult}">
+                                <TextBlock Text="{Binding Results.WinnerText}" FontSize="18" FontWeight="Bold"
+                                           TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding Results.AbandonmentText}"
+                                           IsVisible="{Binding Results.IsAbandonment}"
+                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                            </StackPanel>
+                            <StackPanel Spacing="8" IsVisible="{Binding Results.HasRoundSummaries}">
+                                <ComboBox ItemsSource="{Binding Results.Rounds}"
+                                          SelectedItem="{Binding Results.SelectedRound, Mode=TwoWay}"
+                                          AutomationProperties.Name="{Binding Results.SelectRoundText}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="rows:MatchRoundResultRow">
+                                            <TextBlock Text="{Binding Title}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="12" Margin="8,0">
+                                    <TextBlock Text="{Binding Results.PlayerText}" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Results.FloorsText}"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Results.BonusText}"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding Results.TotalText}"
+                                               FontWeight="SemiBold"/>
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding Results.SelectedScores}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="contracts:MatchRoundPlayerScore">
+                                            <Border Padding="8,6" BorderThickness="0,0,0,1"
+                                                    BorderBrush="{DynamicResource ColorDivider}">
+                                                <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="12">
+                                                    <TextBlock Text="{Binding PlayerUsername}"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding FloorsBuilt}"
+                                                               FontFamily="{DynamicResource FontMono}"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding BonusFloors}"
+                                                               FontFamily="{DynamicResource FontMono}"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
+                                                               FontWeight="Bold"
+                                                               FontFamily="{DynamicResource FontMono}"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </StackPanel>
+                    </Expander>
+                </Border>
                 <Grid ColumnDefinitions="210,*,260" ColumnSpacing="14" MinHeight="450">
                     <Border Grid.Column="0" Classes="match-panel">
                         <StackPanel Spacing="12">
@@ -105,6 +161,12 @@
                                                     <TextBlock Text="{Binding FloorsBuilt}"
                                                                FontFamily="{DynamicResource FontMono}"/>
                                                 </StackPanel>
+                                                <TextBlock Text="{Binding VoteCountText}"
+                                                           IsVisible="{Binding HasVoteCount}" FontSize="12"
+                                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                                                <Button Classes="vertigo-button neutral" TabIndex="1"
+                                                        IsVisible="{Binding HasVoteButton}"
+                                                        Content="{Binding VoteText}" Command="{Binding VoteCommand}"/>
                                             </StackPanel>
                                         </Border>
                                     </DataTemplate>
@@ -257,11 +319,13 @@
             <StackPanel Spacing="14">
                 <TextBlock Text="{Binding ExitConfirmTitleText}" FontWeight="Bold" FontSize="21"/>
                 <TextBlock Text="{Binding ExitConfirmBodyText}" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ExitErrorMessage}" IsVisible="{Binding HasExitError}"
+                           TextWrapping="Wrap" Foreground="{DynamicResource ColorError}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
                     <Button Content="{Binding CancelText}" Command="{Binding CancelExitCommand}"
                             Classes="vertigo-button neutral" TabIndex="7"/>
-                    <Button Content="{Binding ConfirmText}"
-                            Classes="vertigo-button danger" TabIndex="8" IsEnabled="False"/>
+                    <Button Content="{Binding ConfirmText}" Command="{Binding ConfirmExitCommand}"
+                            Classes="vertigo-button danger" TabIndex="8"/>
                 </StackPanel>
             </StackPanel>
         </Border>

@@ -351,13 +351,29 @@ internal sealed class MatchRecord
         pile.CardCount = pile.TopCardNumber.HasValue ? 1 : 0;
     }
 
+    public MatchDepartureResult TryLeaveMatch(Guid playerId, DateTimeOffset now)
+    {
+        bool accepted = Session.PlayerIds.Contains(playerId);
+        long previousRevision = _boardRevision;
+        if (accepted && !IsTerminal && _activePlayerIds.Contains(playerId))
+        {
+            TryExpireTurn(now);
+            if (!IsTerminal && _activePlayerIds.Contains(playerId))
+            {
+                RemoveActivePlayer(playerId, MatchBoardActionKind.LeftMatch, now);
+            }
+        }
+
+        return new MatchDepartureResult(accepted, _boardRevision != previousRevision);
+    }
+
     public Guid? TryExpireTurn(DateTimeOffset now)
     {
         Guid? expelledPlayerId = null;
         if (IsTurnExpired(now))
         {
             Guid playerId = _currentTurnPlayerId;
-            ExpelPlayer(playerId, MatchBoardActionKind.TurnExpired, now);
+            RemoveActivePlayer(playerId, MatchBoardActionKind.TurnExpired, now);
             expelledPlayerId = playerId;
         }
 
@@ -412,7 +428,7 @@ internal sealed class MatchRecord
         {
             if (voters.Count >= ExpulsionVotesRequired)
             {
-                ExpelPlayer(targetId, MatchBoardActionKind.ExpelledByVote, now);
+                RemoveActivePlayer(targetId, MatchBoardActionKind.ExpelledByVote, now);
                 result = MatchExpulsionVoteResult.Expelled;
             }
             else
@@ -430,7 +446,7 @@ internal sealed class MatchRecord
         return !IsTerminal && _turnDeadlineUtc is DateTimeOffset deadline && now >= deadline;
     }
 
-    private void ExpelPlayer(Guid playerId, MatchBoardActionKind kind, DateTimeOffset now)
+    private void RemoveActivePlayer(Guid playerId, MatchBoardActionKind kind, DateTimeOffset now)
     {
         bool wasCurrentPlayer = _currentTurnPlayerId == playerId;
         RecordMove(playerId, (kind, 0, null), Array.Empty<int>());
@@ -547,7 +563,11 @@ internal sealed class MatchRecord
                 PlayerId = playerId,
                 Cards = cards.ToList(),
                 MasterPlans = _masterPlans[playerId],
-                Revision = _boardRevision
+                Revision = _boardRevision,
+                VotingRevision = _votingRevision,
+                VotedExpulsionTargetIds = Session.PlayerIds.Where(targetId =>
+                    _expulsionVotes.TryGetValue(targetId, out HashSet<Guid>? voters) && voters.Contains(playerId))
+                    .ToList()
             };
         }
 

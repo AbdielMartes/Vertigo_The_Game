@@ -164,6 +164,12 @@ public sealed class LobbyClient : ILobbyClient
         }
     }
 
+    public bool LeaveMatch(MatchLeaveRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ReadOnIndependentChannel(channel => channel.LeaveMatch(request));
+    }
+
     public List<LobbySummary> GetPublicLobbies()
     {
         ILobbyService channel = GetOrCreateChannel();

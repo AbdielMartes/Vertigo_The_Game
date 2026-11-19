@@ -35,6 +35,10 @@ public sealed class MatchExpulsionVoteTests
         Assert.Equal(initial.Revision + 1, pending.Revision);
         Assert.Equal(initial.TurnDeadlineUtc, pending.TurnDeadlineUtc);
         Assert.Empty(pending.RecentMoves);
+        MatchPrivateHand votedHand = game.GetPrivateHand(initial.MatchId, next)!;
+        Assert.Equal(pending.VotingRevision, votedHand.VotingRevision);
+        Assert.Equal(target, Assert.Single(votedHand.VotedExpulsionTargetIds));
+        Assert.Empty(game.GetPrivateHand(initial.MatchId, other)!.VotedExpulsionTargetIds);
         Assert.Equal(MatchExpulsionVoteResult.Expelled, game.TryVoteToExpel(initial.MatchId, other, vote));
 
         MatchBoardSnapshot after = game.GetBoard(initial.MatchId)!;
@@ -45,6 +49,9 @@ public sealed class MatchExpulsionVoteTests
         Assert.Equal(MatchBoardActionKind.ExpelledByVote, Assert.Single(after.RecentMoves).ActionKind);
         Assert.Empty(after.ExpulsionVotes);
         Assert.Null(game.GetPrivateHand(initial.MatchId, target));
+        MatchPrivateHand afterHand = game.GetPrivateHand(initial.MatchId, next)!;
+        Assert.Equal(after.VotingRevision, afterHand.VotingRevision);
+        Assert.Empty(afterHand.VotedExpulsionTargetIds);
     }
 
     [Fact]

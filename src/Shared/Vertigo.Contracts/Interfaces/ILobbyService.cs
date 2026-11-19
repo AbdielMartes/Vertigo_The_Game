@@ -21,6 +21,10 @@ public interface ILobbyService
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
+    bool LeaveMatch(MatchLeaveRequest request);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
     List<LobbySummary> GetPublicLobbies();
 
     [OperationContract]

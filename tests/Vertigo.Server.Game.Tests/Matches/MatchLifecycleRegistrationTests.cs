@@ -18,6 +18,7 @@ public sealed class MatchLifecycleRegistrationTests
         IMatchDismantleService dismantle = provider.GetRequiredService<IMatchDismantleService>();
         IMatchTurnClock clock = provider.GetRequiredService<IMatchTurnClock>();
         IMatchExpulsionVoteService votes = provider.GetRequiredService<IMatchExpulsionVoteService>();
+        IMatchDepartureService departures = provider.GetRequiredService<IMatchDepartureService>();
         Guid host = Guid.NewGuid();
         MatchStartRequest request = new()
         {
@@ -37,6 +38,7 @@ public sealed class MatchLifecycleRegistrationTests
         Assert.Same(starter, dismantle);
         Assert.Same(starter, clock);
         Assert.Same(starter, votes);
+        Assert.Same(starter, departures);
         Assert.Null(clock.TryExpireTurn(match.MatchId));
         Assert.Equal(MatchDismantleResult.MatchUnavailable,
             dismantle.TryDismantle(match.MatchId, host, new MatchDismantle(1, 1)));

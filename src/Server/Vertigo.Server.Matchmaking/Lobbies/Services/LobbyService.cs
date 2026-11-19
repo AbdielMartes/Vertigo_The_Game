@@ -133,8 +133,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return response;
     }
 
-    // Leaving an active match is explicitly rejected without changing either module.
-    // bool=false is used here because this method already returns bool.
+    // LeaveLobby is for the waiting room. Explicit match departure uses LeaveMatch.
     public bool LeaveLobby(string lobbyCode, string sessionToken)
     {
         SessionIdentity identity = ResolveIdentity(sessionToken);
@@ -171,6 +170,67 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         }
         WithdrawInvitations(normalizedCode, withdrawnInvitedIds);
         return wasRemoved;
+    }
+
+    public bool LeaveMatch(MatchLeaveRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        SessionIdentity identity = ResolveIdentity(request.SessionToken);
+        string lobbyCode = request.LobbyCode?.Trim() ?? string.Empty;
+        List<ILobbyCallback> callbacks = new();
+        List<Guid> withdrawnInvitedIds = new();
+        MatchBoardChanged? notice = null;
+        bool left = false;
+
+        lock (_lobbyLock)
+        {
+            if (!_lobbies.TryGetValue(lobbyCode, out LobbyState? lobby) || !lobby.Contains(identity.PlayerId))
+            {
+                left = true;
+            }
+            else if (lobby.Status == LobbyStatus.InGame && request.MatchId == lobby.MatchId)
+            {
+                MatchDepartureResult departure = _gameOperations.TryLeaveMatch(lobby.MatchId, identity.PlayerId);
+                if (departure.IsAccepted)
+                {
+                    left = lobby.Remove(identity.PlayerId);
+                    if (lobby.IsEmpty)
+                    {
+                        withdrawnInvitedIds = lobby.GetInvitedPlayerIds();
+                        _lobbies.Remove(lobby.LobbyCode);
+                    }
+                    else if (departure.BoardChanged)
+                    {
+                        callbacks = lobby.GetCallbacksExcept(Guid.Empty);
+                        notice = CreateDepartureNotice(lobby);
+                    }
+                }
+            }
+        }
+
+        if (notice is not null)
+        {
+            Notify(callbacks, SendMatchBoardUpdated, notice);
+        }
+
+        WithdrawInvitations(lobbyCode, withdrawnInvitedIds);
+        return left;
+    }
+
+    private MatchBoardChanged? CreateDepartureNotice(LobbyState lobby)
+    {
+        MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
+        MatchBoardMove? lastMove = board?.RecentMoves.LastOrDefault();
+        return board is not null && lastMove is not null
+            ? new MatchBoardChanged
+            {
+                LobbyCode = lobby.LobbyCode,
+                MatchId = board.MatchId,
+                Revision = board.Revision,
+                PlayerUsername = lastMove.PlayerUsername,
+                ActionKind = lastMove.ActionKind
+            }
+            : null;
     }
 
     public LobbyPreparation GetPreparation(string lobbyCode, string sessionToken)

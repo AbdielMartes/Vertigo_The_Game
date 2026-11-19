@@ -30,13 +30,20 @@ public sealed class LobbyGameOperations
         MatchBoardSnapshot? board = _readers.Board.GetBoard(lobby.MatchId);
         if (board is not null)
         {
-            Dictionary<Guid, string> names = lobby.GetMembersExcept(Guid.Empty)
-                .ToDictionary(member => member.PlayerId, member => member.Username);
+            IReadOnlyDictionary<Guid, string> names = lobby.MatchPlayerNames;
             foreach (MatchBoardMove move in board.RecentMoves)
             {
                 if (names.TryGetValue(move.PlayerId, out string? username))
                 {
                     move.PlayerUsername = username;
+                }
+            }
+
+            foreach (MatchRoundPlayerScore score in board.RoundSummaries.SelectMany(round => round.Players))
+            {
+                if (names.TryGetValue(score.PlayerId, out string? username))
+                {
+                    score.PlayerUsername = username;
                 }
             }
 
@@ -82,11 +89,22 @@ public sealed class LobbyGameOperations
         return _readers.TurnClock.TryExpireTurn(matchId);
     }
 
+    public MatchDepartureResult TryLeaveMatch(Guid matchId, Guid playerId)
+    {
+        return _readers.Departures.TryLeaveMatch(matchId, playerId);
+    }
+
     public bool TryReconnect(LobbyState lobby, Guid playerId)
     {
         MatchReconnectResult result = _presence.TryReconnect(lobby.MatchId, playerId);
         bool accepted = result is MatchReconnectResult.Reconnected
             or MatchReconnectResult.AlreadyConnected;
+        if (!accepted)
+        {
+            MatchBoardSnapshot? board = _readers.Board.GetBoard(lobby.MatchId);
+            accepted = board is not null && (board.TurnDeadlineUtc is null
+                || board.ExpelledPlayerIds.Contains(playerId));
+        }
 
         return accepted;
     }

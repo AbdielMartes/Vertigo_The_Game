@@ -9,6 +9,9 @@ public sealed class MatchRoundPlayerScore
     public Guid PlayerId { get; set; }
 
     [DataMember]
+    public string PlayerUsername { get; set; } = string.Empty;
+
+    [DataMember]
     public int FloorsBuilt { get; set; }
 
     [DataMember]
