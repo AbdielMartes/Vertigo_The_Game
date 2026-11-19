@@ -13,4 +13,7 @@ public sealed class MatchBoardPlayer
 
     [DataMember]
     public int FloorsBuilt { get; set; }
+
+    [DataMember]
+    public int GlobalFloors { get; set; }
 }

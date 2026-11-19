@@ -15,6 +15,7 @@ public sealed class MatchLifecycleRegistrationTests
         using ServiceProvider provider = services.BuildServiceProvider();
         IMatchSessionStarter starter = provider.GetRequiredService<IMatchSessionStarter>();
         IMatchLifecycle lifecycle = provider.GetRequiredService<IMatchLifecycle>();
+        IMatchDismantleService dismantle = provider.GetRequiredService<IMatchDismantleService>();
         Guid host = Guid.NewGuid();
         MatchStartRequest request = new()
         {
@@ -31,5 +32,8 @@ public sealed class MatchLifecycleRegistrationTests
         Assert.Equal(MatchLifecycleStatus.Finished, lifecycle.Get(match.MatchId)?.Status);
         Assert.Equal(2, lifecycle.Get(match.MatchId)?.Revision);
         Assert.Same(starter, lifecycle);
+        Assert.Same(starter, dismantle);
+        Assert.Equal(MatchDismantleResult.MatchUnavailable,
+            dismantle.TryDismantle(match.MatchId, host, new MatchDismantle(1, 1)));
     }
 }

@@ -9,7 +9,16 @@ internal sealed class MatchDeck
 
     private readonly Queue<int> _remaining;
 
-    public MatchDeck()
+    public MatchDeck() : this(Shuffle())
+    {
+    }
+
+    internal MatchDeck(IEnumerable<int> orderedModules)
+    {
+        _remaining = new Queue<int>(orderedModules);
+    }
+
+    private static int[] Shuffle()
     {
         int[] cards = Enumerable.Range(1, ModuleCount).ToArray();
         for (int index = cards.Length - 1; index > 0; index--)
@@ -18,7 +27,7 @@ internal sealed class MatchDeck
             (cards[index], cards[selected]) = (cards[selected], cards[index]);
         }
 
-        _remaining = new Queue<int>(cards);
+        return cards;
     }
 
     public int RemainingCount => _remaining.Count;

@@ -13,4 +13,7 @@ public sealed class MatchPrivateHand
 
     [DataMember]
     public List<int> Cards { get; set; } = new();
+
+    [DataMember]
+    public int MasterPlans { get; set; }
 }

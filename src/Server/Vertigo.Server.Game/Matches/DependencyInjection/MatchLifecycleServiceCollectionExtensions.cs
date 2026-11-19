@@ -27,6 +27,9 @@ public static class MatchLifecycleServiceCollectionExtensions
         services.AddSingleton<IMatchPlacementService>(provider =>
             provider.GetRequiredService<InMemoryMatchSessionStarter>());
 
+        services.AddSingleton<IMatchDismantleService>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
         return services;
     }
 }

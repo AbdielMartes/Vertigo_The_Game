@@ -9,35 +9,37 @@ internal sealed class MatchRecord
 {
     private const int InitialTowerCount = 4;
     private const int FirstRoundNumber = 1;
+    private const int FinalRoundNumber = 3;
+    private const int MaximumFloorsPerDismantle = 10;
+    private const int MinimumBlocksForMasterPlan = 3;
     private const long InitialBoardRevision = 1;
 
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
     private readonly Dictionary<Guid, IReadOnlyList<int>> _hands = new();
-    private readonly MatchDeck _deck = new();
-    private readonly List<MatchBoardPile> _piles;
-    private readonly int _roundNumber;
+    private readonly Dictionary<Guid, int> _personalFloors = new();
+    private readonly Dictionary<Guid, int> _masterPlans = new();
+    private readonly MatchScoring _scoring = new();
+    private readonly Func<MatchDeck> _createDeck;
+    private readonly List<MatchBoardPile> _piles = new();
+    private MatchDeck _deck;
+    private int _roundNumber = FirstRoundNumber;
+    private Guid _roundOpenerId;
     private Guid _currentTurnPlayerId;
-    private long _boardRevision;
+    private Guid[] _winnerIds = Array.Empty<Guid>();
+    private long _boardRevision = InitialBoardRevision;
 
     public MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc)
+        : this(session, createdAtUtc, () => new MatchDeck())
+    {
+    }
+
+    internal MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc, Func<MatchDeck> createDeck)
     {
         Session = session;
-        foreach (Guid playerId in session.PlayerIds)
-        {
-            _hands.Add(playerId, _deck.Draw(MatchDeck.InitialHandSize));
-        }
-
-        IReadOnlyList<int> foundations = _deck.Draw(InitialTowerCount);
-        _roundNumber = FirstRoundNumber;
-        _currentTurnPlayerId = session.PlayerIds[RandomNumberGenerator.GetInt32(session.PlayerIds.Count)];
-        _boardRevision = InitialBoardRevision;
-        _piles = Enumerable.Range(1, InitialTowerCount)
-            .Select(position => new MatchBoardPile
-            {
-                Position = position,
-                TopCardNumber = foundations[position - 1],
-                CardCount = 1
-            }).ToList();
+        _createDeck = createDeck;
+        _deck = _createDeck();
+        Guid opener = session.PlayerIds[RandomNumberGenerator.GetInt32(session.PlayerIds.Count)];
+        DealRound(opener);
         Lifecycle = new MatchLifecycleSnapshot
         {
             MatchId = session.MatchId,
@@ -46,6 +48,31 @@ internal sealed class MatchRecord
             Revision = 1,
             UpdatedAtUtc = createdAtUtc
         };
+    }
+
+    private void DealRound(Guid opener)
+    {
+        foreach (Guid playerId in Session.PlayerIds)
+        {
+            _hands[playerId] = _deck.Draw(MatchDeck.InitialHandSize);
+            _personalFloors[playerId] = 0;
+            _masterPlans[playerId] = 0;
+        }
+
+        IReadOnlyList<int> foundations = _deck.Draw(InitialTowerCount);
+        _piles.Clear();
+        for (int position = 1; position <= InitialTowerCount; position++)
+        {
+            _piles.Add(new MatchBoardPile
+            {
+                Position = position,
+                TopCardNumber = foundations[position - 1],
+                CardCount = 1
+            });
+        }
+
+        _roundOpenerId = opener;
+        _currentTurnPlayerId = opener;
     }
 
     public MatchSessionSnapshot Session { get; }
@@ -60,10 +87,12 @@ internal sealed class MatchRecord
             Revision = _boardRevision,
             RoundNumber = _roundNumber,
             CurrentTurnPlayerId = _currentTurnPlayerId,
+            WinnerIds = _winnerIds.ToList(),
             Players = Session.PlayerIds.Select(id => new MatchBoardPlayer
             {
                 PlayerId = id,
-                FloorsBuilt = 0
+                FloorsBuilt = _personalFloors[id],
+                GlobalFloors = _scoring.GetGlobalFloors(id)
             }).ToList(),
             Piles = _piles.Select(pile => new MatchBoardPile
             {
@@ -74,9 +103,9 @@ internal sealed class MatchRecord
         };
     }
 
-    public MatchPlacementResult TryPlace(Guid playerId, MatchPlacement move)
+    public MatchPlacementResult TryPlace(Guid playerId, MatchPlacement move, DateTimeOffset now)
     {
-        return GetTurnRejection(playerId, move.ExpectedRevision) ?? TryApplyPlacement(playerId, move);
+        return GetTurnRejection(playerId, move.ExpectedRevision) ?? TryApplyPlacement(playerId, move, now);
     }
 
     private MatchPlacementResult? GetTurnRejection(Guid playerId, long expectedRevision)
@@ -98,7 +127,7 @@ internal sealed class MatchRecord
         return rejection;
     }
 
-    private MatchPlacementResult TryApplyPlacement(Guid playerId, MatchPlacement move)
+    private MatchPlacementResult TryApplyPlacement(Guid playerId, MatchPlacement move, DateTimeOffset now)
     {
         MatchPlacementResult result;
         if (!_hands.TryGetValue(playerId, out IReadOnlyList<int>? cards) || !cards.Contains(move.CardNumber))
@@ -122,7 +151,7 @@ internal sealed class MatchRecord
                 _hands[playerId] = cards.Where(card => card != move.CardNumber).ToArray();
                 pile.TopCardNumber = move.CardNumber;
                 pile.CardCount++;
-                CompleteTurn(playerId);
+                CompleteTurn(playerId, now);
                 result = MatchPlacementResult.Applied;
             }
         }
@@ -130,11 +159,113 @@ internal sealed class MatchRecord
         return result;
     }
 
-    private void CompleteTurn(Guid playerId)
+    public MatchDismantleResult TryDismantle(Guid playerId, MatchDismantle move, DateTimeOffset now)
+    {
+        MatchDismantleResult result = GetTurnRejection(playerId, move.ExpectedRevision) switch
+        {
+            MatchPlacementResult.MatchUnavailable => MatchDismantleResult.MatchUnavailable,
+            MatchPlacementResult.StaleRevision => MatchDismantleResult.StaleRevision,
+            MatchPlacementResult.NotYourTurn => MatchDismantleResult.NotYourTurn,
+            null => TryApplyDismantle(playerId, move, now),
+            _ => throw new InvalidOperationException("Unexpected turn rejection.")
+        };
+
+        return result;
+    }
+
+    private MatchDismantleResult TryApplyDismantle(Guid playerId, MatchDismantle move, DateTimeOffset now)
+    {
+        MatchDismantleResult result;
+        if (move.PilePosition < 1 || move.PilePosition > _piles.Count)
+        {
+            result = MatchDismantleResult.InvalidPile;
+        }
+        else
+        {
+            MatchBoardPile pile = _piles[move.PilePosition - 1];
+            if (pile.TopCardNumber is null)
+            {
+                result = MatchDismantleResult.EmptyPile;
+            }
+            else if (CanPlaceAnyModule(playerId))
+            {
+                result = MatchDismantleResult.PlacementAvailable;
+            }
+            else
+            {
+                DismantleTower(playerId, pile);
+                CompleteTurn(playerId, now);
+                result = MatchDismantleResult.Applied;
+            }
+        }
+
+        return result;
+    }
+
+    private bool CanPlaceAnyModule(Guid playerId)
+    {
+        IReadOnlyList<int> hand = _hands[playerId];
+
+        return _piles.Any(pile => pile.TopCardNumber is int top
+            && hand.Any(module => MatchPlacementRules.IsValid(top, module)));
+    }
+
+    private void DismantleTower(Guid playerId, MatchBoardPile pile)
+    {
+        _personalFloors[playerId] += Math.Min(pile.CardCount, MaximumFloorsPerDismantle);
+        if (pile.CardCount >= MinimumBlocksForMasterPlan)
+        {
+            _masterPlans[playerId]++;
+        }
+
+        pile.TopCardNumber = _deck.RemainingCount > 0 ? _deck.Draw(1)[0] : null;
+        pile.CardCount = pile.TopCardNumber.HasValue ? 1 : 0;
+    }
+
+    private void CompleteTurn(Guid playerId, DateTimeOffset now)
     {
         _boardRevision++;
-        int index = Session.PlayerIds.ToList().IndexOf(playerId);
-        _currentTurnPlayerId = Session.PlayerIds[(index + 1) % Session.PlayerIds.Count];
+        if (_hands[playerId].Count == 0)
+        {
+            CloseRound(playerId, now);
+        }
+        else if (_deck.RemainingCount == 0 && !Session.PlayerIds.Any(CanPlaceAnyModule))
+        {
+            CloseRound(null, now);
+        }
+        else
+        {
+            int index = Session.PlayerIds.ToList().IndexOf(playerId);
+            _currentTurnPlayerId = Session.PlayerIds[(index + 1) % Session.PlayerIds.Count];
+        }
+    }
+
+    private void CloseRound(Guid? closedBy, DateTimeOffset now)
+    {
+        _scoring.AddRound(_personalFloors, closedBy);
+        if (_roundNumber == FinalRoundNumber)
+        {
+            _winnerIds = _scoring.GetWinners(Session.PlayerIds);
+            _currentTurnPlayerId = Guid.Empty;
+            TryTransition(MatchLifecycleStatus.Finished, now);
+        }
+        else
+        {
+            Guid opener = GetNextRoundOpener();
+            _roundNumber++;
+            _deck = _createDeck();
+            DealRound(opener);
+        }
+    }
+
+    private Guid GetNextRoundOpener()
+    {
+        IReadOnlyList<Guid> players = Session.PlayerIds;
+        int previous = players.ToList().IndexOf(_roundOpenerId);
+        IEnumerable<Guid> order = Enumerable.Range(1, players.Count)
+            .Select(offset => players[(previous + offset) % players.Count]);
+
+        return order.MinBy(_scoring.GetGlobalFloors);
     }
 
     public MatchPrivateHand? ToPrivateHand(Guid playerId)
@@ -146,7 +277,8 @@ internal sealed class MatchRecord
             {
                 MatchId = Session.MatchId,
                 PlayerId = playerId,
-                Cards = cards.ToList()
+                Cards = cards.ToList(),
+                MasterPlans = _masterPlans[playerId]
             };
         }
 

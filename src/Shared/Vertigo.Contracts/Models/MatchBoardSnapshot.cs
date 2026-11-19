@@ -22,4 +22,7 @@ public sealed class MatchBoardSnapshot
 
     [DataMember]
     public List<MatchBoardPile> Piles { get; set; } = new();
+
+    [DataMember]
+    public List<Guid> WinnerIds { get; set; } = new();
 }
