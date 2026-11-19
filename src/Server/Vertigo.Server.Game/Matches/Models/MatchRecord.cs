@@ -76,21 +76,32 @@ internal sealed class MatchRecord
 
     public MatchPlacementResult TryPlace(Guid playerId, MatchPlacement move)
     {
-        MatchPlacementResult result;
-        if (IsTerminal || Lifecycle.Status != MatchLifecycleStatus.Running)
+        return GetTurnRejection(playerId, move.ExpectedRevision) ?? TryApplyPlacement(playerId, move);
+    }
+
+    private MatchPlacementResult? GetTurnRejection(Guid playerId, long expectedRevision)
+    {
+        MatchPlacementResult? rejection = null;
+        if (Lifecycle.Status != MatchLifecycleStatus.Running)
         {
-            result = MatchPlacementResult.MatchUnavailable;
+            rejection = MatchPlacementResult.MatchUnavailable;
         }
-        else if (move.ExpectedRevision != _boardRevision)
+        else if (expectedRevision != _boardRevision)
         {
-            result = MatchPlacementResult.StaleRevision;
+            rejection = MatchPlacementResult.StaleRevision;
         }
         else if (playerId != _currentTurnPlayerId)
         {
-            result = MatchPlacementResult.NotYourTurn;
+            rejection = MatchPlacementResult.NotYourTurn;
         }
-        else if (!_hands.TryGetValue(playerId, out IReadOnlyList<int>? cards)
-                 || !cards.Contains(move.CardNumber))
+
+        return rejection;
+    }
+
+    private MatchPlacementResult TryApplyPlacement(Guid playerId, MatchPlacement move)
+    {
+        MatchPlacementResult result;
+        if (!_hands.TryGetValue(playerId, out IReadOnlyList<int>? cards) || !cards.Contains(move.CardNumber))
         {
             result = MatchPlacementResult.CardNotOwned;
         }
@@ -111,14 +122,19 @@ internal sealed class MatchRecord
                 _hands[playerId] = cards.Where(card => card != move.CardNumber).ToArray();
                 pile.TopCardNumber = move.CardNumber;
                 pile.CardCount++;
-                _boardRevision++;
-                int index = Session.PlayerIds.ToList().IndexOf(playerId);
-                _currentTurnPlayerId = Session.PlayerIds[(index + 1) % Session.PlayerIds.Count];
+                CompleteTurn(playerId);
                 result = MatchPlacementResult.Applied;
             }
         }
 
         return result;
+    }
+
+    private void CompleteTurn(Guid playerId)
+    {
+        _boardRevision++;
+        int index = Session.PlayerIds.ToList().IndexOf(playerId);
+        _currentTurnPlayerId = Session.PlayerIds[(index + 1) % Session.PlayerIds.Count];
     }
 
     public MatchPrivateHand? ToPrivateHand(Guid playerId)

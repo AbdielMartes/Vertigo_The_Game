@@ -48,7 +48,7 @@ public sealed class MatchPlacementTests
         var move = new MatchPlacement(hand.Cards[0], 1, board.Revision);
         Assert.Equal(MatchPlacementResult.NotYourTurn,
             state.Game.TryPlace(state.MatchId, waitingPlayer, move));
-        Assert.Equal(board.Revision, state.Game.GetBoard(state.MatchId)!.Revision);
+        AssertPlacementStateUnchanged(state.Game, board, hand);
     }
 
     [Fact]
@@ -58,10 +58,74 @@ public sealed class MatchPlacementTests
         var board = state.Game.GetBoard(state.MatchId)!;
         Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
         MatchPrivateHand other = state.Game.GetPrivateHand(state.MatchId, waitingPlayer)!;
+        MatchPrivateHand activeHand = state.Game.GetPrivateHand(state.MatchId, board.CurrentTurnPlayerId)!;
         var move = new MatchPlacement(other.Cards[0], 1, board.Revision);
         Assert.Equal(MatchPlacementResult.CardNotOwned,
             state.Game.TryPlace(state.MatchId, board.CurrentTurnPlayerId, move));
-        Assert.Equal(board.Revision, state.Game.GetBoard(state.MatchId)!.Revision);
+        AssertPlacementStateUnchanged(state.Game, board, activeHand);
+    }
+
+    [Theory]
+    [InlineData(MatchLifecycleStatus.Suspended)]
+    [InlineData(MatchLifecycleStatus.Finished)]
+    [InlineData(MatchLifecycleStatus.Cancelled)]
+    public void TryPlace_InactiveMatchWithStaleRevision_ReturnsUnavailableWithoutMutatingState(
+        MatchLifecycleStatus status)
+    {
+        var (game, matchId, host, other) = Create();
+        bool changed = status switch
+        {
+            MatchLifecycleStatus.Suspended => game.TryDisconnect(matchId, host) && game.TryDisconnect(matchId, other),
+            MatchLifecycleStatus.Finished => game.TryFinish(matchId),
+            MatchLifecycleStatus.Cancelled => game.TryCancel(matchId),
+            _ => throw new ArgumentOutOfRangeException(nameof(status))
+        };
+        Assert.True(changed);
+        Assert.Equal(status, game.Get(matchId)!.Status);
+
+        MatchBoardSnapshot board = game.GetBoard(matchId)!;
+        Guid playerId = board.CurrentTurnPlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(matchId, playerId)!;
+        MatchPlacement move = new(hand.Cards[0], 1, board.Revision - 1);
+
+        MatchPlacementResult result = game.TryPlace(matchId, playerId, move);
+
+        Assert.Equal(MatchPlacementResult.MatchUnavailable, result);
+        AssertPlacementStateUnchanged(game, board, hand);
+        Assert.Equal(status, game.Get(matchId)!.Status);
+    }
+
+    [Fact]
+    public void TryPlace_StaleRevisionOutsideTurn_ReturnsStaleRevisionWithoutMutatingState()
+    {
+        var (game, matchId, _, _) = Create();
+        MatchBoardSnapshot board = game.GetBoard(matchId)!;
+        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(matchId, waitingPlayer)!;
+        MatchPlacement move = new(hand.Cards[0], 1, board.Revision - 1);
+
+        MatchPlacementResult result = game.TryPlace(matchId, waitingPlayer, move);
+
+        Assert.Equal(MatchPlacementResult.StaleRevision, result);
+        AssertPlacementStateUnchanged(game, board, hand);
+    }
+
+    [Fact]
+    public void TryPlace_UnstablePlacement_RejectsWithoutMutatingState()
+    {
+        var (game, matchId, _, _) = Create();
+        MatchBoardSnapshot board = game.GetBoard(matchId)!;
+        Guid playerId = board.CurrentTurnPlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(matchId, playerId)!;
+        MatchPlacement invalidPlacement = (from pile in board.Piles
+                                from card in hand.Cards
+                                where card - pile.TopCardNumber!.Value is < 1 or > 10
+                                select new MatchPlacement(card, pile.Position, board.Revision)).First();
+
+        MatchPlacementResult result = game.TryPlace(matchId, playerId, invalidPlacement);
+
+        Assert.Equal(MatchPlacementResult.InvalidPlacement, result);
+        AssertPlacementStateUnchanged(game, board, hand);
     }
 
     [Fact]
@@ -91,9 +155,12 @@ public sealed class MatchPlacementTests
             Assert.Equal(board.Revision + 1, next.Revision);
             Assert.Equal(waitingPlayer, next.CurrentTurnPlayerId);
             Assert.Equal(match.card, next.Piles[match.Position - 1].TopCardNumber);
-            Assert.DoesNotContain(match.card, state.Game.GetPrivateHand(state.MatchId, openingPlayer)!.Cards);
+            Assert.Equal(board.Piles[match.Position - 1].CardCount + 1, next.Piles[match.Position - 1].CardCount);
+            MatchPrivateHand afterMove = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
+            Assert.Equal(hand.Cards.Where(card => card != match.card), afterMove.Cards);
             Assert.Equal(MatchPlacementResult.StaleRevision,
                 state.Game.TryPlace(state.MatchId, openingPlayer, move));
+            AssertPlacementStateUnchanged(state.Game, next, afterMove);
             return;
         }
         throw new InvalidOperationException("No playable test board generated in 100 attempts.");
@@ -108,5 +175,21 @@ public sealed class MatchPlacementTests
         MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
         Assert.Equal(MatchPlacementResult.InvalidPile,
             state.Game.TryPlace(state.MatchId, openingPlayer, new MatchPlacement(hand.Cards[0], 5, board.Revision)));
+        AssertPlacementStateUnchanged(state.Game, board, hand);
+    }
+
+    private static void AssertPlacementStateUnchanged(
+        InMemoryMatchSessionStarter game, MatchBoardSnapshot expectedBoard, MatchPrivateHand expectedHand)
+    {
+        MatchBoardSnapshot board = game.GetBoard(expectedBoard.MatchId)!;
+        MatchPrivateHand hand = game.GetPrivateHand(expectedBoard.MatchId, expectedHand.PlayerId)!;
+
+        Assert.Equal(expectedBoard.Revision, board.Revision);
+        Assert.Equal(expectedBoard.CurrentTurnPlayerId, board.CurrentTurnPlayerId);
+        Assert.Equal(expectedBoard.RoundNumber, board.RoundNumber);
+        Assert.Equal(
+            expectedBoard.Piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.CardCount)),
+            board.Piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.CardCount)));
+        Assert.Equal(expectedHand.Cards, hand.Cards);
     }
 }
