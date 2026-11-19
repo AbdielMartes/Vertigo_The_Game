@@ -56,6 +56,7 @@ public sealed class InMemoryMatchSessionStarter : IMatchSessionStarter, IMatchLi
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
                 result = record.ToBoard();
+                result.ServerTimeUtc = _timeProvider.GetUtcNow();
             }
         }
 

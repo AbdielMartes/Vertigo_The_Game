@@ -210,7 +210,12 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
                 if (board is not null && board.ExpelledPlayerIds.Contains(identity.PlayerId))
                 {
-                    hand = new MatchPrivateHand { MatchId = lobby.MatchId, PlayerId = identity.PlayerId };
+                    hand = new MatchPrivateHand
+                    {
+                        MatchId = lobby.MatchId,
+                        PlayerId = identity.PlayerId,
+                        Revision = board.Revision
+                    };
                 }
             }
 

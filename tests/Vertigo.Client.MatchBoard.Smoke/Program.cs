@@ -78,6 +78,10 @@ static async Task<bool> RunMatchAsync()
 
         MatchPrivateHand hostHand = hostLobby.GetMatchPrivateHand(lobbyCode, hostToken);
         MatchPrivateHand memberHand = memberLobby.GetMatchPrivateHand(lobbyCode, memberToken);
+        Require(first.ServerTimeUtc.HasValue && first.ServerTimeUtc < first.TurnDeadlineUtc,
+            "The board did not provide a server-time sample for the opening turn.");
+        Require(hostHand.Revision == first.Revision && memberHand.Revision == second.Revision,
+            "Private hand responses did not carry the expected board revisions.");
         Require(hostHand.MatchId == started.MatchId && memberHand.MatchId == started.MatchId,
             "Private hands have the wrong match identifier.");
         Require(hostHand.PlayerId == hostSession.PlayerId && memberHand.PlayerId == memberSession.PlayerId

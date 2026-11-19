@@ -21,6 +21,7 @@ public sealed class MatchTurnClockTests
         Guid nextPlayer = order[(Array.IndexOf(order, active) + 1) % order.Length];
 
         Assert.Equal(StartTime.AddSeconds(20), before.TurnDeadlineUtc);
+        Assert.Equal(StartTime, before.ServerTimeUtc);
         clock.Set(StartTime.AddSeconds(20).AddTicks(-1));
         Assert.Null(game.TryExpireTurn(matchId));
         Assert.Equal(before.Revision, game.GetBoard(matchId)!.Revision);
@@ -33,6 +34,7 @@ public sealed class MatchTurnClockTests
         Assert.Equal(before.Revision + 1, after.Revision);
         Assert.Equal(nextPlayer, after.CurrentTurnPlayerId);
         Assert.Equal(StartTime.AddSeconds(40), after.TurnDeadlineUtc);
+        Assert.Equal(StartTime.AddSeconds(20), after.ServerTimeUtc);
         Assert.Equal(MatchEndReason.None, after.EndReason);
         Assert.Equal(active, Assert.Single(after.ExpelledPlayerIds));
         Assert.DoesNotContain(after.Players, player => player.PlayerId == active);

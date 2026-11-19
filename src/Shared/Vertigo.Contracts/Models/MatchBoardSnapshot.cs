@@ -21,6 +21,9 @@ public sealed class MatchBoardSnapshot
     public DateTimeOffset? TurnDeadlineUtc { get; set; }
 
     [DataMember]
+    public DateTimeOffset? ServerTimeUtc { get; set; }
+
+    [DataMember]
     public MatchEndReason EndReason { get; set; }
 
     [DataMember]

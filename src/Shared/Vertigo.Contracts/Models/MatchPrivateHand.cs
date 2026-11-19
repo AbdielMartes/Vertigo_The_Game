@@ -16,4 +16,7 @@ public sealed class MatchPrivateHand
 
     [DataMember]
     public int MasterPlans { get; set; }
+
+    [DataMember]
+    public long? Revision { get; set; }
 }

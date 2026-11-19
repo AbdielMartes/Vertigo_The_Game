@@ -546,7 +546,8 @@ internal sealed class MatchRecord
                 MatchId = Session.MatchId,
                 PlayerId = playerId,
                 Cards = cards.ToList(),
-                MasterPlans = _masterPlans[playerId]
+                MasterPlans = _masterPlans[playerId],
+                Revision = _boardRevision
             };
         }
 

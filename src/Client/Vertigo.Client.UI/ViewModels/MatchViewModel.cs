@@ -9,6 +9,7 @@ using Avalonia.Threading;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
+using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
 using CommunityToolkit.Mvvm.Input;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
@@ -26,18 +27,25 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private readonly PlayerSession? _session;
     private readonly ISessionGuard? _guard;
     private readonly IClientErrorText? _errors;
+    private static readonly TimeSpan CountdownInterval = TimeSpan.FromMilliseconds(200);
     private readonly MatchBoardRevision _boardRevision = new();
+    private readonly MatchTurnClock _turnClock;
     private int _generation;
     private bool _isLoadingBoard;
     private bool _isExitConfirmationOpen;
     private string _draftMessage = string.Empty;
     private string _roundLabel = "—";
-    private string _currentTurnLabel = "—";
+    private string? _turnPlayerName;
+    private DispatcherTimer? _countdownTimer;
+    private int? _turnSeconds;
+    private bool _isMyTurn;
+    private bool _hasCurrentHand;
+    private bool _hasLegalPlacement;
+    private bool _isSubmittingTurn;
     private string _errorMessage = string.Empty;
     private MatchCardRow? _selectedCard;
     private MatchPileRow? _selectedPile;
     private long _currentBoardRevision;
-    private bool _isPlacingCard;
     private bool _pendingBoardRefresh;
     private long _notifiedRevision;
     private IReadOnlyList<MatchBoardMove> _recentMoves = Array.Empty<MatchBoardMove>();
@@ -45,34 +53,53 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private Guid _matchId;
     private string _lobbyCode = string.Empty;
 
-    public MatchViewModel(ITextLocalizer text)
+    public MatchViewModel(ITextLocalizer text) : this(text, null, TimeProvider.System)
+    {
+    }
+
+    internal MatchViewModel(ITextLocalizer text, PlayerSession? session, TimeProvider timeProvider)
     {
         _text = text;
+        _session = session;
+        _turnClock = new MatchTurnClock(timeProvider);
         RefreshBoardCommand = new AsyncRelayCommand(RefreshBoardAsync);
-        PlaceCardCommand = new AsyncRelayCommand(PlaceCardAsync);
+        PlaceCardCommand = new AsyncRelayCommand(PlaceCardAsync, CanPlaceSelectedCard);
+        DismantleTowerCommand = new AsyncRelayCommand(DismantleTowerAsync, CanDismantleSelectedTower);
         RequestExitCommand = new RelayCommand(RequestExit);
         CancelExitCommand = new RelayCommand(CancelExit);
     }
 
-    public MatchViewModel(MatchBoardContext context) : this(context.Text)
+    public MatchViewModel(MatchBoardContext context) : this(context.Text, context.Session, TimeProvider.System)
     {
         _lobbies = context.Lobbies;
-        _session = context.Session;
         _guard = context.Guard;
         _errors = context.Errors;
     }
 
     public IAsyncRelayCommand RefreshBoardCommand { get; }
     public IAsyncRelayCommand PlaceCardCommand { get; }
+    public IAsyncRelayCommand DismantleTowerCommand { get; }
     public MatchPileRow? SelectedPile
     {
         get => _selectedPile;
-        set => SetProperty(ref _selectedPile, value);
+        set
+        {
+            if (SetProperty(ref _selectedPile, value))
+            {
+                RefreshTurnCommands();
+            }
+        }
     }
     public bool IsLoadingBoard
     {
         get => _isLoadingBoard;
-        private set => SetProperty(ref _isLoadingBoard, value);
+        private set
+        {
+            if (SetProperty(ref _isLoadingBoard, value))
+            {
+                RefreshTurnCommands();
+            }
+        }
     }
 
     public ObservableCollection<MatchMoveRow> RecentMoves { get; } = new();
@@ -125,7 +152,15 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         RecentMoves.Clear();
         RoundSummaries = Array.Empty<MatchRoundSummary>();
         RoundLabel = "—";
-        CurrentTurnLabel = "—";
+        _turnPlayerName = null;
+        _isMyTurn = false;
+        _hasCurrentHand = false;
+        _hasLegalPlacement = false;
+        _isSubmittingTurn = false;
+        _turnClock.SetDeadline(null, null);
+        RefreshTurnCountdown();
+        OnPropertyChanged(nameof(CurrentTurnLabel));
+        RefreshTurnCommands();
         ErrorMessage = string.Empty;
         IsExitConfirmationOpen = false;
         IsLoadingBoard = false;
@@ -140,6 +175,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
             _lobbies.MatchBoardUpdated += OnMatchBoardUpdated;
         }
+        StartCountdownTimer();
         RefreshLocalization();
         _ = RefreshBoardAsync();
     }
@@ -150,8 +186,13 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
         }
+        StopCountdownTimer();
         _generation++;
         _pendingBoardRefresh = false;
+        _hasCurrentHand = false;
+        _isSubmittingTurn = false;
+        IsLoadingBoard = false;
+        RefreshTurnCommands();
         IsExitConfirmationOpen = false;
     }
 
@@ -189,16 +230,19 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             && _guard.HasActiveSession() && original is not null)
         {
             BoardRequestIdentity request = new(original, matchId, generation);
+            _hasCurrentHand = false;
             IsLoadingBoard = true;
             try
             {
-                (MatchBoardSnapshot board, MatchPrivateHand hand) state = await Task.Run(() =>
+                (MatchBoardSnapshot board, MatchPrivateHand? hand, long receivedAt) =
+                    await Task.Run(() => ReadBoardAndHand(_lobbies, lobbyCode, original));
+                await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    MatchBoardSnapshot board = _lobbies!.GetMatchBoard(lobbyCode, original.Token);
-                    MatchPrivateHand hand = _lobbies.GetMatchPrivateHand(lobbyCode, original.Token);
-                    return (board, hand);
+                    if (IsCurrent(request.Session, request.MatchId, request.Generation))
+                    {
+                        ApplyBoardAndHand(board, hand, receivedAt);
+                    }
                 });
-                await Dispatcher.UIThread.InvokeAsync(() => ApplyBoardRefresh(state.board, state.hand, request));
             }
             catch (FaultException<ServiceFault> exception)
             {
@@ -223,21 +267,61 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         }
     }
 
-    private void ApplyBoardRefresh(MatchBoardSnapshot board, MatchPrivateHand hand, BoardRequestIdentity request)
+    private (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadBoardAndHand(
+        ILobbyClient lobbies, string lobbyCode, SessionSnapshot session)
     {
-        if (IsCurrent(request.Session, request.MatchId, request.Generation))
+        (MatchBoardSnapshot board, MatchPrivateHand? hand, long receivedAt) = ReadSnapshot();
+        if (hand?.Revision is long revision && revision != board.Revision)
         {
-            if (board.MatchId == request.MatchId && hand.MatchId == request.MatchId
-                && hand.PlayerId == request.Session.PlayerId)
+            (board, hand, receivedAt) = ReadSnapshot();
+        }
+
+        return (board, hand, receivedAt);
+
+        (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadSnapshot()
+        {
+            MatchBoardSnapshot snapshot = lobbies.GetMatchBoard(lobbyCode, session.Token);
+            long sampleTimestamp = _turnClock.GetTimestamp();
+            MatchPrivateHand? privateHand = null;
+            if (!snapshot.ExpelledPlayerIds.Contains(session.PlayerId))
             {
-                ApplyBoard(board);
-                ErrorMessage = string.Empty;
-                ReplacePrivateHand(hand);
+                try
+                {
+                    privateHand = lobbies.GetMatchPrivateHand(lobbyCode, session.Token);
+                }
+                catch (FaultException<ServiceFault> exception)
+                    when (exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotFound)
+                {
+                    snapshot = lobbies.GetMatchBoard(lobbyCode, session.Token);
+                    sampleTimestamp = _turnClock.GetTimestamp();
+                    if (!snapshot.ExpelledPlayerIds.Contains(session.PlayerId))
+                    {
+                        throw;
+                    }
+                }
             }
-            else
+
+            return (snapshot, privateHand, sampleTimestamp);
+        }
+    }
+
+    internal void ApplyBoardAndHand(MatchBoardSnapshot board, MatchPrivateHand? hand, long? receivedAt = null)
+    {
+        SessionSnapshot? session = _session?.GetActiveSession();
+        if (session is not null && _matchId != Guid.Empty && board.MatchId == _matchId
+            && board.Revision >= _currentBoardRevision)
+        {
+            bool expelled = board.ExpelledPlayerIds.Contains(session.PlayerId);
+            bool validHand = hand is not null && hand.MatchId == _matchId && hand.PlayerId == session.PlayerId
+                && (hand.Revision is null || hand.Revision == board.Revision);
+            if (!ApplyBoard(board, receivedAt) && board.ServerTimeUtc.HasValue)
             {
-                ErrorMessage = _text.Get("Error.Unknown");
+                _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+                RefreshTurnCountdown();
             }
+
+            ReplacePrivateHand(!expelled && validHand ? hand : null);
+            ErrorMessage = expelled || validHand ? string.Empty : _text.Get("Error.Unknown");
         }
     }
 
@@ -246,7 +330,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         if (request.Generation == _generation)
         {
             IsLoadingBoard = false;
-            bool needsRefresh = _pendingBoardRefresh && _notifiedRevision > _currentBoardRevision;
+            bool needsRefresh = _pendingBoardRefresh && (_notifiedRevision > _currentBoardRevision || !_hasCurrentHand);
             _pendingBoardRefresh = false;
             if (needsRefresh && IsCurrent(request.Session, request.MatchId, request.Generation))
             {
@@ -274,9 +358,16 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     public bool ApplyBoard(MatchBoardSnapshot board)
     {
+        return ApplyBoard(board, null);
+    }
+
+    private bool ApplyBoard(MatchBoardSnapshot board, long? receivedAt)
+    {
         bool accepted = _boardRevision.TryAdvance(board, _matchId);
         if (accepted)
         {
+            _hasCurrentHand = false;
+            Guid? localPlayerId = _session?.GetActiveSession()?.PlayerId;
             Players.Clear();
             foreach (MatchBoardPlayer player in board.Players)
             {
@@ -285,7 +376,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     Username = player.Username,
                     FloorsBuilt = player.FloorsBuilt,
                     IsCurrentTurn = player.PlayerId == board.CurrentTurnPlayerId,
-                    IsMe = player.PlayerId == _session?.GetActiveSession()?.PlayerId
+                    IsMe = player.PlayerId == localPlayerId
                 });
             }
 
@@ -296,6 +387,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             {
                 Piles.Add(new MatchPileRow
                 {
+                    Position = pile.Position,
+                    TopCardNumber = pile.TopCardNumber,
                     Label = pile.Position.ToString(),
                     Count = pile.CardCount,
                     TopCardText = pile.TopCardNumber?.ToString() ?? string.Empty
@@ -312,91 +405,196 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             RoundLabel = board.RoundNumber?.ToString() ?? "—";
             MatchBoardPlayer? current = board.Players.Find(player =>
                 player.PlayerId == board.CurrentTurnPlayerId);
-            CurrentTurnLabel = current?.Username ?? "—";
+            _turnPlayerName = current?.Username;
+            _isMyTurn = current is not null && current.PlayerId == localPlayerId;
+            _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+            RefreshTurnCountdown();
+            OnPropertyChanged(nameof(CurrentTurnLabel));
+            RefreshTurnCommands();
             ErrorMessage = string.Empty;
         }
 
         return accepted;
     }
 
-    private async Task PlaceCardAsync()
+    private bool CanSubmitTurn()
     {
-        SessionSnapshot? original = _session?.GetActiveSession();
-        int generation = _generation;
-        Guid matchId = _matchId;
-        MatchCardRow? card = SelectedCard;
+        return _isMyTurn && _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn
+            && _turnClock.GetRemainingSeconds() is > 0;
+    }
+
+    private bool CanPlaceSelectedCard()
+    {
+        return CanSubmitTurn() && SelectedPile is { } pile && Piles.Contains(pile)
+            && SelectedCard is { } card && Hand.Contains(card)
+            && MatchTurnRules.CanPlace(pile.TopCardNumber, card.CardNumber);
+    }
+
+    private bool CanDismantleSelectedTower()
+    {
+        return CanSubmitTurn() && !_hasLegalPlacement
+            && SelectedPile is { TopCardNumber: not null } pile && Piles.Contains(pile);
+    }
+
+    private Task PlaceCardAsync()
+    {
         MatchPileRow? pile = SelectedPile;
-        if (_isPlacingCard || IsLoadingBoard || original is null || card is null || pile is null
-            || !int.TryParse(card.DisplayValue, out int cardNumber)
-            || !int.TryParse(pile.Label, out int pilePosition)
-            || _lobbies is null || _guard is null || !_guard.HasActiveSession())
-        {
-            return;
-        }
-
-        _isPlacingCard = true;
-        ErrorMessage = string.Empty;
-        MatchPlaceRequest request = new()
-        {
-            LobbyCode = _lobbyCode,
-            SessionToken = original.Token,
-            CardNumber = cardNumber,
-            PilePosition = pilePosition,
-            ExpectedRevision = _currentBoardRevision
-        };
-        try
-        {
-            MatchBoardSnapshot board = await Task.Run(() => _lobbies.PlaceMatchCard(request));
-            await Dispatcher.UIThread.InvokeAsync(() =>
+        int? card = SelectedCard?.CardNumber;
+        string lobbyCode = _lobbyCode;
+        long revision = _currentBoardRevision;
+        return CanPlaceSelectedCard() && pile is not null && card is int module
+            ? SubmitTurnAsync((lobbies, token) => lobbies.PlaceMatchCard(new MatchPlaceRequest
             {
-                if (IsCurrent(original, matchId, generation))
-                {
-                    if (ApplyBoard(board) && board.Revision >= _notifiedRevision)
-                    {
-                        _notifiedRevision = board.Revision;
-                    }
-                }
-            });
-            // Read the hand only after the accepted move, never optimistically remove cards.
-            if (IsCurrent(original, matchId, generation))
-            {
-                await RefreshPrivateHandAsync(original, matchId, generation);
-            }
-        }
-        catch (Exception exception)
-        {
-            await ReportBoardFailureAsync(exception, new BoardRequestIdentity(original, matchId, generation));
-        }
-        finally
-        {
-            _isPlacingCard = false;
-        }
+                LobbyCode = lobbyCode,
+                SessionToken = token,
+                CardNumber = module,
+                PilePosition = pile.Position,
+                ExpectedRevision = revision
+            }))
+            : Task.CompletedTask;
     }
 
-    private async Task RefreshPrivateHandAsync(SessionSnapshot session, Guid matchId, int generation)
+    private Task DismantleTowerAsync()
     {
-        MatchPrivateHand hand = await Task.Run(() => _lobbies!.GetMatchPrivateHand(_lobbyCode, session.Token));
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            if (IsCurrent(session, matchId, generation) && hand.MatchId == matchId
-                && hand.PlayerId == session.PlayerId)
+        MatchPileRow? pile = SelectedPile;
+        string lobbyCode = _lobbyCode;
+        long revision = _currentBoardRevision;
+        return CanDismantleSelectedTower() && pile is not null
+            ? SubmitTurnAsync((lobbies, token) => lobbies.DismantleMatchTower(new MatchDismantleRequest
             {
-                ReplacePrivateHand(hand, clearSelection: true);
-            }
-        });
+                LobbyCode = lobbyCode,
+                SessionToken = token,
+                PilePosition = pile.Position,
+                ExpectedRevision = revision
+            }))
+            : Task.CompletedTask;
     }
 
-    private void ReplacePrivateHand(MatchPrivateHand hand, bool clearSelection = false)
+    private async Task SubmitTurnAsync(Func<ILobbyClient, string, MatchBoardSnapshot> submit)
+    {
+        SessionSnapshot? session = _session?.GetActiveSession();
+        if (session is not null && _lobbies is not null && _guard?.HasActiveSession() == true)
+        {
+            BoardRequestIdentity request = new(session, _matchId, _generation);
+            _isSubmittingTurn = true;
+            RefreshTurnCommands();
+            ErrorMessage = string.Empty;
+            try
+            {
+                MatchBoardSnapshot board = await Task.Run(() => submit(_lobbies, session.Token));
+                await Dispatcher.UIThread.InvokeAsync(() => ApplyTurnResult(board, request));
+            }
+            catch (FaultException<ServiceFault> exception)
+                when (exception.Detail.ErrorCode is "MATCH_STALE_REVISION" or "MATCH_TURN_EXPIRED")
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    if (IsCurrent(request.Session, request.MatchId, request.Generation))
+                    {
+                        _hasCurrentHand = false;
+                        if (IsLoadingBoard)
+                        {
+                            _pendingBoardRefresh = true;
+                        }
+                        else
+                        {
+                            _ = RefreshBoardAsync();
+                        }
+                    }
+                });
+                await ReportBoardFailureAsync(exception, request);
+            }
+            catch (Exception exception)
+            {
+                await ReportBoardFailureAsync(exception, request);
+            }
+            finally
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    if (request.Generation == _generation)
+                    {
+                        _isSubmittingTurn = false;
+                        RefreshTurnCommands();
+                    }
+                });
+            }
+        }
+    }
+
+    private void ApplyTurnResult(MatchBoardSnapshot board, BoardRequestIdentity request)
+    {
+        if (IsCurrent(request.Session, request.MatchId, request.Generation))
+        {
+            ApplyBoard(board);
+            if (IsLoadingBoard)
+            {
+                _pendingBoardRefresh = true;
+            }
+            else
+            {
+                _ = RefreshBoardAsync();
+            }
+        }
+    }
+
+    private void ReplacePrivateHand(MatchPrivateHand? hand)
     {
         Hand.Clear();
-        if (clearSelection)
+        SelectedCard = null;
+        _hasCurrentHand = hand is not null;
+        _hasLegalPlacement = hand is not null
+            && MatchTurnRules.HasLegalPlacement(Piles.Select(pile => pile.TopCardNumber), hand.Cards);
+        if (hand is not null)
         {
-            SelectedCard = null;
+            foreach (int card in hand.Cards)
+            {
+                Hand.Add(new MatchCardRow { DisplayValue = card.ToString(), CardNumber = card, IsWildcard = false });
+            }
         }
 
-        foreach (int card in hand.Cards)
+        RefreshTurnCommands();
+    }
+
+    private void RefreshTurnCommands()
+    {
+        PlaceCardCommand.NotifyCanExecuteChanged();
+        DismantleTowerCommand.NotifyCanExecuteChanged();
+    }
+
+    private void StartCountdownTimer()
+    {
+        if (_countdownTimer is null)
         {
-            Hand.Add(new MatchCardRow { DisplayValue = card.ToString(), IsWildcard = false });
+            _countdownTimer = new DispatcherTimer { Interval = CountdownInterval };
+            _countdownTimer.Tick += OnCountdownTick;
+            _countdownTimer.Start();
+        }
+
+        RefreshTurnCountdown();
+    }
+
+    private void StopCountdownTimer()
+    {
+        if (_countdownTimer is not null)
+        {
+            _countdownTimer.Stop();
+            _countdownTimer.Tick -= OnCountdownTick;
+            _countdownTimer = null;
+        }
+    }
+
+    private void OnCountdownTick(object? sender, EventArgs args)
+    {
+        RefreshTurnCountdown();
+    }
+
+    private void RefreshTurnCountdown()
+    {
+        if (SetProperty(ref _turnSeconds, _turnClock.GetRemainingSeconds(), nameof(TurnSecondsLabel)))
+        {
+            OnPropertyChanged(nameof(HasTurnCountdown));
+            RefreshTurnCommands();
         }
     }
 
@@ -420,11 +618,13 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         set => SetProperty(ref _roundLabel, value);
     }
 
-    public string CurrentTurnLabel
-    {
-        get => _currentTurnLabel;
-        set => SetProperty(ref _currentTurnLabel, value);
-    }
+    public string CurrentTurnLabel => _isMyTurn ? _text.Get("Match.Turn.YourTurn")
+        : _turnPlayerName is null ? "—" : string.Format(_text.Get("Match.Turn.OtherPlayer"), _turnPlayerName);
+
+    public string TurnSecondsLabel => _turnSeconds is int seconds
+        ? string.Format(_text.Get("Match.Turn.Seconds"), seconds) : string.Empty;
+
+    public bool HasTurnCountdown => _turnSeconds.HasValue;
 
     public string ErrorMessage
     {
@@ -460,7 +660,13 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public MatchCardRow? SelectedCard
     {
         get => _selectedCard;
-        set => SetProperty(ref _selectedCard, value);
+        set
+        {
+            if (SetProperty(ref _selectedCard, value))
+            {
+                RefreshTurnCommands();
+            }
+        }
     }
 
     public bool IsExitConfirmationOpen
@@ -471,7 +677,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     public string TitleText => _text.Get("Match.Title");
     public string RoundText => _text.Get("Match.Round");
-    public string TurnText => _text.Get("Match.Turn");
     public string PlayersText => _text.Get("Match.Players");
     public string FloorsText => _text.Get("Match.Floors");
     public string BoardText => _text.Get("Match.Board");
@@ -483,6 +688,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public string MessageHintText => _text.Get("Match.MessageHint");
     public string SendText => _text.Get("Match.Send");
     public string PlayCardText => _text.Get("Match.PlayCard");
+    public string DismantleTowerText => _text.Get("Match.DismantleTower");
     public string ExitText => _text.Get("Match.Exit");
     public string ExitConfirmTitleText => _text.Get("Match.ExitConfirmTitle");
     public string ExitConfirmBodyText => _text.Get("Match.ExitConfirmBody");
@@ -497,7 +703,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     {
         OnPropertyChanged(nameof(TitleText));
         OnPropertyChanged(nameof(RoundText));
-        OnPropertyChanged(nameof(TurnText));
+        OnPropertyChanged(nameof(CurrentTurnLabel));
+        OnPropertyChanged(nameof(TurnSecondsLabel));
         OnPropertyChanged(nameof(PlayersText));
         OnPropertyChanged(nameof(FloorsText));
         OnPropertyChanged(nameof(BoardText));
@@ -510,6 +717,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(MessageHintText));
         OnPropertyChanged(nameof(SendText));
         OnPropertyChanged(nameof(PlayCardText));
+        OnPropertyChanged(nameof(DismantleTowerText));
         OnPropertyChanged(nameof(ExitText));
         OnPropertyChanged(nameof(ExitConfirmTitleText));
         OnPropertyChanged(nameof(ExitConfirmBodyText));

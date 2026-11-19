@@ -533,4 +533,8 @@
   <data name="Match.Error.StaleVote" xml:space="preserve">
     <value>The player list changed. Vote again.</value>
   </data>
+  <data name="Match.Turn.YourTurn" xml:space="preserve"><value>Your turn</value></data>
+  <data name="Match.Turn.OtherPlayer" xml:space="preserve"><value>{0}’s turn</value></data>
+  <data name="Match.Turn.Seconds" xml:space="preserve"><value>{0} s</value></data>
+  <data name="Match.DismantleTower" xml:space="preserve"><value>Dismantle tower</value></data>
 </root>
