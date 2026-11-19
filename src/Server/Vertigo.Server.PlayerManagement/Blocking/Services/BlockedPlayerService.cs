@@ -9,6 +9,7 @@ using Vertigo.Server.DataAccess.Repositories.Interfaces;
 
 namespace Vertigo.Server.PlayerManagement.Blocking.Services;
 
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
 public class BlockedPlayerService : IBlockedPlayerService
 {
     private readonly IBlockedPlayerRepository _blockedPlayerRepository;

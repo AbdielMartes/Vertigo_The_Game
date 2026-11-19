@@ -41,22 +41,46 @@ public sealed class FriendshipNotifier : IFriendshipNotifier
 
     public void NotifyFriendRequestReceived(Guid targetPlayerId, FriendshipInvitationEntry request)
     {
-        Send(targetPlayerId, SendFriendRequestReceived, request);
+        FriendshipNotification notification = new()
+        {
+            Kind = FriendshipNotificationKind.FriendRequestReceived,
+            FriendRequest = request
+        };
+
+        Send(targetPlayerId, notification);
     }
 
     public void NotifyFriendshipEstablished(Guid targetPlayerId, FriendEntry friend)
     {
-        Send(targetPlayerId, SendFriendshipEstablished, friend);
+        FriendshipNotification notification = new()
+        {
+            Kind = FriendshipNotificationKind.FriendshipEstablished,
+            Friend = friend
+        };
+
+        Send(targetPlayerId, notification);
     }
 
     public void NotifyLobbyInvitationReceived(Guid targetPlayerId, LobbyInvitationEntry invitation)
     {
-        Send(targetPlayerId, SendLobbyInvitationReceived, invitation);
+        FriendshipNotification notification = new()
+        {
+            Kind = FriendshipNotificationKind.LobbyInvitationReceived,
+            LobbyInvitation = invitation
+        };
+
+        Send(targetPlayerId, notification);
     }
 
     public void NotifyLobbyInvitationWithdrawn(Guid targetPlayerId, string lobbyCode)
     {
-        Send(targetPlayerId, SendLobbyInvitationWithdrawn, lobbyCode);
+        FriendshipNotification notification = new()
+        {
+            Kind = FriendshipNotificationKind.LobbyInvitationWithdrawn,
+            WithdrawnLobbyCode = lobbyCode
+        };
+
+        Send(targetPlayerId, notification);
     }
 
     public bool IsOnline(Guid playerId)
@@ -66,36 +90,13 @@ public sealed class FriendshipNotifier : IFriendshipNotifier
         return isOnline;
     }
 
-    private static void SendLobbyInvitationReceived(IFriendshipCallback callback, LobbyInvitationEntry invitation)
-    {
-        callback.OnLobbyInvitationReceived(invitation);
-    }
-
-    private static void SendLobbyInvitationWithdrawn(IFriendshipCallback callback, string lobbyCode)
-    {
-        callback.OnLobbyInvitationWithdrawn(lobbyCode);
-    }
-
-    private static void SendFriendRequestReceived(IFriendshipCallback callback, FriendshipInvitationEntry request)
-    {
-        callback.OnFriendRequestReceived(request);
-    }
-
-    private static void SendFriendshipEstablished(IFriendshipCallback callback, FriendEntry friend)
-    {
-        callback.OnFriendshipEstablished(friend);
-    }
-
-    private void Send<TArgument>(
-        Guid targetPlayerId,
-        Action<IFriendshipCallback, TArgument> notification,
-        TArgument argument)
+    private void Send(Guid targetPlayerId, FriendshipNotification notification)
     {
         if (_subscriptions.TryGetValue(targetPlayerId, out FriendshipSubscription? subscription))
         {
             try
             {
-                notification(subscription.Callback, argument);
+                subscription.Callback.Notify(notification);
             }
             catch (CommunicationException)
             {

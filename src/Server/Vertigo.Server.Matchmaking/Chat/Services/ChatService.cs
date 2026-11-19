@@ -8,6 +8,7 @@ using Vertigo.Server.PlayerManagement.Authentication.Models;
 
 namespace Vertigo.Server.Matchmaking.Chat.Services;
 
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
 public sealed class ChatService : IChatService
 {
     private const int MaximumMessageLength = 500;

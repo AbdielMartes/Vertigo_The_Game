@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Vertigo.Server.DataAccess.Contexts;
 using Vertigo.Server.DataAccess.Entities.Identity;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
@@ -80,14 +81,24 @@ public class PlayerRepository : IPlayerRepository
             .ToList();
     }
 
-    public bool UpdatePassword(Guid playerId, string passwordHash, string passwordSalt)
+    public bool UpdatePasswordAndRevokeSessions(Guid playerId, string passwordHash, string passwordSalt)
     {
+        using IDbContextTransaction transaction = _context.Database.BeginTransaction();
         int affectedRows = _context.Players
             .Where(player => player.PlayerId == playerId)
             .ExecuteUpdate(setters => setters
                 .SetProperty(player => player.PasswordHash, passwordHash)
                 .SetProperty(player => player.PasswordSalt, passwordSalt));
 
-        return affectedRows == ExpectedAffectedRows;
+        bool isChanged = affectedRows == ExpectedAffectedRows;
+        if (isChanged)
+        {
+            _context.SessionTokens
+                .Where(session => session.PlayerId == playerId && !session.IsRevoked)
+                .ExecuteUpdate(setters => setters.SetProperty(session => session.IsRevoked, true));
+            transaction.Commit();
+        }
+
+        return isChanged;
     }
 }

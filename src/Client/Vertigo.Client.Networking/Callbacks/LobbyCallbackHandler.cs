@@ -20,28 +20,35 @@ public sealed class LobbyCallbackHandler : ILobbyCallback
 
     public event EventHandler<MatchBoardChanged>? MatchBoardUpdated;
 
-    void ILobbyCallback.PlayerJoined(LobbyMember player)
+    void ILobbyCallback.Notify(LobbyNotification notification)
     {
-        PlayerJoined?.Invoke(this, player);
-    }
+        switch (notification)
+        {
+            case { Kind: LobbyNotificationKind.PlayerJoined, JoinedPlayer: { } player,
+                LeftPlayerId: null, ChatMessage: null, Preparation: null, BoardChange: null }:
+                PlayerJoined?.Invoke(this, player);
+                break;
 
-    void ILobbyCallback.PlayerLeft(Guid playerId)
-    {
-        PlayerLeft?.Invoke(this, playerId);
-    }
+            case { Kind: LobbyNotificationKind.PlayerLeft, LeftPlayerId: Guid playerId,
+                JoinedPlayer: null, ChatMessage: null, Preparation: null, BoardChange: null }
+                when playerId != Guid.Empty:
+                PlayerLeft?.Invoke(this, playerId);
+                break;
 
-    void ILobbyCallback.PreparationChanged(LobbyPreparation preparation)
-    {
-        PreparationChanged?.Invoke(this, preparation);
-    }
+            case { Kind: LobbyNotificationKind.MessageReceived, ChatMessage: { } message,
+                JoinedPlayer: null, LeftPlayerId: null, Preparation: null, BoardChange: null }:
+                MessageReceived?.Invoke(this, message);
+                break;
 
-    void ILobbyCallback.MatchBoardUpdated(MatchBoardChanged change)
-    {
-        MatchBoardUpdated?.Invoke(this, change);
-    }
+            case { Kind: LobbyNotificationKind.PreparationChanged, Preparation: { } preparation,
+                JoinedPlayer: null, LeftPlayerId: null, ChatMessage: null, BoardChange: null }:
+                PreparationChanged?.Invoke(this, preparation);
+                break;
 
-    void ILobbyCallback.MessageReceived(LobbyChatMessage message)
-    {
-        MessageReceived?.Invoke(this, message);
+            case { Kind: LobbyNotificationKind.MatchBoardUpdated, BoardChange: { } change,
+                JoinedPlayer: null, LeftPlayerId: null, ChatMessage: null, Preparation: null }:
+                MatchBoardUpdated?.Invoke(this, change);
+                break;
+        }
     }
 }

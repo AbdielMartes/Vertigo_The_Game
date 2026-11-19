@@ -15,23 +15,30 @@ public sealed class FriendshipCallbackHandler : IFriendshipCallback
 
     public event EventHandler<string>? LobbyInvitationWithdrawn;
 
-    void IFriendshipCallback.OnFriendRequestReceived(FriendshipInvitationEntry request)
+    void IFriendshipCallback.Notify(FriendshipNotification notification)
     {
-        FriendRequestReceived?.Invoke(this, request);
-    }
+        switch (notification)
+        {
+            case { Kind: FriendshipNotificationKind.FriendRequestReceived, FriendRequest: { } request,
+                Friend: null, LobbyInvitation: null, WithdrawnLobbyCode: null }:
+                FriendRequestReceived?.Invoke(this, request);
+                break;
 
-    void IFriendshipCallback.OnFriendshipEstablished(FriendEntry friend)
-    {
-        FriendshipEstablished?.Invoke(this, friend);
-    }
+            case { Kind: FriendshipNotificationKind.FriendshipEstablished, Friend: { } friend,
+                FriendRequest: null, LobbyInvitation: null, WithdrawnLobbyCode: null }:
+                FriendshipEstablished?.Invoke(this, friend);
+                break;
 
-    void IFriendshipCallback.OnLobbyInvitationReceived(LobbyInvitationEntry invitation)
-    {
-        LobbyInvitationReceived?.Invoke(this, invitation);
-    }
+            case { Kind: FriendshipNotificationKind.LobbyInvitationReceived, LobbyInvitation: { } invitation,
+                FriendRequest: null, Friend: null, WithdrawnLobbyCode: null }:
+                LobbyInvitationReceived?.Invoke(this, invitation);
+                break;
 
-    void IFriendshipCallback.OnLobbyInvitationWithdrawn(string lobbyCode)
-    {
-        LobbyInvitationWithdrawn?.Invoke(this, lobbyCode);
+            case { Kind: FriendshipNotificationKind.LobbyInvitationWithdrawn, WithdrawnLobbyCode: { } lobbyCode,
+                FriendRequest: null, Friend: null, LobbyInvitation: null }
+                when !string.IsNullOrWhiteSpace(lobbyCode):
+                LobbyInvitationWithdrawn?.Invoke(this, lobbyCode);
+                break;
+        }
     }
 }

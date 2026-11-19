@@ -1,9 +1,4 @@
-#nullable enable
-
 using Vertigo.Contracts.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Vertigo.Contracts.Callbacks;
 using Vertigo.Contracts.Models;
 

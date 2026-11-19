@@ -24,16 +24,14 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     private readonly Dictionary<string, LobbyState> _lobbies = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _lobbyLock = new();
     private readonly HashSet<string> _watchedSessions = new();
-    private readonly TimeProvider _timeProvider;
-    private readonly IFriendshipNotifier _notifier;
+    private readonly LobbyLifecycle _lifecycle;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly LobbyGameOperations _gameOperations;
 
-    public LobbyService(TimeProvider timeProvider, IFriendshipNotifier notifier, IServiceScopeFactory scopeFactory,
+    public LobbyService(LobbyLifecycle lifecycle, IServiceScopeFactory scopeFactory,
         LobbyGameOperations gameOperations)
     {
-        _timeProvider = timeProvider;
-        _notifier = notifier;
+        _lifecycle = lifecycle;
         _scopeFactory = scopeFactory;
         _gameOperations = gameOperations;
     }
@@ -48,7 +46,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         SessionIdentity identity = ResolveIdentity(sessionToken);
         LobbyMember host = CreateMember(identity);
         LobbyConnection hostConnection = new(host, GetCurrentCallback(), WatchCurrentSession());
-        DateTimeOffset createdAtUtc = _timeProvider.GetUtcNow();
+        LobbyCreation creation = _lifecycle.PrepareCreation(isPublic, maxPlayers);
         string lobbyCode;
 
         lock (_lobbyLock)
@@ -59,9 +57,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             }
 
             lobbyCode = GenerateUniqueLobbyCode();
-            LobbySettings settings = new(lobbyCode, host.PlayerId, isPublic, maxPlayers, createdAtUtc);
-            LobbyState lobby = new(settings);
-            lobby.AddOrReplace(hostConnection);
+            LobbyState lobby = _lifecycle.CreateLobby(lobbyCode, hostConnection, creation);
             _lobbies.Add(lobbyCode, lobby);
         }
 
@@ -76,7 +72,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         string normalizedCode = lobbyCode?.Trim() ?? string.Empty;
         List<ILobbyCallback> callbacksToNotify = new();
         List<ILobbyCallback> preparationCallbacks = new();
-        LobbyPreparation? preparation = null;
+        LobbyPreparation preparation;
         LobbyAdmission response;
 
         lock (_lobbyLock)
@@ -127,8 +123,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             preparation = lobby.ToPreparation();
         }
 
-        Notify(callbacksToNotify, SendPlayerJoined, player);
-        Notify(preparationCallbacks, SendPreparationChanged, preparation);
+        Notify(callbacksToNotify, CreatePlayerJoinedNotification(player));
+        Notify(preparationCallbacks, CreatePreparationNotification(preparation));
 
         return response;
     }
@@ -163,12 +159,12 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             }
         }
 
-        Notify(callbacksToNotify, SendPlayerLeft, playerId);
+        Notify(callbacksToNotify, CreatePlayerLeftNotification(playerId));
         if (preparation is not null)
         {
-            Notify(callbacksToNotify, SendPreparationChanged, preparation);
+            Notify(callbacksToNotify, CreatePreparationNotification(preparation));
         }
-        WithdrawInvitations(normalizedCode, withdrawnInvitedIds);
+        _lifecycle.WithdrawInvitations(normalizedCode, withdrawnInvitedIds);
         return wasRemoved;
     }
 
@@ -210,10 +206,10 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
         if (notice is not null)
         {
-            Notify(callbacks, SendMatchBoardUpdated, notice);
+            Notify(callbacks, CreateBoardNotification(notice));
         }
 
-        WithdrawInvitations(lobbyCode, withdrawnInvitedIds);
+        _lifecycle.WithdrawInvitations(lobbyCode, withdrawnInvitedIds);
         return left;
     }
 
@@ -425,7 +421,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             CardNumber = action.CardNumber,
             PilePosition = action.PilePosition
         };
-        Notify(callbacks, SendMatchBoardUpdated, changed);
+        Notify(callbacks, CreateBoardNotification(changed));
         return board;
     }
 
@@ -459,7 +455,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
         foreach ((List<ILobbyCallback> callbacks, MatchBoardChanged notice) in notifications)
         {
-            Notify(callbacks, SendMatchBoardUpdated, notice);
+            Notify(callbacks, CreateBoardNotification(notice));
         }
     }
 
@@ -481,7 +477,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
 
-        Notify(callbacks, SendPreparationChanged, preparation);
+        Notify(callbacks, CreatePreparationNotification(preparation));
         return preparation;
     }
 
@@ -514,7 +510,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
 
-        Notify(callbacks, SendPreparationChanged, preparation);
+        Notify(callbacks, CreatePreparationNotification(preparation));
         return preparation;
     }
 
@@ -642,7 +638,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
 
-        Notify(callbacks, SendChatMessage, message);
+        Notify(callbacks, CreateChatNotification(message));
         return true;
     }
 
@@ -663,19 +659,31 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         };
     }
 
-    private static void SendPreparationChanged(ILobbyCallback callback, LobbyPreparation preparation)
+    private static LobbyNotification CreatePreparationNotification(LobbyPreparation preparation)
     {
-        callback.PreparationChanged(preparation);
+        return new LobbyNotification
+        {
+            Kind = LobbyNotificationKind.PreparationChanged,
+            Preparation = preparation
+        };
     }
 
-    private static void SendMatchBoardUpdated(ILobbyCallback callback, MatchBoardChanged change)
+    private static LobbyNotification CreateBoardNotification(MatchBoardChanged change)
     {
-        callback.MatchBoardUpdated(change);
+        return new LobbyNotification
+        {
+            Kind = LobbyNotificationKind.MatchBoardUpdated,
+            BoardChange = change
+        };
     }
 
-    private static void SendChatMessage(ILobbyCallback callback, LobbyChatMessage message)
+    private static LobbyNotification CreateChatNotification(LobbyChatMessage message)
     {
-        callback.MessageReceived(message);
+        return new LobbyNotification
+        {
+            Kind = LobbyNotificationKind.MessageReceived,
+            ChatMessage = message
+        };
     }
 
     private string WatchCurrentSession()
@@ -749,23 +757,15 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             {
                 foreach (Guid leftId in leftIds)
                 {
-                    Notify(callbacks, SendPlayerLeft, leftId);
+                    Notify(callbacks, CreatePlayerLeftNotification(leftId));
                 }
             }
-            Notify(callbacks, SendPreparationChanged, state);
+            Notify(callbacks, CreatePreparationNotification(state));
         }
 
         foreach ((string lobbyCode, List<Guid> invitedIds) in withdrawals)
         {
-            WithdrawInvitations(lobbyCode, invitedIds);
-        }
-    }
-
-    private void WithdrawInvitations(string lobbyCode, List<Guid> invitedIds)
-    {
-        foreach (Guid invitedId in invitedIds)
-        {
-            _notifier.NotifyLobbyInvitationWithdrawn(invitedId, lobbyCode);
+            _lifecycle.WithdrawInvitations(lobbyCode, invitedIds);
         }
     }
 
@@ -803,26 +803,31 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return callback;
     }
 
-    private static void SendPlayerJoined(ILobbyCallback callback, LobbyMember player)
+    private static LobbyNotification CreatePlayerJoinedNotification(LobbyMember player)
     {
-        callback.PlayerJoined(player);
+        return new LobbyNotification
+        {
+            Kind = LobbyNotificationKind.PlayerJoined,
+            JoinedPlayer = player
+        };
     }
 
-    private static void SendPlayerLeft(ILobbyCallback callback, Guid playerId)
+    private static LobbyNotification CreatePlayerLeftNotification(Guid playerId)
     {
-        callback.PlayerLeft(playerId);
+        return new LobbyNotification
+        {
+            Kind = LobbyNotificationKind.PlayerLeft,
+            LeftPlayerId = playerId
+        };
     }
 
-    private static void Notify<TArgument>(
-        IReadOnlyList<ILobbyCallback> callbacks,
-        Action<ILobbyCallback, TArgument> notification,
-        TArgument argument)
+    private static void Notify(IReadOnlyList<ILobbyCallback> callbacks, LobbyNotification notification)
     {
         foreach (ILobbyCallback callback in callbacks)
         {
             try
             {
-                notification(callback, argument);
+                callback.Notify(notification);
             }
             catch (CommunicationException exception)
             {

@@ -11,6 +11,7 @@ using Vertigo.Server.PlayerManagement.Authentication.Models;
 
 namespace Vertigo.Server.Matchmaking.Invitations.Services;
 
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
 public class LobbyInvitationService : ILobbyInvitationService
 {
     private const int MaximumInvitationsPerRequest = 5;

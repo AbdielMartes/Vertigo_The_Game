@@ -7,6 +7,7 @@ using Vertigo.Server.PlayerManagement.Authentication.Models;
 
 namespace Vertigo.Server.PlayerManagement.Authentication.Services;
 
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
 public class AuthenticationService : IAuthService
 {
     private const string EventCategoryProperty = "EventCategory";

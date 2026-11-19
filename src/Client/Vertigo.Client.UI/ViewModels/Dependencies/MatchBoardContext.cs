@@ -8,9 +8,9 @@ namespace Vertigo.Client.UI.ViewModels.Dependencies;
 public sealed record MatchBoardContext(
     ILobbyClient Lobbies,
     PlayerSession Session,
-    MatchBoardServices Services)
+    UiNavigationContext Ui)
 {
-    public ITextLocalizer Text => Services.Text;
-    public ISessionGuard Guard => Services.Guard;
-    public IClientErrorText Errors => Services.Errors;
+    public ITextLocalizer Text => Ui.Services.Text;
+    public ISessionGuard Guard => Ui.Services.SessionGuard;
+    public IClientErrorText Errors => Ui.Services.Errors;
 }

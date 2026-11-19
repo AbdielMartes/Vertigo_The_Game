@@ -150,10 +150,8 @@ public sealed class LobbyMatchActivationTests
 
     private sealed class StubCallback : ILobbyCallback
     {
-        public void PlayerJoined(LobbyMember member) { }
-        public void PlayerLeft(Guid playerId) { }
-        public void MessageReceived(LobbyChatMessage message) { }
-        public void PreparationChanged(LobbyPreparation preparation) { }
-        public void MatchBoardUpdated(MatchBoardChanged change) { }
+        public void Notify(LobbyNotification notification)
+        {
+        }
     }
 }

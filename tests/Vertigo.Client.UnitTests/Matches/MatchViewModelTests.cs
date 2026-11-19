@@ -1,8 +1,14 @@
 using System.Runtime.Serialization;
 using System.Xml.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Vertigo.Client.Core.Sessions;
+using Vertigo.Client.Networking;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
+using Vertigo.Client.UI.Utilities.Localization.Services;
+using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
+using Vertigo.Client.UI.Utilities.Sessions.Services;
 using Vertigo.Client.UI.ViewModels;
+using Vertigo.Client.UI.ViewModels.Dependencies;
 using Vertigo.Contracts.Models;
 using Xunit;
 
@@ -223,6 +229,29 @@ public sealed class MatchViewModelTests
         model.Activate(Guid.NewGuid(), "XYZ789");
         Assert.Contains(nameof(MatchViewModel.ExitText), changed);
         Assert.Equal("Match.Exit", model.ExitText);
+    }
+
+    [Fact]
+    public void RequestExit_ResolvedBoardContext_EnablesConfirmationWhenDialogOpens()
+    {
+        ServiceCollection services = new();
+        services.AddVertigoClientNetworking();
+        services.AddSingleton<ITextLocalizer>(new FakeTextLocalizer());
+        services.AddSingleton<IClientErrorText, ClientErrorText>();
+        services.AddSingleton<ISessionGuard, SessionGuard>();
+        services.AddTransient<UiServices>();
+        services.AddTransient<UiNavigationContext>();
+        services.AddTransient<MatchBoardContext>();
+        using ServiceProvider provider = services.BuildServiceProvider();
+        MatchViewModel model = new(provider.GetRequiredService<MatchBoardContext>());
+        model.Activate(Guid.NewGuid(), "ABC234");
+        Assert.False(model.ConfirmExitCommand.CanExecute(null));
+
+        model.RequestExitCommand.Execute(null);
+
+        Assert.True(model.IsExitConfirmationOpen);
+        Assert.True(model.ConfirmExitCommand.CanExecute(null));
+        Assert.Equal("Match.ExitConfirmTitle", model.ExitConfirmTitleText);
     }
 
     private static MatchViewModel CreateModel()

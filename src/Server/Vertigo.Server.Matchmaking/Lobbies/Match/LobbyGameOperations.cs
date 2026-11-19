@@ -9,15 +9,17 @@ namespace Vertigo.Server.Matchmaking.Lobbies.Match;
 public sealed class LobbyGameOperations
 {
     private readonly LobbyMatchActivation _activation;
-    private readonly IMatchPresence _presence;
-    private readonly MatchReadServices _readers;
+    private readonly IMatchStateReader _state;
+    private readonly IMatchCommandService _commands;
 
-    public LobbyGameOperations(LobbyMatchActivation activation, IMatchPresence presence,
-        MatchReadServices readers)
+    public LobbyGameOperations(
+        LobbyMatchActivation activation,
+        IMatchStateReader state,
+        IMatchCommandService commands)
     {
         _activation = activation;
-        _presence = presence;
-        _readers = readers;
+        _state = state;
+        _commands = commands;
     }
 
     public void Activate(LobbyState lobby)
@@ -27,7 +29,7 @@ public sealed class LobbyGameOperations
 
     public MatchBoardSnapshot? GetBoard(LobbyState lobby)
     {
-        MatchBoardSnapshot? board = _readers.Board.GetBoard(lobby.MatchId);
+        MatchBoardSnapshot? board = _state.GetBoard(lobby.MatchId);
         if (board is not null)
         {
             IReadOnlyDictionary<Guid, string> names = lobby.MatchPlayerNames;
@@ -61,47 +63,47 @@ public sealed class LobbyGameOperations
 
     public MatchPrivateHand? GetPrivateHand(Guid matchId, Guid playerId)
     {
-        return _readers.Hands.GetPrivateHand(matchId, playerId);
+        return _state.GetPrivateHand(matchId, playerId);
     }
 
     public MatchPlacementResult TryPlace(Guid matchId, Guid playerId, MatchPlacement move)
     {
-        return _readers.Placements.TryPlace(matchId, playerId, move);
+        return _commands.TryPlace(matchId, playerId, move);
     }
 
     public MatchPlacementResult TryUseMasterPlan(Guid matchId, Guid playerId, MatchMasterPlan move)
     {
-        return _readers.Placements.TryUseMasterPlan(matchId, playerId, move);
+        return _commands.TryUseMasterPlan(matchId, playerId, move);
     }
 
     public MatchDismantleResult TryDismantle(Guid matchId, Guid playerId, MatchDismantle move)
     {
-        return _readers.Dismantles.TryDismantle(matchId, playerId, move);
+        return _commands.TryDismantle(matchId, playerId, move);
     }
 
     public MatchExpulsionVoteResult TryVoteToExpel(Guid matchId, Guid voterId, MatchExpulsionVote vote)
     {
-        return _readers.ExpulsionVotes.TryVoteToExpel(matchId, voterId, vote);
+        return _commands.TryVoteToExpel(matchId, voterId, vote);
     }
 
     public Guid? TryExpireTurn(Guid matchId)
     {
-        return _readers.TurnClock.TryExpireTurn(matchId);
+        return _commands.TryExpireTurn(matchId);
     }
 
     public MatchDepartureResult TryLeaveMatch(Guid matchId, Guid playerId)
     {
-        return _readers.Departures.TryLeaveMatch(matchId, playerId);
+        return _commands.TryLeaveMatch(matchId, playerId);
     }
 
     public bool TryReconnect(LobbyState lobby, Guid playerId)
     {
-        MatchReconnectResult result = _presence.TryReconnect(lobby.MatchId, playerId);
+        MatchReconnectResult result = _commands.TryReconnect(lobby.MatchId, playerId);
         bool accepted = result is MatchReconnectResult.Reconnected
             or MatchReconnectResult.AlreadyConnected;
         if (!accepted)
         {
-            MatchBoardSnapshot? board = _readers.Board.GetBoard(lobby.MatchId);
+            MatchBoardSnapshot? board = _state.GetBoard(lobby.MatchId);
             accepted = board is not null && (board.TurnDeadlineUtc is null
                 || board.ExpelledPlayerIds.Contains(playerId));
         }
@@ -111,6 +113,6 @@ public sealed class LobbyGameOperations
 
     public void Disconnect(LobbyState lobby, Guid playerId)
     {
-        _presence.TryDisconnect(lobby.MatchId, playerId);
+        _commands.TryDisconnect(lobby.MatchId, playerId);
     }
 }

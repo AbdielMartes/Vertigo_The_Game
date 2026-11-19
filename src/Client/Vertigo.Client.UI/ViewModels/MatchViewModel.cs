@@ -86,7 +86,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         _lobbies = context.Lobbies;
         _guard = context.Guard;
         _errors = context.Errors;
-        _navigation = context.Services.Navigation;
+        _navigation = context.Ui.Navigation;
     }
 
     public IAsyncRelayCommand RefreshBoardCommand { get; }
@@ -230,7 +230,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             if (session is not null && IsCurrent(session, change.MatchId, generation)
                 && MatchBoardNotificationRules.ShouldRefresh(
-                    change, _lobbyCode, _matchId, Math.Max(_currentBoardRevision, _notifiedRevision)))
+                    change,
+                    new MatchBoardIdentity(_lobbyCode, _matchId),
+                    Math.Max(_currentBoardRevision, _notifiedRevision)))
             {
                 _notifiedRevision = Math.Max(_notifiedRevision, change.Revision);
                 if (IsLoadingBoard)

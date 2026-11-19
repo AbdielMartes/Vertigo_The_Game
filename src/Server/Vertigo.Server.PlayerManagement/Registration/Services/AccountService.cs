@@ -1,5 +1,4 @@
 using CoreWCF;
-using Microsoft.Extensions.Logging;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Contracts.Models;
@@ -7,35 +6,24 @@ using Vertigo.Registration;
 using Vertigo.Server.CrossCutting.Security.Interfaces;
 using Vertigo.Server.DataAccess.Entities.Identity;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Models;
-using Vertigo.Server.PlayerManagement.Registration.Dependencies;
 
 namespace Vertigo.Server.PlayerManagement.Registration.Services;
 
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
 public class AccountService : IAccountService
 {
-    private const string EventCategoryProperty = "EventCategory";
-    private const string SecurityCategory = "Security";
-    private const string SucceededResult = "Succeeded";
-    private const string RejectedResult = "Rejected";
-
-    private static readonly EventId PasswordChangeSucceededEvent = new(2101, "PasswordChangeSucceeded");
-    private static readonly EventId PasswordChangeRejectedEvent = new(2102, "PasswordChangeRejected");
-
     private readonly IPlayerRepository _playerRepository;
-    private readonly ISessionTokenRepository _sessionTokenRepository;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly ISessionIdentityResolver _sessions;
-    private readonly ILogger<AccountService> _logger;
+    private readonly AccountPasswordService _passwordService;
 
-    public AccountService(AccountServiceDependencies dependencies, ILogger<AccountService> logger)
+    public AccountService(
+        IPlayerRepository playerRepository,
+        IPasswordHasher passwordHasher,
+        AccountPasswordService passwordService)
     {
-        _playerRepository = dependencies.PlayerRepository;
-        _sessionTokenRepository = dependencies.SessionTokenRepository;
-        _passwordHasher = dependencies.PasswordHasher;
-        _sessions = dependencies.Sessions;
-        _logger = logger;
+        _playerRepository = playerRepository;
+        _passwordHasher = passwordHasher;
+        _passwordService = passwordService;
     }
 
     public bool RegisterAccount(AccountRegistration registration)
@@ -78,46 +66,7 @@ public class AccountService : IAccountService
 
     public bool ChangePassword(PasswordChange change, string sessionToken)
     {
-        if (change is null || string.IsNullOrWhiteSpace(change.Username)
-            || string.IsNullOrWhiteSpace(change.CurrentPassword)
-            || string.IsNullOrWhiteSpace(change.NewPassword))
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
-        }
-
-        SessionIdentity identity = _sessions.RequireRegistered(sessionToken);
-        Player? player = _playerRepository.GetPlayerById(identity.PlayerId);
-        if (player is null
-            || !string.Equals(player.Username, change.Username, StringComparison.OrdinalIgnoreCase)
-            || !_passwordHasher.VerifyPassword(change.CurrentPassword, player.PasswordHash, player.PasswordSalt))
-        {
-            LogPasswordChange(PasswordChangeRejectedEvent, RejectedResult, identity.PlayerId);
-            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
-        }
-
-        string salt = _passwordHasher.GenerateSalt();
-        string hash = _passwordHasher.HashPassword(change.NewPassword, salt);
-        bool isChanged = _playerRepository.UpdatePassword(player.PlayerId, hash, salt);
-        if (isChanged)
-        {
-            _sessionTokenRepository.RevokePlayerSessions(player.PlayerId);
-            LogPasswordChange(PasswordChangeSucceededEvent, SucceededResult, identity.PlayerId);
-        }
-
-        return isChanged;
-    }
-
-    private void LogPasswordChange(EventId eventId, string result, Guid playerId)
-    {
-        Dictionary<string, object> properties = new()
-        {
-            [EventCategoryProperty] = SecurityCategory
-        };
-
-        using (IDisposable? scope = _logger.BeginScope(properties))
-        {
-            _logger.LogInformation(eventId, "Password change {Result}. PlayerId: {PlayerId}", result, playerId);
-        }
+        return _passwordService.ChangePassword(change, sessionToken);
     }
 
     private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)

@@ -34,6 +34,12 @@ string? hostToken = null;
 string? inviteeToken = null;
 string? liveLobbyCode = null;
 string? closedLobbyCode = null;
+string? disconnectedLobbyCode = null;
+TaskCompletionSource<LobbyInvitationEntry> invitationReceived = new(TaskCreationOptions.RunContinuationsAsynchronously);
+TaskCompletionSource<string> invitationWithdrawn = new(TaskCreationOptions.RunContinuationsAsynchronously);
+TaskCompletionSource<string> disconnectedWithdrawal = new(TaskCreationOptions.RunContinuationsAsynchronously);
+inviteeNotifications.LobbyInvitationReceived += ObserveInvitation;
+inviteeNotifications.LobbyInvitationWithdrawn += ObserveWithdrawal;
 
 try
 {
@@ -50,6 +56,8 @@ try
     // Positive scenario: the server must authorize admission to a PRIVATE room.
     liveLobbyCode = hostLobby.CreateLobby(false, 2, hostToken);
     SendInvitation(host, liveLobbyCode, inviteeSession.PlayerId, hostToken);
+    LobbyInvitationEntry notice = await invitationReceived.Task.WaitAsync(TimeSpan.FromSeconds(10));
+    Require(notice.LobbyCode == liveLobbyCode, "Invitation callback named the wrong lobby.");
     Require(HasInvitation(invitee, liveLobbyCode, inviteeToken), "Valid invitation not visible to invitee.");
     LobbyAdmission admission = inviteeLobby.JoinLobby(liveLobbyCode, inviteeToken);
     Require(string.Equals(admission.LobbyCode, liveLobbyCode, StringComparison.OrdinalIgnoreCase),
@@ -68,6 +76,8 @@ try
     SendInvitation(host, closedLobbyCode, inviteeSession.PlayerId, hostToken);
     Require(HasInvitation(invitee, closedLobbyCode, inviteeToken), "Second invitation was not created.");
     Require(hostLobby.LeaveLobby(closedLobbyCode, hostToken), "Host did not close second room.");
+    string withdrawn = await invitationWithdrawn.Task.WaitAsync(TimeSpan.FromSeconds(10));
+    Require(withdrawn == closedLobbyCode, "Invitation withdrawal callback named the wrong lobby.");
 
     bool rejected = false;
     try
@@ -87,6 +97,32 @@ try
     }
     Require(rejected, "Server admitted the invitee to a closed private room.");
     Console.WriteLine("PASS: closed private room rejected admission with localized error");
+    disconnectedLobbyCode = hostLobby.CreateLobby(false, 2, hostToken);
+    SendInvitation(host, disconnectedLobbyCode, inviteeSession.PlayerId, hostToken);
+    Require(HasInvitation(invitee, disconnectedLobbyCode, inviteeToken), "Disconnect test invitation was not pending.");
+    hostLobby.Disconnect();
+
+    string removedLobby = await disconnectedWithdrawal.Task.WaitAsync(TimeSpan.FromSeconds(10));
+    Require(removedLobby == disconnectedLobbyCode && !HasInvitation(invitee, removedLobby, inviteeToken),
+        "Disconnecting the last member did not withdraw the invitation.");
+    Require(hostLobby.GetCurrentLobby(hostToken) is null, "The disconnected host still belongs to the lobby.");
+    Console.WriteLine("PASS: disconnecting the last member removes the lobby and withdraws its invitation");
+    IBlockedPlayerClient blocks = host.GetRequiredService<IBlockedPlayerClient>();
+    ClientResult<bool> blocked = blocks.BlockPlayer(inviteeSession.PlayerId, hostToken);
+    Require(blocked.IsSuccess && blocked.Value, "Host could not block the test account.");
+    try
+    {
+        Require(FindRelation(host.GetRequiredService<IFriendshipClient>(), hostSession, inviteeSession)
+            == PlayerRelation.Blocked, "The blocker did not see the blocked relationship.");
+        Require(FindRelation(invitee.GetRequiredService<IFriendshipClient>(), inviteeSession, hostSession) is null,
+            "The blocked account could still find the player who blocked it.");
+    }
+    finally
+    {
+        ClientResult<bool> unblocked = blocks.UnblockPlayer(inviteeSession.PlayerId, hostToken);
+        Require(unblocked.IsSuccess && unblocked.Value, "Host could not undo the test block.");
+    }
+    Console.WriteLine("PASS: player search preserves relationships and blocking direction");
     Console.WriteLine("PASS: Private invitations smoke");
     return 0;
 }
@@ -103,6 +139,26 @@ finally
     hostLobby.Disconnect();
     LogoutQuietly(host);
     LogoutQuietly(invitee);
+}
+
+void ObserveInvitation(object? sender, LobbyInvitationEntry invitation)
+{
+    if (invitation.LobbyCode == liveLobbyCode)
+    {
+        invitationReceived.TrySetResult(invitation);
+    }
+}
+
+void ObserveWithdrawal(object? sender, string lobbyCode)
+{
+    if (lobbyCode == closedLobbyCode)
+    {
+        invitationWithdrawn.TrySetResult(lobbyCode);
+    }
+    else if (lobbyCode == disconnectedLobbyCode)
+    {
+        disconnectedWithdrawal.TrySetResult(lobbyCode);
+    }
 }
 
 static string SafeError(Exception exception)
@@ -143,14 +199,42 @@ static void EnsureFriendship(ServiceProvider host, ServiceProvider invitee, User
         Require(request.IsSuccess, $"Could not send test friend request ({request.ErrorCode}).");
         if (request.Value != PlayerRelation.Friends)
         {
+            Require(FindRelation(ownerFriends, owner, other) == PlayerRelation.RequestSent,
+                "Player search did not show the outgoing pending friendship request.");
             IFriendshipClient inviteeFriends = invitee.GetRequiredService<IFriendshipClient>();
+            ClientResult<PlayerRelation> duplicate = ownerFriends.SendFriendRequest(other.PlayerId, owner.Token);
+            Require(duplicate.ErrorCode == ServiceErrorCodes.FriendRequestAlreadySent,
+                "A duplicate friendship request did not return the expected fault.");
+            Require(CountPendingRequestsFrom(inviteeFriends, other, owner) == 1,
+                "The recipient did not see exactly one pending request.");
             ClientResult<bool> response = inviteeFriends.RespondToFriendship(owner.PlayerId, true, other.Token);
             Require(response.IsSuccess && response.Value, $"Could not accept test friend request ({response.ErrorCode}).");
+            Require(CountPendingRequestsFrom(inviteeFriends, other, owner) == 0,
+                "The accepted friendship still appeared as pending.");
         }
     }
     friends = ownerFriends.GetFriends(owner.Token);
     Require(friends.IsSuccess && friends.Value?.Any(friend => friend.PlayerId == other.PlayerId) == true,
         "Test accounts are not friends.");
+    Require(FindRelation(ownerFriends, owner, other) == PlayerRelation.Friends,
+        "Player search did not show the accepted friendship.");
+    ClientResult<PlayerRelation> existing = ownerFriends.SendFriendRequest(other.PlayerId, owner.Token);
+    Require(existing.ErrorCode == ServiceErrorCodes.AlreadyFriends,
+        "An existing friendship did not prevent a new request.");
+}
+
+static int CountPendingRequestsFrom(IFriendshipClient client, UserSession recipient, UserSession sender)
+{
+    ClientResult<List<FriendshipInvitationEntry>> result = client.GetPendingFriendRequests(recipient.Token);
+    Require(result.IsSuccess && result.Value is not null, "Could not read pending friendship requests.");
+    return result.Value!.Count(request => request.SenderId == sender.PlayerId);
+}
+
+static PlayerRelation? FindRelation(IFriendshipClient client, UserSession viewer, UserSession target)
+{
+    ClientResult<List<PlayerSearchEntry>> result = client.SearchPlayers(target.Username, viewer.Token);
+    Require(result.IsSuccess && result.Value is not null, "Player search failed.");
+    return result.Value!.SingleOrDefault(entry => entry.PlayerId == target.PlayerId)?.Relation;
 }
 
 static void SendInvitation(ServiceProvider host, string code, Guid inviteeId, string hostToken)

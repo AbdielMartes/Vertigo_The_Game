@@ -51,10 +51,8 @@ public sealed class LobbyMembershipTests
 
     private sealed class CallbackStub : ILobbyCallback
     {
-        public void PlayerJoined(LobbyMember player) { }
-        public void PlayerLeft(Guid playerId) { }
-        public void PreparationChanged(LobbyPreparation preparation) { }
-        public void MatchBoardUpdated(MatchBoardChanged change) { }
-        public void MessageReceived(LobbyChatMessage message) { }
+        public void Notify(LobbyNotification notification)
+        {
+        }
     }
 }

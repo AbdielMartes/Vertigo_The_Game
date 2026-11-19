@@ -7,14 +7,5 @@ namespace Vertigo.Contracts.Callbacks;
 public interface IFriendshipCallback
 {
     [OperationContract(IsOneWay = true)]
-    void OnFriendRequestReceived(FriendshipInvitationEntry request);
-
-    [OperationContract(IsOneWay = true)]
-    void OnFriendshipEstablished(FriendEntry friend);
-
-    [OperationContract(IsOneWay = true)]
-    void OnLobbyInvitationReceived(LobbyInvitationEntry invitation);
-
-    [OperationContract(IsOneWay = true)]
-    void OnLobbyInvitationWithdrawn(string lobbyCode);
+    void Notify(FriendshipNotification notification);
 }

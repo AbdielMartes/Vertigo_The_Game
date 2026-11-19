@@ -11,6 +11,6 @@ public interface IPlayerRepository
     bool EmailExists(string email);
     bool CreatePlayer(Player player);
     List<Player> SearchPlayersByUsername(string searchTerm, Guid excludedPlayerId, int maximumResults);
-    bool UpdatePassword(Guid playerId, string passwordHash, string passwordSalt);
+    bool UpdatePasswordAndRevokeSessions(Guid playerId, string passwordHash, string passwordSalt);
     bool UpdateLastLogin(Guid playerId, DateTime lastLoginAt);
 }
