@@ -67,7 +67,10 @@ public sealed class BlockedPlayersViewModel : SocialViewModelBase
 
     private async Task ChangeAsync(bool block)
     {
-        if (IsBusy || SelectedPlayerId == Guid.Empty) return;
+        if (IsBusy || SelectedPlayerId == Guid.Empty)
+        {
+            return;
+        }
         SessionSnapshot? session = Operation.GetRegisteredSession();
         if (session is null)
         {
@@ -80,8 +83,10 @@ public sealed class BlockedPlayersViewModel : SocialViewModelBase
             ClientResult<bool> result = await Task.Run(() => block
                 ? _client.BlockPlayer(SelectedPlayerId, token)
                 : _client.UnblockPlayer(SelectedPlayerId, token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || !result.Value) { ErrorMessage = Operation.Error(result, "Social.BlockFailed"); return; }
+            if (!CanApplyBlockChange(result, session))
+            {
+                return;
+            }
         }
         catch (Exception)
         {
@@ -90,11 +95,26 @@ public sealed class BlockedPlayersViewModel : SocialViewModelBase
                 ErrorMessage = Text.Get("Social.BlockFailed");
             }
         }
-        finally { IsBusy = false; }
+        finally
+        {
+            IsBusy = false;
+        }
         if (Operation.IsCurrent(session))
         {
             await RefreshAsync();
         }
+    }
+
+    private bool CanApplyBlockChange(ClientResult<bool> result, SessionSnapshot session)
+    {
+        bool canApply = Operation.Check(result, session);
+        if (canApply && (!result.IsSuccess || !result.Value))
+        {
+            ErrorMessage = Operation.Error(result, "Social.BlockFailed");
+            canApply = false;
+        }
+
+        return canApply;
     }
 
     public void Reset()

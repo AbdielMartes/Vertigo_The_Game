@@ -34,8 +34,8 @@ using ServiceProvider provider = registrations.BuildServiceProvider();
 IAccountClient accounts = provider.GetRequiredService<IAccountClient>();
 IAuthClient authentication = provider.GetRequiredService<IAuthClient>();
 
-bool hostReady = PrepareAccount(accounts, authentication, hostName, hostPassword, "host");
-bool inviteeReady = PrepareAccount(accounts, authentication, inviteeName, inviteePassword, "invitee");
+bool hostReady = PrepareAccount(new LoginCredentials { Username = hostName, Password = hostPassword }, "host");
+bool inviteeReady = PrepareAccount(new LoginCredentials { Username = inviteeName, Password = inviteePassword }, "invitee");
 
 if (!hostReady || !inviteeReady)
 {
@@ -46,16 +46,15 @@ if (!hostReady || !inviteeReady)
 Console.WriteLine("PASS: Both registered test accounts are ready.");
 return 0;
 
-static bool PrepareAccount(IAccountClient accounts, IAuthClient authentication,
-    string username, string password, string label)
+bool PrepareAccount(LoginCredentials credentials, string label)
 {
     // The test identity never needs incoming email; use a unique, reserved example address.
     string email = $"vertigo-test-{Guid.NewGuid():N}@example.com";
     AccountRegistration registration = new()
     {
-        Username = username,
+        Username = credentials.Username,
         Email = email,
-        Password = password
+        Password = credentials.Password
     };
 
     ClientResult<bool> register = accounts.RegisterAccount(registration);
@@ -65,11 +64,7 @@ static bool PrepareAccount(IAccountClient accounts, IAuthClient authentication,
         return false;
     }
 
-    ClientResult<UserSession> login = authentication.Login(new LoginCredentials
-    {
-        Username = username,
-        Password = password
-    });
+    ClientResult<UserSession> login = authentication.Login(credentials);
 
     if (!login.IsSuccess || login.Value is null || login.Value.IsGuest)
     {

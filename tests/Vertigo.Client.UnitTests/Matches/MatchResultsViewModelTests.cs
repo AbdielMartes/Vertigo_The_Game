@@ -10,7 +10,7 @@ public sealed class MatchResultsViewModelTests
     public void ApplyBoard_RoundCloses_OffersScoresWithoutOpeningPanel()
     {
         MatchResultsViewModel results = new(new ResultsText());
-        MatchRoundSummary round = CreateRound(1, 5, 10, 15);
+        MatchRoundSummary round = CreateRound(1, (5, 10), 15);
 
         results.ApplyBoard(new MatchBoardSnapshot { RoundNumber = 2, RoundSummaries = { round } });
 
@@ -27,8 +27,8 @@ public sealed class MatchResultsViewModelTests
     public void ApplyBoard_UnchangedRounds_KeepsTheSelectedEarlierRound()
     {
         MatchResultsViewModel results = new(new ResultsText());
-        MatchRoundSummary first = CreateRound(1, 5, 10, 15);
-        MatchRoundSummary second = CreateRound(2, 4, 0, 19);
+        MatchRoundSummary first = CreateRound(1, (5, 10), 15);
+        MatchRoundSummary second = CreateRound(2, (4, 0), 19);
         MatchBoardSnapshot board = new() { RoundNumber = 3, RoundSummaries = { first, second } };
         results.ApplyBoard(board);
         Assert.Equal(2, results.SelectedRound?.RoundNumber);
@@ -45,9 +45,9 @@ public sealed class MatchResultsViewModelTests
     public void ApplyBoard_NewRoundWhileReviewingEarlierRound_PreservesSelection()
     {
         MatchResultsViewModel results = new(new ResultsText());
-        MatchRoundSummary first = CreateRound(1, 5, 10, 15);
-        MatchRoundSummary second = CreateRound(2, 4, 0, 19);
-        MatchRoundSummary third = CreateRound(3, 2, 0, 21);
+        MatchRoundSummary first = CreateRound(1, (5, 10), 15);
+        MatchRoundSummary second = CreateRound(2, (4, 0), 19);
+        MatchRoundSummary third = CreateRound(3, (2, 0), 21);
         results.ApplyBoard(new MatchBoardSnapshot { RoundSummaries = { first, second } });
         results.SelectedRound = results.Rounds.Single(row => row.RoundNumber == 1);
 
@@ -110,7 +110,7 @@ public sealed class MatchResultsViewModelTests
         Assert.Empty(results.WinnerText);
     }
 
-    private static MatchRoundSummary CreateRound(int number, int floors, int bonus, int total)
+    private static MatchRoundSummary CreateRound(int number, (int Built, int Bonus) floors, int total)
     {
         return new MatchRoundSummary
         {
@@ -120,8 +120,8 @@ public sealed class MatchResultsViewModelTests
                 new MatchRoundPlayerScore
                 {
                     PlayerUsername = "Ana",
-                    FloorsBuilt = floors,
-                    BonusFloors = bonus,
+                    FloorsBuilt = floors.Built,
+                    BonusFloors = floors.Bonus,
                     TotalFloors = total
                 }
             }

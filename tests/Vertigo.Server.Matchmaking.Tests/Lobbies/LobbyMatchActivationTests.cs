@@ -85,8 +85,15 @@ public sealed class LobbyMatchActivationTests
             CallCount++;
             if (!_registered.TryGetValue(request.LobbyInstanceId, out MatchSessionSnapshot? session))
             {
-                session = new MatchSessionSnapshot(Guid.NewGuid(), request.LobbyInstanceId,
-                    request.LobbyCode, request.HostPlayerId, request.PlayerIds, DateTime.UtcNow);
+                session = new MatchSessionSnapshot
+                {
+                    MatchId = Guid.NewGuid(),
+                    LobbyInstanceId = request.LobbyInstanceId,
+                    LobbyCode = request.LobbyCode,
+                    InitialHostPlayerId = request.HostPlayerId,
+                    PlayerIds = request.PlayerIds,
+                    CreatedAtUtc = DateTime.UtcNow
+                };
                 _registered.Add(request.LobbyInstanceId, session);
             }
 
@@ -114,7 +121,14 @@ public sealed class LobbyMatchActivationTests
     {
         Guid host = Guid.NewGuid();
         Guid other = Guid.NewGuid();
-        LobbyState lobby = new(new LobbySettings("ABCDEF", host, false, 4, DateTimeOffset.UtcNow));
+        LobbyState lobby = new(new LobbySettings
+        {
+            LobbyCode = "ABCDEF",
+            HostPlayerId = host,
+            IsPublic = false,
+            MaxPlayers = 4,
+            CreatedAtUtc = DateTimeOffset.UtcNow
+        });
         lobby.AddOrReplace(new LobbyConnection(new LobbyMember { PlayerId = host }, new StubCallback(), "a"));
         lobby.AddOrReplace(new LobbyConnection(new LobbyMember { PlayerId = other }, new StubCallback(), "b"));
         lobby.SetReady(host, true);
@@ -142,9 +156,15 @@ public sealed class LobbyMatchActivationTests
                 throw new InvalidOperationException("Simulated game failure.");
             }
 
-            return new MatchSessionSnapshot(Guid.NewGuid(), request.LobbyInstanceId,
-                _wrongLobby ? "WRONG" : request.LobbyCode,
-                request.HostPlayerId, request.PlayerIds, DateTime.UtcNow);
+            return new MatchSessionSnapshot
+            {
+                MatchId = Guid.NewGuid(),
+                LobbyInstanceId = request.LobbyInstanceId,
+                LobbyCode = _wrongLobby ? "WRONG" : request.LobbyCode,
+                InitialHostPlayerId = request.HostPlayerId,
+                PlayerIds = request.PlayerIds,
+                CreatedAtUtc = DateTime.UtcNow
+            };
         }
     }
 

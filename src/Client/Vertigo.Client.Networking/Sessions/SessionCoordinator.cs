@@ -62,8 +62,14 @@ public sealed class SessionCoordinator : ISessionCoordinator
     {
         if (result.IsSuccess && result.Value is UserSession session)
         {
-            _playerSession.SetSession(new SessionSnapshot(
-                session.PlayerId, session.Username, session.Token, session.ExpiresAt, session.IsGuest));
+            _playerSession.SetSession(new SessionSnapshot
+            {
+                PlayerId = session.PlayerId,
+                Username = session.Username,
+                Token = session.Token,
+                ExpiresAt = session.ExpiresAt,
+                IsGuest = session.IsGuest
+            });
         }
     }
 }

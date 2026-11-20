@@ -15,7 +15,7 @@ internal sealed class MatchRecord
     private const int MaximumRecentMoves = 4;
     private const long InitialBoardRevision = 1;
 
-    private static readonly TimeSpan TurnDuration = TimeSpan.FromSeconds(20);
+    private static readonly TimeSpan TurnDuration = TimeSpan.FromSeconds(30);
 
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
     private readonly HashSet<Guid> _activePlayerIds;

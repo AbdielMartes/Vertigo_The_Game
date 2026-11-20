@@ -43,7 +43,7 @@ public sealed class MatchExpulsionVoteTests
 
         MatchBoardSnapshot after = game.GetBoard(initial.MatchId)!;
         Assert.Equal(next, after.CurrentTurnPlayerId);
-        Assert.Equal(Start.AddSeconds(27), after.TurnDeadlineUtc);
+        Assert.Equal(clock.Now + (initial.TurnDeadlineUtc!.Value - Start), after.TurnDeadlineUtc);
         Assert.Equal(initial.Revision + 2, after.Revision);
         Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
         Assert.Equal(MatchBoardActionKind.ExpelledByVote, Assert.Single(after.RecentMoves).ActionKind);
@@ -137,7 +137,7 @@ public sealed class MatchExpulsionVoteTests
         Guid[] voters = board.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
         MatchExpulsionVote vote = new(target, board.VotingRevision);
         Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[0], vote));
-        clock.Now = Start.AddSeconds(20);
+        clock.Now = board.TurnDeadlineUtc!.Value;
         MatchExpulsionVoteResult result = default;
         Guid? expired = null;
 

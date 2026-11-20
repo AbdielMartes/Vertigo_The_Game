@@ -70,7 +70,7 @@ public sealed class MatchDepartureTests
         Assert.Equal(new MatchDepartureResult(true, true), departure);
         MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
         Assert.Equal(nextPlayer, after.CurrentTurnPlayerId);
-        Assert.Equal(clock.Now.AddSeconds(20), after.TurnDeadlineUtc);
+        Assert.Equal(clock.Now + (before.TurnDeadlineUtc!.Value - DateTimeOffset.UnixEpoch), after.TurnDeadlineUtc);
         Assert.Equal(MatchEndReason.None, after.EndReason);
         Assert.Equal(before.Revision + 2, after.Revision);
         Assert.Equal(before.VotingRevision + 1, after.VotingRevision);

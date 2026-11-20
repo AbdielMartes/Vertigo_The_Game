@@ -54,7 +54,10 @@ public sealed class FriendsViewModel : SocialViewModelBase
 
     public async Task RefreshAsync()
     {
-        if (IsBusy) return;
+        if (IsBusy)
+        {
+            return;
+        }
         SessionSnapshot? session = Operation.GetRegisteredSession();
         if (session is null)
         {
@@ -65,16 +68,32 @@ public sealed class FriendsViewModel : SocialViewModelBase
         ClearError();
         try
         {
-            ClientResult<List<FriendEntry>> friends = await Task.Run(() => _client.GetFriends(token));
-            if (!Operation.Check(friends, session)) return;
-            if (!friends.IsSuccess || friends.Value is null) { ErrorMessage = Operation.Error(friends, "Social.FriendsFailed"); return; }
-            ClientResult<List<FriendshipInvitationEntry>> pending = await Task.Run(() => _client.GetPendingFriendRequests(token));
-            if (!Operation.Check(pending, session)) return;
-            if (!pending.IsSuccess || pending.Value is null) { ErrorMessage = Operation.Error(pending, "Social.FriendsFailed"); return; }
+            ClientResult<List<FriendEntry>> friendsResult = await Task.Run(() => _client.GetFriends(token));
+            List<FriendEntry>? friends = ReadFriendListResult(friendsResult, session);
+            if (friends is null)
+            {
+                return;
+            }
+
+            ClientResult<List<FriendshipInvitationEntry>> pendingResult =
+                await Task.Run(() => _client.GetPendingFriendRequests(token));
+            List<FriendshipInvitationEntry>? pending = ReadFriendListResult(pendingResult, session);
+            if (pending is null)
+            {
+                return;
+            }
+
             Friends.Clear();
-            foreach (FriendEntry friend in friends.Value) Friends.Add(friend);
+            foreach (FriendEntry friend in friends)
+            {
+                Friends.Add(friend);
+            }
+
             PendingRequests.Clear();
-            foreach (FriendshipInvitationEntry request in pending.Value) PendingRequests.Add(request);
+            foreach (FriendshipInvitationEntry request in pending)
+            {
+                PendingRequests.Add(request);
+            }
         }
         catch (Exception)
         {
@@ -83,7 +102,28 @@ public sealed class FriendsViewModel : SocialViewModelBase
                 ErrorMessage = Text.Get("Social.FriendsFailed");
             }
         }
-        finally { IsBusy = false; }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private List<T>? ReadFriendListResult<T>(ClientResult<List<T>> result, SessionSnapshot session)
+    {
+        List<T>? entries = null;
+        if (Operation.Check(result, session))
+        {
+            if (result.IsSuccess && result.Value is not null)
+            {
+                entries = result.Value;
+            }
+            else
+            {
+                ErrorMessage = Operation.Error(result, "Social.FriendsFailed");
+            }
+        }
+
+        return entries;
     }
 
     private async Task SearchAsync()

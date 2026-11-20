@@ -43,7 +43,14 @@ public sealed class LobbyMembershipTests
 
     private static LobbyState CreateLobby(Guid playerId)
     {
-        LobbyState lobby = new(new LobbySettings("ABC234", playerId, true, 4, DateTimeOffset.UtcNow));
+        LobbyState lobby = new(new LobbySettings
+        {
+            LobbyCode = "ABC234",
+            HostPlayerId = playerId,
+            IsPublic = true,
+            MaxPlayers = 4,
+            CreatedAtUtc = DateTimeOffset.UtcNow
+        });
         LobbyMember member = new() { PlayerId = playerId, Username = "test" };
         lobby.AddOrReplace(new LobbyConnection(member, new CallbackStub(), "session-1"));
         return lobby;

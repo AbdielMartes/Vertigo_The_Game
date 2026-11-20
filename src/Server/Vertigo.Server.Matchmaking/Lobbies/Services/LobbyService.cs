@@ -100,20 +100,9 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 lobby.AddOrReplace(connection);
                 response = CreateJoinResponse(lobby, player.PlayerId);
             }
-            else if (lobby.IsFull)
-            {
-                throw CreateFault(ServiceErrorCodes.LobbyFull, ServiceMessageKeys.LobbyFull);
-            }
-            else if (!lobby.IsPublic && !lobby.IsInvited(player.PlayerId))
-            {
-                throw CreateFault(ServiceErrorCodes.LobbyInviteNotAllowed, ServiceMessageKeys.LobbyInviteNotAllowed);
-            }
-            else if (_lobbies.Values.Any(otherLobby => otherLobby.Contains(player.PlayerId)))
-            {
-                throw CreateFault(ServiceErrorCodes.PlayerAlreadyInLobby, ServiceMessageKeys.PlayerAlreadyInLobby);
-            }
             else
             {
+                EnsureNewMemberCanJoin(lobby, player.PlayerId);
                 response = CreateJoinResponse(lobby, player.PlayerId);
                 callbacksToNotify = lobby.GetCallbacksExcept(player.PlayerId);
                 lobby.CancelInvitation(player.PlayerId);
@@ -127,6 +116,24 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         Notify(preparationCallbacks, CreatePreparationNotification(preparation));
 
         return response;
+    }
+
+    private void EnsureNewMemberCanJoin(LobbyState lobby, Guid playerId)
+    {
+        if (lobby.IsFull)
+        {
+            throw CreateFault(ServiceErrorCodes.LobbyFull, ServiceMessageKeys.LobbyFull);
+        }
+
+        if (!lobby.IsPublic && !lobby.IsInvited(playerId))
+        {
+            throw CreateFault(ServiceErrorCodes.LobbyInviteNotAllowed, ServiceMessageKeys.LobbyInviteNotAllowed);
+        }
+
+        if (_lobbies.Values.Any(otherLobby => otherLobby.Contains(playerId)))
+        {
+            throw CreateFault(ServiceErrorCodes.PlayerAlreadyInLobby, ServiceMessageKeys.PlayerAlreadyInLobby);
+        }
     }
 
     // LeaveLobby is for the waiting room. Explicit match departure uses LeaveMatch.

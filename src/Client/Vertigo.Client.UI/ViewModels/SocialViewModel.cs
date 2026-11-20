@@ -203,54 +203,11 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
                 _navigation.NavigateTo(NavigationPage.Home);
                 return;
             }
-            if (!_subscribed || !ReferenceEquals(session, _subscribedSession))
+            bool isSubscribed = await EnsureSubscribedAsync(session, generation);
+            if (isSubscribed)
             {
-                try
-                {
-                    bool accepted = await Task.Run(() => _notifications.Subscribe(session.Token));
-                    if (!IsActive(session, generation))
-                    {
-                        return;
-                    }
-                    if (!accepted)
-                    {
-                        ErrorMessage = _errors.FromException(new InvalidOperationException(),
-                            "Social.NotificationsFailed");
-                        return;
-                    }
-                    _subscribed = true;
-                    _subscribedSession = session;
-                }
-                catch (Exception exception)
-                {
-                    if (!IsActive(session, generation))
-                    {
-                        return;
-                    }
-                    if (_errors.IsUnauthorized(exception))
-                    {
-                        _guard.Invalidate(session);
-                        return;
-                    }
-                    ErrorMessage = _errors.FromException(exception, "Social.NotificationsFailed");
-                    return;
-                }
+                await RefreshSectionsAsync(session, generation);
             }
-            if (!IsActive(session, generation))
-            {
-                return;
-            }
-            await Friends.RefreshAsync();
-            if (!IsActive(session, generation))
-            {
-                return;
-            }
-            await Blocked.RefreshAsync();
-            if (!IsActive(session, generation))
-            {
-                return;
-            }
-            await Invitations.RefreshAsync();
         }
         finally
         {
@@ -259,6 +216,70 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
                 _isRefreshing = false;
             }
         }
+    }
+
+    private async Task<bool> EnsureSubscribedAsync(SessionSnapshot session, int generation)
+    {
+        bool isSubscribed = _subscribed && ReferenceEquals(session, _subscribedSession);
+        if (!isSubscribed)
+        {
+            try
+            {
+                bool accepted = await Task.Run(() => _notifications.Subscribe(session.Token));
+                if (IsActive(session, generation))
+                {
+                    if (accepted)
+                    {
+                        _subscribed = true;
+                        _subscribedSession = session;
+                        isSubscribed = true;
+                    }
+                    else
+                    {
+                        ErrorMessage = _errors.FromException(new InvalidOperationException(),
+                            "Social.NotificationsFailed");
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                if (IsActive(session, generation))
+                {
+                    if (_errors.IsUnauthorized(exception))
+                    {
+                        _guard.Invalidate(session);
+                    }
+                    else
+                    {
+                        ErrorMessage = _errors.FromException(exception, "Social.NotificationsFailed");
+                    }
+                }
+            }
+        }
+
+        return isSubscribed;
+    }
+
+    private async Task RefreshSectionsAsync(SessionSnapshot session, int generation)
+    {
+        if (!IsActive(session, generation))
+        {
+            return;
+        }
+
+        await Friends.RefreshAsync();
+        if (!IsActive(session, generation))
+        {
+            return;
+        }
+
+        await Blocked.RefreshAsync();
+        if (!IsActive(session, generation))
+        {
+            return;
+        }
+
+        await Invitations.RefreshAsync();
     }
 
     private bool IsActive(SessionSnapshot session, int generation)

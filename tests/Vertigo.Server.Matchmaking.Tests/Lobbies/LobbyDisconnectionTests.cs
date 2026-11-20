@@ -99,7 +99,14 @@ public sealed class LobbyDisconnectionTests
 
     private static LobbyState NewLobby(Guid host)
     {
-        return new LobbyState(new LobbySettings("ABCDEF", host, true, 6, DateTimeOffset.UtcNow));
+        return new LobbyState(new LobbySettings
+        {
+            LobbyCode = "ABCDEF",
+            HostPlayerId = host,
+            IsPublic = true,
+            MaxPlayers = 6,
+            CreatedAtUtc = DateTimeOffset.UtcNow
+        });
     }
 
     private static void Add(LobbyState lobby, Guid id, string channel)

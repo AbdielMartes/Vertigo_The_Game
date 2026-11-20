@@ -300,8 +300,14 @@ public sealed class MatchTurnPresentationTests
         ManualClock clock = new();
         PlayerSession session = new(clock);
         Guid player = Guid.NewGuid();
-        session.SetSession(new SessionSnapshot(player, "Ana", "test-token", clock.GetUtcNow().UtcDateTime.AddHours(1),
-            true));
+        session.SetSession(new SessionSnapshot
+        {
+            PlayerId = player,
+            Username = "Ana",
+            Token = "test-token",
+            ExpiresAt = clock.GetUtcNow().UtcDateTime.AddHours(1),
+            IsGuest = true
+        });
         Guid matchId = Guid.NewGuid();
         MatchViewModel model = new(new TestText(), session, clock);
         model.Activate(matchId, "ABC234");
@@ -322,11 +328,22 @@ public sealed class MatchTurnPresentationTests
         };
         MatchPrivateHand hand = new() { MatchId = matchId, PlayerId = player, Revision = 5, Cards = { 15 } };
 
-        return new TurnFixture(model, board, hand, clock);
+        return new TurnFixture
+        {
+            Model = model,
+            Board = board,
+            Hand = hand,
+            Clock = clock
+        };
     }
 
-    private sealed record TurnFixture(
-        MatchViewModel Model, MatchBoardSnapshot Board, MatchPrivateHand Hand, ManualClock Clock);
+    private sealed class TurnFixture
+    {
+        public required MatchViewModel Model { get; init; }
+        public required MatchBoardSnapshot Board { get; init; }
+        public required MatchPrivateHand Hand { get; init; }
+        public required ManualClock Clock { get; init; }
+    }
 
     private sealed class TestText : ITextLocalizer
     {

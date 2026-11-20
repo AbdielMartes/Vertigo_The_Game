@@ -103,8 +103,15 @@ public sealed class MatchMasterPlanTests
     private static MatchRecord CreateMatchWithEarnedPlan()
     {
         Guid[] players = { Guid.NewGuid(), Guid.NewGuid() };
-        MatchSessionSnapshot session = new(
-            Guid.NewGuid(), Guid.NewGuid(), "ABC234", players[0], players, Now.UtcDateTime);
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            InitialHostPlayerId = players[0],
+            PlayerIds = players,
+            CreatedAtUtc = Now.UtcDateTime
+        };
         int[] modules = { 4, 81, 91, 20, 21, 22, 23, 24, 25, 26,
             3, 42, 43, 44, 45, 46, 47, 48, 49, 50, 1, 80, 90, 100, 36, 99 };
         MatchRecord match = new(session, Now, () => new MatchDeck(modules));

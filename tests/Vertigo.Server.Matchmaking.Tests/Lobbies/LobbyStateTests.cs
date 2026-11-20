@@ -156,7 +156,14 @@ public sealed class LobbyStateTests
 
     private static LobbyState CreateLobby(Guid host)
     {
-        return new LobbyState(new LobbySettings("ABCDEF", host, true, 6, DateTimeOffset.UtcNow));
+        return new LobbyState(new LobbySettings
+        {
+            LobbyCode = "ABCDEF",
+            HostPlayerId = host,
+            IsPublic = true,
+            MaxPlayers = 6,
+            CreatedAtUtc = DateTimeOffset.UtcNow
+        });
     }
 
     private static void Add(LobbyState lobby, Guid playerId, string channel)

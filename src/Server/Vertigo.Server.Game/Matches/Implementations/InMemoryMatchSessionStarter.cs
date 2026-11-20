@@ -285,9 +285,15 @@ public sealed class InMemoryMatchSessionStarter :
     {
         Guid[] players = request.PlayerIds.ToArray();
         DateTimeOffset now = _timeProvider.GetUtcNow();
-        MatchSessionSnapshot session = new(
-            Guid.NewGuid(), request.LobbyInstanceId, request.LobbyCode,
-            request.HostPlayerId, Array.AsReadOnly(players), now.UtcDateTime);
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = request.LobbyInstanceId,
+            LobbyCode = request.LobbyCode,
+            InitialHostPlayerId = request.HostPlayerId,
+            PlayerIds = Array.AsReadOnly(players),
+            CreatedAtUtc = now.UtcDateTime
+        };
         MatchRecord record = new(session, now);
 
         return record;

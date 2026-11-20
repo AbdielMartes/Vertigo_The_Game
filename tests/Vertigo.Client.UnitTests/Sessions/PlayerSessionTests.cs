@@ -54,7 +54,13 @@ public sealed class PlayerSessionTests
 
     internal static SessionSnapshot CreateSnapshot(string token, DateTime? expiresAt = null)
     {
-        return new SessionSnapshot(Guid.NewGuid(), "test_player", token,
-            expiresAt ?? DateTime.UtcNow.AddMinutes(30), false);
+        return new SessionSnapshot
+        {
+            PlayerId = Guid.NewGuid(),
+            Username = "test_player",
+            Token = token,
+            ExpiresAt = expiresAt ?? DateTime.UtcNow.AddMinutes(30),
+            IsGuest = false
+        };
     }
 }

@@ -206,7 +206,14 @@ public sealed class MatchViewModelTests
         Guid local = Guid.NewGuid();
         Guid other = Guid.NewGuid();
         PlayerSession session = new(TimeProvider.System);
-        session.SetSession(new SessionSnapshot(local, "Ana", "test-session", DateTime.UtcNow.AddHours(1), true));
+        session.SetSession(new SessionSnapshot
+        {
+            PlayerId = local,
+            Username = "Ana",
+            Token = "test-session",
+            ExpiresAt = DateTime.UtcNow.AddHours(1),
+            IsGuest = true
+        });
         MatchViewModel model = new(new FakeTextLocalizer(), session, TimeProvider.System);
         model.Activate(matchId, "ABC234");
         model.ApplyBoard(new MatchBoardSnapshot { MatchId = matchId, Revision = 4 });

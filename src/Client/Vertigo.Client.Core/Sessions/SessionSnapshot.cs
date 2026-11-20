@@ -1,12 +1,17 @@
 namespace Vertigo.Client.Core.Sessions;
 
-public sealed record SessionSnapshot(
-    Guid PlayerId,
-    string Username,
-    string Token,
-    DateTime ExpiresAt,
-    bool IsGuest)
+public sealed record SessionSnapshot
 {
+    public required Guid PlayerId { get; init; }
+
+    public required string Username { get; init; }
+
+    public required string Token { get; init; }
+
+    public required DateTime ExpiresAt { get; init; }
+
+    public required bool IsGuest { get; init; }
+
     public override string ToString()
     {
         return nameof(SessionSnapshot);

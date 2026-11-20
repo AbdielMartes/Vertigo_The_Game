@@ -22,8 +22,14 @@ public sealed class LobbyLifecycle
 
     internal LobbyState CreateLobby(string lobbyCode, LobbyConnection host, LobbyCreation creation)
     {
-        LobbySettings settings = new(
-            lobbyCode, host.Member.PlayerId, creation.IsPublic, creation.MaxPlayers, creation.CreatedAtUtc);
+        LobbySettings settings = new()
+        {
+            LobbyCode = lobbyCode,
+            HostPlayerId = host.Member.PlayerId,
+            IsPublic = creation.IsPublic,
+            MaxPlayers = creation.MaxPlayers,
+            CreatedAtUtc = creation.CreatedAtUtc
+        };
         LobbyState lobby = new(settings);
         lobby.AddOrReplace(host);
 

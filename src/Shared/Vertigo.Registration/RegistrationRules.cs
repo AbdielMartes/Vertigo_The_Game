@@ -143,9 +143,7 @@ public static class RegistrationRules
             string local = email[..separator];
             string domain = email[(separator + 1)..];
             string[] labels = domain.Split('.');
-            bool validLocal = local.Length <= 64 && !local.StartsWith('.')
-                && !local.EndsWith('.') && !local.Contains("..", StringComparison.Ordinal)
-                && local.All(IsAllowedEmailLocalCharacter);
+            bool validLocal = IsValidEmailLocalPart(local);
             bool validDomain = labels.Length >= 2 && labels.All(IsValidDomainLabel);
 
             if (validLocal && validDomain)
@@ -163,6 +161,13 @@ public static class RegistrationRules
         }
 
         return isValid;
+    }
+
+    private static bool IsValidEmailLocalPart(string local)
+    {
+        return local.Length <= 64 && !local.StartsWith('.')
+            && !local.EndsWith('.') && !local.Contains("..", StringComparison.Ordinal)
+            && local.All(IsAllowedEmailLocalCharacter);
     }
 
     private static bool IsAllowedEmailLocalCharacter(char character)

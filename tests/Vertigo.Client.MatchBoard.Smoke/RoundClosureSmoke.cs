@@ -8,7 +8,7 @@ internal static class RoundClosureSmoke
     private const int MaximumRoundActions = 100;
     private const int MaximumPlacementDifference = 10;
     private static readonly TimeSpan NotificationTimeout = TimeSpan.FromSeconds(15);
-    private static readonly TimeSpan TurnExpiryTimeout = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan TurnExpiryTimeout = TimeSpan.FromSeconds(45);
 
     public static async Task<bool> VerifyAsync(
         (ILobbyClient Lobby, UserSession Session) first,
@@ -22,24 +22,9 @@ internal static class RoundClosureSmoke
 
         try
         {
-            MatchBoardSnapshot board = first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token);
-            Check(board.RoundNumber == 1 && board.RoundSummaries.Count == 0, "Expected the first round in progress.");
-            bool dismantled = false;
-            for (int step = 0; step < MaximumRoundActions && board.RoundNumber == 1; step++)
-            {
-                (ILobbyClient Lobby, UserSession Session) active =
-                    board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
-                TurnResult turn = PlayTurn(active, board, lobbyCode);
-                dismantled |= turn.Kind == MatchBoardActionKind.Dismantle;
-
-                Check(turn.Board.Revision == board.Revision + 1, "A turn must increase the board revision once.");
-                using CancellationTokenSource timeout = new(NotificationTimeout);
-                MatchBoardChanged firstChange = await firstChanges.Reader.ReadAsync(timeout.Token);
-                MatchBoardChanged secondChange = await secondChanges.Reader.ReadAsync(timeout.Token);
-                CheckNotice(firstChange, turn, active.Session.Username);
-                CheckNotice(secondChange, turn, active.Session.Username);
-                board = turn.Board;
-            }
+            RoundParticipant firstPlayer = new(first.Lobby, first.Session, firstChanges.Reader);
+            RoundParticipant secondPlayer = new(second.Lobby, second.Session, secondChanges.Reader);
+            (MatchBoardSnapshot board, bool dismantled) = await PlayFirstRoundAsync(firstPlayer, secondPlayer, lobbyCode);
 
             Check(board.RoundNumber == 2 && board.RoundSummaries.Count == 1, "The first round did not close.");
             VerifySummary(board, first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token));
@@ -51,20 +36,7 @@ internal static class RoundClosureSmoke
 
             if (dismantled)
             {
-                using CancellationTokenSource timeout = new(TurnExpiryTimeout);
-                MatchBoardChanged timedOutForFirst = await firstChanges.Reader.ReadAsync(timeout.Token);
-                MatchBoardChanged timedOutForSecond = await secondChanges.Reader.ReadAsync(timeout.Token);
-                CheckTimeout(timedOutForFirst, board);
-                CheckTimeout(timedOutForSecond, board);
-                CheckAbandonment(first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token), board);
-                CheckAbandonment(second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token), board);
-
-                (ILobbyClient Lobby, UserSession Session) expelled =
-                    board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
-                MatchPrivateHand hand = expelled.Lobby.GetMatchPrivateHand(lobbyCode, expelled.Session.Token);
-                Check(hand.MatchId == board.MatchId && hand.PlayerId == expelled.Session.PlayerId
-                    && hand.Cards.Count == 0 && hand.MasterPlans == 0,
-                    "The expelled client could not refresh its board with an empty private hand.");
+                await VerifyTurnExpiryAsync(firstPlayer, secondPlayer, (lobbyCode, board));
             }
 
             return dismantled;
@@ -84,6 +56,58 @@ internal static class RoundClosureSmoke
         {
             secondChanges.Writer.TryWrite(change);
         }
+    }
+
+    private static async Task<(MatchBoardSnapshot Board, bool Dismantled)> PlayFirstRoundAsync(
+        RoundParticipant first, RoundParticipant second, string lobbyCode)
+    {
+        MatchBoardSnapshot board = first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token);
+        Check(board.RoundNumber == 1 && board.RoundSummaries.Count == 0, "Expected the first round in progress.");
+        bool dismantled = false;
+        for (int step = 0; step < MaximumRoundActions && board.RoundNumber == 1; step++)
+        {
+            RoundParticipant active =
+                board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
+            TurnResult turn = PlayTurn((active.Lobby, active.Session), board, lobbyCode);
+            dismantled |= turn.Kind == MatchBoardActionKind.Dismantle;
+
+            Check(turn.Board.Revision == board.Revision + 1, "A turn must increase the board revision once.");
+            await VerifyTurnNoticesAsync((first.Changes, second.Changes), turn, active.Session.Username);
+            board = turn.Board;
+        }
+        return (board, dismantled);
+    }
+
+    private static async Task VerifyTurnNoticesAsync(
+        (ChannelReader<MatchBoardChanged> First, ChannelReader<MatchBoardChanged> Second) notices,
+        TurnResult turn, string username)
+    {
+        using CancellationTokenSource timeout = new(NotificationTimeout);
+        MatchBoardChanged firstChange = await notices.First.ReadAsync(timeout.Token);
+        MatchBoardChanged secondChange = await notices.Second.ReadAsync(timeout.Token);
+        CheckNotice(firstChange, turn, username);
+        CheckNotice(secondChange, turn, username);
+    }
+
+    private static async Task VerifyTurnExpiryAsync(
+        RoundParticipant first, RoundParticipant second, (string LobbyCode, MatchBoardSnapshot Board) state)
+    {
+        string lobbyCode = state.LobbyCode;
+        MatchBoardSnapshot board = state.Board;
+        using CancellationTokenSource timeout = new(TurnExpiryTimeout);
+        MatchBoardChanged timedOutForFirst = await first.Changes.ReadAsync(timeout.Token);
+        MatchBoardChanged timedOutForSecond = await second.Changes.ReadAsync(timeout.Token);
+        CheckTimeout(timedOutForFirst, board);
+        CheckTimeout(timedOutForSecond, board);
+        CheckAbandonment(first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token), board);
+        CheckAbandonment(second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token), board);
+
+        RoundParticipant expelled =
+            board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
+        MatchPrivateHand hand = expelled.Lobby.GetMatchPrivateHand(lobbyCode, expelled.Session.Token);
+        Check(hand.MatchId == board.MatchId && hand.PlayerId == expelled.Session.PlayerId
+            && hand.Cards.Count == 0 && hand.MasterPlans == 0,
+            "The expelled client could not refresh its board with an empty private hand.");
     }
 
     private static TurnResult PlayTurn(
@@ -252,6 +276,9 @@ internal static class RoundClosureSmoke
             throw new InvalidOperationException(message);
         }
     }
+
+    private sealed record RoundParticipant(
+        ILobbyClient Lobby, UserSession Session, ChannelReader<MatchBoardChanged> Changes);
 
     private sealed record TurnResult(MatchBoardSnapshot Board, MatchBoardActionKind Kind, int Pile);
 }

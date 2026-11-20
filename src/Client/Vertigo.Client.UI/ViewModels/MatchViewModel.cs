@@ -257,40 +257,45 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             && _guard.HasActiveSession() && original is not null)
         {
             BoardRequestIdentity request = new(original, matchId, generation);
-            _hasCurrentHand = false;
-            IsLoadingBoard = true;
-            try
+            await LoadBoardAsync(_lobbies, lobbyCode, request);
+        }
+    }
+
+    private async Task LoadBoardAsync(ILobbyClient lobbies, string lobbyCode, BoardRequestIdentity request)
+    {
+        _hasCurrentHand = false;
+        IsLoadingBoard = true;
+        try
+        {
+            (MatchBoardSnapshot board, MatchPrivateHand? hand, long receivedAt) =
+                await Task.Run(() => ReadBoardAndHand(lobbies, lobbyCode, request.Session));
+            await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                (MatchBoardSnapshot board, MatchPrivateHand? hand, long receivedAt) =
-                    await Task.Run(() => ReadBoardAndHand(_lobbies, lobbyCode, original));
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                if (IsCurrent(request.Session, request.MatchId, request.Generation))
                 {
-                    if (IsCurrent(request.Session, request.MatchId, request.Generation))
-                    {
-                        ApplyBoardAndHand(board, hand, receivedAt);
-                    }
-                });
-            }
-            catch (FaultException<ServiceFault> exception)
-            {
-                await ReportBoardFailureAsync(exception, request);
-            }
-            catch (TimeoutException exception)
-            {
-                await ReportBoardFailureAsync(exception, request);
-            }
-            catch (CommunicationException exception)
-            {
-                await ReportBoardFailureAsync(exception, request);
-            }
-            catch (Exception exception)
-            {
-                await ReportBoardFailureAsync(exception, request);
-            }
-            finally
-            {
-                await Dispatcher.UIThread.InvokeAsync(() => CompleteBoardRefresh(request));
-            }
+                    ApplyBoardAndHand(board, hand, receivedAt);
+                }
+            });
+        }
+        catch (FaultException<ServiceFault> exception)
+        {
+            await ReportBoardFailureAsync(exception, request);
+        }
+        catch (TimeoutException exception)
+        {
+            await ReportBoardFailureAsync(exception, request);
+        }
+        catch (CommunicationException exception)
+        {
+            await ReportBoardFailureAsync(exception, request);
+        }
+        catch (Exception exception)
+        {
+            await ReportBoardFailureAsync(exception, request);
+        }
+        finally
+        {
+            await Dispatcher.UIThread.InvokeAsync(() => CompleteBoardRefresh(request));
         }
     }
 
@@ -339,16 +344,26 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             && board.Revision >= _currentBoardRevision)
         {
             bool expelled = board.ExpelledPlayerIds.Contains(session.PlayerId);
-            bool validHand = hand is not null && hand.MatchId == _matchId && hand.PlayerId == session.PlayerId
-                && (hand.Revision is null || hand.Revision == board.Revision);
-            if (!ApplyBoard(board, receivedAt) && board.ServerTimeUtc.HasValue)
-            {
-                _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
-                RefreshTurnCountdown();
-            }
+            bool validHand = IsValidHand(hand, session.PlayerId, board.Revision);
+            ApplyBoardAndUpdateClock(board, receivedAt);
 
             ReplacePrivateHand(!expelled && validHand ? hand : null);
             ErrorMessage = expelled || validHand ? string.Empty : _text.Get("Error.Unknown");
+        }
+    }
+
+    private bool IsValidHand(MatchPrivateHand? hand, Guid playerId, long boardRevision)
+    {
+        return hand is not null && hand.MatchId == _matchId && hand.PlayerId == playerId
+            && (hand.Revision is null || hand.Revision == boardRevision);
+    }
+
+    private void ApplyBoardAndUpdateClock(MatchBoardSnapshot board, long? receivedAt)
+    {
+        if (!ApplyBoard(board, receivedAt) && board.ServerTimeUtc.HasValue)
+        {
+            _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+            RefreshTurnCountdown();
         }
     }
 

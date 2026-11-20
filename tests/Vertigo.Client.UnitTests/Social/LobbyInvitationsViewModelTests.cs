@@ -75,8 +75,14 @@ public sealed class LobbyInvitationsViewModelTests
         Assert.True(started.Wait(TimeSpan.FromSeconds(5)));
         try
         {
-            test.PlayerSession.SetSession(new SessionSnapshot(
-                Guid.NewGuid(), "replacement", "replacement-token", DateTime.UtcNow.AddHours(1), false));
+            test.PlayerSession.SetSession(new SessionSnapshot
+            {
+                PlayerId = Guid.NewGuid(),
+                Username = "replacement",
+                Token = "replacement-token",
+                ExpiresAt = DateTime.UtcNow.AddHours(1),
+                IsGuest = false
+            });
         }
         finally
         {
@@ -92,7 +98,14 @@ public sealed class LobbyInvitationsViewModelTests
     private static TestContext Create()
     {
         PlayerSession sessions = new(TimeProvider.System);
-        sessions.SetSession(new SessionSnapshot(Guid.NewGuid(), "registered", "test-token", DateTime.UtcNow.AddHours(1), false));
+        sessions.SetSession(new SessionSnapshot
+        {
+            PlayerId = Guid.NewGuid(),
+            Username = "registered",
+            Token = "test-token",
+            ExpiresAt = DateTime.UtcNow.AddHours(1),
+            IsGuest = false
+        });
         Navigator navigator = new();
         ITextLocalizer text = new FakeLocalizer();
         IClientErrorText errors = new ClientErrorText(text);
@@ -104,11 +117,22 @@ public sealed class LobbyInvitationsViewModelTests
         LobbyViewModel lobby = new(lobbyClient, new FakeChatClient(), lobbyContext);
         SocialOperation operation = new(sessions, guard, errors);
         LobbyInvitationsViewModel invitations = new(new FakeInvitationClient(), operation, new LobbyInvitationContext(lobby, text));
-        return new TestContext(sessions, navigator, lobbyClient, invitations);
+        return new TestContext
+        {
+            PlayerSession = sessions,
+            Navigator = navigator,
+            LobbyClient = lobbyClient,
+            Invitations = invitations
+        };
     }
 
-    private sealed record TestContext(PlayerSession PlayerSession, Navigator Navigator,
-        FakeLobbyClient LobbyClient, LobbyInvitationsViewModel Invitations);
+    private sealed class TestContext
+    {
+        public required PlayerSession PlayerSession { get; init; }
+        public required Navigator Navigator { get; init; }
+        public required FakeLobbyClient LobbyClient { get; init; }
+        public required LobbyInvitationsViewModel Invitations { get; init; }
+    }
 
     private sealed class FakeLocalizer : ITextLocalizer
     {

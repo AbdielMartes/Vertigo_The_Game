@@ -154,13 +154,15 @@ public sealed class LobbyState
 
     public LobbyOverview ToOverview()
     {
-        LobbyOverview overview = new(
-            LobbyCode,
-            HostPlayerId,
-            MaxPlayers,
-            Status == LobbyStatus.Waiting,
-            GetMembersExcept(Guid.Empty),
-            new Dictionary<Guid, Guid>(_invitations));
+        LobbyOverview overview = new()
+        {
+            LobbyCode = LobbyCode,
+            HostPlayerId = HostPlayerId,
+            MaxPlayers = MaxPlayers,
+            IsWaiting = Status == LobbyStatus.Waiting,
+            Members = GetMembersExcept(Guid.Empty),
+            Invitations = new Dictionary<Guid, Guid>(_invitations)
+        };
 
         return overview;
     }

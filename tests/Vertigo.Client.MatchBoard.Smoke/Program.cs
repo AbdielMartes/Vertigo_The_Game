@@ -56,96 +56,24 @@ static async Task<bool> RunMatchAsync()
     {
         UserSession hostSession = CreateGuest(host);
         UserSession memberSession = CreateGuest(member);
-        string hostToken = hostSession.Token;
-        string memberToken = memberSession.Token;
-        string lobbyCode = hostLobby.CreateLobby(true, 2, hostToken);
-        memberLobby.JoinLobby(lobbyCode, memberToken);
-        hostLobby.SetReady(lobbyCode, true, hostToken);
-        memberLobby.SetReady(lobbyCode, true, memberToken);
-        LobbyPreparation started = hostLobby.StartMatch(lobbyCode, hostToken);
-        Require(started.MatchId != Guid.Empty, "StartMatch returned an empty MatchId.");
-
-        LobbyPreparation? membership = memberLobby.GetCurrentLobby(memberToken);
-        Require(membership?.LobbyCode == lobbyCode && membership.MatchId == started.MatchId,
-            "Current lobby does not match the running match.");
-
-        MatchBoardSnapshot first = hostLobby.GetMatchBoard(lobbyCode, hostToken);
-        MatchBoardSnapshot second = memberLobby.GetMatchBoard(lobbyCode, memberToken);
-        Require(first.MatchId == started.MatchId, "Host board has wrong MatchId.");
-        Require(second.MatchId == started.MatchId, "Member board has wrong MatchId.");
-        Require(first.Players.Count == 2 && second.Players.Count == 2,
-            "Match board did not return two participants.");
-        Console.WriteLine("PASS: GET MATCH BOARD OVER NETTCP FOR BOTH PARTICIPANTS");
-
-        MatchPrivateHand hostHand = hostLobby.GetMatchPrivateHand(lobbyCode, hostToken);
-        MatchPrivateHand memberHand = memberLobby.GetMatchPrivateHand(lobbyCode, memberToken);
-        Require(first.ServerTimeUtc.HasValue && first.ServerTimeUtc < first.TurnDeadlineUtc,
-            "The board did not provide a server-time sample for the opening turn.");
-        Require(hostHand.Revision == first.Revision && memberHand.Revision == second.Revision,
-            "Private hand responses did not carry the expected board revisions.");
-        Require(hostHand.MatchId == started.MatchId && memberHand.MatchId == started.MatchId,
-            "Private hands have the wrong match identifier.");
-        Require(hostHand.PlayerId == hostSession.PlayerId && memberHand.PlayerId == memberSession.PlayerId
-            && hostHand.Cards.Count == 10 && memberHand.Cards.Count == 10
-            && hostHand.Cards.Concat(memberHand.Cards).Distinct().Count() == 20,
-            "Private hands overlap or are invalid.");
-        Require(first.CurrentTurnPlayerId == second.CurrentTurnPlayerId
-            && first.Players.Any(player => player.PlayerId == first.CurrentTurnPlayerId),
-            "Clients disagree on the opening turn or identify a non-participant.");
+        SmokeParticipant hostPlayer = new(hostLobby, hostSession);
+        SmokeParticipant memberPlayer = new(memberLobby, memberSession);
+        (string lobbyCode, Guid matchId) = StartSmokeMatch(hostPlayer, new[] { memberPlayer });
+        (MatchBoardSnapshot first, MatchBoardSnapshot second) =
+            VerifyOpeningBoards(hostPlayer, memberPlayer, (lobbyCode, matchId));
+        (MatchPrivateHand hostHand, MatchPrivateHand memberHand) =
+            VerifyOpeningHands(hostPlayer, memberPlayer, (lobbyCode, first, second));
 
         bool isHostOpening = first.CurrentTurnPlayerId == hostSession.PlayerId;
-        (ILobbyClient Lobby, UserSession Session, MatchPrivateHand Hand) opening = isHostOpening
-            ? (hostLobby, hostSession, hostHand)
-            : (memberLobby, memberSession, memberHand);
-        (ILobbyClient Lobby, UserSession Session, MatchPrivateHand Hand) waiting = isHostOpening
-            ? (memberLobby, memberSession, memberHand)
-            : (hostLobby, hostSession, hostHand);
+        (SmokeParticipant Player, MatchPrivateHand Hand) opening = isHostOpening
+            ? (hostPlayer, hostHand)
+            : (memberPlayer, memberHand);
+        (SmokeParticipant Player, MatchPrivateHand Hand) waiting = isHostOpening
+            ? (memberPlayer, memberHand)
+            : (hostPlayer, hostHand);
 
-        bool wrongTurnDenied = false;
-        try
-        {
-            waiting.Lobby.PlaceMatchCard(new MatchPlaceRequest
-            {
-                LobbyCode = lobbyCode,
-                SessionToken = waiting.Session.Token,
-                CardNumber = waiting.Hand.Cards[0],
-                PilePosition = 1,
-                ExpectedRevision = second.Revision
-            });
-        }
-        catch (FaultException<ServiceFault> exception)
-        {
-            wrongTurnDenied = exception.Detail.MessageKey == "Match.Error.NotYourTurn";
-        }
-
-        Require(wrongTurnDenied, "Placement outside the player's turn was not rejected.");
-        Require(hostLobby.GetMatchBoard(lobbyCode, hostToken).Revision == first.Revision,
-            "Rejected placement changed the board revision.");
-        Console.WriteLine("PASS: WRONG TURN REJECTED WITHOUT CHANGING BOARD");
-
-        bool planRequired = false;
-        try
-        {
-            opening.Lobby.UseMatchMasterPlan(new MatchMasterPlanRequest
-            {
-                LobbyCode = lobbyCode,
-                SessionToken = opening.Session.Token,
-                CardNumbers = opening.Hand.Cards.Take(2).ToList(),
-                PilePosition = 1,
-                ExpectedRevision = first.Revision
-            });
-        }
-        catch (FaultException<ServiceFault> exception)
-        {
-            planRequired = exception.Detail.ErrorCode == "MATCH_MASTER_PLAN_REQUIRED"
-                && exception.Detail.MessageKey == "Match.Error.MasterPlanRequired";
-        }
-
-        Require(planRequired, "Using a master plan without earning one did not return the expected fault.");
-        MatchBoardSnapshot afterRejectedPlan = opening.Lobby.GetMatchBoard(lobbyCode, opening.Session.Token);
-        Require(afterRejectedPlan.Revision == first.Revision && afterRejectedPlan.RecentMoves.Count == 0,
-            "The rejected master plan changed the revision or added a move.");
-        Console.WriteLine("PASS: MASTER PLAN REQUIRED FAULT LEAVES HISTORY UNCHANGED");
+        VerifyWrongTurn(waiting, hostPlayer, (lobbyCode, second.Revision, first.Revision));
+        VerifyUnearnedMasterPlan(opening, first, lobbyCode);
 
         (int CardNumber, int PilePosition) move = FindPlacement(first, opening.Hand);
         if (move.PilePosition == 0)
@@ -154,52 +82,18 @@ static async Task<bool> RunMatchAsync()
         }
 
         await VerifyPlacementAsync(
-            (opening.Lobby, opening.Session), (waiting.Lobby, waiting.Session), (lobbyCode, first, opening.Hand, move));
+            opening.Player, waiting.Player, (lobbyCode, first, opening.Hand, move));
 
         IEnumerable<int> expectedMemberCards = isHostOpening
             ? memberHand.Cards
             : memberHand.Cards.Where(card => card != move.CardNumber);
 
-        string outsiderToken = CreateGuest(outsider).Token;
-        bool outsiderDenied = false;
-        try
-        {
-            outsiderLobby.GetMatchPrivateHand(lobbyCode, outsiderToken);
-        }
-        catch (FaultException<ServiceFault> exception)
-        {
-            outsiderDenied = exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotMember;
-        }
+        UserSession outsiderSession = CreateGuest(outsider);
+        VerifyOutsiderDenial(new SmokeParticipant(outsiderLobby, outsiderSession),
+            lobbyCode, first.Revision + 1);
+        VerifyReconnectedMember(memberPlayer, (lobbyCode, memberHand, expectedMemberCards),
+            (opening.Player.Session, move));
 
-        Require(outsiderDenied, "An outsider was able to read the private hand.");
-        bool outsiderDismantleDenied = false;
-        try
-        {
-            outsiderLobby.DismantleMatchTower(new MatchDismantleRequest
-            {
-                LobbyCode = lobbyCode,
-                SessionToken = outsiderToken,
-                PilePosition = 1,
-                ExpectedRevision = first.Revision + 1
-            });
-        }
-        catch (FaultException<ServiceFault> exception)
-        {
-            outsiderDismantleDenied = exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotMember;
-        }
-
-        Require(outsiderDismantleDenied, "An outsider was able to request a dismantle.");
-        memberLobby.Disconnect();
-        memberLobby.JoinLobby(lobbyCode, memberToken);
-        MatchPrivateHand resumedHand = memberLobby.GetMatchPrivateHand(lobbyCode, memberToken);
-        Require(resumedHand.MatchId == memberHand.MatchId && resumedHand.PlayerId == memberHand.PlayerId
-            && resumedHand.Cards.SequenceEqual(expectedMemberCards), "Private hand changed after reconnecting.");
-        MatchBoardMove latest = memberLobby.GetMatchBoard(lobbyCode, memberToken).RecentMoves.Last();
-        Require(latest.ActionKind == MatchBoardActionKind.Placement && latest.PlayerId == opening.Session.PlayerId
-            && latest.PlayerUsername == opening.Session.Username && latest.PilePosition == move.PilePosition
-            && latest.CardNumbers.SequenceEqual(new[] { move.CardNumber }),
-            "The reconnected client did not recover the last public move.");
-        Console.WriteLine("PASS: PRIVATE HANDS, OUTSIDER DENIAL, RECONNECTION AND RECENT MOVES");
         bool dismantled = await RoundClosureSmoke.VerifyAsync((hostLobby, hostSession), (memberLobby, memberSession),
             lobbyCode);
         if (dismantled)
@@ -219,6 +113,178 @@ static async Task<bool> RunMatchAsync()
     }
 }
 
+static (string LobbyCode, Guid MatchId) StartSmokeMatch(
+    SmokeParticipant host, IReadOnlyList<SmokeParticipant> members)
+{
+    string hostToken = host.Session.Token;
+    string lobbyCode = host.Lobby.CreateLobby(true, members.Count + 1, hostToken);
+    foreach (SmokeParticipant member in members)
+    {
+        member.Lobby.JoinLobby(lobbyCode, member.Session.Token);
+    }
+
+    host.Lobby.SetReady(lobbyCode, true, hostToken);
+    foreach (SmokeParticipant member in members)
+    {
+        member.Lobby.SetReady(lobbyCode, true, member.Session.Token);
+    }
+
+    LobbyPreparation started = host.Lobby.StartMatch(lobbyCode, hostToken);
+    return (lobbyCode, started.MatchId);
+}
+
+static (MatchBoardSnapshot Host, MatchBoardSnapshot Member) VerifyOpeningBoards(
+    SmokeParticipant host, SmokeParticipant member, (string LobbyCode, Guid MatchId) match)
+{
+    string lobbyCode = match.LobbyCode;
+    Guid matchId = match.MatchId;
+    Require(matchId != Guid.Empty, "StartMatch returned an empty MatchId.");
+
+    LobbyPreparation? membership = member.Lobby.GetCurrentLobby(member.Session.Token);
+    Require(membership?.LobbyCode == lobbyCode && membership.MatchId == matchId,
+        "Current lobby does not match the running match.");
+
+    MatchBoardSnapshot first = host.Lobby.GetMatchBoard(lobbyCode, host.Session.Token);
+    MatchBoardSnapshot second = member.Lobby.GetMatchBoard(lobbyCode, member.Session.Token);
+    Require(first.MatchId == matchId, "Host board has wrong MatchId.");
+    Require(second.MatchId == matchId, "Member board has wrong MatchId.");
+    Require(first.Players.Count == 2 && second.Players.Count == 2,
+        "Match board did not return two participants.");
+    Console.WriteLine("PASS: GET MATCH BOARD OVER NETTCP FOR BOTH PARTICIPANTS");
+    return (first, second);
+}
+
+static (MatchPrivateHand Host, MatchPrivateHand Member) VerifyOpeningHands(
+    SmokeParticipant host, SmokeParticipant member,
+    (string LobbyCode, MatchBoardSnapshot Host, MatchBoardSnapshot Member) match)
+{
+    string lobbyCode = match.LobbyCode;
+    MatchBoardSnapshot first = match.Host;
+    MatchBoardSnapshot second = match.Member;
+    MatchPrivateHand hostHand = host.Lobby.GetMatchPrivateHand(lobbyCode, host.Session.Token);
+    MatchPrivateHand memberHand = member.Lobby.GetMatchPrivateHand(lobbyCode, member.Session.Token);
+    Require(first.ServerTimeUtc.HasValue && first.ServerTimeUtc < first.TurnDeadlineUtc,
+        "The board did not provide a server-time sample for the opening turn.");
+    Require(hostHand.Revision == first.Revision && memberHand.Revision == second.Revision,
+        "Private hand responses did not carry the expected board revisions.");
+    Require(hostHand.MatchId == first.MatchId && memberHand.MatchId == first.MatchId,
+        "Private hands have the wrong match identifier.");
+    Require(hostHand.PlayerId == host.Session.PlayerId && memberHand.PlayerId == member.Session.PlayerId
+        && hostHand.Cards.Count == 10 && memberHand.Cards.Count == 10
+        && hostHand.Cards.Concat(memberHand.Cards).Distinct().Count() == 20,
+        "Private hands overlap or are invalid.");
+    Require(first.CurrentTurnPlayerId == second.CurrentTurnPlayerId
+        && first.Players.Any(player => player.PlayerId == first.CurrentTurnPlayerId),
+        "Clients disagree on the opening turn or identify a non-participant.");
+    return (hostHand, memberHand);
+}
+
+static void VerifyWrongTurn(
+    (SmokeParticipant Player, MatchPrivateHand Hand) waiting,
+    SmokeParticipant host, (string LobbyCode, long AttemptRevision, long HostRevision) match)
+{
+    bool wrongTurnDenied = false;
+    try
+    {
+        waiting.Player.Lobby.PlaceMatchCard(new MatchPlaceRequest
+        {
+            LobbyCode = match.LobbyCode,
+            SessionToken = waiting.Player.Session.Token,
+            CardNumber = waiting.Hand.Cards[0],
+            PilePosition = 1,
+            ExpectedRevision = match.AttemptRevision
+        });
+    }
+    catch (FaultException<ServiceFault> exception)
+    {
+        wrongTurnDenied = exception.Detail.MessageKey == "Match.Error.NotYourTurn";
+    }
+
+    Require(wrongTurnDenied, "Placement outside the player's turn was not rejected.");
+    Require(host.Lobby.GetMatchBoard(match.LobbyCode, host.Session.Token).Revision == match.HostRevision,
+        "Rejected placement changed the board revision.");
+    Console.WriteLine("PASS: WRONG TURN REJECTED WITHOUT CHANGING BOARD");
+}
+
+static void VerifyUnearnedMasterPlan(
+    (SmokeParticipant Player, MatchPrivateHand Hand) opening,
+    MatchBoardSnapshot first, string lobbyCode)
+{
+    bool planRequired = false;
+    try
+    {
+        opening.Player.Lobby.UseMatchMasterPlan(new MatchMasterPlanRequest
+        {
+            LobbyCode = lobbyCode,
+            SessionToken = opening.Player.Session.Token,
+            CardNumbers = opening.Hand.Cards.Take(2).ToList(),
+            PilePosition = 1,
+            ExpectedRevision = first.Revision
+        });
+    }
+    catch (FaultException<ServiceFault> exception)
+    {
+        planRequired = exception.Detail.ErrorCode == "MATCH_MASTER_PLAN_REQUIRED"
+            && exception.Detail.MessageKey == "Match.Error.MasterPlanRequired";
+    }
+
+    Require(planRequired, "Using a master plan without earning one did not return the expected fault.");
+    MatchBoardSnapshot afterRejectedPlan = opening.Player.Lobby.GetMatchBoard(lobbyCode, opening.Player.Session.Token);
+    Require(afterRejectedPlan.Revision == first.Revision && afterRejectedPlan.RecentMoves.Count == 0,
+        "The rejected master plan changed the revision or added a move.");
+    Console.WriteLine("PASS: MASTER PLAN REQUIRED FAULT LEAVES HISTORY UNCHANGED");
+}
+
+static void VerifyOutsiderDenial(SmokeParticipant outsider, string lobbyCode, long revision)
+{
+    bool outsiderDenied = false;
+    try
+    {
+        outsider.Lobby.GetMatchPrivateHand(lobbyCode, outsider.Session.Token);
+    }
+    catch (FaultException<ServiceFault> exception)
+    {
+        outsiderDenied = exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotMember;
+    }
+
+    Require(outsiderDenied, "An outsider was able to read the private hand.");
+    bool outsiderDismantleDenied = false;
+    try
+    {
+        outsider.Lobby.DismantleMatchTower(new MatchDismantleRequest
+        {
+            LobbyCode = lobbyCode,
+            SessionToken = outsider.Session.Token,
+            PilePosition = 1,
+            ExpectedRevision = revision
+        });
+    }
+    catch (FaultException<ServiceFault> exception)
+    {
+        outsiderDismantleDenied = exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotMember;
+    }
+
+    Require(outsiderDismantleDenied, "An outsider was able to request a dismantle.");
+}
+
+static void VerifyReconnectedMember(
+    SmokeParticipant member,
+    (string LobbyCode, MatchPrivateHand OriginalHand, IEnumerable<int> ExpectedCards) state,
+    (UserSession Session, (int CardNumber, int PilePosition) Move) opening)
+{
+    member.Lobby.Disconnect();
+    member.Lobby.JoinLobby(state.LobbyCode, member.Session.Token);
+    MatchPrivateHand resumedHand = member.Lobby.GetMatchPrivateHand(state.LobbyCode, member.Session.Token);
+    Require(resumedHand.MatchId == state.OriginalHand.MatchId && resumedHand.PlayerId == state.OriginalHand.PlayerId
+        && resumedHand.Cards.SequenceEqual(state.ExpectedCards), "Private hand changed after reconnecting.");
+    MatchBoardMove latest = member.Lobby.GetMatchBoard(state.LobbyCode, member.Session.Token).RecentMoves.Last();
+    Require(latest.ActionKind == MatchBoardActionKind.Placement && latest.PlayerId == opening.Session.PlayerId
+        && latest.PlayerUsername == opening.Session.Username && latest.PilePosition == opening.Move.PilePosition
+        && latest.CardNumbers.SequenceEqual(new[] { opening.Move.CardNumber }),
+        "The reconnected client did not recover the last public move.");
+    Console.WriteLine("PASS: PRIVATE HANDS, OUTSIDER DENIAL, RECONNECTION AND RECENT MOVES");
+}
+
 static async Task RunExpulsionVoteAsync()
 {
     using ServiceProvider first = CreateClient();
@@ -227,27 +293,15 @@ static async Task RunExpulsionVoteAsync()
     using ServiceProvider outsider = CreateClient();
     using ILobbyClient outsiderLobby = outsider.GetRequiredService<ILobbyClient>();
     string outsiderToken = CreateGuest(outsider).Token;
-    (ILobbyClient Lobby, UserSession Session)[] clients = new[] { first, second, third }.Select(provider =>
-        (provider.GetRequiredService<ILobbyClient>(), CreateGuest(provider))).ToArray();
+    SmokeParticipant[] clients = new[] { first, second, third }.Select(provider =>
+        new SmokeParticipant(provider.GetRequiredService<ILobbyClient>(), CreateGuest(provider))).ToArray();
 
-    ILobbyClient host = clients[0].Lobby;
-    string hostToken = clients[0].Session.Token;
-    string lobbyCode = host.CreateLobby(true, 3, hostToken);
-    foreach ((ILobbyClient Lobby, UserSession Session) client in clients.Skip(1))
-    {
-        client.Lobby.JoinLobby(lobbyCode, client.Session.Token);
-    }
-
-    foreach ((ILobbyClient Lobby, UserSession Session) client in clients)
-    {
-        client.Lobby.SetReady(lobbyCode, true, client.Session.Token);
-    }
-
-    host.StartMatch(lobbyCode, hostToken);
-    MatchBoardSnapshot initial = host.GetMatchBoard(lobbyCode, hostToken);
-    (ILobbyClient Lobby, UserSession Session) target = clients.First(client =>
+    SmokeParticipant host = clients[0];
+    string lobbyCode = StartSmokeMatch(host, clients[1..]).LobbyCode;
+    MatchBoardSnapshot initial = host.Lobby.GetMatchBoard(lobbyCode, host.Session.Token);
+    SmokeParticipant target = clients.First(client =>
         client.Session.PlayerId != initial.CurrentTurnPlayerId);
-    (ILobbyClient Lobby, UserSession Session)[] voters = clients.Where(client =>
+    SmokeParticipant[] voters = clients.Where(client =>
         client.Session.PlayerId != target.Session.PlayerId).ToArray();
     Channel<MatchBoardChanged> notices = Channel.CreateUnbounded<MatchBoardChanged>();
     target.Lobby.MatchBoardUpdated += ObserveVote;
@@ -261,27 +315,11 @@ static async Task RunExpulsionVoteAsync()
             TargetPlayerId = target.Session.PlayerId,
             ExpectedVotingRevision = initial.VotingRevision
         };
-        request.MatchId = Guid.NewGuid();
-        VerifyRejectedVote(voters[0].Lobby, request, "MATCH_UNAVAILABLE");
-        request.MatchId = initial.MatchId;
-        request.SessionToken = outsiderToken;
-        VerifyRejectedVote(outsiderLobby, request, ServiceErrorCodes.LobbyNotMember);
-        request.SessionToken = voters[0].Session.Token;
-        MatchBoardSnapshot unchanged = host.GetMatchBoard(lobbyCode, hostToken);
+        VerifyRejectedVotes(request, voters[0], (outsiderLobby, outsiderToken));
+        MatchBoardSnapshot unchanged = host.Lobby.GetMatchBoard(lobbyCode, host.Session.Token);
         Require(unchanged.Revision == initial.Revision && unchanged.ExpulsionVotes.Count == 0,
             "A rejected vote changed the board.");
-        MatchBoardSnapshot recorded = voters[0].Lobby.VoteToExpelMatchPlayer(request);
-        Require(recorded.ExpulsionVotesRequired == 2 && recorded.ExpulsionVotes.Single().VoteCount == 1,
-            "The first vote did not produce a pending tally.");
-        VerifyRejectedVote(voters[0].Lobby, request, "MATCH_ALREADY_VOTED");
-        voters[0].Lobby.Disconnect();
-        voters[0].Lobby.JoinLobby(lobbyCode, voters[0].Session.Token);
-        MatchPrivateHand resumedVote = voters[0].Lobby.GetMatchPrivateHand(lobbyCode, voters[0].Session.Token);
-        MatchPrivateHand otherHand = voters[1].Lobby.GetMatchPrivateHand(lobbyCode, voters[1].Session.Token);
-        Require(resumedVote.VotingRevision == recorded.VotingRevision
-            && resumedVote.VotedExpulsionTargetIds.SequenceEqual(new[] { target.Session.PlayerId })
-            && otherHand.VotedExpulsionTargetIds.Count == 0,
-            "A reconnected client did not receive its own vote, or another client received it.");
+        MatchBoardSnapshot recorded = RecordFirstVote(request, voters, target.Session.PlayerId);
 
         request.SessionToken = voters[1].Session.Token;
         MatchBoardSnapshot expelled = voters[1].Lobby.VoteToExpelMatchPlayer(request);
@@ -289,34 +327,14 @@ static async Task RunExpulsionVoteAsync()
             && expelled.ExpulsionVotes.Count == 0 && initial.CurrentTurnPlayerId == expelled.CurrentTurnPlayerId
             && initial.TurnDeadlineUtc == expelled.TurnDeadlineUtc,
             "A vote against a waiting player did not preserve the active turn.");
-        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(15));
-        MatchBoardChanged firstNotice = await notices.Reader.ReadAsync(timeout.Token);
-        MatchBoardChanged secondNotice = await notices.Reader.ReadAsync(timeout.Token);
-        Require(firstNotice.ActionKind == MatchBoardActionKind.ExpulsionVoteRecorded
-            && firstNotice.Revision == recorded.Revision && firstNotice.PlayerUsername == string.Empty
-            && secondNotice.ActionKind == MatchBoardActionKind.ExpelledByVote
-            && secondNotice.Revision == expelled.Revision && secondNotice.PlayerUsername == target.Session.Username,
-            "The expelled client did not receive the expected vote notifications.");
-        MatchLeaveRequest leave = new()
-        {
-            LobbyCode = lobbyCode,
-            MatchId = expelled.MatchId,
-            SessionToken = target.Session.Token
-        };
-        Require(target.Lobby.LeaveMatch(leave) && target.Lobby.GetCurrentLobby(target.Session.Token) is null,
-            "The expelled player could not leave the match.");
-        MatchBoardSnapshot afterExit = voters[0].Lobby.GetMatchBoard(lobbyCode, voters[0].Session.Token);
-        Require(afterExit.Revision == expelled.Revision && afterExit.EndReason == MatchEndReason.None
-            && afterExit.CurrentTurnPlayerId == expelled.CurrentTurnPlayerId
-            && afterExit.TurnDeadlineUtc == expelled.TurnDeadlineUtc && afterExit.Players.Count == 2,
-            "Leaving after expulsion changed the match for the remaining players.");
-        Console.WriteLine("PASS: EXPELLED PLAYER CAN LEAVE WITHOUT CHANGING THE ONGOING MATCH");
+        await VerifyVoteNoticesAsync(notices.Reader, (recorded, expelled), target.Session.Username);
+        VerifyExpelledPlayerExit(target, voters[0], (lobbyCode, expelled));
         Console.WriteLine("PASS: EXPULSION VOTE OVER NETTCP PRESERVES THE ACTIVE TURN");
     }
     finally
     {
         target.Lobby.MatchBoardUpdated -= ObserveVote;
-        foreach ((ILobbyClient Lobby, UserSession Session) client in clients)
+        foreach (SmokeParticipant client in clients)
         {
             client.Lobby.Disconnect();
         }
@@ -331,6 +349,75 @@ static async Task RunExpulsionVoteAsync()
     {
         notices.Writer.TryWrite(notice);
     }
+}
+
+static void VerifyRejectedVotes(
+    MatchExpulsionVoteRequest request, SmokeParticipant voter,
+    (ILobbyClient Lobby, string Token) outsider)
+{
+    Guid matchId = request.MatchId;
+    request.MatchId = Guid.NewGuid();
+    VerifyRejectedVote(voter.Lobby, request, "MATCH_UNAVAILABLE");
+    request.MatchId = matchId;
+    request.SessionToken = outsider.Token;
+    VerifyRejectedVote(outsider.Lobby, request, ServiceErrorCodes.LobbyNotMember);
+    request.SessionToken = voter.Session.Token;
+}
+
+static MatchBoardSnapshot RecordFirstVote(
+    MatchExpulsionVoteRequest request, SmokeParticipant[] voters, Guid targetId)
+{
+    string lobbyCode = request.LobbyCode;
+    MatchBoardSnapshot recorded = voters[0].Lobby.VoteToExpelMatchPlayer(request);
+    Require(recorded.ExpulsionVotesRequired == 2 && recorded.ExpulsionVotes.Single().VoteCount == 1,
+        "The first vote did not produce a pending tally.");
+    VerifyRejectedVote(voters[0].Lobby, request, "MATCH_ALREADY_VOTED");
+    voters[0].Lobby.Disconnect();
+    voters[0].Lobby.JoinLobby(lobbyCode, voters[0].Session.Token);
+    MatchPrivateHand resumedVote = voters[0].Lobby.GetMatchPrivateHand(lobbyCode, voters[0].Session.Token);
+    MatchPrivateHand otherHand = voters[1].Lobby.GetMatchPrivateHand(lobbyCode, voters[1].Session.Token);
+    Require(resumedVote.VotingRevision == recorded.VotingRevision
+        && resumedVote.VotedExpulsionTargetIds.SequenceEqual(new[] { targetId })
+        && otherHand.VotedExpulsionTargetIds.Count == 0,
+        "A reconnected client did not receive its own vote, or another client received it.");
+    return recorded;
+}
+
+static async Task VerifyVoteNoticesAsync(
+    ChannelReader<MatchBoardChanged> notices,
+    (MatchBoardSnapshot Recorded, MatchBoardSnapshot Expelled) boards, string targetUsername)
+{
+    using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(15));
+    MatchBoardChanged firstNotice = await notices.ReadAsync(timeout.Token);
+    MatchBoardChanged secondNotice = await notices.ReadAsync(timeout.Token);
+    Require(firstNotice.ActionKind == MatchBoardActionKind.ExpulsionVoteRecorded
+        && firstNotice.Revision == boards.Recorded.Revision && firstNotice.PlayerUsername == string.Empty
+        && secondNotice.ActionKind == MatchBoardActionKind.ExpelledByVote
+        && secondNotice.Revision == boards.Expelled.Revision && secondNotice.PlayerUsername == targetUsername,
+        "The expelled client did not receive the expected vote notifications.");
+}
+
+static void VerifyExpelledPlayerExit(
+    SmokeParticipant target,
+    SmokeParticipant remaining,
+    (string LobbyCode, MatchBoardSnapshot Board) result)
+{
+    string lobbyCode = result.LobbyCode;
+    MatchBoardSnapshot expelled = result.Board;
+    MatchLeaveRequest leave = new()
+    {
+        LobbyCode = lobbyCode,
+        MatchId = expelled.MatchId,
+        SessionToken = target.Session.Token
+    };
+    Require(target.Lobby.LeaveMatch(leave) && target.Lobby.GetCurrentLobby(target.Session.Token) is null,
+        "The expelled player could not leave the match.");
+    MatchBoardSnapshot afterExit = remaining.Lobby.GetMatchBoard(lobbyCode, remaining.Session.Token);
+    Require(afterExit.Revision == expelled.Revision && afterExit.EndReason == MatchEndReason.None
+        && afterExit.CurrentTurnPlayerId == expelled.CurrentTurnPlayerId
+        && afterExit.TurnDeadlineUtc == expelled.TurnDeadlineUtc && afterExit.Players.Count == 2,
+        "Leaving after expulsion changed the match for the remaining players.");
+    Console.WriteLine("PASS: EXPELLED PLAYER CAN LEAVE WITHOUT CHANGING THE ONGOING MATCH");
 }
 
 static void VerifyRejectedVote(ILobbyClient client, MatchExpulsionVoteRequest request, string expectedError)
@@ -442,8 +529,7 @@ static (int CardNumber, int PilePosition) FindPlacement(MatchBoardSnapshot board
 }
 
 static async Task VerifyPlacementAsync(
-    (ILobbyClient Lobby, UserSession Session) active,
-    (ILobbyClient Lobby, UserSession Session) waiting,
+    SmokeParticipant active, SmokeParticipant waiting,
     (string LobbyCode, MatchBoardSnapshot Board, MatchPrivateHand Hand,
         (int CardNumber, int PilePosition) Move) opening)
 {
@@ -467,27 +553,14 @@ static async Task VerifyPlacementAsync(
         MatchBoardChanged[] changes = await Task.WhenAll(activeUpdate.Task, waitingUpdate.Task)
             .WaitAsync(TimeSpan.FromSeconds(15));
 
-        Require(placed.Revision == initial.Revision + 1 && changes.All(change =>
-            change.LobbyCode == opening.LobbyCode && change.Revision == placed.Revision
-            && change.PlayerUsername == active.Session.Username
-            && change.CardNumber == request.CardNumber && change.PilePosition == request.PilePosition),
-            "Placement did not notify both clients of the expected move.");
+        VerifyPlacementNotices(changes, (initial.Revision, placed.Revision), (request, active.Session.Username));
 
         MatchBoardSnapshot activeBoard = active.Lobby.GetMatchBoard(request.LobbyCode, active.Session.Token);
         MatchBoardSnapshot waitingBoard = waiting.Lobby.GetMatchBoard(request.LobbyCode, waiting.Session.Token);
         foreach (MatchBoardSnapshot board in new[] { placed, activeBoard, waitingBoard })
         {
-            Require(board.MatchId == initial.MatchId && board.Revision == placed.Revision
-                && board.CurrentTurnPlayerId == waiting.Session.PlayerId
-                && board.Piles.Single(pile => pile.Position == request.PilePosition).TopCardNumber
-                    == request.CardNumber,
-                "A client received an incorrect board after the move.");
-            Require(board.Players.Count == 2
-                && board.Players.Any(player => player.PlayerId == active.Session.PlayerId
-                    && player.Username == active.Session.Username)
-                && board.Players.Any(player => player.PlayerId == waiting.Session.PlayerId
-                    && player.Username == waiting.Session.Username),
-                "A board snapshot did not preserve both player names.");
+            VerifyPlacedBoard(board, (initial.MatchId, placed.Revision, waiting.Session.PlayerId), request);
+            VerifyPlacedBoardPlayers(board, active.Session, waiting.Session);
         }
 
         MatchPrivateHand hand = active.Lobby.GetMatchPrivateHand(request.LobbyCode, active.Session.Token);
@@ -519,6 +592,38 @@ static async Task VerifyPlacementAsync(
     }
 }
 
+static void VerifyPlacementNotices(
+    MatchBoardChanged[] changes, (long Before, long After) revision,
+    (MatchPlaceRequest Request, string Username) placement)
+{
+    MatchPlaceRequest request = placement.Request;
+    Require(revision.After == revision.Before + 1 && changes.All(change =>
+        change.LobbyCode == request.LobbyCode && change.Revision == revision.After
+        && change.PlayerUsername == placement.Username
+        && change.CardNumber == request.CardNumber && change.PilePosition == request.PilePosition),
+        "Placement did not notify both clients of the expected move.");
+}
+
+static void VerifyPlacedBoard(
+    MatchBoardSnapshot board, (Guid MatchId, long Revision, Guid NextPlayerId) expected, MatchPlaceRequest request)
+{
+    Require(board.MatchId == expected.MatchId && board.Revision == expected.Revision
+        && board.CurrentTurnPlayerId == expected.NextPlayerId
+        && board.Piles.Single(pile => pile.Position == request.PilePosition).TopCardNumber
+            == request.CardNumber,
+        "A client received an incorrect board after the move.");
+}
+
+static void VerifyPlacedBoardPlayers(MatchBoardSnapshot board, UserSession active, UserSession waiting)
+{
+    Require(board.Players.Count == 2
+        && board.Players.Any(player => player.PlayerId == active.PlayerId
+            && player.Username == active.Username)
+        && board.Players.Any(player => player.PlayerId == waiting.PlayerId
+            && player.Username == waiting.Username),
+        "A board snapshot did not preserve both player names.");
+}
+
 static ServiceProvider CreateClient()
 {
     ServiceCollection services = new();
@@ -544,3 +649,5 @@ static void Require(bool condition, string message)
         throw new InvalidOperationException(message);
     }
 }
+
+internal sealed record SmokeParticipant(ILobbyClient Lobby, UserSession Session);

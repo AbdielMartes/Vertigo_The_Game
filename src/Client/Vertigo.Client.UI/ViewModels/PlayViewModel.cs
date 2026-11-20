@@ -208,19 +208,7 @@ public sealed class PlayViewModel : ObservableObject, INavigationAware
             ErrorMessage = string.Empty;
             try
             {
-                if (MaxPlayers < 2 || MaxPlayers > 6)
-                {
-                    ErrorMessage = _text.Get("Play.InvalidCapacity");
-                }
-                else
-                {
-                    bool success = await _lobby.CreateAsync(IsPublic, MaxPlayers);
-                    if (IsCurrent(current, generation) && !success)
-                    {
-                        ErrorMessage = _lobby.ErrorMessage;
-                        await CheckMembershipAsync();
-                    }
-                }
+                await CreateLobbyForSessionAsync(current, generation);
             }
             catch (Exception)
             {
@@ -235,6 +223,23 @@ public sealed class PlayViewModel : ObservableObject, INavigationAware
                 {
                     IsBusy = false;
                 }
+            }
+        }
+    }
+
+    private async Task CreateLobbyForSessionAsync(SessionSnapshot current, int generation)
+    {
+        if (MaxPlayers < 2 || MaxPlayers > 6)
+        {
+            ErrorMessage = _text.Get("Play.InvalidCapacity");
+        }
+        else
+        {
+            bool success = await _lobby.CreateAsync(IsPublic, MaxPlayers);
+            if (IsCurrent(current, generation) && !success)
+            {
+                ErrorMessage = _lobby.ErrorMessage;
+                await CheckMembershipAsync();
             }
         }
     }

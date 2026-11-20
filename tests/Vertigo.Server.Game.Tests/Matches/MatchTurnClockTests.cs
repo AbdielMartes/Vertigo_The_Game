@@ -20,21 +20,21 @@ public sealed class MatchTurnClockTests
         Guid[] order = before.Players.Select(player => player.PlayerId).ToArray();
         Guid nextPlayer = order[(Array.IndexOf(order, active) + 1) % order.Length];
 
-        Assert.Equal(StartTime.AddSeconds(20), before.TurnDeadlineUtc);
+        Assert.Equal(StartTime.AddSeconds(30), before.TurnDeadlineUtc);
         Assert.Equal(StartTime, before.ServerTimeUtc);
-        clock.Set(StartTime.AddSeconds(20).AddTicks(-1));
+        clock.Set(before.TurnDeadlineUtc!.Value.AddTicks(-1));
         Assert.Null(game.TryExpireTurn(matchId));
         Assert.Equal(before.Revision, game.GetBoard(matchId)!.Revision);
 
-        clock.Set(StartTime.AddSeconds(20));
+        clock.Set(before.TurnDeadlineUtc!.Value);
         Assert.Equal(active, game.TryExpireTurn(matchId));
         Assert.Null(game.TryExpireTurn(matchId));
 
         MatchBoardSnapshot after = game.GetBoard(matchId)!;
         Assert.Equal(before.Revision + 1, after.Revision);
         Assert.Equal(nextPlayer, after.CurrentTurnPlayerId);
-        Assert.Equal(StartTime.AddSeconds(40), after.TurnDeadlineUtc);
-        Assert.Equal(StartTime.AddSeconds(20), after.ServerTimeUtc);
+        Assert.Equal(clock.GetUtcNow() + (before.TurnDeadlineUtc!.Value - StartTime), after.TurnDeadlineUtc);
+        Assert.Equal(clock.GetUtcNow(), after.ServerTimeUtc);
         Assert.Equal(MatchEndReason.None, after.EndReason);
         Assert.Equal(active, Assert.Single(after.ExpelledPlayerIds));
         Assert.DoesNotContain(after.Players, player => player.PlayerId == active);
@@ -75,7 +75,7 @@ public sealed class MatchTurnClockTests
         MatchBoardSnapshot before = game.GetBoard(matchId)!;
         Guid winner = before.Players.Single(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
 
-        clock.Set(StartTime.AddSeconds(20));
+        clock.Set(before.TurnDeadlineUtc!.Value);
         Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
 
         MatchBoardSnapshot after = game.GetBoard(matchId)!;
@@ -97,9 +97,9 @@ public sealed class MatchTurnClockTests
         clock.Set(StartTime.AddSeconds(12));
         Assert.All(board.Players, player => Assert.True(game.TryDisconnect(matchId, player.PlayerId)));
         Assert.Equal(MatchLifecycleStatus.Suspended, game.Get(matchId)!.Status);
-        clock.Set(StartTime.AddSeconds(19));
+        clock.Set(board.TurnDeadlineUtc!.Value.AddSeconds(-1));
         Assert.Null(game.TryExpireTurn(matchId));
-        clock.Set(StartTime.AddSeconds(20));
+        clock.Set(board.TurnDeadlineUtc!.Value);
 
         Guid? expelled = game.TryExpireTurn(matchId);
 
@@ -116,7 +116,7 @@ public sealed class MatchTurnClockTests
         Func<bool> playTurn = GetLegalTurn(game, before);
         bool played = false;
         Guid? expelled = null;
-        clock.Set(StartTime.AddSeconds(20));
+        clock.Set(before.TurnDeadlineUtc!.Value);
 
         Parallel.Invoke(() => played = playTurn(), () => expelled = game.TryExpireTurn(matchId));
 
@@ -163,14 +163,15 @@ public sealed class MatchTurnClockTests
         var (game, matchId) = StartMatch(clock, 3);
         MatchBoardSnapshot before = game.GetBoard(matchId)!;
         Func<bool> playTurn = GetLegalTurn(game, before);
-        clock.Set(StartTime.AddSeconds(19));
+        clock.Set(before.TurnDeadlineUtc!.Value.AddSeconds(-1));
 
         Assert.True(playTurn());
-        clock.Set(StartTime.AddSeconds(20));
+        clock.Set(before.TurnDeadlineUtc!.Value);
         Assert.Null(game.TryExpireTurn(matchId));
 
         MatchBoardSnapshot after = game.GetBoard(matchId)!;
-        Assert.Equal(StartTime.AddSeconds(39), after.TurnDeadlineUtc);
+        Assert.Equal(before.TurnDeadlineUtc!.Value.AddSeconds(-1) + (before.TurnDeadlineUtc.Value - StartTime),
+            after.TurnDeadlineUtc);
         Assert.Equal(before.Revision + 1, after.Revision);
         Assert.Empty(after.ExpelledPlayerIds);
     }
@@ -179,14 +180,21 @@ public sealed class MatchTurnClockTests
     public void TryExpireTurn_ExpelledHand_ReturnsAfterExistingModules()
     {
         Guid[] players = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-        MatchSessionSnapshot session = new(
-            Guid.NewGuid(), Guid.NewGuid(), "ABC234", players[0], players, StartTime.UtcDateTime);
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            InitialHostPlayerId = players[0],
+            PlayerIds = players,
+            CreatedAtUtc = StartTime.UtcDateTime
+        };
         int[] modules = Enumerable.Range(1, 10).Concat(Enumerable.Range(21, 10))
             .Concat(Enumerable.Range(41, 10)).Concat(new[] { 90, 91, 92, 93, 95 }).ToArray();
         MatchRecord record = new(session, StartTime, () => new MatchDeck(modules));
         MatchBoardSnapshot board = record.ToBoard();
         int expectedReturnedModule = record.ToPrivateHand(board.CurrentTurnPlayerId)!.Cards[0];
-        DateTimeOffset now = StartTime.AddSeconds(20);
+        DateTimeOffset now = board.TurnDeadlineUtc!.Value;
 
         Assert.Equal(board.CurrentTurnPlayerId, record.TryExpireTurn(now));
         Assert.Equal(MatchEndReason.None, record.ToBoard().EndReason);

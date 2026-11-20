@@ -482,7 +482,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             if (_playerJoined is null)
             {
-                _pendingEvents.Enqueue(new PendingLobbyEvent(player, Guid.Empty, null));
+                _pendingEvents.Enqueue(new PendingLobbyEvent { Joined = player });
             }
             else
             {
@@ -497,7 +497,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             if (_playerLeft is null)
             {
-                _pendingEvents.Enqueue(new PendingLobbyEvent(null, playerId, null));
+                _pendingEvents.Enqueue(new PendingLobbyEvent { LeftPlayerId = playerId });
             }
             else
             {
@@ -511,7 +511,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             if (_preparationChanged is null)
             {
-                _pendingEvents.Enqueue(new PendingLobbyEvent(null, Guid.Empty, null, preparation));
+                _pendingEvents.Enqueue(new PendingLobbyEvent { Preparation = preparation });
             }
             else
             {
@@ -534,7 +534,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             if (_messageReceived is null)
             {
-                _pendingEvents.Enqueue(new PendingLobbyEvent(null, Guid.Empty, message));
+                _pendingEvents.Enqueue(new PendingLobbyEvent { Chat = message });
             }
             else
             {

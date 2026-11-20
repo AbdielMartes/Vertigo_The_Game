@@ -15,7 +15,7 @@ public sealed class MatchDismantleTests
         MatchRecord match = Create(
             Enumerable.Range(1, 10).Select(module => module * 2),
             Enumerable.Range(1, 10).Select(module => module * 2 + 1),
-            new[] { 80, 1, 90, 99 }, 70);
+            [80, 1, 90, 99, 70]);
         MatchBoardSnapshot board = match.ToBoard();
         Guid active = board.CurrentTurnPlayerId;
         MatchPrivateHand hand = match.ToPrivateHand(active)!;
@@ -37,7 +37,7 @@ public sealed class MatchDismantleTests
         MatchRecord match = Create(
             new[] { 2, 4, 6, 8, 10, 12, 14, 40, 42, 81 },
             new[] { 3, 5, 7, 9, 11, 13, 41, 43, 45, 47 },
-            new[] { 1, 80, 95, 99 }, 70, 71);
+            [1, 80, 95, 99, 70, 71]);
         if (match.ToBoard().CurrentTurnPlayerId == match.Session.PlayerIds[0])
         {
             Place(match, 81, 2);
@@ -78,7 +78,7 @@ public sealed class MatchDismantleTests
     {
         MatchRecord match = Create(
             new[] { 2, 4, 40, 41, 42, 43, 44, 45, 46, 47 }, Enumerable.Range(50, 10),
-            new[] { 1, 80, 90, 99 });
+            [1, 80, 90, 99]);
         if (match.ToBoard().CurrentTurnPlayerId == match.Session.PlayerIds[0])
         {
             Place(match, 2);
@@ -99,16 +99,27 @@ public sealed class MatchDismantleTests
     }
 
     [Theory]
-    [InlineData(true, 2, -1, MatchDismantleResult.StaleRevision)]
-    [InlineData(true, 2, 0, MatchDismantleResult.NotYourTurn)]
-    [InlineData(false, 2, 0, MatchDismantleResult.EmptyPile)]
-    [InlineData(false, 5, 0, MatchDismantleResult.InvalidPile)]
-    public void TryDismantle_InvalidRequest_PreservesBoardAndHands(
-        bool useWaitingPlayer, int pilePosition, long revisionOffset, MatchDismantleResult expected)
+    [InlineData(-1L, MatchDismantleResult.StaleRevision)]
+    [InlineData(0L, MatchDismantleResult.NotYourTurn)]
+    public void TryDismantle_WaitingPlayerRequest_PreservesBoardAndHands(long revisionOffset, MatchDismantleResult expected)
+    {
+        AssertRejectedDismantle(true, (2, revisionOffset), expected);
+    }
+
+    [Theory]
+    [InlineData(2, MatchDismantleResult.EmptyPile)]
+    [InlineData(5, MatchDismantleResult.InvalidPile)]
+    public void TryDismantle_InvalidActivePlayerPile_PreservesBoardAndHands(int pilePosition, MatchDismantleResult expected)
+    {
+        AssertRejectedDismantle(false, (pilePosition, 0L), expected);
+    }
+
+    private static void AssertRejectedDismantle(
+        bool useWaitingPlayer, (int PilePosition, long RevisionOffset) request, MatchDismantleResult expected)
     {
         MatchRecord match = Create(
             new[] { 2, 4, 40, 41, 42, 43, 44, 45, 46, 47 }, Enumerable.Range(50, 10),
-            new[] { 1, 80, 90, 99 });
+            [1, 80, 90, 99]);
         Guid active = match.Session.PlayerIds[0];
         Guid waiting = match.Session.PlayerIds[1];
         if (match.ToBoard().CurrentTurnPlayerId == active)
@@ -124,7 +135,7 @@ public sealed class MatchDismantleTests
         MatchPrivateHand waitingHand = match.ToPrivateHand(waiting)!;
 
         Guid playerId = useWaitingPlayer ? waiting : active;
-        MatchDismantle move = new(pilePosition, before.Revision + revisionOffset);
+        MatchDismantle move = new(request.PilePosition, before.Revision + request.RevisionOffset);
 
         MatchDismantleResult result = match.TryDismantle(playerId, move, Now);
 
@@ -148,7 +159,7 @@ public sealed class MatchDismantleTests
         MatchRecord match = Create(
             new[] { 31, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
             new[] { 32, 81, 10, 11, 12, 13, 14, 15, 16, 17 },
-            new[] { 30, 80, 90, 99 }, 95);
+            [30, 80, 90, 99, 95]);
         Guid scorer = match.Session.PlayerIds[0];
         Guid other = match.Session.PlayerIds[1];
         if (match.ToBoard().CurrentTurnPlayerId == other)
@@ -184,7 +195,7 @@ public sealed class MatchDismantleTests
     [Fact]
     public void TryDismantle_ExhaustionAcrossThreeRounds_ScoresAndFinishesWithWinner()
     {
-        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(11, 10), new[] { 90, 91, 92, 93 }, 94);
+        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(11, 10), [90, 91, 92, 93, 94]);
         Guid initialOpener = match.ToBoard().CurrentTurnPlayerId;
         Guid other = match.Session.PlayerIds.Single(playerId => playerId != initialOpener);
 
@@ -220,7 +231,7 @@ public sealed class MatchDismantleTests
         MatchRecord match = Create(
             Enumerable.Range(1, 10).Select(module => module * 2),
             Enumerable.Range(1, 10).Select(module => module * 2 + 1),
-            new[] { 1, 90, 95, 100 }, 70);
+            [1, 90, 95, 100, 70]);
         Guid opener = match.ToBoard().CurrentTurnPlayerId;
         int firstModule = match.ToPrivateHand(opener)!.Cards.Min();
         for (int module = firstModule; module < firstModule + 19; module++)
@@ -249,12 +260,19 @@ public sealed class MatchDismantleTests
     }
 
     private static MatchRecord Create(
-        IEnumerable<int> firstHand, IEnumerable<int> secondHand, int[] foundations, params int[] remaining)
+        IEnumerable<int> firstHand, IEnumerable<int> secondHand, int[] towerAndDeckCards)
     {
         Guid[] players = { Guid.NewGuid(), Guid.NewGuid() };
-        MatchSessionSnapshot session = new(
-            Guid.NewGuid(), Guid.NewGuid(), "ABC234", players[0], players, Now.UtcDateTime);
-        int[] modules = firstHand.Concat(secondHand).Concat(foundations).Concat(remaining).ToArray();
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            InitialHostPlayerId = players[0],
+            PlayerIds = players,
+            CreatedAtUtc = Now.UtcDateTime
+        };
+        int[] modules = firstHand.Concat(secondHand).Concat(towerAndDeckCards).ToArray();
         Assert.Equal(modules.Length, modules.Distinct().Count());
 
         return new MatchRecord(session, Now, () => new MatchDeck(modules));
