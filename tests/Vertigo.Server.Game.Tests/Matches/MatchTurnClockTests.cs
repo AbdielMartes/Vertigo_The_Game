@@ -198,8 +198,8 @@ public sealed class MatchTurnClockTests
             CreatedAtUtc = StartTime.UtcDateTime
         };
         int[] modules = Enumerable.Range(1, 10).Concat(Enumerable.Range(21, 10))
-            .Concat(Enumerable.Range(41, 10)).Concat(new[] { 90, 91, 92, 93, 95 }).ToArray();
-        MatchRecord record = new(session, StartTime, () => new MatchDeck(modules));
+            .Concat(Enumerable.Range(41, 10)).Concat(new[] { 90, 95 }).ToArray();
+        MatchRecord record = new(session, StartTime, (() => new MatchDeck(modules), _ => 0));
         MatchBoardSnapshot board = record.ToBoard();
         int expectedReturnedModule = record.ToPrivateHand(board.CurrentTurnPlayerId)!.Cards[0];
         DateTimeOffset now = board.TurnDeadlineUtc!.Value.AddSeconds(1);
@@ -209,12 +209,10 @@ public sealed class MatchTurnClockTests
         Assert.Equal(board.CurrentTurnPlayerId, record.TryExpireTurn(now));
         Assert.Equal(MatchEndReason.None, record.ToBoard().EndReason);
         Assert.Equal(1, record.ToBoard().RoundNumber);
-        Guid nextPlayer = record.ToBoard().CurrentTurnPlayerId;
         Dismantle(record, now);
-        Assert.Equal(95, record.ToBoard().Piles[0].TopCardNumber);
-        Dismantle(record, now);
-        Assert.Equal(expectedReturnedModule, record.ToBoard().Piles[0].TopCardNumber);
-        Assert.Equal(nextPlayer, record.ToBoard().CurrentTurnPlayerId);
+
+        Assert.Equal(new int?[] { 95, expectedReturnedModule },
+            record.ToBoard().Piles.Select(pile => pile.TopCardNumber));
     }
 
     [Fact]

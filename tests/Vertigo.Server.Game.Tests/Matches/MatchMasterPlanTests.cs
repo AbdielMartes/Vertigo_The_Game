@@ -132,13 +132,9 @@ public sealed class MatchMasterPlanTests
             PlayerIds = players,
             CreatedAtUtc = Now.UtcDateTime
         };
-        int[] modules = { 4, 81, 91, 20, 21, 22, 23, 24, 25, 26,
-            3, 42, 43, 44, 45, 46, 47, 48, 49, 50, 1, 80, 90, 100, 36, 99 };
-        MatchRecord match = new(session, Now, () => new MatchDeck(modules));
-        if (match.ToBoard().CurrentTurnPlayerId == players[0])
-        {
-            Place(match, 81, 2);
-        }
+        int[] modules = { 4, 91, 20, 21, 22, 23, 24, 25, 26, 27,
+            3, 42, 43, 44, 45, 46, 47, 48, 49, 50, 1, 36, 90, 100 };
+        MatchRecord match = new(session, Now, (() => new MatchDeck(modules), _ => 1));
 
         MatchBoardSnapshot before = match.ToBoard();
         Assert.Equal(MatchPlacementResult.MasterPlanRequired, match.TryUseMasterPlan(
@@ -155,7 +151,7 @@ public sealed class MatchMasterPlanTests
         }
         else
         {
-            Place(match, 91, 3);
+            Place(match, 91, 2);
         }
 
         return match;

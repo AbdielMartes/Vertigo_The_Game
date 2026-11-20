@@ -31,10 +31,10 @@ public sealed class MatchPlacementTests
         var host = state.Game.GetPrivateHand(state.MatchId, state.Host)!;
         var other = state.Game.GetPrivateHand(state.MatchId, state.Other)!;
         int[] foundations = board.Piles.Select(pile => pile.TopCardNumber!.Value).ToArray();
-        Assert.Equal(4, foundations.Length);
+        Assert.Single(foundations);
         Assert.Equal(10, host.Cards.Count);
         Assert.Equal(10, other.Cards.Count);
-        Assert.Equal(24, foundations.Concat(host.Cards).Concat(other.Cards).Distinct().Count());
+        Assert.Equal(21, foundations.Concat(host.Cards).Concat(other.Cards).Distinct().Count());
         Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
     }
 

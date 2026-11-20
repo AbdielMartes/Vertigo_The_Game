@@ -17,7 +17,7 @@ namespace Vertigo.Client.UI.ViewModels.Social;
 public sealed class LobbyInvitationsViewModel : SocialViewModelBase
 {
     private readonly ILobbyInvitationClient _client;
-    private readonly Vertigo.Client.UI.ViewModels.LobbyViewModel _lobby;
+    private readonly LobbyViewModel _lobby;
     private string _lobbyCode = string.Empty;
     private string _declinedCode = string.Empty;
     private string _acceptedCode = string.Empty;

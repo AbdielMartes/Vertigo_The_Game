@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Vertigo.Client.Core.Sessions;
 using System.Collections.ObjectModel;

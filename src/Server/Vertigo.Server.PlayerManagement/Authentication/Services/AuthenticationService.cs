@@ -18,10 +18,10 @@ public class AuthenticationService : IAuthService
     private static readonly EventId AuthenticationFailedEvent = new(2001, "AuthenticationFailed");
     private static readonly EventId AuthenticationSucceededEvent = new(2002, "AuthenticationSucceeded");
 
-    private readonly AuthService _authentication;
+    private readonly SessionService _authentication;
     private readonly ILogger<AuthenticationService> _logger;
 
-    public AuthenticationService(AuthService authentication, ILogger<AuthenticationService> logger)
+    public AuthenticationService(SessionService authentication, ILogger<AuthenticationService> logger)
     {
         _authentication = authentication;
         _logger = logger;

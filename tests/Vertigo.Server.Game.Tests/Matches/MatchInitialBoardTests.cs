@@ -25,7 +25,7 @@ public sealed class MatchInitialBoardTests
     }
 
     [Fact]
-    public void GetBoard_AfterStart_HasFourOrderedFoundations()
+    public void GetBoard_AfterStart_HasOneFoundation()
     {
         InMemoryMatchSessionStarter game = new(TimeProvider.System);
         Guid matchId = game.Start(CreateRequest()).MatchId;
@@ -33,16 +33,14 @@ public sealed class MatchInitialBoardTests
         MatchBoardSnapshot? board = game.GetBoard(matchId);
 
         Assert.NotNull(board);
-        Assert.Equal(new[] { 1, 2, 3, 4 }, board.Piles.Select(pile => pile.Position));
-        Assert.All(board.Piles, pile =>
-        {
-            Assert.Equal(1, pile.CardCount);
-            Assert.InRange(pile.TopCardNumber!.Value, 1, 100);
-        });
+        MatchBoardPile pile = Assert.Single(board.Piles);
+        Assert.Equal(1, pile.Position);
+        Assert.Equal(1, pile.CardCount);
+        Assert.InRange(pile.TopCardNumber!.Value, 1, 100);
     }
 
     [Fact]
-    public void Start_SixParticipants_DealsTenUniqueModulesPerPlayerAndFourFoundations()
+    public void Start_SixParticipants_DealsTenUniqueModulesPerPlayerAndOneFoundation()
     {
         InMemoryMatchSessionStarter game = new(TimeProvider.System);
         Guid[] players = Enumerable.Range(0, 6).Select(index => Guid.NewGuid()).ToArray();
@@ -59,7 +57,7 @@ public sealed class MatchInitialBoardTests
         MatchBoardSnapshot? board = game.GetBoard(matchId);
         Assert.NotNull(board);
         List<int> dealt = board.Piles.Select(pile => pile.TopCardNumber!.Value).ToList();
-        Assert.Equal(4, dealt.Count);
+        Assert.Single(dealt);
         foreach (Guid player in players)
         {
             MatchPrivateHand? hand = game.GetPrivateHand(matchId, player);
@@ -68,7 +66,7 @@ public sealed class MatchInitialBoardTests
             dealt.AddRange(hand.Cards);
         }
 
-        Assert.Equal(64, dealt.Distinct().Count());
+        Assert.Equal(61, dealt.Distinct().Count());
         Assert.All(dealt, module => Assert.InRange(module, 1, 100));
     }
 
@@ -110,7 +108,7 @@ public sealed class MatchInitialBoardTests
 
         Assert.NotNull(second);
         Assert.Equal(1, second.RoundNumber);
-        Assert.Equal(4, second.Piles.Count);
+        Assert.Single(second.Piles);
         Assert.Equal(1, second.Piles[0].Position);
         Assert.Equal(foundation, second.Piles[0].TopCardNumber);
         Assert.Equal(1, second.Piles[0].CardCount);
@@ -133,8 +131,8 @@ public sealed class MatchInitialBoardTests
         Assert.NotNull(second);
         Assert.Contains(first.CurrentTurnPlayerId, firstRequest.PlayerIds);
         Assert.Contains(second.CurrentTurnPlayerId, secondRequest.PlayerIds);
-        Assert.Equal(4, first.Piles.Count);
-        Assert.Equal(4, second.Piles.Count);
+        Assert.Single(first.Piles);
+        Assert.Single(second.Piles);
     }
 
     [Fact]

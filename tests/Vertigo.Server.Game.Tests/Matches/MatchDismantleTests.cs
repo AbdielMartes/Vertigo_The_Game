@@ -15,7 +15,8 @@ public sealed class MatchDismantleTests
         MatchRecord match = Create(
             Enumerable.Range(1, 10).Select(module => module * 2),
             Enumerable.Range(1, 10).Select(module => module * 2 + 1),
-            [80, 1, 90, 99, 70]);
+            [80, 90, 1, 70]);
+        Dismantle(match, 1);
         MatchBoardSnapshot board = match.ToBoard();
         Guid active = board.CurrentTurnPlayerId;
         MatchPrivateHand hand = match.ToPrivateHand(active)!;
@@ -25,8 +26,9 @@ public sealed class MatchDismantleTests
         Assert.Equal(MatchDismantleResult.PlacementAvailable, result);
         Assert.Equal(board.Revision, match.ToBoard().Revision);
         Assert.Equal(active, match.ToBoard().CurrentTurnPlayerId);
-        Assert.Equal(80, match.ToBoard().Piles[0].TopCardNumber);
-        Assert.All(match.ToBoard().Players, player => Assert.Equal(0, player.FloorsBuilt));
+        Assert.Equal(90, match.ToBoard().Piles[0].TopCardNumber);
+        Assert.Equal(board.Players.Select(player => player.FloorsBuilt),
+            match.ToBoard().Players.Select(player => player.FloorsBuilt));
         Assert.Equal(hand.Cards, match.ToPrivateHand(active)!.Cards);
         Assert.Equal(0, match.ToPrivateHand(active)!.MasterPlans);
     }
@@ -35,14 +37,9 @@ public sealed class MatchDismantleTests
     public void TryDismantle_ThirteenBlocks_CreditsTenFloorsAndOnePlanExactlyOnce()
     {
         MatchRecord match = Create(
-            new[] { 2, 4, 6, 8, 10, 12, 14, 40, 42, 81 },
             new[] { 3, 5, 7, 9, 11, 13, 41, 43, 45, 47 },
-            [1, 80, 95, 99, 70, 71]);
-        if (match.ToBoard().CurrentTurnPlayerId == match.Session.PlayerIds[0])
-        {
-            Place(match, 81, 2);
-        }
-
+            new[] { 2, 4, 6, 8, 10, 12, 14, 40, 42, 81 },
+            [1, 70, 71]);
         Guid opener = match.ToBoard().CurrentTurnPlayerId;
         for (int module = 3; module <= 14; module++)
         {
@@ -76,13 +73,7 @@ public sealed class MatchDismantleTests
     [Fact]
     public void TryDismantle_EmptyDeckAndAnotherPlayerCanPlace_LeavesSpaceEmptyAndContinues()
     {
-        MatchRecord match = Create(
-            new[] { 2, 4, 40, 41, 42, 43, 44, 45, 46, 47 }, Enumerable.Range(50, 10),
-            [1, 80, 90, 99]);
-        if (match.ToBoard().CurrentTurnPlayerId == match.Session.PlayerIds[0])
-        {
-            Place(match, 2);
-        }
+        MatchRecord match = CreateMatchWithTwoTowersAndEmptyDeck();
 
         MatchBoardSnapshot before = match.ToBoard();
         Guid blocked = before.CurrentTurnPlayerId;
@@ -117,19 +108,10 @@ public sealed class MatchDismantleTests
     private static void AssertRejectedDismantle(
         bool useWaitingPlayer, (int PilePosition, long RevisionOffset) request, MatchDismantleResult expected)
     {
-        MatchRecord match = Create(
-            new[] { 2, 4, 40, 41, 42, 43, 44, 45, 46, 47 }, Enumerable.Range(50, 10),
-            [1, 80, 90, 99]);
+        MatchRecord match = CreateMatchWithTwoTowersAndEmptyDeck();
         Guid active = match.Session.PlayerIds[0];
         Guid waiting = match.Session.PlayerIds[1];
-        if (match.ToBoard().CurrentTurnPlayerId == active)
-        {
-            Place(match, 2);
-        }
-
-        MatchBoardSnapshot beforeDismantle = match.ToBoard();
-        Assert.Equal(MatchDismantleResult.Applied,
-            match.TryDismantle(waiting, new MatchDismantle(2, beforeDismantle.Revision), Now));
+        Dismantle(match, 2);
         MatchBoardSnapshot before = match.ToBoard();
         MatchPrivateHand activeHand = match.ToPrivateHand(active)!;
         MatchPrivateHand waitingHand = match.ToPrivateHand(waiting)!;
@@ -159,14 +141,9 @@ public sealed class MatchDismantleTests
         MatchRecord match = Create(
             new[] { 31, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
             new[] { 32, 81, 10, 11, 12, 13, 14, 15, 16, 17 },
-            [30, 80, 90, 99, 95]);
+            [30, 80]);
         Guid scorer = match.Session.PlayerIds[0];
         Guid other = match.Session.PlayerIds[1];
-        if (match.ToBoard().CurrentTurnPlayerId == other)
-        {
-            Place(match, 81, 2);
-        }
-
         Place(match, 31);
         Place(match, 32);
         MatchBoardSnapshot before = match.ToBoard();
@@ -175,7 +152,7 @@ public sealed class MatchDismantleTests
         if (match.ToBoard().RoundNumber == 1)
         {
             Assert.Equal(1, match.ToPrivateHand(scorer)!.MasterPlans);
-            Place(match, 81, 2);
+            Place(match, 81);
         }
 
         Assert.Equal(MatchDismantleResult.Applied, result);
@@ -195,7 +172,7 @@ public sealed class MatchDismantleTests
     [Fact]
     public void TryDismantle_ExhaustionAcrossThreeRounds_ScoresAndFinishesWithWinner()
     {
-        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(11, 10), [90, 91, 92, 93, 94]);
+        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(11, 10), [90]);
         Guid initialOpener = match.ToBoard().CurrentTurnPlayerId;
         Guid other = match.Session.PlayerIds.Single(playerId => playerId != initialOpener);
 
@@ -211,7 +188,7 @@ public sealed class MatchDismantleTests
             if (round < 3)
             {
                 Assert.All(match.ToBoard().Players, player => Assert.Equal(0, player.FloorsBuilt));
-                Assert.All(match.ToBoard().Piles, pile => Assert.Equal(1, pile.CardCount));
+                Assert.Equal(1, Assert.Single(match.ToBoard().Piles).CardCount);
             }
         }
 
@@ -253,6 +230,110 @@ public sealed class MatchDismantleTests
         Assert.All(match.Session.PlayerIds, playerId => Assert.Equal(10, match.ToPrivateHand(playerId)!.Cards.Count));
     }
 
+    [Fact]
+    public void TryDismantle_LastDeckCard_RefillsTheSameTowerWithoutGrowing()
+    {
+        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(81, 10), [70, 80]);
+        MatchBoardSnapshot before = match.ToBoard();
+
+        Dismantle(match, 1);
+
+        MatchBoardSnapshot after = match.ToBoard();
+        MatchBoardPile tower = Assert.Single(after.Piles);
+        Assert.Equal(1, tower.Position);
+        Assert.Equal(80, tower.TopCardNumber);
+        Assert.Equal(1, tower.CardCount);
+        Assert.Equal(1, after.RoundNumber);
+        Assert.Equal(before.Revision + 1, after.Revision);
+    }
+
+    [Fact]
+    public void TryDismantle_NextRound_ResetsAnExpandedBoardToOneTower()
+    {
+        MatchRecord match = CreateMatchWithTwoTowersAndEmptyDeck();
+        Assert.Equal(2, match.ToBoard().Piles.Count);
+
+        Dismantle(match, 2);
+        Place(match, 2);
+        Dismantle(match, 1);
+
+        MatchBoardSnapshot next = match.ToBoard();
+        Assert.Equal(2, next.RoundNumber);
+        MatchBoardPile tower = Assert.Single(next.Piles);
+        Assert.Equal(1, tower.Position);
+        Assert.Equal(80, tower.TopCardNumber);
+        Assert.Equal(1, tower.CardCount);
+    }
+
+    [Fact]
+    public void TryDismantle_GrowsOneTowerPerActionThenCapsAtSix()
+    {
+        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(11, 10),
+            Enumerable.Range(80, 14).ToArray());
+
+        Assert.Equal(80, Assert.Single(match.ToBoard().Piles).TopCardNumber);
+        for (int expected = 2; expected <= 6; expected++)
+        {
+            Dismantle(match, 1);
+            MatchBoardSnapshot board = match.ToBoard();
+            Assert.Equal(Enumerable.Range(1, expected), board.Piles.Select(pile => pile.Position));
+            Assert.Equal(80 + 2 * (expected - 1), board.Piles[^1].TopCardNumber);
+            Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
+        }
+
+        Dismantle(match, 6);
+        MatchBoardSnapshot capped = match.ToBoard();
+        Assert.Equal(6, capped.Piles.Count);
+        Assert.Equal(91, capped.Piles[^1].TopCardNumber);
+        Assert.Equal(1, capped.RoundNumber);
+    }
+
+    [Fact]
+    public void TryDismantle_ReusesAnEmptySpaceWhenReturnedCardsRefillTheDeck()
+    {
+        Guid[] players = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            InitialHostPlayerId = players[0],
+            PlayerIds = players,
+            CreatedAtUtc = Now.UtcDateTime
+        };
+        int[] modules = Enumerable.Range(2, 10).Concat(Enumerable.Range(50, 10))
+            .Concat(Enumerable.Range(61, 10)).Concat(new[] { 80, 1, 90 }).ToArray();
+        MatchRecord match = new(session, Now, (() => new MatchDeck(modules), _ => 0));
+        Dismantle(match, 1);
+        Dismantle(match, 2);
+        Assert.Null(match.ToBoard().Piles[1].TopCardNumber);
+
+        Assert.True(match.TryLeaveMatch(players[2], Now).IsAccepted);
+        Place(match, 2);
+        Dismantle(match, 1);
+
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(new[] { 1, 2 }, after.Piles.Select(pile => pile.Position));
+        Assert.Equal(new int?[] { 61, 62 }, after.Piles.Select(pile => pile.TopCardNumber));
+    }
+
+    private static MatchRecord CreateMatchWithTwoTowersAndEmptyDeck()
+    {
+        MatchRecord match = Create(
+            new[] { 2, 4, 40, 41, 42, 43, 44, 45, 46, 47 }, Enumerable.Range(50, 10),
+            [80, 1, 90]);
+        Dismantle(match, 1);
+        return match;
+    }
+
+    private static void Dismantle(MatchRecord match, int position)
+    {
+        MatchBoardSnapshot board = match.ToBoard();
+        MatchDismantle move = new(position, board.Revision);
+        MatchDismantleResult result = match.TryDismantle(board.CurrentTurnPlayerId, move, Now);
+        Assert.Equal(MatchDismantleResult.Applied, result);
+    }
+
     private static void Place(MatchRecord match, int module, int pilePosition = 1)
     {
         MatchBoardSnapshot board = match.ToBoard();
@@ -277,6 +358,6 @@ public sealed class MatchDismantleTests
         int[] modules = firstHand.Concat(secondHand).Concat(towerAndDeckCards).ToArray();
         Assert.Equal(modules.Length, modules.Distinct().Count());
 
-        return new MatchRecord(session, Now, () => new MatchDeck(modules));
+        return new MatchRecord(session, Now, (() => new MatchDeck(modules), _ => 0));
     }
 }

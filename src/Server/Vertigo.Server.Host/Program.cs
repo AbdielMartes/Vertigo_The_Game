@@ -47,7 +47,7 @@ try
     builder.Services.AddTransient<AccountPasswordService>();
     builder.Services.AddTransient<PlayerCredentialsVerifier>();
     builder.Services.AddTransient<RegisteredPlayerSessions>();
-    builder.Services.AddTransient<AuthService>();
+    builder.Services.AddTransient<SessionService>();
     builder.Services.AddTransient<AuthenticationService>();
     builder.Services.AddTransient<AccountService>();
     builder.Services.AddTransient<BlockedPlayerService>();
@@ -66,7 +66,6 @@ try
     builder.Services.AddTransient<LobbyInvitationFriendLookup>();
     builder.Services.AddTransient<LobbyInvitationOperations>();
     builder.Services.AddTransient<LobbyInvitationService>();
-    // A nonempty ChatModeration:BlockedTerms list replaces the built-in dictionary.
     IEnumerable<string> blockedChatTerms = builder.Configuration.GetSection("ChatModeration:BlockedTerms")
         .GetChildren().Select(entry => entry.Value).OfType<string>();
     builder.Services.AddSingleton(new ChatLanguageFilter(blockedChatTerms));

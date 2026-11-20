@@ -4,10 +4,9 @@ using Vertigo.Contracts.Models;
 
 namespace Vertigo.Server.Game.Matches.Models;
 
-// Protected by the owning starter's synchronization lock.
 internal sealed class MatchRecord
 {
-    private const int InitialTowerCount = 4;
+    private const int MaximumTowerCount = 6;
     private const int FirstRoundNumber = 1;
     private const int FinalRoundNumber = 3;
     private const int MaximumFloorsPerDismantle = 10;
@@ -45,17 +44,20 @@ internal sealed class MatchRecord
     private int ExpulsionVotesRequired => _activePlayerIds.Count / 2 + 1;
 
     public MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc)
-        : this(session, createdAtUtc, () => new MatchDeck())
+        : this(session, createdAtUtc, (() => new MatchDeck(), RandomNumberGenerator.GetInt32))
     {
     }
 
-    internal MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc, Func<MatchDeck> createDeck)
+    internal MatchRecord(
+        MatchSessionSnapshot session,
+        DateTimeOffset createdAtUtc,
+        (Func<MatchDeck> CreateDeck, Func<int, int> PickOpeningPlayer) setup)
     {
         Session = session;
         _activePlayerIds = new HashSet<Guid>(session.PlayerIds);
-        _createDeck = createDeck;
+        _createDeck = setup.CreateDeck;
         _deck = _createDeck();
-        Guid opener = session.PlayerIds[RandomNumberGenerator.GetInt32(session.PlayerIds.Count)];
+        Guid opener = session.PlayerIds[setup.PickOpeningPlayer(session.PlayerIds.Count)];
         DealRound(opener, createdAtUtc);
         Lifecycle = new MatchLifecycleSnapshot
         {
@@ -76,17 +78,8 @@ internal sealed class MatchRecord
             _masterPlans[playerId] = 0;
         }
 
-        IReadOnlyList<int> foundations = _deck.Draw(InitialTowerCount);
         _piles.Clear();
-        for (int position = 1; position <= InitialTowerCount; position++)
-        {
-            _piles.Add(new MatchBoardPile
-            {
-                Position = position,
-                TopCardNumber = foundations[position - 1],
-                CardCount = 1
-            });
-        }
+        AddTower();
 
         _roundOpenerId = opener;
         BeginTurn(opener, now);
@@ -358,6 +351,37 @@ internal sealed class MatchRecord
             _masterPlans[playerId]++;
         }
 
+        RefillTower(pile);
+        OpenAdditionalTower();
+    }
+
+    private void OpenAdditionalTower()
+    {
+        if (_deck.RemainingCount == 0)
+        {
+            return;
+        }
+
+        MatchBoardPile? vacant = _piles.Find(pile => pile.TopCardNumber is null);
+        if (vacant is not null)
+        {
+            RefillTower(vacant);
+        }
+        else if (_piles.Count < MaximumTowerCount)
+        {
+            AddTower();
+        }
+    }
+
+    private void AddTower()
+    {
+        MatchBoardPile pile = new() { Position = _piles.Count + 1 };
+        RefillTower(pile);
+        _piles.Add(pile);
+    }
+
+    private void RefillTower(MatchBoardPile pile)
+    {
         pile.TopCardNumber = _deck.RemainingCount > 0 ? _deck.Draw(1)[0] : null;
         pile.CardCount = pile.TopCardNumber.HasValue ? 1 : 0;
     }

@@ -67,7 +67,7 @@ public sealed class LobbyState
         else
         {
             _connections.Add(connection);
-            _readyPlayerIds.Clear(); // Joining changes the preparation quorum.
+            _readyPlayerIds.Clear(); 
             _revision++;
         }
     }
@@ -82,7 +82,6 @@ public sealed class LobbyState
             _revision++;
         }
 
-        // The role passes to the participant who has been longest in the lobby (CU-014 FA-04).
         if (removedCount > 0 && playerId == HostPlayerId && _connections.Count > 0)
         {
             HostPlayerId = _connections[0].Member.PlayerId;
@@ -90,9 +89,7 @@ public sealed class LobbyState
 
         return removedCount > 0;
     }
-
-    // In-game transport loss does not remove a player or transfer the host role.
-    // A delayed Closed event from the old channel cannot disconnect a new channel.
+    
     public List<Guid> DisconnectSession(string sessionId)
     {
         List<Guid> changed = new();

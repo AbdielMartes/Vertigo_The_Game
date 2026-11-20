@@ -40,18 +40,21 @@ public sealed class ChatServiceTests
     }
 
     [Fact]
-    public void SendMessage_WaitingRoomRetainsFiveHundredCharacterLimitAndNoMatchId()
+    public void SendMessage_WaitingRoomEnforcesThirtyCharacterLimitAndDoesNotSetMatchId()
     {
         RecordingLobbyDirectory directory = new();
         ChatService service = CreateService(directory, new StubSessionResolver());
-        string text = new('a', 500);
+        string text = new('a', 30);
 
         Assert.True(service.SendMessage("ABC234", text, "session"));
         LobbyChatMessage message = Assert.IsType<LobbyChatMessage>(directory.Message);
         Assert.Equal(text, message.Text);
         Assert.Null(message.MatchId);
 
-        Assert.Throws<FaultException<ServiceFault>>(() => service.SendMessage("ABC234", text + "a", "session"));
+        FaultException<ServiceFault> fault =
+            Assert.Throws<FaultException<ServiceFault>>(() => service.SendMessage("ABC234", text + "a", "session"));
+        Assert.Equal(ServiceErrorCodes.InvalidData, fault.Detail.ErrorCode);
+        Assert.Same(message, directory.Message);
     }
 
     [Theory]

@@ -10,7 +10,7 @@ namespace Vertigo.Server.Matchmaking.Chat.Services;
 [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
 public sealed class ChatService : IChatService
 {
-    private const int MaximumMessageLength = 500;
+    private const int MaximumMessageLength = 30;
 
     private readonly ILobbyDirectory _lobbies;
     private readonly ChatServiceDependencies _dependencies;

@@ -17,8 +17,7 @@ public sealed class MatchChatRow
         {
             return string.Empty;
         }
-
-        // ChatService supplies UTC. Treat deserialized values without a kind as UTC too.
+        
         DateTime utc = sentAt.Kind == DateTimeKind.Unspecified
             ? DateTime.SpecifyKind(sentAt, DateTimeKind.Utc)
             : sentAt.ToUniversalTime();

@@ -106,7 +106,7 @@ public sealed class MatchPrivateHandTests
         var board = state.Game.GetBoard(state.MatchId);
 
         Assert.NotNull(board);
-        Assert.Equal(4, board.Piles.Count);
+        Assert.Single(board.Piles);
         Assert.All(board.Piles, pile => Assert.InRange(pile.TopCardNumber!.Value, 1, 100));
     }
 

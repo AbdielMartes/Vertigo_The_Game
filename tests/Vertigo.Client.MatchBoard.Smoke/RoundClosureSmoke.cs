@@ -27,6 +27,8 @@ internal static class RoundClosureSmoke
             (MatchBoardSnapshot board, bool dismantled) = await PlayFirstRoundAsync(firstPlayer, secondPlayer, lobbyCode);
 
             Check(board.RoundNumber == 2 && board.RoundSummaries.Count == 1, "The first round did not close.");
+            Check(board.Piles is [{ Position: 1, CardCount: 1, TopCardNumber: not null }],
+                "The second round must start with one foundation.");
             VerifySummary(board, first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token));
             VerifySummary(board, second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token));
 
@@ -74,7 +76,12 @@ internal static class RoundClosureSmoke
             RoundParticipant active =
                 board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
             TurnResult turn = PlayTurn((active.Lobby, active.Session), board, lobbyCode);
-            dismantled |= turn.Kind == MatchBoardActionKind.Dismantle;
+            if (!dismantled && turn.Kind == MatchBoardActionKind.Dismantle)
+            {
+                Check(turn.Board.Piles.Count == 2 && turn.Board.Piles.All(pile => pile.CardCount == 1),
+                    "The first dismantle must replenish its tower and open a second one.");
+                dismantled = true;
+            }
 
             Check(turn.Board.Revision == board.Revision + 1, "A turn must increase the board revision once.");
             await VerifyTurnNoticesAsync((first.Changes, second.Changes), turn, active.Session.Username);

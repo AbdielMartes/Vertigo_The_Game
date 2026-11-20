@@ -1,6 +1,3 @@
-#nullable enable
-
-using System;
 using System.ServiceModel;
 using Vertigo.Contracts.Callbacks;
 using Vertigo.Contracts.Models;

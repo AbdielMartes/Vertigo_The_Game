@@ -28,7 +28,7 @@ public sealed class MatchBoardReaderTests
         Assert.Equal(1, board.Revision);
         Assert.Equal(new[] { host, guest }, board.Players.Select(p => p.PlayerId));
         Assert.All(board.Players, p => Assert.Equal(0, p.FloorsBuilt));
-        Assert.Equal(4, board.Piles.Count);
+        Assert.Single(board.Piles);
         Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
         Assert.All(board.Piles, pile => Assert.InRange(pile.TopCardNumber!.Value, 1, 100));
         Assert.Equal(1, board.RoundNumber);

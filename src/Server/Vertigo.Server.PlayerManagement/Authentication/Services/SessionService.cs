@@ -4,13 +4,13 @@ using Vertigo.Server.PlayerManagement.Authentication.Models;
 
 namespace Vertigo.Server.PlayerManagement.Authentication.Services;
 
-public class AuthService
+public class SessionService
 {
     private readonly PlayerCredentialsVerifier _credentials;
     private readonly RegisteredPlayerSessions _registeredSessions;
     private readonly IGuestSessionRegistry _guests;
 
-    public AuthService(
+    public SessionService(
         PlayerCredentialsVerifier credentials,
         RegisteredPlayerSessions registeredSessions,
         IGuestSessionRegistry guests)

@@ -151,6 +151,9 @@ static (MatchBoardSnapshot Host, MatchBoardSnapshot Member) VerifyOpeningBoards(
     Require(second.MatchId == matchId, "Member board has wrong MatchId.");
     Require(first.Players.Count == 2 && second.Players.Count == 2,
         "Match board did not return two participants.");
+    Require(first.Piles.Count == 1 && second.Piles.Count == 1
+        && first.Piles[0].TopCardNumber == second.Piles[0].TopCardNumber,
+        "Both clients must start with the same single tower.");
     Console.WriteLine("PASS: GET MATCH BOARD OVER NETTCP FOR BOTH PARTICIPANTS");
     return (first, second);
 }
