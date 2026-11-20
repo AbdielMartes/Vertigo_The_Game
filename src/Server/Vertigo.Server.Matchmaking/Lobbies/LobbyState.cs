@@ -236,15 +236,20 @@ public sealed class LobbyState
         return members;
     }
 
+    public bool IsDisconnected(Guid playerId) => _disconnectedPlayerIds.Contains(playerId);
+
     public List<ILobbyCallback> GetCallbacksExcept(Guid playerId)
     {
-        List<ILobbyCallback> callbacks = _connections
-            .Where(connection => connection.Member.PlayerId != playerId
+        return GetConnectedCallbacks(id => id != playerId);
+    }
+
+    public List<ILobbyCallback> GetConnectedCallbacks(Predicate<Guid> includesPlayer)
+    {
+        return _connections
+            .Where(connection => includesPlayer(connection.Member.PlayerId)
                 && !_disconnectedPlayerIds.Contains(connection.Member.PlayerId))
             .Select(connection => connection.Callback)
             .ToList();
-
-        return callbacks;
     }
 
     public LobbySummary ToSummary()

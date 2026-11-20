@@ -16,6 +16,7 @@
   <data name="Lobby.MessageFailed" xml:space="preserve"><value>No se pudo enviar el mensaje.</value></data>
   <data name="Lobby.LeaveFailed" xml:space="preserve"><value>No se pudo salir de la sala.</value></data>
   <data name="Authentication.Unauthorized" xml:space="preserve"><value>Tu sesión ya no es válida. Inicia sesión nuevamente.</value></data>
+  <data name="Chat.LanguageBlocked" xml:space="preserve"><value>El mensaje contiene lenguaje no permitido. Edítalo y vuelve a enviarlo.</value></data>
   <data name="Lobby.ChatNotAllowed" xml:space="preserve"><value>No puedes enviar mensajes en esta sala.</value></data>
   <data name="RegisterAccount.UsernameAlreadyRegistered" xml:space="preserve"><value>Ese nombre de usuario ya está registrado.</value></data>
   <data name="RegisterAccount.EmailAlreadyRegistered" xml:space="preserve"><value>Ese correo ya está registrado.</value></data>
@@ -443,10 +444,10 @@
     <value>Pisos</value>
   </data>
   <data name="Match.Board" xml:space="preserve">
-    <value>PILAS DE DESCARTE</value>
+    <value>Torres centrales</value>
   </data>
   <data name="Match.BoardHint" xml:space="preserve">
-    <value>Selecciona una carta de tu mano y una pila compatible. Las jugadas se activarán al conectar Game.</value>
+    <value>Elige una carta entre 1 y 10 números mayor que el tope de una torre.</value>
   </data>
   <data name="Match.Hand" xml:space="preserve">
     <value>MI MANO</value>
@@ -458,7 +459,7 @@
     <value>CHAT DE PARTIDA</value>
   </data>
   <data name="Match.MessageHint" xml:space="preserve">
-    <value>Mensaje (máx. 40 caracteres)</value>
+    <value>Escribe un mensaje</value>
   </data>
   <data name="Match.Send" xml:space="preserve">
     <value>Enviar</value>
@@ -537,6 +538,7 @@
   <data name="Match.Turn.OtherPlayer" xml:space="preserve"><value>Turno de {0}</value></data>
   <data name="Match.Turn.Seconds" xml:space="preserve"><value>{0} s</value></data>
   <data name="Match.DismantleTower" xml:space="preserve"><value>Desmontar torre</value></data>
+  <data name="Match.MasterPlan.Title" xml:space="preserve"><value>Plano Maestro</value></data>
   <data name="Match.MasterPlan.Count" xml:space="preserve">
     <value>Planos Maestros disponibles · {0}</value>
   </data>
@@ -544,10 +546,10 @@
     <value>Elige una torre y añade dos o más módulos en orden.</value>
   </data>
   <data name="Match.MasterPlan.AddModule" xml:space="preserve">
-    <value>Añadir módulo seleccionado</value>
+    <value>Añadir carta</value>
   </data>
   <data name="Match.MasterPlan.RemoveModule" xml:space="preserve">
-    <value>Quitar último módulo</value>
+    <value>Quitar última</value>
   </data>
   <data name="Match.MasterPlan.Play" xml:space="preserve">
     <value>Jugar Plano Maestro</value>
@@ -569,6 +571,24 @@
   </data>
   <data name="Match.Results.Abandonment" xml:space="preserve">
     <value>Victoria por abandono</value>
+  </data>
+  <data name="Match.Results.Victory" xml:space="preserve">
+    <value>Victoria</value>
+  </data>
+  <data name="Match.Results.SharedVictory" xml:space="preserve">
+    <value>Victoria compartida</value>
+  </data>
+  <data name="Match.Results.PersonalTower" xml:space="preserve">
+    <value>Tu rascacielos de la ronda</value>
+  </data>
+  <data name="Match.Results.FinalTower" xml:space="preserve">
+    <value>Tu rascacielos final</value>
+  </data>
+  <data name="Match.Results.Standings" xml:space="preserve">
+    <value>Clasificación final</value>
+  </data>
+  <data name="Match.Results.TowerCaption" xml:space="preserve">
+    <value>{0} pisos construidos · +{1} de bono · {2} acumulados</value>
   </data>
   <data name="Match.Results.SelectRound" xml:space="preserve">
     <value>Elegir ronda</value>
@@ -602,5 +622,35 @@
   </data>
   <data name="Match.Move.LeftMatch" xml:space="preserve">
     <value>{0} abandonó la partida.</value>
+  </data>
+  <data name="Match.Connection.Lost" xml:space="preserve">
+    <value>Se interrumpió la comunicación con el servidor. Reconecta para actualizar la partida.</value>
+  </data>
+  <data name="Match.Connection.Reconnect" xml:space="preserve">
+    <value>Reconectar</value>
+  </data>
+  <data name="Match.Presence.Confirm" xml:space="preserve">
+    <value>Sigo jugando</value>
+  </data>
+  <data name="Match.Presence.Expelled" xml:space="preserve">
+    <value>Fuiste expulsado por inactividad.</value>
+  </data>
+  <data name="Match.Presence.Play" xml:space="preserve">
+    <value>Es tu turno. Haz una jugada válida en los {0} s restantes.</value>
+  </data>
+  <data name="Match.Presence.Skipped" xml:space="preserve">
+    <value>Se omitió tu turno. Tienes {0} s para confirmar que sigues jugando.</value>
+  </data>
+  <data name="Match.Presence.Pending" xml:space="preserve">
+    <value>La tolerancia ha terminado. Esperando al servidor.</value>
+  </data>
+  <data name="Match.Move.TurnSkipped" xml:space="preserve">
+    <value>Se omitió el turno de {0}.</value>
+  </data>
+  <data name="Match.Move.PresenceConfirmed" xml:space="preserve">
+    <value>{0} confirmó que sigue jugando.</value>
+  </data>
+  <data name="Match.Connection.Unavailable" xml:space="preserve">
+    <value>La partida ya no está disponible en el servidor.</value>
   </data>
 </root>

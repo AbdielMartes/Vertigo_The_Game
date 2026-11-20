@@ -7,4 +7,5 @@ public sealed class MatchPileRow
     public required string Label { get; init; }
     public string TopCardText { get; init; } = string.Empty;
     public int Count { get; init; }
+    public bool IsEmpty => !TopCardNumber.HasValue;
 }

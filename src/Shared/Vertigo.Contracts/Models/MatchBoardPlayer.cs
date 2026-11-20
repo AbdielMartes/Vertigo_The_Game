@@ -16,4 +16,7 @@ public sealed class MatchBoardPlayer
 
     [DataMember]
     public int GlobalFloors { get; set; }
+
+    [DataMember(EmitDefaultValue = false)]
+    public int? FinalPosition { get; set; }
 }

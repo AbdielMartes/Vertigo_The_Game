@@ -17,6 +17,14 @@ public interface ILobbyService
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
+    LobbyAdmission ReconnectMatch(MatchPresenceRequest request);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
     bool LeaveLobby(string lobbyCode, string sessionToken);
 
     [OperationContract]

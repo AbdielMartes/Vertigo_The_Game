@@ -12,6 +12,12 @@ internal sealed class MatchMasterPlanDraft
 
     public bool CanPlay => _modules.Count >= 2;
 
+    public int? GetOrder(int? module)
+    {
+        int index = module is int number ? _modules.IndexOf(number) : -1;
+        return index >= 0 ? index + 1 : null;
+    }
+
     public bool CanAppend(int? towerTop, int? module)
     {
         int? top = _modules.Count == 0 ? towerTop : _modules[^1];

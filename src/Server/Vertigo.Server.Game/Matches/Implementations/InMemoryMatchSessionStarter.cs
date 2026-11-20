@@ -152,16 +152,16 @@ public sealed class InMemoryMatchSessionStarter :
 
     public Guid? TryExpireTurn(Guid matchId)
     {
-        Guid? expelledPlayerId = null;
+        Guid? affectedPlayerId = null;
         lock (_syncRoot)
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                expelledPlayerId = record.TryExpireTurn(_timeProvider.GetUtcNow());
+                affectedPlayerId = record.TryExpireTurn(_timeProvider.GetUtcNow());
             }
         }
 
-        return expelledPlayerId;
+        return affectedPlayerId;
     }
 
     public MatchLifecycleSnapshot? Get(Guid matchId)
@@ -204,6 +204,15 @@ public sealed class InMemoryMatchSessionStarter :
         }
 
         return result;
+    }
+
+    public bool TryConfirmPresence(Guid matchId, Guid playerId)
+    {
+        lock (_syncRoot)
+        {
+            return _matchesById.TryGetValue(matchId, out MatchRecord? record)
+                && record.TryConfirmPresence(playerId, _timeProvider.GetUtcNow());
+        }
     }
 
     public bool TryDisconnect(Guid matchId, Guid playerId)

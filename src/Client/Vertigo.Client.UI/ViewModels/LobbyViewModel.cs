@@ -435,6 +435,11 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
 
     private void OnMessageReceived(object? sender, LobbyChatMessage message)
     {
+        if (message.MatchId.HasValue)
+        {
+            return;
+        }
+
         SessionSnapshot? eventSession = _playerSession.GetActiveSession();
         string eventLobby = LobbyCode;
         Dispatcher.UIThread.Post(() =>

@@ -16,6 +16,7 @@
   <data name="Lobby.MessageFailed" xml:space="preserve"><value>The message could not be sent.</value></data>
   <data name="Lobby.LeaveFailed" xml:space="preserve"><value>The lobby could not be left.</value></data>
   <data name="Authentication.Unauthorized" xml:space="preserve"><value>Your session is no longer valid. Sign in again.</value></data>
+  <data name="Chat.LanguageBlocked" xml:space="preserve"><value>The message contains language that is not allowed. Edit it and send it again.</value></data>
   <data name="Lobby.ChatNotAllowed" xml:space="preserve"><value>You cannot send messages in this lobby.</value></data>
   <data name="RegisterAccount.UsernameAlreadyRegistered" xml:space="preserve"><value>Username already exists.</value></data>
   <data name="RegisterAccount.EmailAlreadyRegistered" xml:space="preserve"><value>Email already exists.</value></data>
@@ -443,10 +444,10 @@
     <value>Floors</value>
   </data>
   <data name="Match.Board" xml:space="preserve">
-    <value>DISCARD PILES</value>
+    <value>Central towers</value>
   </data>
   <data name="Match.BoardHint" xml:space="preserve">
-    <value>Select a card from your hand and a compatible pile. Moves become available when Game is connected.</value>
+    <value>Choose a card that is 1 to 10 numbers higher than the top of a tower.</value>
   </data>
   <data name="Match.Hand" xml:space="preserve">
     <value>MY HAND</value>
@@ -458,7 +459,7 @@
     <value>MATCH CHAT</value>
   </data>
   <data name="Match.MessageHint" xml:space="preserve">
-    <value>Message (max. 40 characters)</value>
+    <value>Write a message</value>
   </data>
   <data name="Match.Send" xml:space="preserve">
     <value>Send</value>
@@ -537,6 +538,7 @@
   <data name="Match.Turn.OtherPlayer" xml:space="preserve"><value>{0}’s turn</value></data>
   <data name="Match.Turn.Seconds" xml:space="preserve"><value>{0} s</value></data>
   <data name="Match.DismantleTower" xml:space="preserve"><value>Dismantle tower</value></data>
+  <data name="Match.MasterPlan.Title" xml:space="preserve"><value>Master Plan</value></data>
   <data name="Match.MasterPlan.Count" xml:space="preserve">
     <value>Master Plans available · {0}</value>
   </data>
@@ -544,10 +546,10 @@
     <value>Choose a tower and add two or more modules in order.</value>
   </data>
   <data name="Match.MasterPlan.AddModule" xml:space="preserve">
-    <value>Add selected module</value>
+    <value>Add card</value>
   </data>
   <data name="Match.MasterPlan.RemoveModule" xml:space="preserve">
-    <value>Remove last module</value>
+    <value>Remove last</value>
   </data>
   <data name="Match.MasterPlan.Play" xml:space="preserve">
     <value>Play Master Plan</value>
@@ -569,6 +571,24 @@
   </data>
   <data name="Match.Results.Abandonment" xml:space="preserve">
     <value>Win by abandonment</value>
+  </data>
+  <data name="Match.Results.Victory" xml:space="preserve">
+    <value>Victory</value>
+  </data>
+  <data name="Match.Results.SharedVictory" xml:space="preserve">
+    <value>Shared victory</value>
+  </data>
+  <data name="Match.Results.PersonalTower" xml:space="preserve">
+    <value>Your tower this round</value>
+  </data>
+  <data name="Match.Results.FinalTower" xml:space="preserve">
+    <value>Your final tower</value>
+  </data>
+  <data name="Match.Results.Standings" xml:space="preserve">
+    <value>Final standings</value>
+  </data>
+  <data name="Match.Results.TowerCaption" xml:space="preserve">
+    <value>{0} floors built · +{1} bonus · {2} overall</value>
   </data>
   <data name="Match.Results.SelectRound" xml:space="preserve">
     <value>Select round</value>
@@ -602,5 +622,35 @@
   </data>
   <data name="Match.Move.LeftMatch" xml:space="preserve">
     <value>{0} left the match.</value>
+  </data>
+  <data name="Match.Connection.Lost" xml:space="preserve">
+    <value>Communication with the server was interrupted. Reconnect to update the match.</value>
+  </data>
+  <data name="Match.Connection.Reconnect" xml:space="preserve">
+    <value>Reconnect</value>
+  </data>
+  <data name="Match.Presence.Confirm" xml:space="preserve">
+    <value>Keep playing</value>
+  </data>
+  <data name="Match.Presence.Expelled" xml:space="preserve">
+    <value>You were removed for inactivity.</value>
+  </data>
+  <data name="Match.Presence.Play" xml:space="preserve">
+    <value>It is your turn. Make a valid move within the remaining {0} s.</value>
+  </data>
+  <data name="Match.Presence.Skipped" xml:space="preserve">
+    <value>Your turn was skipped. You have {0} s to confirm you are still playing.</value>
+  </data>
+  <data name="Match.Presence.Pending" xml:space="preserve">
+    <value>The grace period has ended. Waiting for the server.</value>
+  </data>
+  <data name="Match.Move.TurnSkipped" xml:space="preserve">
+    <value>{0}'s turn was skipped.</value>
+  </data>
+  <data name="Match.Move.PresenceConfirmed" xml:space="preserve">
+    <value>{0} confirmed they are still playing.</value>
+  </data>
+  <data name="Match.Connection.Unavailable" xml:space="preserve">
+    <value>The match is no longer available on the server.</value>
   </data>
 </root>

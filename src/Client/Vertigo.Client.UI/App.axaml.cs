@@ -5,6 +5,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Vertigo.Client.Networking;
+using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Client.UI.ViewModels;
 using Vertigo.Client.UI.ViewModels.Dependencies;
 using Vertigo.Client.UI.Views;
@@ -50,7 +51,8 @@ public partial class App : Application
             registrations.AddSingleton<HomeViewModel>();
             registrations.AddTransient<MatchBoardContext>();
             registrations.AddSingleton<MatchViewModel>(provider =>
-                new MatchViewModel(provider.GetRequiredService<MatchBoardContext>()));
+                new MatchViewModel(provider.GetRequiredService<MatchBoardContext>(),
+                    provider.GetRequiredService<IChatClient>()));
             registrations.AddSingleton<LobbyViewModel>();
             registrations.AddSingleton<SocialOperation>();
             registrations.AddSingleton<FriendsViewModel>();

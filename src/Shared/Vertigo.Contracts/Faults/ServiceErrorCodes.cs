@@ -27,5 +27,6 @@ public static class ServiceErrorCodes
     public const string LobbyAlreadyInGame = "LOBBY_ALREADY_IN_GAME";
 
     public const string Unauthorized = "UNAUTHORIZED";
+    public const string ChatLanguageBlocked = "CHAT_LANGUAGE_BLOCKED";
     public const string LobbyChatNotAllowed = "LOBBY_CHAT_NOT_ALLOWED";
 }

@@ -13,6 +13,11 @@ public sealed class MatchResultsViewModel : ViewModelBase
     private IReadOnlyList<MatchRoundSummary> _roundSummaries = Array.Empty<MatchRoundSummary>();
     private IReadOnlyList<MatchRoundResultRow> _rounds = Array.Empty<MatchRoundResultRow>();
     private MatchRoundResultRow? _selectedRound;
+    private Guid? _localPlayerId;
+    private MatchTowerResult? _selectedTower;
+    private MatchTowerResult? _latestTower;
+    private MatchTowerResult? _finalTower;
+    private IReadOnlyList<MatchFinalStandingRow> _finalStandings = Array.Empty<MatchFinalStandingRow>();
     private MatchEndReason _endReason;
     private IReadOnlyList<string> _winnerNames = Array.Empty<string>();
     private bool _isExpanded;
@@ -37,13 +42,30 @@ public sealed class MatchResultsViewModel : ViewModelBase
         {
             if (SetProperty(ref _selectedRound, value))
             {
+                _selectedTower = BuildRoundTower(SelectedScores);
                 OnPropertyChanged(nameof(SelectedScores));
+                OnPropertyChanged(nameof(SelectedTower));
+                OnPropertyChanged(nameof(HasSelectedTower));
+                OnPropertyChanged(nameof(SelectedTowerCaption));
             }
         }
     }
 
     public IReadOnlyList<MatchRoundPlayerScore> SelectedScores =>
         SelectedRound?.Scores ?? Array.Empty<MatchRoundPlayerScore>();
+
+    public MatchTowerResult? SelectedTower => _selectedTower;
+    public bool HasSelectedTower => SelectedTower is not null;
+    public string SelectedTowerCaption => FormatTower(SelectedTower);
+
+    public MatchTowerResult? LatestTower => _latestTower;
+    public bool ShowLatestTower => !HasFinalResult && LatestTower is not null;
+    public string LatestTowerCaption => FormatTower(LatestTower);
+
+    public MatchTowerResult? FinalTower => _finalTower;
+    public bool HasFinalTower => _finalTower is not null;
+    public string FinalTowerCaption => FormatTower(_finalTower);
+    public IReadOnlyList<MatchFinalStandingRow> FinalStandings => _finalStandings;
 
     public bool IsExpanded
     {
@@ -64,36 +86,31 @@ public sealed class MatchResultsViewModel : ViewModelBase
         _ => string.Format(_text.Get("Match.Results.Winners"), string.Join(", ", _winnerNames))
     };
 
-    public string AbandonmentText => _text.Get("Match.Results.Abandonment");
+    public string VictoryTitle => _text.Get(IsAbandonment ? "Match.Results.Abandonment"
+        : _winnerNames.Count > 1 ? "Match.Results.SharedVictory" : "Match.Results.Victory");
+    public string PersonalTowerText => _text.Get("Match.Results.PersonalTower");
+    public string FinalTowerText => _text.Get("Match.Results.FinalTower");
+    public string StandingsText => _text.Get("Match.Results.Standings");
     public string SelectRoundText => _text.Get("Match.Results.SelectRound");
     public string PlayerText => _text.Get("Match.Results.Player");
     public string FloorsText => _text.Get("Match.Results.Floors");
     public string BonusText => _text.Get("Match.Results.Bonus");
     public string TotalText => _text.Get("Match.Results.Total");
 
-    internal void ApplyBoard(MatchBoardSnapshot board)
+    internal void ApplyBoard(MatchBoardSnapshot board, Guid? localPlayerId = null)
     {
-        if (_roundSummaries.Count != board.RoundSummaries.Count)
+        bool identityChanged = _localPlayerId != localPlayerId;
+        _localPlayerId = localPlayerId;
+        if (identityChanged || _roundSummaries.Count != board.RoundSummaries.Count)
         {
-            int? selectedRound = SelectedRound?.RoundNumber;
-            bool reviewingEarlierRound = _roundSummaries.Count > 0 && selectedRound.HasValue
-                && selectedRound.Value != _roundSummaries[^1].RoundNumber;
-            _roundSummaries = board.RoundSummaries;
-            BuildRoundOptions(reviewingEarlierRound ? selectedRound : null);
-            OnPropertyChanged(nameof(HasRoundSummaries));
+            UpdateRoundSummaries(board.RoundSummaries);
         }
 
-        if (_endReason != board.EndReason)
+        if (_endReason != board.EndReason || (identityChanged && HasFinalResult))
         {
             bool endedNow = !HasFinalResult && board.EndReason != MatchEndReason.None;
             _endReason = board.EndReason;
-            Dictionary<Guid, string> names = board.Players.ToDictionary(
-                player => player.PlayerId, player => player.Username);
-            _winnerNames = board.WinnerIds.Select(id => names.GetValueOrDefault(id))
-                .Where(name => !string.IsNullOrWhiteSpace(name)).Select(name => name!).ToArray();
-            OnPropertyChanged(nameof(HasFinalResult));
-            OnPropertyChanged(nameof(IsAbandonment));
-            OnPropertyChanged(nameof(WinnerText));
+            ApplyFinalResult(board);
             if (endedNow)
             {
                 IsExpanded = true;
@@ -106,17 +123,19 @@ public sealed class MatchResultsViewModel : ViewModelBase
 
     internal void Reset()
     {
+        _localPlayerId = null;
         _roundSummaries = Array.Empty<MatchRoundSummary>();
         BuildRoundOptions(null);
         _endReason = MatchEndReason.None;
         _winnerNames = Array.Empty<string>();
+        _latestTower = null;
+        _finalTower = null;
+        _finalStandings = Array.Empty<MatchFinalStandingRow>();
         IsExpanded = false;
         OnPropertyChanged(nameof(HasRoundSummaries));
-        OnPropertyChanged(nameof(HasFinalResult));
-        OnPropertyChanged(nameof(IsAbandonment));
+        RefreshFinalResult();
         OnPropertyChanged(nameof(HasResults));
         OnPropertyChanged(nameof(HeaderText));
-        OnPropertyChanged(nameof(WinnerText));
     }
 
     internal void RefreshLocalization()
@@ -124,12 +143,108 @@ public sealed class MatchResultsViewModel : ViewModelBase
         BuildRoundOptions(SelectedRound?.RoundNumber);
         OnPropertyChanged(nameof(HeaderText));
         OnPropertyChanged(nameof(WinnerText));
-        OnPropertyChanged(nameof(AbandonmentText));
+        OnPropertyChanged(nameof(VictoryTitle));
+        OnPropertyChanged(nameof(PersonalTowerText));
+        OnPropertyChanged(nameof(FinalTowerText));
+        OnPropertyChanged(nameof(StandingsText));
+        OnPropertyChanged(nameof(FinalTowerCaption));
+        RefreshLatestTower();
         OnPropertyChanged(nameof(SelectRoundText));
         OnPropertyChanged(nameof(PlayerText));
         OnPropertyChanged(nameof(FloorsText));
         OnPropertyChanged(nameof(BonusText));
         OnPropertyChanged(nameof(TotalText));
+    }
+
+    private void UpdateRoundSummaries(IReadOnlyList<MatchRoundSummary> summaries)
+    {
+        int? selectedRound = SelectedRound?.RoundNumber;
+        bool reviewingEarlierRound = _roundSummaries.Count > 0 && selectedRound.HasValue
+            && selectedRound.Value != _roundSummaries[^1].RoundNumber;
+        _roundSummaries = summaries;
+        _latestTower = _roundSummaries.Count == 0 ? null : BuildRoundTower(_roundSummaries[^1].Players);
+        BuildRoundOptions(reviewingEarlierRound ? selectedRound : null);
+        OnPropertyChanged(nameof(HasRoundSummaries));
+        RefreshLatestTower();
+    }
+
+    private MatchTowerResult? BuildRoundTower(IReadOnlyList<MatchRoundPlayerScore> scores)
+    {
+        MatchRoundPlayerScore? personal = scores.FirstOrDefault(score => score.PlayerId == _localPlayerId);
+        if (personal is null)
+        {
+            return null;
+        }
+
+        int tallest = scores.Max(score => score.FloorsBuilt);
+        return new MatchTowerResult((personal.FloorsBuilt, personal.BonusFloors, personal.TotalFloors),
+            tallest, includeBonusInDrawing: false);
+    }
+
+    private string FormatTower(MatchTowerResult? tower)
+    {
+        return tower is null ? string.Empty : string.Format(_text.Get("Match.Results.TowerCaption"),
+            tower.BuiltFloors, tower.BonusFloors, tower.TotalFloors);
+    }
+
+    private void ApplyFinalResult(MatchBoardSnapshot board)
+    {
+        Dictionary<Guid, string> names = board.Players.ToDictionary(
+            player => player.PlayerId, player => player.Username);
+        _winnerNames = board.WinnerIds.Select(id => names.GetValueOrDefault(id))
+            .Where(name => !string.IsNullOrWhiteSpace(name)).Select(name => name!).ToArray();
+        _finalStandings = board.Players
+            .Select(player => new MatchFinalStandingRow
+            {
+                Position = player.FinalPosition,
+                Username = player.Username,
+                TotalFloors = player.GlobalFloors,
+                IsWinner = board.WinnerIds.Contains(player.PlayerId)
+            })
+            .OrderBy(row => row.Position ?? int.MaxValue)
+            .ThenByDescending(row => row.IsWinner)
+            .ThenByDescending(row => row.TotalFloors)
+            .ToArray();
+        _finalTower = BuildFinalTower(board);
+        RefreshFinalResult();
+    }
+
+    private MatchTowerResult? BuildFinalTower(MatchBoardSnapshot board)
+    {
+        MatchBoardPlayer? personal = board.Players.Find(player => player.PlayerId == _localPlayerId);
+        if (personal is null)
+        {
+            return null;
+        }
+
+        MatchRoundPlayerScore[] scores = _roundSummaries.SelectMany(round => round.Players)
+            .Where(score => score.PlayerId == personal.PlayerId).ToArray();
+        int built = scores.Sum(score => score.FloorsBuilt);
+        int bonus = scores.Sum(score => score.BonusFloors);
+        return built + bonus == personal.GlobalFloors
+            ? new MatchTowerResult((built, bonus, personal.GlobalFloors),
+                board.Players.Max(player => player.GlobalFloors), includeBonusInDrawing: true)
+            : null;
+    }
+
+    private void RefreshLatestTower()
+    {
+        OnPropertyChanged(nameof(LatestTower));
+        OnPropertyChanged(nameof(LatestTowerCaption));
+        OnPropertyChanged(nameof(ShowLatestTower));
+    }
+
+    private void RefreshFinalResult()
+    {
+        OnPropertyChanged(nameof(HasFinalResult));
+        OnPropertyChanged(nameof(IsAbandonment));
+        OnPropertyChanged(nameof(WinnerText));
+        OnPropertyChanged(nameof(VictoryTitle));
+        OnPropertyChanged(nameof(FinalTower));
+        OnPropertyChanged(nameof(HasFinalTower));
+        OnPropertyChanged(nameof(FinalTowerCaption));
+        OnPropertyChanged(nameof(FinalStandings));
+        RefreshLatestTower();
     }
 
     private void BuildRoundOptions(int? selectedRoundNumber)

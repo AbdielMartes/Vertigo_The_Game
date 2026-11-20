@@ -52,11 +52,29 @@ internal sealed class MatchScoring
 
     public Guid[] GetWinners(IReadOnlyList<Guid> players)
     {
-        (Guid PlayerId, (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) Rank)[] ranks =
-            players.Select(playerId => (playerId, GetRank(playerId))).ToArray();
-        (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) highest = ranks.Max(entry => entry.Rank);
+        return GetFinalPositions(players).Where(entry => entry.Value == 1).Select(entry => entry.Key).ToArray();
+    }
 
-        return ranks.Where(entry => entry.Rank == highest).Select(entry => entry.PlayerId).ToArray();
+    public Dictionary<Guid, int> GetFinalPositions(IReadOnlyList<Guid> players)
+    {
+        IEnumerable<(Guid PlayerId, (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) Rank)> standings =
+            players.Select(playerId => (PlayerId: playerId, Rank: GetRank(playerId)))
+                .OrderByDescending(entry => entry.Rank);
+        Dictionary<Guid, int> positions = new();
+        (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors)? previousRank = null;
+        int position = 0;
+        foreach ((Guid playerId, (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) rank) in standings)
+        {
+            if (rank != previousRank)
+            {
+                position = positions.Count + 1;
+                previousRank = rank;
+            }
+
+            positions.Add(playerId, position);
+        }
+
+        return positions;
     }
 
     private (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) GetRank(Guid playerId)

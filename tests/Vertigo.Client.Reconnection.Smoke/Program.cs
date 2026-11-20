@@ -64,8 +64,17 @@ try
     revision = afterGuestLoss.Revision;
     Console.WriteLine("PASS: SINGLE DISCONNECT KEEPS MATCH RUNNING");
 
-    // The same identity reclaims its seat through a NEW duplex channel, without a new login.
-    resumedGuestLobby.JoinLobby(code, guestToken);
+    // Reconnection is scoped to the same match and identity.
+    MatchPresenceRequest reconnect = new() { MatchId = Guid.NewGuid(), LobbyCode = code, SessionToken = guestToken };
+    RequireFault(() => resumedGuestLobby.ReconnectMatch(reconnect), ServiceErrorCodes.LobbyNotFound);
+    Require(hostLobby.GetPreparation(code, hostToken).DisconnectedPlayerIds.Contains(guestId),
+        "A mismatched match identifier restored the guest seat");
+    reconnect.MatchId = matchId;
+    resumedGuestLobby.ReconnectMatch(reconnect);
+    MatchBoardSnapshot beforeConfirmation = resumedGuestLobby.GetMatchBoard(code, guestToken);
+    MatchBoardSnapshot afterConfirmation = resumedGuestLobby.ConfirmMatchPresence(reconnect);
+    Require(afterConfirmation.MatchId == matchId && afterConfirmation.Revision == beforeConfirmation.Revision,
+        "Confirming presence without an active grace period changed the board");
     LobbyPreparation afterGuestReturn = resumedGuestLobby.GetPreparation(code, guestToken);
     Require(!afterGuestReturn.DisconnectedPlayerIds.Contains(guestId), "Guest still marked disconnected");
     Require(afterGuestReturn.MatchId == matchId && afterGuestReturn.Revision > revision,

@@ -20,6 +20,7 @@ public sealed class MatchDepartureTests
         MatchBoardSnapshot finished = game.GetBoard(before.MatchId)!;
         Assert.Equal(MatchEndReason.Abandonment, finished.EndReason);
         Assert.Equal(remaining, Assert.Single(finished.WinnerIds));
+        Assert.Equal(1, Assert.Single(finished.Players).FinalPosition);
         Assert.Equal(leaving, Assert.Single(finished.ExpelledPlayerIds));
         Assert.Equal(MatchBoardActionKind.LeftMatch, Assert.Single(finished.RecentMoves).ActionKind);
         Assert.Empty(finished.RoundSummaries);
@@ -80,7 +81,7 @@ public sealed class MatchDepartureTests
     }
 
     [Fact]
-    public void TryLeaveMatch_WhenTurnAlreadyExpired_UsesTimeoutResultFirst()
+    public void TryLeaveMatch_WhenTurnJustExpired_SkipsBeforeApplyingVoluntaryDeparture()
     {
         ManualClock clock = new();
         InMemoryMatchSessionStarter game = new(clock);
@@ -91,8 +92,9 @@ public sealed class MatchDepartureTests
         Assert.Equal(new MatchDepartureResult(true, true), game.TryLeaveMatch(before.MatchId, leaving));
 
         MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
-        Assert.Equal(leaving, Assert.Single(after.WinnerIds));
-        Assert.Equal(MatchBoardActionKind.TurnExpired, Assert.Single(after.RecentMoves).ActionKind);
+        Assert.Equal(before.CurrentTurnPlayerId, Assert.Single(after.WinnerIds));
+        Assert.Equal(new[] { MatchBoardActionKind.TurnSkipped, MatchBoardActionKind.LeftMatch },
+            after.RecentMoves.Select(move => move.ActionKind));
         Assert.Null(game.TryExpireTurn(before.MatchId));
     }
 

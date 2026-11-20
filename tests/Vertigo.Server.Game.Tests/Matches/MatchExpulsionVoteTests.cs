@@ -128,7 +128,7 @@ public sealed class MatchExpulsionVoteTests
     }
 
     [Fact]
-    public void TryVoteToExpel_AtExpiry_RecordsOneExpulsionAndClearsPreviousVotes()
+    public void TryVoteToExpel_AtGraceExpiry_RecordsOneExpulsionAndClearsPreviousVotes()
     {
         ManualClock clock = new();
         InMemoryMatchSessionStarter game = new(clock);
@@ -138,6 +138,8 @@ public sealed class MatchExpulsionVoteTests
         MatchExpulsionVote vote = new(target, board.VotingRevision);
         Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[0], vote));
         clock.Now = board.TurnDeadlineUtc!.Value;
+        Assert.Equal(target, game.TryExpireTurn(board.MatchId));
+        clock.Now = game.GetBoard(board.MatchId)!.PresenceDeadlinesUtc[target];
         MatchExpulsionVoteResult result = default;
         Guid? expired = null;
 
@@ -148,9 +150,9 @@ public sealed class MatchExpulsionVoteTests
         Assert.True(result is MatchExpulsionVoteResult.TurnExpired or MatchExpulsionVoteResult.StaleVotingRevision);
         Assert.Equal(target, expired);
         MatchBoardSnapshot after = game.GetBoard(board.MatchId)!;
-        Assert.Equal(board.Revision + 2, after.Revision);
+        Assert.Equal(board.Revision + 3, after.Revision);
         Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
-        Assert.Equal(MatchBoardActionKind.TurnExpired, Assert.Single(after.RecentMoves).ActionKind);
+        Assert.Equal(MatchBoardActionKind.TurnExpired, after.RecentMoves.Last().ActionKind);
         Assert.Empty(after.ExpulsionVotes);
     }
 

@@ -1,4 +1,4 @@
-using Vertigo.Client.UI.Utilities.Validation;
+using Vertigo.Contracts.Models;
 using Xunit;
 
 namespace Vertigo.Client.UnitTests.Validation;
@@ -6,21 +6,29 @@ namespace Vertigo.Client.UnitTests.Validation;
 public sealed class MatchChatRulesTests
 {
     [Fact]
-    public void CanSend_ExactlyFortyCharacters_ReturnsTrue()
+    public void CanSend_ExactlyThirtyCharacters_ReturnsTrue()
     {
-        Assert.True(MatchChatRules.CanSend(new string('a', 40)));
+        Assert.True(MatchChatRules.CanSend(new string('a', 30)));
     }
 
     [Fact]
-    public void CanSend_FortyOneCharacters_ReturnsFalse()
+    public void CanSend_ThirtyOneCharacters_ReturnsFalse()
     {
-        Assert.False(MatchChatRules.CanSend(new string('a', 41)));
+        Assert.False(MatchChatRules.CanSend(new string('a', 31)));
     }
 
     [Fact]
     public void CanSend_WhitespaceOnly_ReturnsFalse()
     {
         Assert.False(MatchChatRules.CanSend("   "));
+    }
+
+    [Theory]
+    [InlineData("Hola\rAdiós")]
+    [InlineData("Hola\nAdiós")]
+    public void CanSend_MultipleLines_ReturnsFalse(string message)
+    {
+        Assert.False(MatchChatRules.CanSend(message));
     }
 
     [Fact]

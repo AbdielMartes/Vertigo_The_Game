@@ -1,14 +1,17 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking;
+using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
 using Vertigo.Client.UI.Utilities.Localization.Services;
 using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
 using Vertigo.Client.UI.Utilities.Sessions.Services;
 using Vertigo.Client.UI.ViewModels;
 using Vertigo.Client.UI.ViewModels.Dependencies;
+using Vertigo.Client.UI.ViewModels.Presentation;
 using Vertigo.Contracts.Models;
 using Xunit;
 
@@ -16,6 +19,39 @@ namespace Vertigo.Client.UnitTests.Matches;
 
 public sealed class MatchViewModelTests
 {
+    [Theory]
+    [InlineData("es-MX", "Plano Maestro")]
+    [InlineData("en-US", "Master Plan")]
+    public void MasterPlanTitle_UsesLocalizedResources(string cultureName, string expected)
+    {
+        CultureInfo previousCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
+            MatchViewModel model = new(new TextLocalizer());
+
+            Assert.Equal(expected, model.MasterPlanTitle);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = previousCulture;
+        }
+    }
+
+    [Fact]
+    public void RefreshLocalization_NotifiesMatchPanelLabels()
+    {
+        MatchViewModel model = CreateModel();
+        List<string?> changes = [];
+        model.PropertyChanged += (_, args) => changes.Add(args.PropertyName);
+
+        model.RefreshLocalization();
+
+        Assert.Contains(nameof(MatchViewModel.ChatText), changes);
+        Assert.Contains(nameof(MatchViewModel.RecentMovesText), changes);
+        Assert.Contains(nameof(MatchViewModel.MasterPlanTitle), changes);
+    }
+
     [Fact]
     public void Activate_ValidMatch_SetsMatchIdentity()
     {
@@ -41,6 +77,87 @@ public sealed class MatchViewModelTests
 
         Assert.False(activated);
         Assert.Equal("Mensaje sin enviar", model.DraftMessage);
+    }
+
+    [Fact]
+    public void ApplyChatMessage_IgnoresLobbyChatAndMessagesFromOtherMatches()
+    {
+        MatchViewModel model = CreateModel();
+        Guid matchId = Guid.NewGuid();
+        model.Activate(matchId, "ABC234");
+        model.ApplyChatMessage(new LobbyChatMessage { LobbyCode = "ABC234", Text = "Solo sala" });
+        model.ApplyChatMessage(new LobbyChatMessage
+        {
+            LobbyCode = "ABC234", MatchId = Guid.NewGuid(), Text = "Otra partida"
+        });
+        model.ApplyChatMessage(new LobbyChatMessage { LobbyCode = "XYZ789", MatchId = matchId });
+        DateTime sentAt = new(2026, 1, 15, 23, 7, 0, DateTimeKind.Utc);
+        model.ApplyChatMessage(new LobbyChatMessage
+        {
+            LobbyCode = "abc234", MatchId = matchId, Text = "¡Vamos!", SenderUsername = "Ana", SentAt = sentAt
+        });
+
+        MatchChatRow message = Assert.Single(model.ChatMessages);
+        Assert.Equal("¡Vamos!", message.Text);
+        Assert.Equal("Ana", message.Sender);
+        Assert.Equal(sentAt, message.SentAt);
+        Assert.Equal(DateTimeKind.Utc, message.SentAt.Kind);
+        Assert.Equal(sentAt.ToLocalTime().ToString("HH:mm", CultureInfo.InvariantCulture), message.LocalTimeText);
+    }
+
+    [Theory]
+    [InlineData(-360, "17:07")]
+    [InlineData(120, "01:07")]
+    [InlineData(330, "04:37")]
+    public void FormatTime_ServerTimestamp_ShowsTimeInPlayersZone(int offsetMinutes, string expected)
+    {
+        const string ZoneName = "Test zone";
+        TimeZoneInfo zone = TimeZoneInfo.CreateCustomTimeZone(
+            ZoneName,
+            TimeSpan.FromMinutes(offsetMinutes),
+            ZoneName,
+            ZoneName);
+        DateTime utc = new(2026, 1, 15, 23, 7, 0, DateTimeKind.Utc);
+
+        Assert.Equal(expected, MatchChatRow.FormatTime(utc, zone));
+        Assert.Equal(expected, MatchChatRow.FormatTime(DateTime.SpecifyKind(utc, DateTimeKind.Unspecified), zone));
+    }
+
+    [Fact]
+    public void LocalTimeText_MissingTimestamp_IsEmpty()
+    {
+        MatchChatRow message = new() { Sender = "Ana", Text = "¡Vamos!" };
+
+        Assert.Empty(message.LocalTimeText);
+    }
+
+    [Fact]
+    public void ApplyChatMessage_HistoryAtCapacity_DropsOnlyOldestMessage()
+    {
+        MatchViewModel model = CreateModel();
+        Guid matchId = Guid.NewGuid();
+        model.Activate(matchId, "ABC234");
+
+        for (int index = 0; index <= 100; index++)
+        {
+            model.ApplyChatMessage(new LobbyChatMessage { LobbyCode = "ABC234", MatchId = matchId, Text = $"#{index}" });
+        }
+
+        Assert.Equal(100, model.ChatMessages.Count);
+        Assert.Equal("#100", model.ChatMessages[0].Text);
+        Assert.Equal("#1", model.ChatMessages[^1].Text);
+    }
+
+    [Fact]
+    public void Activate_AnotherMatch_ClearsChatHistory()
+    {
+        MatchViewModel model = CreateModel();
+        Guid firstMatch = Guid.NewGuid();
+        model.Activate(firstMatch, "ABC234");
+        model.ApplyChatMessage(new LobbyChatMessage { LobbyCode = "ABC234", MatchId = firstMatch, Text = "Hola" });
+        model.Activate(Guid.NewGuid(), "ABC234");
+
+        Assert.Empty(model.ChatMessages);
     }
 
     [Fact]
@@ -250,7 +367,8 @@ public sealed class MatchViewModelTests
         services.AddTransient<UiNavigationContext>();
         services.AddTransient<MatchBoardContext>();
         using ServiceProvider provider = services.BuildServiceProvider();
-        MatchViewModel model = new(provider.GetRequiredService<MatchBoardContext>());
+        MatchViewModel model = new(provider.GetRequiredService<MatchBoardContext>(),
+            provider.GetRequiredService<IChatClient>());
         model.Activate(Guid.NewGuid(), "ABC234");
         Assert.False(model.ConfirmExitCommand.CanExecute(null));
 

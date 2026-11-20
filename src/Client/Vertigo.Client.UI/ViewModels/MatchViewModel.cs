@@ -21,7 +21,7 @@ using Vertigo.Client.UI.ViewModels.Dependencies;
 
 namespace Vertigo.Client.UI.ViewModels;
 
-public sealed class MatchViewModel : ViewModelBase, INavigationAware
+public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
 {
     private readonly ITextLocalizer _text;
     private readonly ILobbyClient? _lobbies;
@@ -32,6 +32,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private static readonly TimeSpan CountdownInterval = TimeSpan.FromMilliseconds(200);
     private readonly MatchBoardRevision _boardRevision = new();
     private readonly MatchTurnClock _turnClock;
+    private readonly MatchTurnClock _presenceClock;
+    private int? _presenceSeconds;
+    private bool _wasExpelledForInactivity;
+    private bool _needsReconnect;
+    private bool _matchUnavailable;
+    private int _connectionLossCount;
     private readonly MatchMasterPlanDraft _masterPlanDraft = new();
     private readonly MatchExpulsionVoting _voting = new();
     private DateTimeOffset? _turnDeadlineUtc;
@@ -41,7 +47,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private bool _isExitConfirmationOpen;
     private bool _isLeavingMatch;
     private string _exitErrorMessage = string.Empty;
-    private string _draftMessage = string.Empty;
     private string _roundLabel = "—";
     private string? _turnPlayerName;
     private DispatcherTimer? _countdownTimer;
@@ -68,8 +73,14 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     {
         _text = text;
         Results = new MatchResultsViewModel(text);
+        SendChatCommand = new AsyncRelayCommand(SendChatAsync, CanSendChat);
         _session = session;
         _turnClock = new MatchTurnClock(timeProvider);
+        _presenceClock = new MatchTurnClock(timeProvider);
+        ReconnectCommand = new AsyncRelayCommand(ReconnectAsync, () => NeedsReconnect && !IsLoadingBoard
+            && !_isSubmittingTurn && !_isLeavingMatch);
+        ConfirmPresenceCommand = new AsyncRelayCommand(ConfirmPresenceAsync, CanConfirmPresence);
+        ReturnToMenuCommand = new RelayCommand(ReturnToMenu);
         RefreshBoardCommand = new AsyncRelayCommand(RefreshBoardAsync);
         PlaceCardCommand = new AsyncRelayCommand(PlaceCardAsync, CanPlaceSelectedCard);
         DismantleTowerCommand = new AsyncRelayCommand(DismantleTowerAsync, CanDismantleSelectedTower);
@@ -81,14 +92,19 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         ConfirmExitCommand = new AsyncRelayCommand(ConfirmExitAsync, CanConfirmExit);
     }
 
-    public MatchViewModel(MatchBoardContext context) : this(context.Text, context.Session, TimeProvider.System)
+    public MatchViewModel(MatchBoardContext context, IChatClient chatClient)
+        : this(context.Text, context.Session, TimeProvider.System)
     {
         _lobbies = context.Lobbies;
+        _chatClient = chatClient;
         _guard = context.Guard;
         _errors = context.Errors;
         _navigation = context.Ui.Navigation;
     }
 
+    public IRelayCommand ReturnToMenuCommand { get; }
+    public IAsyncRelayCommand ReconnectCommand { get; }
+    public IAsyncRelayCommand ConfirmPresenceCommand { get; }
     public IAsyncRelayCommand RefreshBoardCommand { get; }
     public IAsyncRelayCommand PlaceCardCommand { get; }
     public IAsyncRelayCommand DismantleTowerCommand { get; }
@@ -157,6 +173,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         Hand.Clear();
         ChatMessages.Clear();
         DraftMessage = string.Empty;
+        ChatErrorMessage = string.Empty;
         SelectedCard = null;
         SelectedPile = null;
         _currentBoardRevision = 0;
@@ -177,6 +194,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         SetMasterPlanCount(0);
         ClearMasterPlanDraft();
         _turnClock.SetDeadline(null, null);
+        _presenceClock.SetDeadline(null, null);
+        _wasExpelledForInactivity = false;
+        SetMatchUnavailable(false);
+        SetNeedsReconnect(false);
         RefreshTurnCountdown();
         OnPropertyChanged(nameof(CurrentTurnLabel));
         RefreshTurnCommands();
@@ -195,6 +216,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
             _lobbies.MatchBoardUpdated += OnMatchBoardUpdated;
+            _lobbies.ConnectionLost -= OnConnectionLost;
+            _lobbies.ConnectionLost += OnConnectionLost;
+            _lobbies.MessageReceived -= OnMatchChatReceived;
+            _lobbies.MessageReceived += OnMatchChatReceived;
         }
         StartCountdownTimer();
         RefreshLocalization();
@@ -206,6 +231,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         if (_lobbies is not null)
         {
             _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
+            _lobbies.ConnectionLost -= OnConnectionLost;
+            _lobbies.MessageReceived -= OnMatchChatReceived;
         }
         StopCountdownTimer();
         ClearMasterPlanDraft();
@@ -219,6 +246,18 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         RefreshTurnCommands();
         IsExitConfirmationOpen = false;
         ExitErrorMessage = string.Empty;
+    }
+
+    private void OnConnectionLost(object? sender, EventArgs args)
+    {
+        int generation = _generation;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_generation == generation && _matchId != Guid.Empty)
+            {
+                SetNeedsReconnect(true);
+            }
+        });
     }
 
     private void OnMatchBoardUpdated(object? sender, MatchBoardChanged change)
@@ -247,7 +286,17 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         });
     }
 
-    public async Task RefreshBoardAsync()
+    public Task RefreshBoardAsync()
+    {
+        return NeedsReconnect || MatchUnavailable ? Task.CompletedTask : RequestBoardAsync(reconnect: false);
+    }
+
+    private Task ReconnectAsync()
+    {
+        return RequestBoardAsync(reconnect: true);
+    }
+
+    private async Task RequestBoardAsync(bool reconnect)
     {
         SessionSnapshot? original = _session?.GetActiveSession();
         Guid matchId = _matchId;
@@ -257,37 +306,35 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             && _guard.HasActiveSession() && original is not null)
         {
             BoardRequestIdentity request = new(original, matchId, generation);
-            await LoadBoardAsync(_lobbies, lobbyCode, request);
+            await LoadBoardAsync(_lobbies, (lobbyCode, reconnect), request);
         }
     }
 
-    private async Task LoadBoardAsync(ILobbyClient lobbies, string lobbyCode, BoardRequestIdentity request)
+    private async Task LoadBoardAsync(ILobbyClient lobbies, (string LobbyCode, bool Reconnect) options,
+        BoardRequestIdentity request)
     {
         _hasCurrentHand = false;
         IsLoadingBoard = true;
+        int lossCount = _connectionLossCount;
         try
         {
             (MatchBoardSnapshot board, MatchPrivateHand? hand, long receivedAt) =
-                await Task.Run(() => ReadBoardAndHand(lobbies, lobbyCode, request.Session));
+                await Task.Run(() => ReadBoard(lobbies, options, request));
+            await Dispatcher.UIThread.InvokeAsync(() =>
+                ApplyLoadedBoard((board, hand, receivedAt), request, (options.Reconnect, lossCount)));
+        }
+        catch (FaultException<ServiceFault> exception) when (options.Reconnect
+            && exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotFound)
+        {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 if (IsCurrent(request.Session, request.MatchId, request.Generation))
                 {
-                    ApplyBoardAndHand(board, hand, receivedAt);
+                    SetMatchUnavailable(true);
+                    SetNeedsReconnect(false);
+                    ErrorMessage = string.Empty;
                 }
             });
-        }
-        catch (FaultException<ServiceFault> exception)
-        {
-            await ReportBoardFailureAsync(exception, request);
-        }
-        catch (TimeoutException exception)
-        {
-            await ReportBoardFailureAsync(exception, request);
-        }
-        catch (CommunicationException exception)
-        {
-            await ReportBoardFailureAsync(exception, request);
         }
         catch (Exception exception)
         {
@@ -297,6 +344,38 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             await Dispatcher.UIThread.InvokeAsync(() => CompleteBoardRefresh(request));
         }
+    }
+
+    private void ApplyLoadedBoard(
+        (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) state,
+        BoardRequestIdentity request,
+        (bool Requested, int LossCount) reconnect)
+    {
+        if (IsCurrent(request.Session, request.MatchId, request.Generation))
+        {
+            ApplyBoardAndHand(state.Board, state.Hand, state.ReceivedAt);
+            if (reconnect.Requested && reconnect.LossCount == _connectionLossCount
+                && state.Board.MatchId == request.MatchId && state.Board.Revision == _currentBoardRevision
+                && (_hasCurrentHand || state.Board.ExpelledPlayerIds.Contains(request.Session.PlayerId)))
+            {
+                SetNeedsReconnect(false);
+            }
+            else if (!reconnect.Requested && NeedsReconnect)
+            {
+                _hasCurrentHand = false;
+            }
+        }
+    }
+
+    private (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadBoard(
+        ILobbyClient lobbies, (string LobbyCode, bool Reconnect) options, BoardRequestIdentity request)
+    {
+        if (options.Reconnect)
+        {
+            lobbies.ReconnectMatch(CreatePresenceRequest(options.LobbyCode, request.MatchId, request.Session.Token));
+        }
+
+        return ReadBoardAndHand(lobbies, options.LobbyCode, request.Session);
     }
 
     private (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadBoardAndHand(
@@ -362,7 +441,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     {
         if (!ApplyBoard(board, receivedAt) && board.ServerTimeUtc.HasValue)
         {
-            _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+            SetBoardClocks(board, _session?.GetActiveSession()?.PlayerId, receivedAt);
             RefreshTurnCountdown();
         }
     }
@@ -388,6 +467,11 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             if (IsCurrent(request.Session, request.MatchId, request.Generation))
             {
+                if (exception is TimeoutException or (CommunicationException and not FaultException))
+                {
+                    SetNeedsReconnect(true);
+                }
+
                 ErrorMessage = _errors?.FromException(exception, "Error.Unknown")
                     ?? _text.Get("Error.Unknown");
                 if (_errors?.IsUnauthorized(exception) == true)
@@ -417,7 +501,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             UpdatePiles(board.Piles);
 
             int previousRoundCount = RoundSummaries.Count;
-            Results.ApplyBoard(board);
+            Results.ApplyBoard(board, localPlayerId);
             RefreshExitLabels();
             if (previousRoundCount != RoundSummaries.Count)
             {
@@ -438,8 +522,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             }
 
             _turnDeadlineUtc = board.TurnDeadlineUtc;
-            _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+            SetBoardClocks(board, localPlayerId, receivedAt);
+            _wasExpelledForInactivity = localPlayerId is Guid playerId && board.InactivePlayerIds.Contains(playerId);
             RefreshTurnCountdown();
+            RefreshPresenceNotice();
             OnPropertyChanged(nameof(CurrentTurnLabel));
             RefreshTurnCommands();
             ErrorMessage = string.Empty;
@@ -482,9 +568,78 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         };
     }
 
+    private static MatchPresenceRequest CreatePresenceRequest(string lobbyCode, Guid matchId, string token)
+    {
+        return new MatchPresenceRequest { LobbyCode = lobbyCode, MatchId = matchId, SessionToken = token };
+    }
+
+    public bool NeedsReconnect => _needsReconnect && !MatchUnavailable;
+    public bool MatchUnavailable => _matchUnavailable;
+    public string MatchUnavailableText => _text.Get("Match.Connection.Unavailable");
+    public string ReturnToMenuText => _text.Get("Match.Exit.ReturnHome");
+
+    private void SetMatchUnavailable(bool value)
+    {
+        if (SetProperty(ref _matchUnavailable, value, nameof(MatchUnavailable)))
+        {
+            OnPropertyChanged(nameof(NeedsReconnect));
+            RefreshPresenceNotice();
+            RefreshTurnCommands();
+        }
+    }
+    public string ReconnectText => _text.Get("Match.Connection.Reconnect");
+    public string ConnectionText => _text.Get("Match.Connection.Lost");
+    public string ConfirmPresenceText => _text.Get("Match.Presence.Confirm");
+    public bool ShowConfirmPresence => _presenceSeconds is > 0 && !_isMyTurn && !NeedsReconnect && !MatchUnavailable;
+    public bool HasPresenceNotice => !MatchUnavailable && (_wasExpelledForInactivity || _presenceSeconds.HasValue);
+    public string PresenceNotice => _wasExpelledForInactivity
+        ? _text.Get("Match.Presence.Expelled")
+        : _presenceSeconds == 0 ? _text.Get("Match.Presence.Pending")
+        : string.Format(_text.Get(_isMyTurn ? "Match.Presence.Play" : "Match.Presence.Skipped"), _presenceSeconds);
+
+    private void SetNeedsReconnect(bool value)
+    {
+        if (value)
+        {
+            _connectionLossCount++;
+            _hasCurrentHand = false;
+        }
+
+        if (SetProperty(ref _needsReconnect, value, nameof(NeedsReconnect)))
+        {
+            RefreshPresenceNotice();
+            RefreshTurnCommands();
+        }
+    }
+
+    private void RefreshPresenceNotice()
+    {
+        OnPropertyChanged(nameof(HasPresenceNotice));
+        OnPropertyChanged(nameof(PresenceNotice));
+        OnPropertyChanged(nameof(ShowConfirmPresence));
+        ConfirmPresenceCommand.NotifyCanExecuteChanged();
+    }
+
+    private bool CanConfirmPresence()
+    {
+        return ShowConfirmPresence && _presenceClock.GetRemainingSeconds() is > 0
+            && !IsLoadingBoard && !_isSubmittingTurn && !_isLeavingMatch;
+    }
+
+    private Task ConfirmPresenceAsync()
+    {
+        string lobbyCode = _lobbyCode;
+        Guid matchId = _matchId;
+        return CanConfirmPresence()
+            ? SubmitTurnAsync((lobbies, token) =>
+                lobbies.ConfirmMatchPresence(CreatePresenceRequest(lobbyCode, matchId, token)))
+            : Task.CompletedTask;
+    }
+
     private bool CanVoteToExpel(Guid targetId)
     {
-        return _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn && !_isLeavingMatch
+        return _hasCurrentHand && !NeedsReconnect && !MatchUnavailable && !IsLoadingBoard
+            && !_isSubmittingTurn && !_isLeavingMatch
             && _turnClock.GetRemainingSeconds() is > 0
             && _voting.CanVoteFor(targetId);
     }
@@ -523,7 +678,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     TopCardNumber = pile.TopCardNumber,
                     Label = pile.Position.ToString(),
                     Count = pile.CardCount,
-                    TopCardText = pile.TopCardNumber?.ToString() ?? string.Empty
+                    TopCardText = pile.TopCardNumber?.ToString() ?? "—"
                 });
             }
         }
@@ -531,7 +686,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private bool CanSubmitTurn()
     {
-        return _isMyTurn && _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn && !_isLeavingMatch
+        return _isMyTurn && _hasCurrentHand && !NeedsReconnect && !MatchUnavailable && !IsLoadingBoard
+            && !_isSubmittingTurn && !_isLeavingMatch
             && _turnClock.GetRemainingSeconds() is > 0;
     }
 
@@ -725,7 +881,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             foreach (int card in hand.Cards)
             {
-                Hand.Add(new MatchCardRow { DisplayValue = card.ToString(), CardNumber = card, IsWildcard = false });
+                Hand.Add(new MatchCardRow
+                {
+                    DisplayValue = card.ToString(),
+                    CardNumber = card,
+                    PlanOrder = _masterPlanDraft.GetOrder(card)
+                });
             }
         }
 
@@ -734,6 +895,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private void RefreshTurnCommands()
     {
+        SendChatCommand.NotifyCanExecuteChanged();
+        ReconnectCommand.NotifyCanExecuteChanged();
+        ConfirmPresenceCommand.NotifyCanExecuteChanged();
         ConfirmExitCommand.NotifyCanExecuteChanged();
         PlaceCardCommand.NotifyCanExecuteChanged();
         DismantleTowerCommand.NotifyCanExecuteChanged();
@@ -751,6 +915,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         if (SetProperty(ref _masterPlanCount, count, nameof(MasterPlanCountLabel)))
         {
             OnPropertyChanged(nameof(HasMasterPlans));
+            OnPropertyChanged(nameof(MasterPlanCount));
         }
     }
 
@@ -765,7 +930,14 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private void OnMasterPlanDraftChanged()
     {
+        foreach (MatchCardRow card in Hand)
+        {
+            card.PlanOrder = _masterPlanDraft.GetOrder(card.CardNumber);
+        }
+
         OnPropertyChanged(nameof(MasterPlanPreview));
+        OnPropertyChanged(nameof(HasMasterPlanDraft));
+        OnPropertyChanged(nameof(MasterPlanSteps));
         RefreshTurnCommands();
     }
 
@@ -796,8 +968,23 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         RefreshTurnCountdown();
     }
 
+    private void SetBoardClocks(MatchBoardSnapshot board, Guid? playerId, long? receivedAt)
+    {
+        _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+        DateTimeOffset? presenceDeadline = playerId is Guid id
+            && board.PresenceDeadlinesUtc.TryGetValue(id, out DateTimeOffset deadline) ? deadline : null;
+        _presenceClock.SetDeadline(presenceDeadline, board.ServerTimeUtc, receivedAt);
+    }
+
     private void RefreshTurnCountdown()
     {
+        int? presenceSeconds = _presenceClock.GetRemainingSeconds();
+        if (presenceSeconds != _presenceSeconds)
+        {
+            _presenceSeconds = presenceSeconds;
+            RefreshPresenceNotice();
+        }
+
         if (SetProperty(ref _turnSeconds, _turnClock.GetRemainingSeconds(), nameof(TurnSecondsLabel)))
         {
             OnPropertyChanged(nameof(HasTurnCountdown));
@@ -821,7 +1008,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public ObservableCollection<MatchPlayerRow> Players { get; } = new();
     public ObservableCollection<MatchPileRow> Piles { get; } = new();
     public ObservableCollection<MatchCardRow> Hand { get; } = new();
-    public ObservableCollection<MatchChatRow> ChatMessages { get; } = new();
 
     public string RoundLabel
     {
@@ -851,23 +1037,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
 
-    public string DraftMessage
-    {
-        get => _draftMessage;
-        set
-        {
-            string nextValue = value ?? string.Empty;
-            if (SetProperty(ref _draftMessage, nextValue))
-            {
-                OnPropertyChanged(nameof(ChatLengthLabel));
-                OnPropertyChanged(nameof(CanSendChat));
-            }
-        }
-    }
-
-    public bool CanSendChat => MatchChatRules.CanSend(DraftMessage);
-    public string ChatLengthLabel => $"{DraftMessage.Length}/{MatchChatRules.MaximumLength}";
-
     public MatchCardRow? SelectedCard
     {
         get => _selectedCard;
@@ -888,6 +1057,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             if (SetProperty(ref _isExitConfirmationOpen, value))
             {
                 ConfirmExitCommand.NotifyCanExecuteChanged();
+                SendChatCommand.NotifyCanExecuteChanged();
             }
         }
     }
@@ -913,10 +1083,19 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public string BoardText => _text.Get("Match.Board");
     public string BoardHintText => _text.Get("Match.BoardHint");
     public string HandText => _text.Get("Match.Hand");
-    public bool HasMasterPlans => _masterPlanCount > 0;
+    public int MasterPlanCount => _masterPlanCount;
+    public string MasterPlanTitle => _text.Get("Match.MasterPlan.Title");
+    public bool HasMasterPlans => MasterPlanCount > 0;
     public string MasterPlanCountLabel => string.Format(_text.Get("Match.MasterPlan.Count"), _masterPlanCount);
+    public bool HasMasterPlanDraft => _masterPlanDraft.Modules.Count > 0;
     public string MasterPlanPreview => SelectedPile?.TopCardNumber is int top && _masterPlanDraft.Modules.Count > 0
         ? string.Join(" → ", _masterPlanDraft.Modules.Prepend(top)) : _text.Get("Match.MasterPlan.Hint");
+    public IReadOnlyList<MatchMasterPlanStep> MasterPlanSteps =>
+        HasMasterPlanDraft && SelectedPile?.TopCardNumber is int top
+            ? _masterPlanDraft.Modules.Select(number => new MatchMasterPlanStep(number, IsTowerTop: false))
+                .Prepend(new MatchMasterPlanStep(top, IsTowerTop: true)).ToArray()
+            : Array.Empty<MatchMasterPlanStep>();
+
     public string AddMasterPlanModuleText => _text.Get("Match.MasterPlan.AddModule");
     public string RemoveMasterPlanModuleText => _text.Get("Match.MasterPlan.RemoveModule");
     public string PlayMasterPlanText => _text.Get("Match.MasterPlan.Play");
@@ -946,6 +1125,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public void RefreshLocalization()
     {
         Results.RefreshLocalization();
+        OnPropertyChanged(nameof(ReconnectText));
+        OnPropertyChanged(nameof(ConnectionText));
+        OnPropertyChanged(nameof(MatchUnavailableText));
+        OnPropertyChanged(nameof(ReturnToMenuText));
+        OnPropertyChanged(nameof(ConfirmPresenceText));
+        RefreshPresenceNotice();
         RefreshPlayers();
         OnPropertyChanged(nameof(TitleText));
         OnPropertyChanged(nameof(RoundText));
@@ -957,6 +1142,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(BoardHintText));
         OnPropertyChanged(nameof(HandText));
         OnPropertyChanged(nameof(MasterPlanCountLabel));
+        OnPropertyChanged(nameof(MasterPlanTitle));
         OnPropertyChanged(nameof(MasterPlanPreview));
         OnPropertyChanged(nameof(AddMasterPlanModuleText));
         OnPropertyChanged(nameof(RemoveMasterPlanModuleText));
@@ -993,6 +1179,14 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         else if (move.ActionKind == MatchBoardActionKind.TurnExpired)
         {
             label = string.Format(_text.Get("Match.Move.TurnExpired"), move.PlayerUsername);
+        }
+        else if (move.ActionKind == MatchBoardActionKind.TurnSkipped)
+        {
+            label = string.Format(_text.Get("Match.Move.TurnSkipped"), move.PlayerUsername);
+        }
+        else if (move.ActionKind == MatchBoardActionKind.PresenceConfirmed)
+        {
+            label = string.Format(_text.Get("Match.Move.PresenceConfirmed"), move.PlayerUsername);
         }
         else if (move.ActionKind == MatchBoardActionKind.LeftMatch)
         {
@@ -1083,19 +1277,24 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             if (left)
             {
-                try
-                {
-                    _lobbies?.Disconnect();
-                }
-                finally
-                {
-                    _navigation?.NavigateTo(NavigationPage.Home);
-                }
+                ReturnToMenu();
             }
             else
             {
                 ExitErrorMessage = _text.Get("Match.Exit.Failed");
             }
+        }
+    }
+
+    private void ReturnToMenu()
+    {
+        try
+        {
+            _lobbies?.Disconnect();
+        }
+        finally
+        {
+            _navigation?.NavigateTo(NavigationPage.Home);
         }
     }
 

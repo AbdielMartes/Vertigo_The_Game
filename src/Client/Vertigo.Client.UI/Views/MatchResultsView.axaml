@@ -1,0 +1,150 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
+             xmlns:contracts="clr-namespace:Vertigo.Contracts.Models;assembly=Vertigo.Contracts"
+             x:Class="Vertigo.Client.UI.Views.MatchResultsView"
+             x:DataType="vm:MatchResultsViewModel"
+             x:CompileBindings="True"
+             IsVisible="{Binding HasResults}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="TowerDrawing" x:DataType="rows:MatchTowerResult">
+            <Border Width="60" Height="112" BorderThickness="0,0,0,4"
+                    BorderBrush="{DynamicResource ColorSnesBlue}">
+                <ItemsControl ItemsSource="{Binding Segments}" VerticalAlignment="Bottom" Width="44">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="rows:MatchTowerSegment">
+                            <Border Height="{Binding Height}" Classes="tower-segment"
+                                    Classes.bonus="{Binding IsBonus}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="Border.tower-segment">
+            <Setter Property="Background" Value="{DynamicResource ColorSnesBlue}"/>
+        </Style>
+        <Style Selector="Border.tower-segment.bonus">
+            <Setter Property="Background" Value="{DynamicResource ColorSnesYellow}"/>
+        </Style>
+        <Style Selector="Border.standing.winner">
+            <Setter Property="Background" Value="{DynamicResource ColorSuccessBackground}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Border Padding="14" Background="{DynamicResource ColorWhite}"
+            BorderBrush="{DynamicResource ColorBorderStrong}" BorderThickness="{DynamicResource BorderThin}"
+            CornerRadius="{DynamicResource RadiusSmall}">
+        <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                  HorizontalContentAlignment="Stretch">
+            <Expander.Header>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Viewbox Height="34" IsVisible="{Binding ShowLatestTower}">
+                        <ContentControl Content="{Binding LatestTower}"
+                                        ContentTemplate="{StaticResource TowerDrawing}"/>
+                    </Viewbox>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="{Binding HeaderText}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding LatestTowerCaption}" IsVisible="{Binding ShowLatestTower}"
+                                   Foreground="{DynamicResource ColorTextSecondary}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+            </Expander.Header>
+
+            <StackPanel Spacing="14">
+                <StackPanel Spacing="12" IsVisible="{Binding HasFinalResult}">
+                    <Border Padding="14" Background="{DynamicResource ColorInfoBackground}"
+                            CornerRadius="{DynamicResource RadiusSmall}">
+                        <StackPanel Spacing="3">
+                            <TextBlock Text="{Binding VictoryTitle}" FontSize="22" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding WinnerText}" FontSize="15" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                        <StackPanel Width="175" Spacing="6" IsVisible="{Binding HasFinalTower}">
+                            <TextBlock Text="{Binding FinalTowerText}" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <ContentControl Content="{Binding FinalTower}"
+                                            ContentTemplate="{StaticResource TowerDrawing}"
+                                            HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding FinalTowerCaption}" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="8,0">
+                                <TextBlock Text="{Binding StandingsText}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="{Binding TotalText}"
+                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding FinalStandings}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="rows:MatchFinalStandingRow">
+                                        <Border Classes="standing" Classes.winner="{Binding IsWinner}" Padding="8,6"
+                                                BorderBrush="{DynamicResource ColorDivider}" BorderThickness="0,0,0,1">
+                                            <Grid ColumnDefinitions="30,*,Auto" ColumnSpacing="8">
+                                                <TextBlock Text="{Binding Position}"
+                                                           FontFamily="{DynamicResource FontMono}"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Username}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding TotalFloors}"
+                                                           FontWeight="Bold"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="10" IsVisible="{Binding HasRoundSummaries}">
+                    <ComboBox ItemsSource="{Binding Rounds}" SelectedItem="{Binding SelectedRound, Mode=TwoWay}"
+                              AutomationProperties.Name="{Binding SelectRoundText}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="rows:MatchRoundResultRow">
+                                <TextBlock Text="{Binding Title}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                        <StackPanel Width="150" Spacing="6" IsVisible="{Binding HasSelectedTower}">
+                            <TextBlock Text="{Binding PersonalTowerText}" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <ContentControl Content="{Binding SelectedTower}"
+                                            ContentTemplate="{StaticResource TowerDrawing}" HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding SelectedTowerCaption}" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="8" Margin="8,0">
+                                <TextBlock Text="{Binding PlayerText}" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="1" Text="{Binding FloorsText}" FontWeight="SemiBold"
+                                           TextWrapping="Wrap"/>
+                                <TextBlock Grid.Column="2" Text="{Binding BonusText}" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="3" Text="{Binding TotalText}" FontWeight="SemiBold"
+                                           TextWrapping="Wrap"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding SelectedScores}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="contracts:MatchRoundPlayerScore">
+                                        <Border Padding="8,6" BorderThickness="0,0,0,1"
+                                                BorderBrush="{DynamicResource ColorDivider}">
+                                            <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="8">
+                                                <TextBlock Text="{Binding PlayerUsername}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding FloorsBuilt}"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding BonusFloors}"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
+                                                           FontWeight="Bold"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </Expander>
+    </Border>
+</UserControl>

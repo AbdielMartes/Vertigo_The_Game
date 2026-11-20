@@ -154,6 +154,9 @@ public sealed class LobbyInvitationsViewModelTests
 
     private sealed class FakeChatClient : IChatClient
     {
+        public ClientResult<bool> SendMatchMessage(MatchChatRequest request) =>
+            throw new NotSupportedException();
+
         public ClientResult<bool> SendMessage(string lobbyCode, string text, string sessionToken)
         {
             return ClientResult<bool>.Success(true);
@@ -169,6 +172,12 @@ public sealed class LobbyInvitationsViewModelTests
         public event EventHandler<LobbyChatMessage>? MessageReceived;
         public event EventHandler<LobbyPreparation>? PreparationChanged;
         public event EventHandler<MatchBoardChanged>? MatchBoardUpdated { add { } remove { } }
+        public event EventHandler? ConnectionLost { add { } remove { } }
+
+        public LobbyAdmission ReconnectMatch(MatchPresenceRequest request) => throw new NotSupportedException();
+
+        public MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request) =>
+            throw new NotSupportedException();
 
         public string CreateLobby(bool isPublic, int maxPlayers, string sessionToken)
         {

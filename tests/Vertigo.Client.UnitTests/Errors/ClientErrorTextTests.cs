@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.ServiceModel;
 using Vertigo.Client.Networking.Results;
 using Vertigo.Client.UI.Utilities.Localization.Services;
@@ -8,6 +9,27 @@ namespace Vertigo.Client.UnitTests.Errors;
 
 public sealed class ClientErrorTextTests
 {
+    [Theory]
+    [InlineData("es-MX", "El mensaje contiene lenguaje no permitido.")]
+    [InlineData("en-US", "The message contains language that is not allowed.")]
+    public void FromResult_BlockedChatLanguage_ReturnsLocalizedExplanation(string cultureName, string expected)
+    {
+        CultureInfo previousCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
+            ClientErrorText errors = new(new TextLocalizer());
+            ClientResult<bool> failed = ClientResult<bool>.BusinessFailure(
+                ServiceErrorCodes.ChatLanguageBlocked, ServiceMessageKeys.ChatLanguageBlocked);
+
+            Assert.StartsWith(expected, errors.FromResult(failed, "Error.Unknown"));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = previousCulture;
+        }
+    }
+
     [Fact]
     public void FromResult_Timeout_ReturnsLocalizedMessage()
     {

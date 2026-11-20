@@ -66,6 +66,17 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public LobbyAdmission JoinLobby(string lobbyCode, string sessionToken)
     {
+        return JoinLobby(lobbyCode, sessionToken, null);
+    }
+
+    public LobbyAdmission ReconnectMatch(MatchPresenceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return JoinLobby(request.LobbyCode, request.SessionToken, request.MatchId);
+    }
+
+    private LobbyAdmission JoinLobby(string lobbyCode, string sessionToken, Guid? matchId)
+    {
         SessionIdentity identity = ResolveIdentity(sessionToken);
         LobbyMember player = CreateMember(identity);
         LobbyConnection connection = new(player, GetCurrentCallback(), WatchCurrentSession());
@@ -81,6 +92,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             {
                 throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
             }
+
+            EnsureReconnectMatchesLobby(lobby, player.PlayerId, matchId);
 
             if (lobby.Status != LobbyStatus.Waiting && !lobby.Contains(player.PlayerId))
             {
@@ -116,6 +129,15 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         Notify(preparationCallbacks, CreatePreparationNotification(preparation));
 
         return response;
+    }
+
+    private static void EnsureReconnectMatchesLobby(LobbyState lobby, Guid playerId, Guid? matchId)
+    {
+        if (matchId.HasValue && (lobby.Status != LobbyStatus.InGame
+            || lobby.MatchId != matchId.Value || !lobby.Contains(playerId)))
+        {
+            throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+        }
     }
 
     private void EnsureNewMemberCanJoin(LobbyState lobby, Guid playerId)
@@ -314,7 +336,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
             (move.PilePosition, move.CardNumber), ApplyPlacement);
 
-        MatchBoardActionKind ApplyPlacement(Guid matchId, Guid playerId)
+        MatchBoardActionKind? ApplyPlacement(Guid matchId, Guid playerId)
         {
             MatchPlacementResult result = _gameOperations.TryPlace(matchId, playerId, move);
             if (result != MatchPlacementResult.Applied)
@@ -334,7 +356,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
             (move.PilePosition, 0), ApplyDismantle);
 
-        MatchBoardActionKind ApplyDismantle(Guid matchId, Guid playerId)
+        MatchBoardActionKind? ApplyDismantle(Guid matchId, Guid playerId)
         {
             MatchDismantleResult result = _gameOperations.TryDismantle(matchId, playerId, move);
             if (result != MatchDismantleResult.Applied)
@@ -355,7 +377,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
             (move.PilePosition, modules.LastOrDefault()), ApplyMasterPlan);
 
-        MatchBoardActionKind ApplyMasterPlan(Guid matchId, Guid playerId)
+        MatchBoardActionKind? ApplyMasterPlan(Guid matchId, Guid playerId)
         {
             MatchPlacementResult result = _gameOperations.TryUseMasterPlan(matchId, playerId, move);
             if (result != MatchPlacementResult.Applied)
@@ -375,7 +397,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken), (0, 0), ApplyVote);
 
-        MatchBoardActionKind ApplyVote(Guid matchId, Guid voterId)
+        MatchBoardActionKind? ApplyVote(Guid matchId, Guid voterId)
         {
             MatchExpulsionVoteResult result = matchId == matchToVote
                 ? _gameOperations.TryVoteToExpel(matchId, voterId, vote)
@@ -390,14 +412,31 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         }
     }
 
+    public MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken), (0, 0), Confirm);
+
+        MatchBoardActionKind? Confirm(Guid matchId, Guid playerId)
+        {
+            if (matchId != request.MatchId)
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+            }
+
+            return _gameOperations.TryConfirmPresence(matchId, playerId)
+                ? MatchBoardActionKind.PresenceConfirmed : null;
+        }
+    }
+
     private MatchBoardSnapshot ApplyMatchBoardAction(
         (string LobbyCode, string SessionToken) access,
         (int PilePosition, int CardNumber) action,
-        Func<Guid, Guid, MatchBoardActionKind> apply)
+        Func<Guid, Guid, MatchBoardActionKind?> apply)
     {
         SessionIdentity identity = ResolveIdentity(access.SessionToken);
         MatchBoardSnapshot board;
-        MatchBoardActionKind kind;
+        MatchBoardActionKind? kind;
         List<ILobbyCallback> callbacks;
         lock (_lobbyLock)
         {
@@ -413,6 +452,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
 
+        if (!kind.HasValue)
+        {
+            return board;
+        }
+
         MatchBoardChanged changed = new()
         {
             LobbyCode = access.LobbyCode,
@@ -424,7 +468,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 MatchBoardActionKind.ExpulsionVoteRecorded => string.Empty,
                 _ => identity.Username
             },
-            ActionKind = kind,
+            ActionKind = kind.Value,
             CardNumber = action.CardNumber,
             PilePosition = action.PilePosition
         };
@@ -440,11 +484,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             foreach (LobbyState lobby in _lobbies.Values)
             {
                 if (lobby.Status == LobbyStatus.InGame
-                    && _gameOperations.TryExpireTurn(lobby.MatchId) is Guid expelledId)
+                    && _gameOperations.TryExpireTurn(lobby.MatchId) is Guid affectedPlayerId)
                 {
                     MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
                     MatchBoardMove? move = board?.RecentMoves.LastOrDefault();
-                    if (board is not null && move is not null && move.PlayerId == expelledId)
+                    if (board is not null && move is not null && move.PlayerId == affectedPlayerId)
                     {
                         MatchBoardChanged notice = new()
                         {
@@ -452,7 +496,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                             MatchId = board.MatchId,
                             Revision = board.Revision,
                             PlayerUsername = move.PlayerUsername,
-                            ActionKind = MatchBoardActionKind.TurnExpired
+                            ActionKind = move.ActionKind
                         };
                         notifications.Add((lobby.GetCallbacksExcept(Guid.Empty), notice));
                     }
@@ -629,24 +673,48 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return overviews;
     }
 
-    // A closed or faulted channel means the client left or dropped: its players are removed from every lobby.
     public bool PublishChatMessage(LobbyChatMessage message)
     {
-        List<ILobbyCallback> callbacks;
+        List<ILobbyCallback>? callbacks;
         lock (_lobbyLock)
         {
             if (!_lobbies.TryGetValue(message.LobbyCode, out LobbyState? lobby)
-                || lobby.Status != LobbyStatus.Waiting
                 || !lobby.Contains(message.SenderId))
             {
                 return false;
             }
 
-            callbacks = lobby.GetCallbacksExcept(Guid.Empty);
+            callbacks = message.MatchId.HasValue
+                ? GetMatchChatCallbacks(lobby, message)
+                : lobby.Status == LobbyStatus.Waiting ? lobby.GetCallbacksExcept(Guid.Empty) : null;
+        }
+
+        if (callbacks is null)
+        {
+            return false;
         }
 
         Notify(callbacks, CreateChatNotification(message));
         return true;
+    }
+
+    private List<ILobbyCallback>? GetMatchChatCallbacks(LobbyState lobby, LobbyChatMessage message)
+    {
+        if (lobby.Status != LobbyStatus.InGame || lobby.MatchId != message.MatchId
+            || lobby.IsDisconnected(message.SenderId))
+        {
+            return null;
+        }
+
+        MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
+        if (board is not { EndReason: MatchEndReason.None, TurnDeadlineUtc: not null }
+            || !board.Players.Exists(player => player.PlayerId == message.SenderId))
+        {
+            return null;
+        }
+
+        HashSet<Guid> activePlayers = board.Players.Select(player => player.PlayerId).ToHashSet();
+        return lobby.GetConnectedCallbacks(activePlayers.Contains);
     }
 
     private SessionIdentity ResolveIdentity(string sessionToken)

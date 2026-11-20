@@ -81,6 +81,7 @@ public sealed class MatchResultsViewModelTests
         Assert.True(results.IsExpanded);
         Assert.False(results.IsAbandonment);
         Assert.Equal("Ganaron Ana, Beto", results.WinnerText);
+        Assert.Equal("Match.Results.SharedVictory", results.VictoryTitle);
         results.IsExpanded = false;
         results.ApplyBoard(board);
         Assert.False(results.IsExpanded);
@@ -108,6 +109,76 @@ public sealed class MatchResultsViewModelTests
         Assert.False(results.HasResults);
         Assert.False(results.IsExpanded);
         Assert.Empty(results.WinnerText);
+    }
+
+    [Fact]
+    public void ApplyBoard_LatestTowerStaysVisibleWhileAnEarlierRoundIsSelected()
+    {
+        Guid local = Guid.NewGuid();
+        MatchResultsViewModel results = new(new ResultsText());
+        MatchRoundSummary first = CreateRound(1, (5, 10), 15);
+        MatchRoundSummary second = CreateRound(2, (4, 0), 19);
+        first.Players[0].PlayerId = local;
+        second.Players[0].PlayerId = local;
+        results.ApplyBoard(new MatchBoardSnapshot { RoundSummaries = { first, second } }, local);
+        results.SelectedRound = results.Rounds.Single(round => round.RoundNumber == 1);
+
+        Assert.True(results.ShowLatestTower);
+        Assert.False(results.IsExpanded);
+        Assert.Equal(4, results.LatestTower!.BuiltFloors);
+        Assert.Equal(10, results.SelectedTower!.BonusFloors);
+        Assert.False(Assert.Single(results.SelectedTower.Segments).IsBonus);
+        Assert.Equal(15, results.SelectedTower.TotalFloors);
+    }
+
+    [Fact]
+    public void ApplyBoard_FinalStandingUsesOfficialPositionsAndOnlyCreditedFloors()
+    {
+        Guid ana = Guid.NewGuid();
+        Guid beto = Guid.NewGuid();
+        MatchRoundSummary round = CreateRound(1, (5, 10), 15);
+        round.Players[0].PlayerId = ana;
+        MatchBoardSnapshot board = new()
+        {
+            EndReason = MatchEndReason.Completed,
+            WinnerIds = { beto },
+            RoundSummaries = { round },
+            Players =
+            {
+                new MatchBoardPlayer { PlayerId = ana, GlobalFloors = 15, FloorsBuilt = 99, FinalPosition = 2 },
+                new MatchBoardPlayer { PlayerId = beto, GlobalFloors = 15, FinalPosition = 1 }
+            }
+        };
+
+        MatchResultsViewModel results = new(new ResultsText());
+        results.ApplyBoard(board, ana);
+
+        Assert.True(results.IsExpanded);
+        Assert.False(results.ShowLatestTower);
+        Assert.Equal(new int?[] { 1, 2 }, results.FinalStandings.Select(row => row.Position));
+        Assert.True(results.FinalStandings[0].IsWinner);
+        Assert.Equal(5, results.FinalTower!.BuiltFloors);
+        Assert.Equal(10, results.FinalTower.BonusFloors);
+        Assert.Equal(15, results.FinalTower.TotalFloors);
+        Assert.Contains(results.FinalTower.Segments, segment => segment.IsBonus);
+    }
+
+    [Fact]
+    public void ApplyBoard_AbandonmentWithoutClosedRounds_DoesNotCreditOpenRound()
+    {
+        Guid winner = Guid.NewGuid();
+        MatchResultsViewModel results = new(new ResultsText());
+        results.ApplyBoard(new MatchBoardSnapshot
+        {
+            EndReason = MatchEndReason.Abandonment,
+            WinnerIds = { winner },
+            Players = { new MatchBoardPlayer { PlayerId = winner, FloorsBuilt = 12, FinalPosition = 1 } }
+        }, winner);
+
+        Assert.Equal("Match.Results.Abandonment", results.VictoryTitle);
+        Assert.Equal(0, results.FinalTower!.TotalFloors);
+        Assert.Empty(results.FinalTower.Segments);
+        Assert.True(Assert.Single(results.FinalStandings).IsWinner);
     }
 
     private static MatchRoundSummary CreateRound(int number, (int Built, int Bonus) floors, int total)

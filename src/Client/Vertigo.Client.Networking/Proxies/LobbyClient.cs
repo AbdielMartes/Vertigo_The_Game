@@ -120,6 +120,30 @@ public sealed class LobbyClient : ILobbyClient
         }
     }
 
+    public event EventHandler? ConnectionLost;
+
+    public LobbyAdmission ReconnectMatch(MatchPresenceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        Disconnect();
+        ILobbyService channel = GetOrCreateChannel();
+        try
+        {
+            return channel.ReconnectMatch(request);
+        }
+        catch (Exception exception) when (IsTransportFailure(exception))
+        {
+            AbortChannel(channel);
+            throw;
+        }
+    }
+
+    public MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ReadOnIndependentChannel(channel => channel.ConfirmMatchPresence(request));
+    }
+
     public string CreateLobby(bool isPublic, int maxPlayers, string sessionToken)
     {
         ClearPendingEvents();
@@ -423,8 +447,20 @@ public sealed class LobbyClient : ILobbyClient
             _channelFactory = new DuplexChannelFactory<ILobbyService>(
                 new InstanceContext(handler), binding,
                 new EndpointAddress(ServiceEndpoints.LobbyServiceAddress));
-            _channel = _channelFactory.CreateChannel();
-            return _channel;
+            ILobbyService channel = _channelFactory.CreateChannel();
+            ICommunicationObject transport = (ICommunicationObject)channel;
+            _channel = channel;
+            transport.Faulted += (_, _) => OnConnectionLost(channel);
+            transport.Closed += (_, _) => OnConnectionLost(channel);
+            return channel;
+        }
+    }
+
+    private void OnConnectionLost(ILobbyService channel)
+    {
+        if (ReferenceEquals(Volatile.Read(ref _channel), channel))
+        {
+            ConnectionLost?.Invoke(this, EventArgs.Empty);
         }
     }
 

@@ -14,6 +14,12 @@ public interface ILobbyClient : IDisposable
 
     event EventHandler<MatchBoardChanged>? MatchBoardUpdated;
 
+    event EventHandler? ConnectionLost;
+
+    LobbyAdmission ReconnectMatch(MatchPresenceRequest request);
+
+    MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request);
+
     string CreateLobby(bool isPublic, int maxPlayers, string sessionToken);
 
     LobbyAdmission JoinLobby(string lobbyCode, string sessionToken);

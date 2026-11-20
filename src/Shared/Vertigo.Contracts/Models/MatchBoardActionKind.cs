@@ -24,5 +24,11 @@ public enum MatchBoardActionKind
     ExpelledByVote,
 
     [EnumMember]
-    LeftMatch
+    LeftMatch,
+
+    [EnumMember]
+    TurnSkipped,
+
+    [EnumMember]
+    PresenceConfirmed
 }

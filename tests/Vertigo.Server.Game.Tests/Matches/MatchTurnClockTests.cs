@@ -11,7 +11,7 @@ public sealed class MatchTurnClockTests
     private static readonly DateTimeOffset StartTime = DateTimeOffset.UnixEpoch;
 
     [Fact]
-    public void TryExpireTurn_AtDeadline_ExpelsOnlyOnceAndStartsNextTurn()
+    public void TryExpireTurn_AtDeadline_SkipsOnceAndStartsNextTurn()
     {
         ManualClock clock = new();
         var (game, matchId) = StartMatch(clock, 3);
@@ -36,13 +36,12 @@ public sealed class MatchTurnClockTests
         Assert.Equal(clock.GetUtcNow() + (before.TurnDeadlineUtc!.Value - StartTime), after.TurnDeadlineUtc);
         Assert.Equal(clock.GetUtcNow(), after.ServerTimeUtc);
         Assert.Equal(MatchEndReason.None, after.EndReason);
-        Assert.Equal(active, Assert.Single(after.ExpelledPlayerIds));
-        Assert.DoesNotContain(after.Players, player => player.PlayerId == active);
-        Assert.Null(game.GetPrivateHand(matchId, active));
-        Assert.Equal(MatchReconnectResult.Rejected, game.TryReconnect(matchId, active));
+        Assert.Equal(clock.GetUtcNow().AddSeconds(30), after.PresenceDeadlinesUtc[active]);
+        Assert.Empty(after.ExpelledPlayerIds);
+        Assert.NotNull(game.GetPrivateHand(matchId, active));
         MatchBoardMove move = Assert.Single(after.RecentMoves);
         Assert.Equal(active, move.PlayerId);
-        Assert.Equal(MatchBoardActionKind.TurnExpired, move.ActionKind);
+        Assert.Equal(MatchBoardActionKind.TurnSkipped, move.ActionKind);
         Assert.Equal(after.Revision, move.Revision);
     }
 
@@ -77,8 +76,14 @@ public sealed class MatchTurnClockTests
 
         clock.Set(before.TurnDeadlineUtc!.Value);
         Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
+        clock.Set(game.GetBoard(matchId)!.PresenceDeadlinesUtc[before.CurrentTurnPlayerId]);
+        Assert.False(game.TryConfirmPresence(matchId, before.CurrentTurnPlayerId));
+        Assert.Equal(MatchReconnectResult.Rejected, game.TryReconnect(matchId, before.CurrentTurnPlayerId));
+        Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
 
         MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(before.CurrentTurnPlayerId, Assert.Single(after.InactivePlayerIds));
+        Assert.Empty(after.PresenceDeadlinesUtc);
         Assert.Equal(MatchLifecycleStatus.Finished, game.Get(matchId)!.Status);
         Assert.Equal(MatchEndReason.Abandonment, after.EndReason);
         Assert.Equal(winner, Assert.Single(after.WinnerIds));
@@ -101,30 +106,33 @@ public sealed class MatchTurnClockTests
         Assert.Null(game.TryExpireTurn(matchId));
         clock.Set(board.TurnDeadlineUtc!.Value);
 
-        Guid? expelled = game.TryExpireTurn(matchId);
-
-        Assert.Equal(board.CurrentTurnPlayerId, expelled);
+        Assert.Equal(board.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot skipped = game.GetBoard(matchId)!;
+        Assert.Equal(MatchEndReason.None, skipped.EndReason);
+        Assert.Equal(MatchLifecycleStatus.Suspended, game.Get(matchId)!.Status);
+        clock.Set(skipped.PresenceDeadlinesUtc[board.CurrentTurnPlayerId]);
+        Assert.Equal(board.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
         Assert.Equal(MatchEndReason.Abandonment, game.GetBoard(matchId)!.EndReason);
     }
 
     [Fact]
-    public void TryExpireTurn_ConcurrentLegalActionAtDeadline_OnlyExpulsionTakesEffect()
+    public void TryExpireTurn_ConcurrentLegalActionAtDeadline_OnlySkipTakesEffect()
     {
         ManualClock clock = new();
         var (game, matchId) = StartMatch(clock, 3);
         MatchBoardSnapshot before = game.GetBoard(matchId)!;
         Func<bool> playTurn = GetLegalTurn(game, before);
         bool played = false;
-        Guid? expelled = null;
+        Guid? skipped = null;
         clock.Set(before.TurnDeadlineUtc!.Value);
 
-        Parallel.Invoke(() => played = playTurn(), () => expelled = game.TryExpireTurn(matchId));
+        Parallel.Invoke(() => played = playTurn(), () => skipped = game.TryExpireTurn(matchId));
 
         Assert.False(played);
-        Assert.Equal(before.CurrentTurnPlayerId, expelled);
+        Assert.Equal(before.CurrentTurnPlayerId, skipped);
         MatchBoardSnapshot after = game.GetBoard(matchId)!;
         Assert.Equal(before.Revision + 1, after.Revision);
-        Assert.Equal(MatchBoardActionKind.TurnExpired, Assert.Single(after.RecentMoves).ActionKind);
+        Assert.Equal(MatchBoardActionKind.TurnSkipped, Assert.Single(after.RecentMoves).ActionKind);
         Assert.Equal(before.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)),
             after.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)));
     }
@@ -194,8 +202,10 @@ public sealed class MatchTurnClockTests
         MatchRecord record = new(session, StartTime, () => new MatchDeck(modules));
         MatchBoardSnapshot board = record.ToBoard();
         int expectedReturnedModule = record.ToPrivateHand(board.CurrentTurnPlayerId)!.Cards[0];
-        DateTimeOffset now = board.TurnDeadlineUtc!.Value;
+        DateTimeOffset now = board.TurnDeadlineUtc!.Value.AddSeconds(1);
 
+        Assert.Equal(board.CurrentTurnPlayerId, record.TryExpireTurn(now));
+        now = record.ToBoard().PresenceDeadlinesUtc[board.CurrentTurnPlayerId];
         Assert.Equal(board.CurrentTurnPlayerId, record.TryExpireTurn(now));
         Assert.Equal(MatchEndReason.None, record.ToBoard().EndReason);
         Assert.Equal(1, record.ToBoard().RoundNumber);
@@ -205,6 +215,102 @@ public sealed class MatchTurnClockTests
         Dismantle(record, now);
         Assert.Equal(expectedReturnedModule, record.ToBoard().Piles[0].TopCardNumber);
         Assert.Equal(nextPlayer, record.ToBoard().CurrentTurnPlayerId);
+    }
+
+    [Fact]
+    public void TryReconnect_DuringGrace_KeepsSeatAndDeadlineUntilPresenceIsConfirmed()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 3);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Guid active = before.CurrentTurnPlayerId;
+        Assert.True(game.TryDisconnect(matchId, active));
+        clock.Set(before.TurnDeadlineUtc!.Value.AddSeconds(2));
+        Assert.Equal(active, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot skipped = game.GetBoard(matchId)!;
+        Assert.False(game.TryConfirmPresence(matchId, active));
+
+        Assert.Equal(MatchReconnectResult.Reconnected, game.TryReconnect(matchId, active));
+        Assert.Equal(before.TurnDeadlineUtc.Value.AddSeconds(30),
+            game.GetBoard(matchId)!.PresenceDeadlinesUtc[active]);
+        Assert.True(game.TryConfirmPresence(matchId, active));
+        Assert.False(game.TryConfirmPresence(matchId, active));
+
+        MatchBoardSnapshot confirmed = game.GetBoard(matchId)!;
+        Assert.Equal(skipped.CurrentTurnPlayerId, confirmed.CurrentTurnPlayerId);
+        Assert.Equal(skipped.TurnDeadlineUtc, confirmed.TurnDeadlineUtc);
+        Assert.Empty(confirmed.PresenceDeadlinesUtc);
+        Assert.Equal(MatchBoardActionKind.PresenceConfirmed, confirmed.RecentMoves.Last().ActionKind);
+        clock.Set(skipped.PresenceDeadlinesUtc[active]);
+        Assert.Null(game.TryExpireTurn(matchId));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Grace_WhenTurnReturns_RequiresValidMoveWithinOriginalDeadline(bool play)
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 2);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Guid skippedPlayer = before.CurrentTurnPlayerId;
+        clock.Set(before.TurnDeadlineUtc!.Value);
+        Assert.Equal(skippedPlayer, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot skipped = game.GetBoard(matchId)!;
+        DateTimeOffset deadline = skipped.PresenceDeadlinesUtc[skippedPlayer];
+        clock.Set(deadline.AddSeconds(-20));
+        Assert.True(GetLegalTurn(game, skipped)());
+
+        MatchBoardSnapshot returned = game.GetBoard(matchId)!;
+        Assert.Equal(skippedPlayer, returned.CurrentTurnPlayerId);
+        Assert.Equal(deadline, returned.TurnDeadlineUtc);
+        Assert.False(game.TryConfirmPresence(matchId, skippedPlayer));
+        Assert.Equal(MatchPlacementResult.CardNotOwned,
+            game.TryPlace(matchId, skippedPlayer, new MatchPlacement(0, 1, returned.Revision)));
+        Assert.Equal(deadline, game.GetBoard(matchId)!.PresenceDeadlinesUtc[skippedPlayer]);
+
+        if (play)
+        {
+            clock.Set(deadline.AddTicks(-1));
+            Assert.True(GetLegalTurn(game, returned)());
+        }
+
+        clock.Set(deadline);
+        Assert.Equal(play ? (Guid?)null : skippedPlayer, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Empty(after.PresenceDeadlinesUtc);
+        Assert.Equal(!play, after.InactivePlayerIds.Contains(skippedPlayer));
+    }
+
+    [Fact]
+    public void Grace_ExpiresDuringAnotherTurn_WithoutChangingThatDeadline()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 3);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        clock.Set(before.TurnDeadlineUtc!.Value);
+        Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot skipped = game.GetBoard(matchId)!;
+        DateTimeOffset deadline = skipped.PresenceDeadlinesUtc[before.CurrentTurnPlayerId];
+        clock.Set(deadline.AddSeconds(-20));
+        Assert.True(GetLegalTurn(game, skipped)());
+        MatchBoardSnapshot next = game.GetBoard(matchId)!;
+
+        clock.Set(deadline);
+        Guid inactive = before.CurrentTurnPlayerId;
+        Guid active = next.CurrentTurnPlayerId;
+        Assert.False(game.TryConfirmPresence(matchId, inactive));
+        Assert.Equal(MatchExpulsionVoteResult.TurnExpired,
+            game.TryVoteToExpel(matchId, inactive, new MatchExpulsionVote(active, next.VotingRevision)));
+        Assert.Equal(MatchExpulsionVoteResult.TurnExpired,
+            game.TryVoteToExpel(matchId, active, new MatchExpulsionVote(inactive, next.VotingRevision)));
+        Assert.Equal(next.Revision, game.GetBoard(matchId)!.Revision);
+        Assert.Equal(inactive, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(next.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(next.TurnDeadlineUtc, after.TurnDeadlineUtc);
+        Assert.Equal(before.CurrentTurnPlayerId, Assert.Single(after.InactivePlayerIds));
+        Assert.Null(game.TryExpireTurn(matchId));
     }
 
     private static void Dismantle(MatchRecord record, DateTimeOffset now)

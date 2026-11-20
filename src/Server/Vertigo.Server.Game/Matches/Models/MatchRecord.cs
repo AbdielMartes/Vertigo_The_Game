@@ -17,6 +17,10 @@ internal sealed class MatchRecord
 
     private static readonly TimeSpan TurnDuration = TimeSpan.FromSeconds(30);
 
+    private static readonly TimeSpan PresenceGraceDuration = TimeSpan.FromSeconds(30);
+
+    private readonly Dictionary<Guid, DateTimeOffset> _presenceDeadlinesUtc = new();
+    private readonly List<Guid> _inactivePlayerIds = new();
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
     private readonly HashSet<Guid> _activePlayerIds;
     private readonly Dictionary<Guid, HashSet<Guid>> _expulsionVotes = new();
@@ -94,6 +98,10 @@ internal sealed class MatchRecord
 
     public MatchBoardSnapshot ToBoard()
     {
+        Guid[] activePlayers = Session.PlayerIds.Where(_activePlayerIds.Contains).ToArray();
+        Dictionary<Guid, int>? positions = _endReason == MatchEndReason.Completed
+            ? _scoring.GetFinalPositions(activePlayers) : null;
+
         return new MatchBoardSnapshot
         {
             MatchId = Session.MatchId,
@@ -102,6 +110,8 @@ internal sealed class MatchRecord
             CurrentTurnPlayerId = _currentTurnPlayerId,
             TurnDeadlineUtc = _turnDeadlineUtc,
             EndReason = _endReason,
+            PresenceDeadlinesUtc = new(_presenceDeadlinesUtc),
+            InactivePlayerIds = new(_inactivePlayerIds),
             ExpelledPlayerIds = Session.PlayerIds.Where(id => !_activePlayerIds.Contains(id)).ToList(),
             VotingRevision = _votingRevision,
             ExpulsionVotesRequired = ExpulsionVotesRequired,
@@ -118,11 +128,12 @@ internal sealed class MatchRecord
                 PreviousTop = move.PreviousTop,
                 CardNumbers = move.CardNumbers.ToList()
             }).ToList(),
-            Players = Session.PlayerIds.Where(_activePlayerIds.Contains).Select(id => new MatchBoardPlayer
+            Players = activePlayers.Select(id => new MatchBoardPlayer
             {
                 PlayerId = id,
                 FloorsBuilt = _personalFloors[id],
-                GlobalFloors = _scoring.GetGlobalFloors(id)
+                GlobalFloors = _scoring.GetGlobalFloors(id),
+                FinalPosition = _endReason == MatchEndReason.Abandonment ? 1 : positions?[id]
             }).ToList(),
             Piles = _piles.Select(pile => new MatchBoardPile
             {
@@ -369,15 +380,49 @@ internal sealed class MatchRecord
 
     public Guid? TryExpireTurn(DateTimeOffset now)
     {
-        Guid? expelledPlayerId = null;
-        if (IsTurnExpired(now))
+        if (IsTerminal)
         {
-            Guid playerId = _currentTurnPlayerId;
-            RemoveActivePlayer(playerId, MatchBoardActionKind.TurnExpired, now);
-            expelledPlayerId = playerId;
+            return null;
         }
 
-        return expelledPlayerId;
+        Guid expiredPlayerId = _presenceDeadlinesUtc
+            .Where(entry => entry.Value <= now)
+            .OrderBy(entry => entry.Value)
+            .Select(entry => entry.Key)
+            .FirstOrDefault();
+        if (expiredPlayerId != Guid.Empty)
+        {
+            _inactivePlayerIds.Add(expiredPlayerId);
+            RemoveActivePlayer(expiredPlayerId, MatchBoardActionKind.TurnExpired, now);
+            return expiredPlayerId;
+        }
+
+        if (!IsTurnExpired(now))
+        {
+            return null;
+        }
+
+        Guid skippedPlayerId = _currentTurnPlayerId;
+        _presenceDeadlinesUtc.Add(skippedPlayerId, _turnDeadlineUtc!.Value + PresenceGraceDuration);
+        RecordMove(skippedPlayerId, (MatchBoardActionKind.TurnSkipped, 0, null), Array.Empty<int>());
+        AdvanceGameplayRevision();
+        BeginTurn(GetActivePlayersAfter(skippedPlayerId).First(), now);
+        return skippedPlayerId;
+    }
+
+    public bool TryConfirmPresence(Guid playerId, DateTimeOffset now)
+    {
+        bool confirmed = !IsTerminal && playerId != _currentTurnPlayerId
+            && !_disconnectedPlayerIds.Contains(playerId)
+            && _presenceDeadlinesUtc.TryGetValue(playerId, out DateTimeOffset deadline) && now < deadline;
+        if (confirmed)
+        {
+            _presenceDeadlinesUtc.Remove(playerId);
+            RecordMove(playerId, (MatchBoardActionKind.PresenceConfirmed, 0, null), Array.Empty<int>());
+            _boardRevision++;
+        }
+
+        return confirmed;
     }
 
     public MatchExpulsionVoteResult TryVoteToExpel(Guid voterId, MatchExpulsionVote vote, DateTimeOffset now)
@@ -387,7 +432,7 @@ internal sealed class MatchRecord
         {
             result = MatchExpulsionVoteResult.MatchUnavailable;
         }
-        else if (IsTurnExpired(now))
+        else if (IsTurnExpired(now) || HasPresenceExpired(voterId, now) || HasPresenceExpired(vote.TargetPlayerId, now))
         {
             result = MatchExpulsionVoteResult.TurnExpired;
         }
@@ -441,6 +486,11 @@ internal sealed class MatchRecord
         return result;
     }
 
+    private bool HasPresenceExpired(Guid playerId, DateTimeOffset now)
+    {
+        return _presenceDeadlinesUtc.TryGetValue(playerId, out DateTimeOffset deadline) && now >= deadline;
+    }
+
     private bool IsTurnExpired(DateTimeOffset now)
     {
         return !IsTerminal && _turnDeadlineUtc is DateTimeOffset deadline && now >= deadline;
@@ -453,6 +503,7 @@ internal sealed class MatchRecord
         _deck.ReturnToBottom(_hands[playerId]);
         _hands.Remove(playerId);
         _activePlayerIds.Remove(playerId);
+        _presenceDeadlinesUtc.Remove(playerId);
         _disconnectedPlayerIds.Remove(playerId);
         _expulsionVotes.Clear();
         _votingRevision++;
@@ -486,6 +537,7 @@ internal sealed class MatchRecord
 
     private void CompleteTurn(Guid playerId, DateTimeOffset now)
     {
+        _presenceDeadlinesUtc.Remove(playerId);
         AdvanceGameplayRevision();
         if (_hands[playerId].Count == 0)
         {
@@ -512,7 +564,8 @@ internal sealed class MatchRecord
     private void BeginTurn(Guid playerId, DateTimeOffset now)
     {
         _currentTurnPlayerId = playerId;
-        _turnDeadlineUtc = now + TurnDuration;
+        _turnDeadlineUtc = _presenceDeadlinesUtc.TryGetValue(playerId, out DateTimeOffset deadline)
+            ? deadline : now + TurnDuration;
     }
 
     private void CloseRound(Guid? closedBy, DateTimeOffset now)
@@ -612,7 +665,7 @@ internal sealed class MatchRecord
     public MatchReconnectResult TryReconnect(Guid playerId, DateTimeOffset now)
     {
         MatchReconnectResult result = MatchReconnectResult.Rejected;
-        if (!IsTerminal && _activePlayerIds.Contains(playerId))
+        if (!IsTerminal && _activePlayerIds.Contains(playerId) && !HasPresenceExpired(playerId, now))
         {
             if (_disconnectedPlayerIds.Remove(playerId))
             {
@@ -641,6 +694,7 @@ internal sealed class MatchRecord
         if (!IsTerminal && (next is MatchLifecycleStatus.Finished or MatchLifecycleStatus.Cancelled))
         {
             _turnDeadlineUtc = null;
+            _presenceDeadlinesUtc.Clear();
             _expulsionVotes.Clear();
             Lifecycle = Lifecycle with
             {

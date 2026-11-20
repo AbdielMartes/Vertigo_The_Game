@@ -221,6 +221,8 @@ public sealed class MatchDismantleTests
         Assert.Equal(initialOpener, Assert.Single(final.WinnerIds));
         Assert.Equal(22, final.Players.Single(player => player.PlayerId == initialOpener).GlobalFloors);
         Assert.Equal(11, final.Players.Single(player => player.PlayerId == other).GlobalFloors);
+        Assert.Equal(1, final.Players.Single(player => player.PlayerId == initialOpener).FinalPosition);
+        Assert.Equal(2, final.Players.Single(player => player.PlayerId == other).FinalPosition);
         Assert.Equal(MatchDismantleResult.MatchUnavailable,
             match.TryDismantle(initialOpener, new MatchDismantle(1, final.Revision), Now));
     }

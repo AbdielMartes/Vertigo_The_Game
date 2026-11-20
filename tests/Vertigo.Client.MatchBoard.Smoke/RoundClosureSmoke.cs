@@ -8,7 +8,7 @@ internal static class RoundClosureSmoke
     private const int MaximumRoundActions = 100;
     private const int MaximumPlacementDifference = 10;
     private static readonly TimeSpan NotificationTimeout = TimeSpan.FromSeconds(15);
-    private static readonly TimeSpan TurnExpiryTimeout = TimeSpan.FromSeconds(45);
+    private static readonly TimeSpan TurnExpiryTimeout = TimeSpan.FromSeconds(75);
 
     public static async Task<bool> VerifyAsync(
         (ILobbyClient Lobby, UserSession Session) first,
@@ -31,7 +31,12 @@ internal static class RoundClosureSmoke
             VerifySummary(board, second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token));
 
             second.Lobby.Disconnect();
-            second.Lobby.JoinLobby(lobbyCode, second.Session.Token);
+            second.Lobby.ReconnectMatch(new MatchPresenceRequest
+            {
+                MatchId = board.MatchId,
+                LobbyCode = lobbyCode,
+                SessionToken = second.Session.Token
+            });
             VerifySummary(board, second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token));
 
             if (dismantled)
@@ -95,10 +100,14 @@ internal static class RoundClosureSmoke
         string lobbyCode = state.LobbyCode;
         MatchBoardSnapshot board = state.Board;
         using CancellationTokenSource timeout = new(TurnExpiryTimeout);
-        MatchBoardChanged timedOutForFirst = await first.Changes.ReadAsync(timeout.Token);
-        MatchBoardChanged timedOutForSecond = await second.Changes.ReadAsync(timeout.Token);
-        CheckTimeout(timedOutForFirst, board);
-        CheckTimeout(timedOutForSecond, board);
+        CheckTimeout(await first.Changes.ReadAsync(timeout.Token), board, MatchBoardActionKind.TurnSkipped);
+        CheckTimeout(await second.Changes.ReadAsync(timeout.Token), board, MatchBoardActionKind.TurnSkipped);
+        MatchBoardSnapshot skipped = first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token);
+        Check(skipped.ExpelledPlayerIds.Count == 0 && skipped.CurrentTurnPlayerId != board.CurrentTurnPlayerId
+            && skipped.PresenceDeadlinesUtc.ContainsKey(board.CurrentTurnPlayerId),
+            "The skipped player did not keep their seat during the grace period.");
+        CheckTimeout(await first.Changes.ReadAsync(timeout.Token), skipped, MatchBoardActionKind.TurnExpired);
+        CheckTimeout(await second.Changes.ReadAsync(timeout.Token), skipped, MatchBoardActionKind.TurnExpired);
         CheckAbandonment(first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token), board);
         CheckAbandonment(second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token), board);
 
@@ -225,10 +234,10 @@ internal static class RoundClosureSmoke
             "A client received the wrong action notification.");
     }
 
-    private static void CheckTimeout(MatchBoardChanged notice, MatchBoardSnapshot before)
+    private static void CheckTimeout(MatchBoardChanged notice, MatchBoardSnapshot before, MatchBoardActionKind kind)
     {
         Check(notice.MatchId == before.MatchId && notice.Revision == before.Revision + 1
-            && notice.ActionKind == MatchBoardActionKind.TurnExpired,
+            && notice.ActionKind == kind,
             "A client did not receive the turn-expiry notification.");
     }
 
@@ -237,8 +246,9 @@ internal static class RoundClosureSmoke
         Guid expelled = before.CurrentTurnPlayerId;
         Guid winner = before.Players.Single(player => player.PlayerId != expelled).PlayerId;
         Check(after.EndReason == MatchEndReason.Abandonment && after.CurrentTurnPlayerId == Guid.Empty
-            && after.TurnDeadlineUtc is null && after.Revision == before.Revision + 1
+            && after.TurnDeadlineUtc is null && after.Revision == before.Revision + 2
             && after.WinnerIds.SequenceEqual(new[] { winner })
+            && after.Players.Single(player => player.PlayerId == winner).FinalPosition == 1
             && after.ExpelledPlayerIds.SequenceEqual(new[] { expelled }),
             "The timed-out match did not end with the expected winner and expelled player.");
     }

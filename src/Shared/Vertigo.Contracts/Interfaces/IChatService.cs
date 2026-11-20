@@ -9,4 +9,8 @@ public interface IChatService
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
     bool SendMessage(string lobbyCode, string text, string sessionToken);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    bool SendMatchMessage(MatchChatRequest request);
 }

@@ -30,6 +30,12 @@ public sealed class MatchBoardSnapshot
     public List<Guid> ExpelledPlayerIds { get; set; } = new();
 
     [DataMember]
+    public Dictionary<Guid, DateTimeOffset> PresenceDeadlinesUtc { get; set; } = new();
+
+    [DataMember]
+    public List<Guid> InactivePlayerIds { get; set; } = new();
+
+    [DataMember]
     public long VotingRevision { get; set; }
 
     [DataMember]
@@ -59,6 +65,8 @@ public sealed class MatchBoardSnapshot
         RoundSummaries = new List<MatchRoundSummary>();
         RecentMoves = new List<MatchBoardMove>();
         ExpelledPlayerIds = new List<Guid>();
+        PresenceDeadlinesUtc = new Dictionary<Guid, DateTimeOffset>();
+        InactivePlayerIds = new List<Guid>();
         ExpulsionVotes = new List<MatchExpulsionVoteSummary>();
     }
 }

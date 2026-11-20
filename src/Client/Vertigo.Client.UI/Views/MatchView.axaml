@@ -1,11 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:views="using:Vertigo.Client.UI.Views"
              xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
              xmlns:contracts="clr-namespace:Vertigo.Contracts.Models;assembly=Vertigo.Contracts"
              x:Class="Vertigo.Client.UI.Views.MatchView"
              x:DataType="vm:MatchViewModel"
-             xmlns:validation="using:Vertigo.Client.UI.Utilities.Validation"
              x:CompileBindings="True">
     <UserControl.KeyBindings>
         <KeyBinding Gesture="Escape" Command="{Binding CancelExitCommand}"/>
@@ -27,14 +27,76 @@
             <Setter Property="BorderBrush" Value="{DynamicResource ColorSnesBlue}"/>
             <Setter Property="BorderThickness" Value="3,0,0,1"/>
         </Style>
-        <Style Selector="Border.match-pile">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorSnesBlue}"/>
+        <Style Selector="ListBox.module-picker">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="ListBox.module-picker ListBoxItem /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Background" Value="{DynamicResource ColorInfoBackground}"/>
-            <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
-            <Setter Property="Padding" Value="12"/>
-            <Setter Property="MinWidth" Value="86"/>
-            <Setter Property="MinHeight" Value="132"/>
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+        <Style Selector="ListBox.module-picker ListBoxItem:pointerover /template/
+                         ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleHover}"/>
+        </Style>
+        <Style Selector="ListBox.module-picker ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleSelected}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleSelectedBorder}"/>
+        </Style>
+        <Style Selector="ListBox.module-picker ListBoxItem:focus-visible /template/
+                         ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleFocus}"/>
+        </Style>
+        <Style Selector="Border.module-face">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleFace}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Width" Value="74"/>
+            <Setter Property="Height" Value="98"/>
+        </Style>
+        <Style Selector="Border.module-face.hand-card">
+            <Setter Property="Width" Value="NaN"/>
+            <Setter Property="MaxWidth" Value="82"/>
+            <Setter Property="Height" Value="72"/>
+        </Style>
+        <Style Selector="ListBox.hand-picker ListBoxItem">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+        <Style Selector="Border.plan-step">
+            <Setter Property="Background" Value="{DynamicResource ColorPlanStepSurface}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorPlanStepBorder}"/>
+        </Style>
+        <Style Selector="Border.plan-step.tower-top">
+            <Setter Property="Background" Value="{DynamicResource ColorPlanTowerSurface}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorPlanTowerBorder}"/>
+        </Style>
+        <Style Selector="Button.match-compact">
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Padding" Value="9,4"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style Selector="Border.module-face.queued">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleQueuedFace}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleQueuedBorder}"/>
+        </Style>
+        <Style Selector="Border.module-face.empty">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleEmptyFace}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleEmptyBorder}"/>
+        </Style>
+        <Style Selector="Border.module-face.empty TextBlock.module-number">
+            <Setter Property="Foreground" Value="{DynamicResource ColorModuleEmptyText}"/>
+        </Style>
+        <Style Selector="TextBlock.module-number">
+            <Setter Property="Foreground" Value="{DynamicResource ColorModuleNumber}"/>
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontMono}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style Selector="Button:focus-visible">
             <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
@@ -45,184 +107,291 @@
             <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
         </Style>
     </UserControl.Styles>
-    <Grid Background="{DynamicResource ColorCanvas}">
+    <Grid x:Name="grdMatchViewport" ClipToBounds="True">
+        <Border IsHitTestVisible="False">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="{DynamicResource ColorBoardSkyTop}" Offset="0"/>
+                    <GradientStop Color="{DynamicResource ColorBoardSkyMiddle}" Offset="0.6"/>
+                    <GradientStop Color="{DynamicResource ColorBoardSkyBottom}" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <Viewbox Height="260" Stretch="Fill" VerticalAlignment="Bottom"
+                 IsHitTestVisible="False" Opacity="0.55">
+            <Canvas Width="1200" Height="218">
+                <Path Fill="{DynamicResource ColorBoardSkylineFar}"
+                      Data="M 0,218 V 158 H 72 V 118 H 156 V 158 H 212 V 77 H 282 V 153 H 354 V 123 H 424 V 161 H 513
+                            V 92 H 586 V 149 H 661 V 115 H 717 V 71 H 792 V 155 H 880 V 101 H 948 V 167 H 1002 V 115
+                            H 1074 V 150 H 1150 V 100 H 1200 V 218 Z"/>
+                <Path Fill="{DynamicResource ColorBoardSkyline}"
+                      Data="M 0,158 L 53,158 L 53,115 L 121,115 L 121,170 L 195,170 L 195,110 L 256,110 L 256,145 L
+                            325,145 L 325,78 L 397,78 L 397,173 L 493,173 L 493,125 L 560,125 L 560,159 L 654,159 L
+                            654,99 L 720,99 L 720,158 L 802,158 L 802,120 L 878,120 L 878,65 L 951,65 L 951,147 L
+                            1026,147 L 1026,102 L 1095,102 L 1095,153 L 1159,153 L 1159,125 L 1200,125 L 1200,218 L
+                            0,218 Z"/>
+                <Path Stroke="{DynamicResource ColorBoardSkylineDetail}" StrokeThickness="1.4"
+                      Data="M 0,197 H 1200 M 325,78 V 65 H 397 M 361,65 V 45 M 878,65 V 50 H 951 M 915,50 V 32 M
+                            1060,102 V 61 H 1170 M 1060,61 L 1092,47 H 1170 L 1150,61 M 1170,61 V 82"/>
+                <Path Fill="{DynamicResource ColorBoardSkylineNear}" Opacity="0.6"
+                      Data="M 73,188 H 116 V 143 H 150 V 123 H 204 V 188 H 264 V 218 H 73 Z
+                            M 770,184 H 827 V 146 H 858 V 188 H 918 V 218 H 770 Z
+                            M 1060,175 H 1108 V 141 H 1140 V 175 H 1200 V 218 H 1060 Z"/>
+                <Path Stroke="{DynamicResource ColorBoardSkylineOutline}" StrokeThickness="1.7"
+                      Data="M 1051,218 V 62 H 1063 V 218 M 1051,80 L 1063,96 L 1051,112 L 1063,128 L 1051,144 L 1063,160
+                            L 1051,176
+                            M 982,63 L 1057,34 L 1166,63 Z M 1057,34 V 63 M 1008,53 L 1028,63 L 1037,44 L 1057,63
+                            M 1057,63 L 1080,40 L 1101,63 L 1122,51 L 1144,63 M 1144,63 V 99 H 1151 V 106"/>
+                <Path Stroke="{DynamicResource ColorBoardSkylineWindows}" StrokeThickness="1"
+                      Data="M 152,142 H 197 M 152,152 H 197 M 152,162 H 197 M 152,172 H 197
+                            M 331,92 H 389 M 331,102 H 389 M 331,112 H 389 M 331,122 H 389
+                            M 884,80 H 944 M 884,91 H 944 M 884,102 H 944 M 884,113 H 944 M 884,124 H 944"/>
+            </Canvas>
+        </Viewbox>
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto"
                       IsEnabled="{Binding !IsExitConfirmationOpen}">
-            <StackPanel MinWidth="980" MaxWidth="1510" Margin="24" Spacing="14"
-                        HorizontalAlignment="Center">
-                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="20">
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="VÉRTIGO" FontSize="32" FontWeight="Bold"
-                                   FontFamily="{DynamicResource FontTitleDisplay}"/>
-                        <TextBlock Text="{Binding TitleText}" FontSize="12"
-                                   Foreground="{DynamicResource ColorTextSecondary}"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12"
-                                VerticalAlignment="Center">
-                        <TextBlock Text="{Binding RoundText}" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding RoundLabel}" FontFamily="{DynamicResource FontMono}"
-                                   Foreground="{DynamicResource ColorSnesBlue}"/>
-                        <Border Margin="12,0,0,0" Padding="10,6"
-                                CornerRadius="{DynamicResource RadiusSmall}"
+            <Border MinWidth="760"
+                    MinHeight="600"
+                    Width="{Binding #grdMatchViewport.Bounds.Width}"
+                    Height="{Binding #grdMatchViewport.Bounds.Height}"
+                    Padding="18,12,18,18">
+                <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="10">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="VÉRTIGO" FontSize="32" FontWeight="Bold"
+                                       FontFamily="{DynamicResource FontTitleDisplay}"/>
+                            <TextBlock Text="{Binding TitleText}" FontSize="12"
+                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{Binding RoundText}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding RoundLabel}" FontFamily="{DynamicResource FontMono}"
+                                       Foreground="{DynamicResource ColorSnesBlue}"/>
+                            <Border Margin="12,0,0,0" Padding="10,6"
+                                    CornerRadius="{DynamicResource RadiusSmall}"
+                                    Background="{DynamicResource ColorInfoBackground}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="{Binding CurrentTurnLabel}" FontWeight="Bold" MaxWidth="220"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding TurnSecondsLabel}" IsVisible="{Binding HasTurnCountdown}"
+                                               FontFamily="{DynamicResource FontMono}"
+                                               Foreground="{DynamicResource ColorSnesBlue}"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Button Grid.Column="2" Classes="vertigo-button danger" TabIndex="0"
+                                Content="{Binding ExitText}" Command="{Binding RequestExitCommand}"/>
+                    </Grid>
+                    <StackPanel Grid.Row="1" Spacing="6">
+                        <Border IsVisible="{Binding NeedsReconnect}" Classes="match-panel" Padding="10,6"
+                                Background="{DynamicResource ColorErrorBackground}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock
+                                           Text="{Binding ConnectionText}"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                        Content="{Binding ReconnectText}" Command="{Binding ReconnectCommand}"/>
+                            </Grid>
+                        </Border>
+                        <Border IsVisible="{Binding MatchUnavailable}" Classes="match-panel" Padding="10,6"
+                                Background="{DynamicResource ColorErrorBackground}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock
+                                           Text="{Binding MatchUnavailableText}"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                        Content="{Binding ReturnToMenuText}" Command="{Binding ReturnToMenuCommand}"/>
+                            </Grid>
+                        </Border>
+                        <Border IsVisible="{Binding HasPresenceNotice}" Classes="match-panel" Padding="10,6"
                                 Background="{DynamicResource ColorInfoBackground}">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <TextBlock Text="{Binding CurrentTurnLabel}" FontWeight="Bold"/>
-                                <TextBlock Text="{Binding TurnSecondsLabel}" IsVisible="{Binding HasTurnCountdown}"
-                                           FontFamily="{DynamicResource FontMono}"
-                                           Foreground="{DynamicResource ColorSnesBlue}"/>
-                            </StackPanel>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock
+                                           Text="{Binding PresenceNotice}"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                        IsVisible="{Binding ShowConfirmPresence}"
+                                        Content="{Binding ConfirmPresenceText}"
+                                        Command="{Binding ConfirmPresenceCommand}"/>
+                            </Grid>
+                        </Border>
+                        <Border IsVisible="{Binding HasError}" Classes="match-panel" Padding="10,6"
+                                Background="{DynamicResource ColorErrorBackground}"
+                                BorderBrush="{DynamicResource ColorError}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                <Path Width="18" Height="18" Stretch="Uniform"
+                                      Stroke="{DynamicResource ColorError}" StrokeThickness="2"
+                                      Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
+                                <TextBlock Grid.Column="1" Text="{Binding ErrorMessage}" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+                        <Border IsVisible="{Binding Results.HasRoundSummaries}">
+                            <ScrollViewer IsVisible="{Binding !Results.HasFinalResult}" MaxHeight="118"
+                                          HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                <views:MatchResultsView DataContext="{Binding Results}"/>
+                            </ScrollViewer>
                         </Border>
                     </StackPanel>
-                    <Button Grid.Column="2" Classes="vertigo-button danger" TabIndex="0"
-                            Content="{Binding ExitText}" Command="{Binding RequestExitCommand}"/>
-                </Grid>
-                <Border IsVisible="{Binding HasError}" Classes="match-panel"
-                        Background="{DynamicResource ColorErrorBackground}"
-                        BorderBrush="{DynamicResource ColorError}">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Path Width="18" Height="18" Stretch="Uniform"
-                              Stroke="{DynamicResource ColorError}" StrokeThickness="2"
-                              Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
-                        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"/>
-                    </StackPanel>
-                </Border>
-                <Border Classes="match-panel" IsVisible="{Binding Results.HasResults}">
-                    <Expander Header="{Binding Results.HeaderText}" HorizontalAlignment="Stretch"
-                              HorizontalContentAlignment="Stretch"
-                              IsExpanded="{Binding Results.IsExpanded, Mode=TwoWay}">
-                        <StackPanel Spacing="10">
-                            <StackPanel Spacing="4" IsVisible="{Binding Results.HasFinalResult}">
-                                <TextBlock Text="{Binding Results.WinnerText}" FontSize="18" FontWeight="Bold"
-                                           TextWrapping="Wrap"/>
-                                <TextBlock Text="{Binding Results.AbandonmentText}"
-                                           IsVisible="{Binding Results.IsAbandonment}"
-                                           Foreground="{DynamicResource ColorTextSecondary}"/>
-                            </StackPanel>
-                            <StackPanel Spacing="8" IsVisible="{Binding Results.HasRoundSummaries}">
-                                <ComboBox ItemsSource="{Binding Results.Rounds}"
-                                          SelectedItem="{Binding Results.SelectedRound, Mode=TwoWay}"
-                                          AutomationProperties.Name="{Binding Results.SelectRoundText}">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate x:DataType="rows:MatchRoundResultRow">
-                                            <TextBlock Text="{Binding Title}"/>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
-                                <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="12" Margin="8,0">
-                                    <TextBlock Text="{Binding Results.PlayerText}" FontWeight="SemiBold"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding Results.FloorsText}"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Grid.Column="2" Text="{Binding Results.BonusText}"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Grid.Column="3" Text="{Binding Results.TotalText}"
-                                               FontWeight="SemiBold"/>
-                                </Grid>
-                                <ItemsControl ItemsSource="{Binding Results.SelectedScores}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="contracts:MatchRoundPlayerScore">
-                                            <Border Padding="8,6" BorderThickness="0,0,0,1"
-                                                    BorderBrush="{DynamicResource ColorDivider}">
-                                                <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="12">
-                                                    <TextBlock Text="{Binding PlayerUsername}"
-                                                               TextTrimming="CharacterEllipsis"/>
-                                                    <TextBlock Grid.Column="1" Text="{Binding FloorsBuilt}"
-                                                               FontFamily="{DynamicResource FontMono}"/>
-                                                    <TextBlock Grid.Column="2" Text="{Binding BonusFloors}"
-                                                               FontFamily="{DynamicResource FontMono}"/>
-                                                    <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
-                                                               FontWeight="Bold"
-                                                               FontFamily="{DynamicResource FontMono}"/>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </StackPanel>
-                    </Expander>
-                </Border>
-                <Grid ColumnDefinitions="210,*,260" ColumnSpacing="14" MinHeight="450">
-                    <Border Grid.Column="0" Classes="match-panel">
-                        <StackPanel Spacing="12">
-                            <TextBlock Text="{Binding PlayersText}" FontSize="18" FontWeight="Bold"/>
-                            <ListBox ItemsSource="{Binding Players}" TabIndex="1" MinHeight="300"
-                                     AutomationProperties.Name="{Binding PlayersText}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate x:DataType="rows:MatchPlayerRow">
-                                        <Border Classes="match-player" Padding="6,10"
-                                                Classes.active-turn="{Binding IsCurrentTurn}">
-                                            <StackPanel Spacing="5">
-                                                <TextBlock Text="{Binding Username}" FontWeight="SemiBold"
-                                                           TextTrimming="CharacterEllipsis"/>
-                                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                                    <Path Width="15" Height="15" Stroke="{DynamicResource ColorSnesBlue}"
-                                                          StrokeThickness="1.6" Data="M 2,13 L 13,13 L 13,2 L 2,2 Z"/>
-                                                    <TextBlock Text="{Binding FloorsBuilt}"
-                                                               FontFamily="{DynamicResource FontMono}"/>
-                                                </StackPanel>
-                                                <TextBlock Text="{Binding VoteCountText}"
-                                                           IsVisible="{Binding HasVoteCount}" FontSize="12"
-                                                           Foreground="{DynamicResource ColorTextSecondary}"/>
-                                                <Button Classes="vertigo-button neutral" TabIndex="1"
-                                                        IsVisible="{Binding HasVoteButton}"
-                                                        Content="{Binding VoteText}" Command="{Binding VoteCommand}"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
-                    </Border>
-                    <Border Grid.Column="1" Classes="match-panel">
-                        <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="12">
-                            <TextBlock Text="{Binding BoardText}" FontSize="18" FontWeight="Bold"/>
-                            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
-                                          VerticalScrollBarVisibility="Disabled">
-                                <ListBox ItemsSource="{Binding Piles}"
-                                         SelectedItem="{Binding SelectedPile, Mode=TwoWay}"
-                                         SelectionMode="Single" TabIndex="7"
-                                         AutomationProperties.Name="{Binding BoardText}">
-                                    <ListBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" Spacing="14"/>
-                                        </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="168,*,250" ColumnSpacing="12" MaxHeight="360">
+                        <Border Classes="match-panel" IsVisible="{Binding !Results.HasFinalResult}" Padding="10">
+                            <Grid RowDefinitions="Auto,*" RowSpacing="8">
+                                <TextBlock Text="{Binding PlayersText}" FontSize="17" FontWeight="Bold"/>
+                                <ListBox ItemsSource="{Binding Players}" Grid.Row="1" TabIndex="1"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         AutomationProperties.Name="{Binding PlayersText}">
                                     <ListBox.ItemTemplate>
-                                        <DataTemplate x:DataType="rows:MatchPileRow">
-                                            <StackPanel Spacing="8">
-                                                <TextBlock Text="{Binding Label}" HorizontalAlignment="Center"
-                                                           FontWeight="SemiBold"/>
-                                                <Border Classes="match-pile">
-                                                    <Grid RowDefinitions="*,Auto">
-                                                        <Path Stretch="Uniform" Width="46" Height="55"
+                                        <DataTemplate x:DataType="rows:MatchPlayerRow">
+                                            <Border Classes="match-player" Padding="6,10"
+                                                    Classes.active-turn="{Binding IsCurrentTurn}">
+                                                <StackPanel Spacing="5">
+                                                    <TextBlock Text="{Binding Username}" FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                        <Path
+                                                              Width="15"
+                                                              Height="15"
                                                               Stroke="{DynamicResource ColorSnesBlue}"
-                                                              StrokeThickness="1.5"
-                                                              Data="M 5,5 L 41,5 L 41,50 L 5,50 Z M 12,12 L 34,12 M 12,18 L 34,18"/>
-                                                        <TextBlock Grid.Row="1" Text="{Binding TopCardText}"
-                                                                   FontSize="24" FontWeight="Bold"
-                                                                   HorizontalAlignment="Center"
+                                                              StrokeThickness="1.6" Data="M 2,13 L 13,13 L 13,2 L 2,2
+                                                                                          Z"/>
+                                                        <TextBlock Text="{Binding FloorsBuilt}"
                                                                    FontFamily="{DynamicResource FontMono}"/>
-                                                    </Grid>
-                                                </Border>
-                                            </StackPanel>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding VoteCountText}"
+                                                               IsVisible="{Binding HasVoteCount}" FontSize="12"
+                                                               Foreground="{DynamicResource ColorTextSecondary}"/>
+                                                    <Button Classes="vertigo-button neutral" Grid.Row="1" TabIndex="1"
+                                                            IsVisible="{Binding HasVoteButton}"
+                                                            Content="{Binding VoteText}"
+                                                            Command="{Binding VoteCommand}"/>
+                                                </StackPanel>
+                                            </Border>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                            </ScrollViewer>
-                            <TextBlock Grid.Row="2" Text="{Binding BoardHintText}"
-                                       TextWrapping="Wrap" Foreground="{DynamicResource ColorTextSecondary}"
-                                       FontSize="12"/>
-                            <Button Grid.Row="3" Classes="vertigo-button neutral" TabIndex="8"
-                                    Content="{Binding DismantleTowerText}" Command="{Binding DismantleTowerCommand}"/>
-                        </Grid>
-                    </Border>
-                    <Border Grid.Column="2" Classes="match-panel">
-                        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10">
-                            <Border BorderBrush="{DynamicResource ColorDivider}"
-                                    BorderThickness="0,0,0,1" Padding="0,0,0,10">
-                                <StackPanel Spacing="6">
-                                    <TextBlock Text="{Binding RecentMovesText}" FontSize="15" FontWeight="SemiBold"/>
+                            </Grid>
+                        </Border>
+                        <Border
+                                Grid.Column="1"
+                                Classes="match-panel"
+                                IsVisible="{Binding !Results.HasFinalResult}"
+                                BorderBrush="{DynamicResource ColorBoardBorder}"
+                                MaxWidth="620" Padding="10" ClipToBounds="True">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Color="{DynamicResource ColorBoardPanelTop}" Offset="0"/>
+                                    <GradientStop Color="{DynamicResource ColorBoardPanelBottom}" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Grid>
+                                <Viewbox Stretch="Fill" Opacity="0.25" IsHitTestVisible="False">
+                                    <Canvas Width="440" Height="400">
+                                        <Path Stroke="{DynamicResource ColorBoardGrid}" StrokeThickness="1"
+                                              Data="M 0,40 H 440 M 0,80 H 440 M 0,120 H 440 M 0,160 H 440 M 0,200 H 440
+                                              M
+                                                    0,240 H 440 M 0,280 H 440 M 0,320 H 440 M 0,360 H 440 M 40,0 V 400 M
+                                                    80,0
+                                                    V 400 M 120,0 V 400 M 160,0 V 400 M 200,0 V 400 M 240,0 V 400 M
+                                                    280,0 V
+                                                    400 M 320,0 V 400 M 360,0 V 400 M 400,0 V 400"/>
+                                    </Canvas>
+                                </Viewbox>
+                                <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
+                                    <TextBlock
+                                               Text="{Binding BoardText}"
+                                               Foreground="{DynamicResource ColorBoardHeading}"
+                                               FontSize="18" FontWeight="Bold"/>
+                                    <Viewbox Grid.Row="1" Stretch="Uniform" StretchDirection="DownOnly"
+                                             HorizontalAlignment="Center">
+                                        <ListBox Classes="module-picker" VerticalAlignment="Center"
+                                                 HorizontalAlignment="Center"
+                                                 ItemsSource="{Binding Piles}"
+                                                 SelectedItem="{Binding SelectedPile, Mode=TwoWay}"
+                                                 SelectionMode="Single" TabIndex="7"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                                 AutomationProperties.Name="{Binding BoardText}">
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" Spacing="8"/>
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate x:DataType="rows:MatchPileRow">
+                                                    <StackPanel Spacing="7">
+                                                        <TextBlock Text="{Binding Label}" HorizontalAlignment="Center"
+                                                                   Foreground="{DynamicResource ColorTowerLabel}"
+                                                                   FontFamily="{DynamicResource FontMono}"/>
+                                                        <Border Classes="module-face" Classes.empty="{Binding IsEmpty}">
+                                                            <Grid>
+                                                                <Path
+                                                                      Width="62"
+                                                                      Height="38"
+                                                                      Stretch="Fill"
+                                                                      VerticalAlignment="Bottom"
+                                                                      Margin="0,0,0,8"
+                                                                      Stroke="{DynamicResource
+                                                                      ColorTowerCardIllustration}"
+                                                                      Opacity="0.5"
+                                                                      Data="M 3,34 H 59 M 8,30 V 21 H 19 V 30 M 22,30 V
+                                                                      13 H
+                                                                            37 V 30 M 41,30 V 6 H 54 V 30"/>
+                                                                <TextBlock
+                                                                           Classes="module-number"
+                                                                           Text="{Binding TopCardText}"
+                                                                           Margin="0,0,0,18"/>
+                                                            </Grid>
+                                                        </Border>
+                                                        <StackPanel
+                                                                    Orientation="Horizontal"
+                                                                    Spacing="5"
+                                                                    HorizontalAlignment="Center">
+                                                            <Path
+                                                                  Width="14"
+                                                                  Height="12"
+                                                                  Stretch="Uniform"
+                                                                  Stroke="{DynamicResource ColorTowerCountIcon}"
+                                                                  StrokeThickness="1.4"
+                                                                  Data="M 2,3 L 8,0 L 14,3 L 8,6 Z M 2,7 L 8,10 L 14,7 M
+                                                                  2,11
+                                                                        L 8,14 L 14,11"/>
+                                                            <TextBlock
+                                                                       Text="{Binding Count}"
+                                                                       Foreground="{DynamicResource ColorBoardHeading}"
+                                                                       FontFamily="{DynamicResource FontMono}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Viewbox>
+                                    <TextBlock
+                                               Grid.Row="2"
+                                               Text="{Binding BoardHintText}"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTip.Tip="{Binding BoardHintText}"
+                                               Foreground="{DynamicResource ColorBoardHint}"
+                                               FontSize="12"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <ScrollViewer Grid.ColumnSpan="2" IsVisible="{Binding Results.HasFinalResult}"
+                                      HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <views:MatchResultsView DataContext="{Binding Results}"/>
+                        </ScrollViewer>
+                        <Border Grid.Column="2" Classes="match-panel" Padding="8">
+                            <Grid RowDefinitions="Auto,*,5*" RowSpacing="3">
+                                <TextBlock Text="{Binding RecentMovesText}" FontSize="13" FontWeight="Bold"/>
+                                <ScrollViewer
+                                              Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
                                     <ItemsControl ItemsSource="{Binding RecentMoves}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="rows:MatchMoveRow">
@@ -232,88 +401,268 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                </StackPanel>
-                            </Border>
-                            <TextBlock Grid.Row="1" Text="{Binding ChatText}" FontSize="18" FontWeight="Bold"/>
-                            <ListBox Grid.Row="2" TabIndex="2" MinHeight="240"
-                                     ItemsSource="{Binding ChatMessages}"
-                                     AutomationProperties.Name="{Binding ChatText}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate x:DataType="rows:MatchChatRow">
-                                        <StackPanel Margin="4,6" Spacing="3">
-                                            <TextBlock Text="{Binding Sender}" FontWeight="Bold"
-                                                       Foreground="{DynamicResource ColorSnesBlue}"/>
-                                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                </ScrollViewer>
+                                <Border Grid.Row="2" BorderThickness="0,1,0,0"
+                                        BorderBrush="{DynamicResource ColorDivider}" Padding="0,3,0,0">
+                                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="2">
+                                        <TextBlock Text="{Binding ChatText}" FontSize="12" FontWeight="Bold"/>
+                                        <ListBox Grid.Row="1" TabIndex="2" ItemsSource="{Binding ChatMessages}"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                 AutomationProperties.Name="{Binding ChatText}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate x:DataType="rows:MatchChatRow">
+                                                    <StackPanel Margin="2,3" Spacing="2">
+                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                                            <TextBlock Text="{Binding Sender}" FontWeight="Bold"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       Foreground="{DynamicResource ColorSnesBlue}"/>
+                                                            <TextBlock
+                                                                       Grid.Column="1"
+                                                                       Text="{Binding LocalTimeText}"
+                                                                       FontSize="11"
+                                                                       VerticalAlignment="Center"
+                                                                       FontFamily="{DynamicResource FontMono}"
+                                                                       Foreground="{DynamicResource
+                                                                       ColorTextSecondary}"/>
+                                                        </Grid>
+                                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                        <StackPanel Grid.Row="2" Spacing="3">
+                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="5">
+                                                <TextBox
+                                                         TabIndex="3"
+                                                         MaxLength="{x:Static contracts:MatchChatRules.MaximumLength}"
+                                                         Text="{Binding DraftMessage, Mode=TwoWay}"
+                                                         AcceptsReturn="False"
+                                                         PlaceholderText="{Binding MessageHintText}"
+                                                         AutomationProperties.Name="{Binding MessageHintText}">
+                                                    <TextBox.KeyBindings>
+                                                        <KeyBinding
+                                                                    Gesture="Enter"
+                                                                    Command="{Binding SendChatCommand}"/>
+                                                    </TextBox.KeyBindings>
+                                                </TextBox>
+                                                <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                                        TabIndex="4"
+                                                        Content="{Binding SendText}"
+                                                        Command="{Binding SendChatCommand}"/>
+                                                <TextBlock
+                                                           Grid.Column="2"
+                                                           Text="{Binding ChatLengthLabel}"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="11"
+                                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                                            </Grid>
+                                            <TextBlock
+                                                       Text="{Binding ChatErrorMessage}"
+                                                       IsVisible="{Binding HasChatError}"
+                                                       TextWrapping="Wrap" Foreground="{DynamicResource ColorError}"/>
                                         </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            <TextBox Grid.Row="3" TabIndex="3"
-                                     MaxLength="{x:Static validation:MatchChatRules.MaximumLength}"
-                                     Text="{Binding DraftMessage, Mode=TwoWay}"
-                                     PlaceholderText="{Binding MessageHintText}" AcceptsReturn="False"
-                                     AutomationProperties.Name="{Binding MessageHintText}"/>
-                            <TextBlock Grid.Row="4" Text="{Binding ChatLengthLabel}"
-                                       HorizontalAlignment="Right" FontSize="11"
-                                       Foreground="{DynamicResource ColorTextSecondary}"/>
-                            <Button Grid.Row="5" Classes="vertigo-button primary" TabIndex="4"
-                                    Content="{Binding SendText}" IsEnabled="False"/>
-                        </Grid>
-                    </Border>
-                </Grid>
-                <Border Classes="match-panel">
-                    <Grid ColumnDefinitions="*,240" ColumnSpacing="24">
-                        <StackPanel Spacing="10">
-                            <TextBlock Text="{Binding HandText}" FontSize="19" FontWeight="Bold"/>
-                            <ListBox ItemsSource="{Binding Hand}" SelectedItem="{Binding SelectedCard, Mode=TwoWay}"
-                                     TabIndex="5" MaxHeight="168" SelectionMode="Single">
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Border
+                            Grid.Row="3"
+                            Classes="match-panel"
+                            Padding="10,8"
+                            Background="{DynamicResource ColorBoardHandPanel}">
+                        <Grid RowDefinitions="Auto,80,Auto" RowSpacing="5">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                <TextBlock
+                                           Text="{Binding HandText}"
+                                           FontWeight="Bold"
+                                           FontSize="17"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="vertigo-button neutral match-compact" TabIndex="8"
+                                        Content="{Binding DismantleTowerText}"
+                                        Command="{Binding DismantleTowerCommand}"/>
+                                <Button Grid.Column="2" Classes="vertigo-button primary match-compact" TabIndex="6"
+                                        Content="{Binding PlayCardText}" Command="{Binding PlaceCardCommand}"/>
+                            </Grid>
+                            <ListBox Grid.Row="1" Classes="module-picker hand-picker" ItemsSource="{Binding Hand}"
+                                     SelectedItem="{Binding SelectedCard, Mode=TwoWay}"
+                                     TabIndex="5" Height="80" SelectionMode="Single" UseLayoutRounding="False"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                     AutomationProperties.Name="{Binding HandText}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" Spacing="9"/>
+                                        <UniformGrid Columns="10"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate x:DataType="rows:MatchCardRow">
-                                        <Border Classes="match-pile" MinHeight="100" MinWidth="75"
-                                                Background="{DynamicResource ColorWhite}">
-                                            <TextBlock Text="{Binding DisplayValue}" FontSize="28"
-                                                       FontWeight="Bold" HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center"
-                                                       FontFamily="{DynamicResource FontMono}"/>
+                                        <Border
+                                                Classes="module-face hand-card"
+                                                ClipToBounds="True"
+                                                Classes.queued="{Binding IsInMasterPlan}">
+                                            <Grid Margin="4">
+                                                <Border
+                                                        Height="3"
+                                                        Width="21"
+                                                        Background="{DynamicResource ColorModuleStripe}"
+                                                        CornerRadius="1"
+                                                        HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                                <Path
+                                                      MaxWidth="51"
+                                                      Height="18"
+                                                      HorizontalAlignment="Stretch"
+                                                      Stretch="Fill"
+                                                      VerticalAlignment="Bottom"
+                                                      Stroke="{DynamicResource ColorModuleIllustration}" Opacity="0.7"
+                                                      Data="M 2,23 H 54 M 5,20 V 13 H 18 V 20 M 21,20 V 8 H 32 V 20 M
+                                                      35,20 V
+                                                            2 H 50 V 20 M 41,6 V 9 M 45,6 V 9"/>
+                                                <TextBlock Classes="module-number" Text="{Binding DisplayValue}"
+                                                           Margin="0,0,0,6" FontSize="26"/>
+                                                <Border
+                                                        Width="19"
+                                                        Height="19"
+                                                        Background="{DynamicResource ColorModuleBadge}"
+                                                        CornerRadius="9"
+                                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                        IsVisible="{Binding IsInMasterPlan}">
+                                                    <TextBlock
+                                                               Text="{Binding PlanOrder}"
+                                                               Foreground="{DynamicResource ColorTextOnDark}"
+                                                               FontSize="11"
+                                                               FontWeight="Bold" HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Border>
+                                            </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Spacing="8">
-                            <Button Classes="vertigo-button primary" TabIndex="6"
-                                    Content="{Binding PlayCardText}" Command="{Binding PlaceCardCommand}"/>
-                            <TextBlock Text="{Binding MasterPlanCountLabel}" FontWeight="SemiBold"/>
-                            <StackPanel Spacing="6" IsVisible="{Binding HasMasterPlans}">
-                                <Border Padding="8" Background="{DynamicResource ColorInfoBackground}"
-                                        CornerRadius="{DynamicResource RadiusSmall}">
-                                    <TextBlock Text="{Binding MasterPlanPreview}" TextWrapping="Wrap"
-                                               FontSize="13"/>
-                                </Border>
-                                <Button Classes="vertigo-button neutral" TabIndex="9"
-                                        Content="{Binding AddMasterPlanModuleText}"
-                                        Command="{Binding AddMasterPlanModuleCommand}"/>
-                                <Button Classes="vertigo-button neutral" TabIndex="10"
-                                        Content="{Binding RemoveMasterPlanModuleText}"
-                                        Command="{Binding RemoveMasterPlanModuleCommand}"/>
-                                <Button Classes="vertigo-button primary" TabIndex="11"
-                                        Content="{Binding PlayMasterPlanText}"
-                                        Command="{Binding PlayMasterPlanCommand}"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </StackPanel>
+                            <Border
+                                    Grid.Row="2"
+                                    MinHeight="40"
+                                    Padding="6,3"
+                                    Background="{DynamicResource ColorBoardMasterPlanStrip}"
+                                    CornerRadius="5">
+                                <Grid ColumnDefinitions="*,*,2*" ColumnSpacing="8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"
+                                          ToolTip.Tip="{Binding MasterPlanCountLabel}">
+                                        <Border
+                                                MinWidth="46"
+                                                Height="32"
+                                                CornerRadius="5"
+                                                Background="{DynamicResource ColorPlanCountSurface}"
+                                                BorderBrush="{DynamicResource ColorPlanTowerBorder}"
+                                                BorderThickness="1"
+                                                VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="3" Margin="4,0"
+                                                        VerticalAlignment="Center">
+                                                <Path
+                                                      Width="19"
+                                                      Height="20"
+                                                      Stretch="Uniform"
+                                                      Stroke="{DynamicResource ColorPlanCountIcon}"
+                                                      StrokeThickness="1.5" VerticalAlignment="Center"
+                                                      Data="M 2,2 H 17 V 19 H 2 Z M 5,15 V 10 H 8 V 15
+                                                            M 8,15 V 6 H 12 V 15 M 12,15 V 8 H 14 V 15 M 4,15 H 15"/>
+                                                <TextBlock Text="{Binding MasterPlanCount}" FontWeight="Bold"
+                                                           FontSize="12"
+                                                           Foreground="{DynamicResource ColorTextOnDark}"
+                                                           VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBlock
+                                                   Grid.Column="1"
+                                                   Text="{Binding MasterPlanTitle}"
+                                                   FontWeight="Bold"
+                                                   FontSize="12"
+                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                    </Grid>
+                                    <Panel Grid.Column="1" ClipToBounds="True" IsVisible="{Binding HasMasterPlans}">
+                                        <TextBlock Text="{Binding MasterPlanPreview}" FontSize="12"
+                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                                   ToolTip.Tip="{Binding MasterPlanPreview}"
+                                                   IsVisible="{Binding !HasMasterPlanDraft}"/>
+                                        <Viewbox
+                                                 Stretch="Uniform"
+                                                 StretchDirection="DownOnly"
+                                                 HorizontalAlignment="Left"
+                                                 IsVisible="{Binding HasMasterPlanDraft}"
+                                                 ToolTip.Tip="{Binding MasterPlanPreview}">
+                                            <ItemsControl ItemsSource="{Binding MasterPlanSteps}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" Spacing="3"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="rows:MatchMasterPlanStep">
+                                                        <StackPanel Orientation="Horizontal" Spacing="3">
+                                                            <TextBlock
+                                                                       Text="→"
+                                                                       Foreground="{DynamicResource ColorPlanStepArrow}"
+                                                                       VerticalAlignment="Center"
+                                                                       IsVisible="{Binding !IsTowerTop}"/>
+                                                            <Border
+                                                                    Classes="plan-step"
+                                                                    Classes.tower-top="{Binding IsTowerTop}"
+                                                                    BorderThickness="1" CornerRadius="4" Padding="5,3">
+                                                                <TextBlock Text="{Binding Number}" FontWeight="Bold"
+                                                                           FontFamily="{DynamicResource FontMono}"
+                                                                           FontSize="13"/>
+                                                            </Border>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Viewbox>
+                                    </Panel>
+                                    <Grid Grid.Column="2" ColumnDefinitions="*,*,*" ColumnSpacing="4"
+                                          IsVisible="{Binding HasMasterPlans}">
+                                        <Button Classes="vertigo-button neutral match-compact" TabIndex="9"
+                                                HorizontalAlignment="Stretch"
+                                                ToolTip.Tip="{Binding AddMasterPlanModuleText}"
+                                                Command="{Binding AddMasterPlanModuleCommand}">
+                                            <TextBlock
+                                                       Text="{Binding AddMasterPlanModuleText}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </Button>
+                                        <Button
+                                                Grid.Column="1"
+                                                Classes="vertigo-button neutral match-compact"
+                                                TabIndex="10"
+                                                HorizontalAlignment="Stretch"
+                                                ToolTip.Tip="{Binding RemoveMasterPlanModuleText}"
+                                                Command="{Binding RemoveMasterPlanModuleCommand}">
+                                            <TextBlock
+                                                       Text="{Binding RemoveMasterPlanModuleText}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </Button>
+                                        <Button
+                                                Grid.Column="2"
+                                                Classes="vertigo-button primary match-compact"
+                                                TabIndex="11"
+                                                HorizontalAlignment="Stretch" ToolTip.Tip="{Binding PlayMasterPlanText}"
+                                                Command="{Binding PlayMasterPlanCommand}">
+                                            <TextBlock
+                                                       Text="{Binding PlayMasterPlanText}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
         </ScrollViewer>
         <Border IsVisible="{Binding IsExitConfirmationOpen}" Background="{DynamicResource ColorCanvas}"
                 BorderBrush="{DynamicResource ColorCoal}" BorderThickness="2"
                 CornerRadius="{DynamicResource RadiusSmall}"
-                Width="450" MaxWidth="450" Padding="24"
+                Margin="14" MaxWidth="450" Padding="24"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 Focusable="True">
             <StackPanel Spacing="14">

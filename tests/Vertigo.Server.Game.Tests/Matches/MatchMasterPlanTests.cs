@@ -100,7 +100,27 @@ public sealed class MatchMasterPlanTests
         Assert.Equal(10, match.ToPrivateHand(playerId)!.Cards.Count);
     }
 
-    private static MatchRecord CreateMatchWithEarnedPlan()
+    [Fact]
+    public void TryUseMasterPlan_ClosesRoundWhileOpenerIsInGrace_KeepsTheOriginalDeadline()
+    {
+        MatchRecord match = CreateMatchWithEarnedPlan(skipOtherPlayer: true);
+        MatchBoardSnapshot before = match.ToBoard();
+        Guid skippedPlayer = match.Session.PlayerIds[0];
+        DateTimeOffset deadline = before.PresenceDeadlinesUtc[skippedPlayer];
+
+        MatchPlacementResult result = match.TryUseMasterPlan(before.CurrentTurnPlayerId,
+            new MatchMasterPlan(Enumerable.Range(42, 9).ToArray(), 1, before.Revision), deadline.AddSeconds(-1));
+
+        Assert.Equal(MatchPlacementResult.Applied, result);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(2, after.RoundNumber);
+        Assert.Equal(skippedPlayer, after.CurrentTurnPlayerId);
+        Assert.Equal(deadline, after.TurnDeadlineUtc);
+        Assert.Equal(deadline, after.PresenceDeadlinesUtc[skippedPlayer]);
+        Assert.Equal(skippedPlayer, match.TryExpireTurn(deadline));
+    }
+
+    private static MatchRecord CreateMatchWithEarnedPlan(bool skipOtherPlayer = false)
     {
         Guid[] players = { Guid.NewGuid(), Guid.NewGuid() };
         MatchSessionSnapshot session = new()
@@ -128,7 +148,15 @@ public sealed class MatchMasterPlanTests
         MatchBoardSnapshot towerReady = match.ToBoard();
         Assert.Equal(MatchDismantleResult.Applied, match.TryDismantle(
             players[1], new MatchDismantle(1, towerReady.Revision), Now));
-        Place(match, 91, 3);
+        if (skipOtherPlayer)
+        {
+            DateTimeOffset deadline = match.ToBoard().TurnDeadlineUtc!.Value;
+            Assert.Equal(players[0], match.TryExpireTurn(deadline));
+        }
+        else
+        {
+            Place(match, 91, 3);
+        }
 
         return match;
     }

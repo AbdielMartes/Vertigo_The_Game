@@ -8,6 +8,9 @@ public sealed class LobbyChatMessage
     [DataMember]
     public string LobbyCode { get; set; } = string.Empty;
 
+    [DataMember(EmitDefaultValue = false)]
+    public Guid? MatchId { get; set; }
+
     [DataMember]
     public Guid SenderId { get; set; }
 

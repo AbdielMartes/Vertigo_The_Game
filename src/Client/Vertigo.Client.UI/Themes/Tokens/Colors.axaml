@@ -40,4 +40,51 @@
     <SolidColorBrush x:Key="ColorInputBackground" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ColorDisabledBackground" Color="#E6E7EA"/>
     <SolidColorBrush x:Key="ColorDisabledForeground" Color="#62656E"/>
+    <SolidColorBrush x:Key="ColorModuleHover" Color="#325998AF"/>
+    <SolidColorBrush x:Key="ColorModuleSelected" Color="#405998AF"/>
+    <SolidColorBrush x:Key="ColorModuleSelectedBorder" Color="#48AAC6"/>
+    <SolidColorBrush x:Key="ColorModuleFocus" Color="#B47B21"/>
+    <SolidColorBrush x:Key="ColorModuleFace" Color="#F7FAFD"/>
+    <SolidColorBrush x:Key="ColorModuleBorder" Color="#9AAEBD"/>
+    <SolidColorBrush x:Key="ColorModuleQueuedFace" Color="#E8F5F8"/>
+    <SolidColorBrush x:Key="ColorModuleQueuedBorder" Color="#397E97"/>
+    <SolidColorBrush x:Key="ColorModuleEmptyFace" Color="#25385468"/>
+    <SolidColorBrush x:Key="ColorModuleEmptyBorder" Color="#7192A6"/>
+    <SolidColorBrush x:Key="ColorModuleEmptyText" Color="#DBE8F1"/>
+    <SolidColorBrush x:Key="ColorModuleNumber" Color="#15354D"/>
+    <Color x:Key="ColorBoardSkyTop">#F3F8FC</Color>
+    <Color x:Key="ColorBoardSkyMiddle">#DDEAF4</Color>
+    <Color x:Key="ColorBoardSkyBottom">#CBDDEA</Color>
+    <SolidColorBrush x:Key="ColorBoardSkyline" Color="#9CB8CF"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineDetail" Color="#7096B2"/>
+    <SolidColorBrush x:Key="ColorBoardBorder" Color="#34536B"/>
+    <Color x:Key="ColorBoardPanelTop">#102E46</Color>
+    <Color x:Key="ColorBoardPanelBottom">#1B495F</Color>
+    <SolidColorBrush x:Key="ColorBoardGrid" Color="#6FA6BC"/>
+    <SolidColorBrush x:Key="ColorBoardHeading" Color="#F0F7FB"/>
+    <SolidColorBrush x:Key="ColorTowerLabel" Color="#E4F1F8"/>
+    <SolidColorBrush x:Key="ColorTowerCardIllustration" Color="#9BB9C9"/>
+    <SolidColorBrush x:Key="ColorTowerCountIcon" Color="#C6E5F1"/>
+    <SolidColorBrush x:Key="ColorBoardHint" Color="#DCECF5"/>
+    <SolidColorBrush x:Key="ColorModuleStripe" Color="#7096AD"/>
+    <SolidColorBrush x:Key="ColorModuleIllustration" Color="#91B4C7"/>
+    <SolidColorBrush x:Key="ColorModuleBadge" Color="#194D66"/>
+    <SolidColorBrush x:Key="ColorMasterPlanPanel" Color="#E3EFF6"/>
+    <SolidColorBrush x:Key="ColorMasterPlanBorder" Color="#A5BDCC"/>
+    <SolidColorBrush x:Key="ColorMasterPlanIcon" Color="#1C5E7A"/>
+    <SolidColorBrush x:Key="ColorMasterPlanPreview" Color="#153B55"/>
+    <SolidColorBrush x:Key="ColorMasterPlanPreviewText" Color="#F1F7FA"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineFar" Color="#BDDBED"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineNear" Color="#87ACCB"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineOutline" Color="#5B8FB3"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineWindows" Color="#74A1C1"/>
+    <SolidColorBrush x:Key="ColorBoardMasterPlanStrip" Color="#CCDFEEF6"/>
+    <SolidColorBrush x:Key="ColorBoardHandPanel" Color="#EAF6FAFC"/>
+    <SolidColorBrush x:Key="ColorPlanStepSurface" Color="#D4EDF5"/>
+    <SolidColorBrush x:Key="ColorPlanStepBorder" Color="#80A9BE"/>
+    <SolidColorBrush x:Key="ColorPlanTowerSurface" Color="#F3E4B9"/>
+    <SolidColorBrush x:Key="ColorPlanTowerBorder" Color="#B89447"/>
+    <SolidColorBrush x:Key="ColorPlanCountSurface" Color="#183D58"/>
+    <SolidColorBrush x:Key="ColorPlanCountIcon" Color="#F4DB96"/>
+    <SolidColorBrush x:Key="ColorPlanStepArrow" Color="#315971"/>
 </ResourceDictionary>

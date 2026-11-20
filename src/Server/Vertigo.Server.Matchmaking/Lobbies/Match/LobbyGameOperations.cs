@@ -86,6 +86,11 @@ public sealed class LobbyGameOperations
         return _commands.TryVoteToExpel(matchId, voterId, vote);
     }
 
+    public bool TryConfirmPresence(Guid matchId, Guid playerId)
+    {
+        return _commands.TryConfirmPresence(matchId, playerId);
+    }
+
     public Guid? TryExpireTurn(Guid matchId)
     {
         return _commands.TryExpireTurn(matchId);

@@ -18,6 +18,7 @@ try
     }
 
     Require(played, "No attempt exercised both an opening placement and a dismantle before round two.");
+    await RunMatchChatAsync();
     await RunExpulsionVoteAsync();
     await RunMatchExitAsync();
     return 0;
@@ -285,6 +286,93 @@ static void VerifyReconnectedMember(
     Console.WriteLine("PASS: PRIVATE HANDS, OUTSIDER DENIAL, RECONNECTION AND RECENT MOVES");
 }
 
+static async Task RunMatchChatAsync()
+{
+    using ServiceProvider host = CreateClient();
+    using ServiceProvider member = CreateClient();
+    using ServiceProvider outsider = CreateClient();
+    SmokeParticipant hostPlayer = new(host.GetRequiredService<ILobbyClient>(), CreateGuest(host));
+    SmokeParticipant memberPlayer = new(member.GetRequiredService<ILobbyClient>(), CreateGuest(member));
+    UserSession outsiderSession = CreateGuest(outsider);
+    (string lobbyCode, Guid matchId) = StartSmokeMatch(hostPlayer, new[] { memberPlayer });
+    MatchChatRequest request = new()
+    {
+        LobbyCode = lobbyCode, MatchId = matchId, Text = new string('a', 30),
+        SessionToken = hostPlayer.Session.Token
+    };
+    IChatClient chat = host.GetRequiredService<IChatClient>();
+    VerifyMatchChatRejections(chat, request, outsiderSession.Token);
+    await VerifyMatchChatDeliveryAsync(chat, request, (hostPlayer, memberPlayer));
+    VerifyFinishedMatchChat(chat, request, memberPlayer);
+    Console.WriteLine("PASS: MATCH CHAT SCOPE, VALIDATION AND CALLBACKS");
+}
+
+static void VerifyFinishedMatchChat(IChatClient chat, MatchChatRequest request, SmokeParticipant member)
+{
+    Require(member.Lobby.LeaveMatch(new MatchLeaveRequest
+    {
+        LobbyCode = request.LobbyCode,
+        MatchId = request.MatchId,
+        SessionToken = member.Session.Token
+    }), "The member could not leave the chat test match.");
+    Require(chat.SendMatchMessage(request).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed,
+        "The remaining player could still chat after the match ended.");
+}
+
+static void VerifyMatchChatRejections(IChatClient chat, MatchChatRequest request, string outsiderToken)
+{
+    string token = request.SessionToken;
+    request.SessionToken = outsiderToken;
+    Require(chat.SendMatchMessage(request).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed,
+        "The server accepted match chat from an outsider.");
+    request.SessionToken = token;
+
+    Guid matchId = request.MatchId;
+    request.MatchId = Guid.NewGuid();
+    Require(chat.SendMatchMessage(request).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed,
+        "The server accepted match chat for an unrelated match.");
+    request.MatchId = matchId;
+
+    string text = request.Text;
+    request.Text += "b";
+    Require(chat.SendMatchMessage(request).ErrorCode == ServiceErrorCodes.InvalidData,
+        "The server accepted a match message exceeding 30 characters.");
+    request.Text = text;
+    Require(chat.SendMessage(request.LobbyCode, request.Text, token).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed,
+        "The waiting-room endpoint bypassed match chat scoping.");
+}
+
+static async Task VerifyMatchChatDeliveryAsync(IChatClient chat, MatchChatRequest request,
+    (SmokeParticipant Sender, SmokeParticipant Receiver) players)
+{
+    Channel<LobbyChatMessage> senderMessages = Channel.CreateUnbounded<LobbyChatMessage>();
+    Channel<LobbyChatMessage> receiverMessages = Channel.CreateUnbounded<LobbyChatMessage>();
+    players.Sender.Lobby.MessageReceived += OnSenderMessage;
+    players.Receiver.Lobby.MessageReceived += OnReceiverMessage;
+    try
+    {
+        Require(chat.SendMatchMessage(request).Value, "The server rejected a 30-character match message.");
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(15));
+        LobbyChatMessage senderMessage = await senderMessages.Reader.ReadAsync(timeout.Token);
+        LobbyChatMessage receiverMessage = await receiverMessages.Reader.ReadAsync(timeout.Token);
+        foreach (LobbyChatMessage message in new[] { senderMessage, receiverMessage })
+        {
+            Require(message.MatchId == request.MatchId && message.LobbyCode == request.LobbyCode
+                && message.Text == request.Text && message.SenderId == players.Sender.Session.PlayerId,
+                "The callback delivered a different match message.");
+        }
+    }
+    finally
+    {
+        players.Sender.Lobby.MessageReceived -= OnSenderMessage;
+        players.Receiver.Lobby.MessageReceived -= OnReceiverMessage;
+    }
+
+    void OnSenderMessage(object? sender, LobbyChatMessage message) => senderMessages.Writer.TryWrite(message);
+
+    void OnReceiverMessage(object? sender, LobbyChatMessage message) => receiverMessages.Writer.TryWrite(message);
+}
+
 static async Task RunExpulsionVoteAsync()
 {
     using ServiceProvider first = CreateClient();
@@ -328,6 +416,14 @@ static async Task RunExpulsionVoteAsync()
             && initial.TurnDeadlineUtc == expelled.TurnDeadlineUtc,
             "A vote against a waiting player did not preserve the active turn.");
         await VerifyVoteNoticesAsync(notices.Reader, (recorded, expelled), target.Session.Username);
+        IChatClient chat = first.GetRequiredService<IChatClient>();
+        Require(chat.SendMatchMessage(new MatchChatRequest
+        {
+            LobbyCode = lobbyCode,
+            MatchId = expelled.MatchId,
+            SessionToken = target.Session.Token,
+            Text = "Test message"
+        }).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed, "An expelled member could still use match chat.");
         VerifyExpelledPlayerExit(target, voters[0], (lobbyCode, expelled));
         Console.WriteLine("PASS: EXPULSION VOTE OVER NETTCP PRESERVES THE ACTIVE TURN");
     }

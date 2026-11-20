@@ -27,5 +27,6 @@ public static class ServiceMessageKeys
     public const string LobbyAlreadyInGame = "Lobby.AlreadyInGame";
 
     public const string Unauthorized = "Authentication.Unauthorized";
+    public const string ChatLanguageBlocked = "Chat.LanguageBlocked";
     public const string LobbyChatNotAllowed = "Lobby.ChatNotAllowed";
 }

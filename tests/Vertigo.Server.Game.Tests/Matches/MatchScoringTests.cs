@@ -49,6 +49,25 @@ public sealed class MatchScoringTests
         Assert.Equal(15, scoring.GetGlobalFloors(second));
         Assert.Equal(3, scoring.GetGlobalFloors(third));
         Assert.Equal(new[] { first, second }, scoring.GetWinners(new[] { first, second, third }));
+        Dictionary<Guid, int> positions = scoring.GetFinalPositions(new[] { third, first, second });
+        Assert.Equal((1, 1, 3), (positions[first], positions[second], positions[third]));
+    }
+
+    [Fact]
+    public void GetFinalPositions_FormerParticipantWithHighestScore_RanksOnlyRemainingPlayers()
+    {
+        MatchScoring scoring = new();
+        Guid departed = Guid.NewGuid();
+        Guid first = Guid.NewGuid();
+        Guid second = Guid.NewGuid();
+        scoring.AddRound(new Dictionary<Guid, int> { [departed] = 10, [first] = 5, [second] = 2 }, null);
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 2, [second] = 1 }, null);
+
+        Dictionary<Guid, int> positions = scoring.GetFinalPositions(new[] { second, first });
+
+        Assert.Equal(2, positions.Count);
+        Assert.False(positions.ContainsKey(departed));
+        Assert.Equal((1, 2), (positions[first], positions[second]));
     }
 
     [Fact]
@@ -62,6 +81,8 @@ public sealed class MatchScoringTests
 
         Assert.Equal(scoring.GetGlobalFloors(first), scoring.GetGlobalFloors(second));
         Assert.Equal(second, Assert.Single(scoring.GetWinners(new[] { first, second })));
+        Dictionary<Guid, int> positions = scoring.GetFinalPositions(new[] { first, second });
+        Assert.Equal((2, 1), (positions[first], positions[second]));
     }
 
     [Fact]

@@ -3,7 +3,6 @@ using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
-using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
 using Vertigo.Server.PlayerManagement.Authentication.Models;
 
 namespace Vertigo.Server.Matchmaking.Chat.Services;
@@ -14,32 +13,54 @@ public sealed class ChatService : IChatService
     private const int MaximumMessageLength = 500;
 
     private readonly ILobbyDirectory _lobbies;
-    private readonly ISessionIdentityResolver _sessions;
-    private readonly TimeProvider _timeProvider;
+    private readonly ChatServiceDependencies _dependencies;
 
-    public ChatService(ILobbyDirectory lobbies, ISessionIdentityResolver sessions, TimeProvider timeProvider)
+    public ChatService(ILobbyDirectory lobbies, ChatServiceDependencies dependencies)
     {
         _lobbies = lobbies;
-        _sessions = sessions;
-        _timeProvider = timeProvider;
+        _dependencies = dependencies;
     }
 
     public bool SendMessage(string lobbyCode, string text, string sessionToken)
     {
-        SessionIdentity sender = _sessions.Require(sessionToken);
+        SessionIdentity sender = _dependencies.Sessions.Require(sessionToken);
         if (string.IsNullOrWhiteSpace(lobbyCode) || string.IsNullOrWhiteSpace(text)
             || text.Length > MaximumMessageLength)
         {
             throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
         }
 
-        LobbyChatMessage message = new LobbyChatMessage
+        return Publish(sender, (lobbyCode, text, null));
+    }
+
+    public bool SendMatchMessage(MatchChatRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        SessionIdentity sender = _dependencies.Sessions.Require(request.SessionToken);
+        if (request.MatchId == Guid.Empty || string.IsNullOrWhiteSpace(request.LobbyCode)
+            || !MatchChatRules.CanSend(request.Text))
         {
-            LobbyCode = lobbyCode.Trim(),
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        return Publish(sender, (request.LobbyCode, request.Text, request.MatchId));
+    }
+
+    private bool Publish(SessionIdentity sender, (string LobbyCode, string Text, Guid? MatchId) content)
+    {
+        if (_dependencies.LanguageFilter.ContainsBlockedLanguage(content.Text))
+        {
+            throw CreateFault(ServiceErrorCodes.ChatLanguageBlocked, ServiceMessageKeys.ChatLanguageBlocked);
+        }
+
+        LobbyChatMessage message = new()
+        {
+            LobbyCode = content.LobbyCode.Trim(),
+            MatchId = content.MatchId,
             SenderId = sender.PlayerId,
             SenderUsername = sender.Username,
-            Text = text.Trim(),
-            SentAt = _timeProvider.GetUtcNow().UtcDateTime
+            Text = content.Text.Trim(),
+            SentAt = _dependencies.TimeProvider.GetUtcNow().UtcDateTime
         };
 
         if (!_lobbies.PublishChatMessage(message))

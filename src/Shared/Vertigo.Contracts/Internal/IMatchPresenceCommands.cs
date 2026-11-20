@@ -2,6 +2,8 @@ namespace Vertigo.Contracts.Internal;
 
 public interface IMatchPresenceCommands
 {
+    bool TryConfirmPresence(Guid matchId, Guid playerId);
+
     bool TryDisconnect(Guid matchId, Guid playerId);
 
     MatchReconnectResult TryReconnect(Guid matchId, Guid playerId);

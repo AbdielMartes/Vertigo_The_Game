@@ -95,8 +95,11 @@ public sealed class MatchTurnPresentationTests
         turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
 
         turn.Model.SelectedPile = turn.Model.Piles[2];
+        Assert.True(turn.Model.Piles[2].IsEmpty);
+        Assert.Equal("—", turn.Model.Piles[2].TopCardText);
         Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
         turn.Model.SelectedPile = turn.Model.Piles[0];
+        Assert.False(turn.Model.Piles[0].IsEmpty);
         Assert.True(turn.Model.DismantleTowerCommand.CanExecute(null));
         turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
         Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
@@ -152,6 +155,34 @@ public sealed class MatchTurnPresentationTests
     }
 
     [Fact]
+    public void ApplyBoardAndHand_PresenceNoticeChangesFromConfirmationToPlayingAndExpulsion()
+    {
+        TurnFixture turn = CreateTurn();
+        Guid playerId = turn.Hand.PlayerId;
+        turn.Board.CurrentTurnPlayerId = turn.Board.Players[1].PlayerId;
+        turn.Board.PresenceDeadlinesUtc[playerId] = ServerTime.AddSeconds(12);
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.True(turn.Model.ShowConfirmPresence);
+        Assert.Contains("Match.Presence.Skipped", turn.Model.PresenceNotice);
+
+        turn.Board.Revision++;
+        turn.Board.CurrentTurnPlayerId = playerId;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.False(turn.Model.ShowConfirmPresence);
+        Assert.Contains("Match.Presence.Play", turn.Model.PresenceNotice);
+
+        turn.Board.Revision++;
+        turn.Board.PresenceDeadlinesUtc.Clear();
+        turn.Board.ExpelledPlayerIds.Add(playerId);
+        turn.Board.InactivePlayerIds.Add(playerId);
+        turn.Model.ApplyBoardAndHand(turn.Board, null);
+        Assert.True(turn.Model.HasPresenceNotice);
+        Assert.Equal("Match.Presence.Expelled", turn.Model.PresenceNotice);
+        Assert.Empty(turn.Model.Hand);
+    }
+
+    [Fact]
     public void ApplyBoardAndHand_SameRevisionAfterReconnect_ResamplesRemainingTime()
     {
         TurnFixture turn = CreateTurn();
@@ -187,9 +218,41 @@ public sealed class MatchTurnPresentationTests
         turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
 
         Assert.Equal("12 → 15 → 22", turn.Model.MasterPlanPreview);
+        MatchMasterPlanStep[] expected = [new(12, true), new(15, false), new(22, false)];
+        Assert.Equal(expected, turn.Model.MasterPlanSteps);
+        Assert.Equal(1, turn.Model.MasterPlanCount);
+        Assert.Equal(new int?[] { 1, 2 }, turn.Model.Hand.Select(card => card.PlanOrder));
         Assert.True(turn.Model.PlayMasterPlanCommand.CanExecute(null));
         turn.Model.SelectedCard = turn.Model.Hand[0];
         Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_UndoLast_UpdatesCardBadgesAndChainPreview()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        MatchCardRow lastCard = turn.Model.Hand[1];
+        List<string?> changes = [];
+        List<string?> modelChanges = [];
+        lastCard.PropertyChanged += (_, args) => changes.Add(args.PropertyName);
+        turn.Model.PropertyChanged += (_, args) => modelChanges.Add(args.PropertyName);
+
+        turn.Model.RemoveMasterPlanModuleCommand.Execute(null);
+
+        Assert.True(turn.Model.HasMasterPlanDraft);
+        Assert.Equal("12 → 15", turn.Model.MasterPlanPreview);
+        MatchMasterPlanStep[] expected = [new(12, true), new(15, false)];
+        Assert.Equal(expected, turn.Model.MasterPlanSteps);
+        Assert.Contains(nameof(MatchViewModel.MasterPlanSteps), modelChanges);
+        Assert.Equal(new int?[] { 1, null }, turn.Model.Hand.Select(card => card.PlanOrder));
+        Assert.Contains(nameof(MatchCardRow.PlanOrder), changes);
+        Assert.Contains(nameof(MatchCardRow.IsInMasterPlan), changes);
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        turn.Model.RemoveMasterPlanModuleCommand.Execute(null);
+
+        Assert.False(turn.Model.HasMasterPlanDraft);
+        Assert.Empty(turn.Model.MasterPlanSteps);
+        Assert.All(turn.Model.Hand, card => Assert.False(card.IsInMasterPlan));
     }
 
     [Fact]
@@ -204,6 +267,7 @@ public sealed class MatchTurnPresentationTests
         turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
 
         Assert.Null(turn.Model.SelectedPile);
+        Assert.Empty(turn.Model.MasterPlanSteps);
         Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
         turn.Model.SelectedPile = oldPile;
         turn.Model.SelectedCard = turn.Model.Hand[0];
@@ -221,10 +285,30 @@ public sealed class MatchTurnPresentationTests
 
         turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
 
+        Assert.False(turn.Model.HasMasterPlanDraft);
+        Assert.All(turn.Model.Hand, card => Assert.False(card.IsInMasterPlan));
         Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
         Assert.False(turn.Model.RemoveMasterPlanModuleCommand.CanExecute(null));
         turn.Model.SelectedCard = oldCard;
         Assert.False(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_NoPlansRemaining_UpdatesCounterAndClearsPreview()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        List<string?> changes = [];
+        turn.Model.PropertyChanged += (_, args) => changes.Add(args.PropertyName);
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Hand.MasterPlans = 0;
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Equal(0, turn.Model.MasterPlanCount);
+        Assert.Contains(nameof(MatchViewModel.MasterPlanCount), changes);
+        Assert.Empty(turn.Model.MasterPlanSteps);
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
     }
 
     [Fact]
