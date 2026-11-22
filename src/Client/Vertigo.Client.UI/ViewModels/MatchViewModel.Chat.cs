@@ -14,7 +14,7 @@ namespace Vertigo.Client.UI.ViewModels;
 
 public sealed partial class MatchViewModel
 {
-    private const int MaximumVisibleChatMessages = 100;
+    private const int MaximumRetainedChatMessages = 100;
     private const string ChatSendFailed = "Lobby.MessageFailed";
 
     private readonly IChatClient? _chatClient;
@@ -132,15 +132,15 @@ public sealed partial class MatchViewModel
             return;
         }
 
-        ChatMessages.Insert(0, new MatchChatRow
+        ChatMessages.Add(new MatchChatRow
         {
             Sender = message.SenderUsername,
             Text = message.Text,
             SentAt = message.SentAt
         });
-        if (ChatMessages.Count > MaximumVisibleChatMessages)
+        if (ChatMessages.Count > MaximumRetainedChatMessages)
         {
-            ChatMessages.RemoveAt(ChatMessages.Count - 1);
+            ChatMessages.RemoveAt(0);
         }
     }
 }

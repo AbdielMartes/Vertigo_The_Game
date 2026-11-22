@@ -18,13 +18,9 @@ public sealed class ClientErrorText : IClientErrorText
 
     public string FromResult<T>(ClientResult<T> result, string fallbackKey)
     {
-        if (result.Failure == FailureKind.Business)
-        {
-            return _localizer.Get(string.IsNullOrWhiteSpace(result.MessageKey) ? fallbackKey : result.MessageKey);
-        }
-
         string key = result.Failure switch
         {
+            FailureKind.Business when !string.IsNullOrWhiteSpace(result.MessageKey) => result.MessageKey,
             FailureKind.Timeout => "Error.Timeout",
             FailureKind.ServerUnreachable => "Error.Connection",
             _ => fallbackKey
@@ -34,14 +30,11 @@ public sealed class ClientErrorText : IClientErrorText
 
     public string FromException(Exception exception, string fallbackKey)
     {
-        if (exception is FaultException<ServiceFault> fault)
-        {
-            return _localizer.Get(string.IsNullOrWhiteSpace(fault.Detail?.MessageKey)
-                ? fallbackKey : fault.Detail.MessageKey);
-        }
-
         string key = exception switch
         {
+            FaultException<ServiceFault> fault when !string.IsNullOrWhiteSpace(fault.Detail?.MessageKey)
+                => fault.Detail.MessageKey,
+            FaultException => fallbackKey,
             TimeoutException => "Error.Timeout",
             CommunicationException => "Error.Connection",
             _ => fallbackKey

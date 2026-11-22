@@ -148,11 +148,11 @@
                             M 884,80 H 944 M 884,91 H 944 M 884,102 H 944 M 884,113 H 944 M 884,124 H 944"/>
             </Canvas>
         </Viewbox>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+        <ScrollViewer x:Name="scrMatch" HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto"
                       IsEnabled="{Binding !IsExitConfirmationOpen}">
             <Border MinWidth="760"
-                    MinHeight="600"
+                    MinHeight="500"
                     Width="{Binding #grdMatchViewport.Bounds.Width}"
                     Height="{Binding #grdMatchViewport.Bounds.Height}"
                     Padding="18,12,18,18">
@@ -238,7 +238,7 @@
                         </Border>
                     </StackPanel>
 
-                    <Grid Grid.Row="2" ColumnDefinitions="168,*,250" ColumnSpacing="12" MaxHeight="360">
+                    <Grid Grid.Row="2" ColumnDefinitions="168,*,250" ColumnSpacing="12" MinHeight="164" MaxHeight="360">
                         <Border Classes="match-panel" IsVisible="{Binding !Results.HasFinalResult}" Padding="10">
                             <Grid RowDefinitions="Auto,*" RowSpacing="8">
                                 <TextBlock Text="{Binding PlayersText}" FontSize="17" FontWeight="Bold"/>
@@ -386,51 +386,60 @@
                             <views:MatchResultsView DataContext="{Binding Results}"/>
                         </ScrollViewer>
                         <Border Grid.Column="2" Classes="match-panel" Padding="8">
-                            <Grid RowDefinitions="Auto,*,5*" RowSpacing="3">
+                            <Grid RowDefinitions="Auto,2*,5*" RowSpacing="3">
                                 <TextBlock Text="{Binding RecentMovesText}" FontSize="13" FontWeight="Bold"/>
-                                <ScrollViewer
-                                              Grid.Row="1"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              VerticalScrollBarVisibility="Auto">
-                                    <ItemsControl ItemsSource="{Binding RecentMoves}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="rows:MatchMoveRow">
-                                                <TextBlock Text="{Binding Text}" FontSize="12" Margin="0,0,0,3"
-                                                           TextWrapping="Wrap"
-                                                           Foreground="{DynamicResource ColorTextSecondary}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
+                                <ScrollViewer x:Name="scrRecentMoves" Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                                              ScrollViewer.IsScrollChainingEnabled="False"
+                                              AutomationProperties.Name="{Binding RecentMovesText}">
+                                    <Grid MinHeight="{Binding #scrRecentMoves.Viewport.Height}">
+                                        <ItemsControl x:Name="lstRecentMoves" VerticalAlignment="Bottom"
+                                                      ItemsSource="{Binding RecentMoves}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="rows:MatchMoveRow">
+                                                    <TextBlock Text="{Binding Text}" FontSize="12" Margin="0,0,0,3"
+                                                               TextWrapping="Wrap"
+                                                               Foreground="{DynamicResource ColorTextSecondary}"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
                                 </ScrollViewer>
                                 <Border Grid.Row="2" BorderThickness="0,1,0,0"
                                         BorderBrush="{DynamicResource ColorDivider}" Padding="0,3,0,0">
                                     <Grid RowDefinitions="Auto,*,Auto" RowSpacing="2">
                                         <TextBlock Text="{Binding ChatText}" FontSize="12" FontWeight="Bold"/>
-                                        <ListBox Grid.Row="1" TabIndex="2" ItemsSource="{Binding ChatMessages}"
-                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                 AutomationProperties.Name="{Binding ChatText}">
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate x:DataType="rows:MatchChatRow">
-                                                    <StackPanel Margin="2,3" Spacing="2">
-                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
-                                                            <TextBlock Text="{Binding Sender}" FontWeight="Bold"
-                                                                       TextTrimming="CharacterEllipsis"
-                                                                       Foreground="{DynamicResource ColorSnesBlue}"/>
-                                                            <TextBlock
-                                                                       Grid.Column="1"
-                                                                       Text="{Binding LocalTimeText}"
-                                                                       FontSize="11"
-                                                                       VerticalAlignment="Center"
-                                                                       FontFamily="{DynamicResource FontMono}"
-                                                                       Foreground="{DynamicResource
-                                                                       ColorTextSecondary}"/>
-                                                        </Grid>
-                                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
+                                        <ScrollViewer x:Name="scrMatchChat" Grid.Row="1" TabIndex="2" Focusable="True"
+                                                      HorizontalScrollBarVisibility="Disabled"
+                                                      VerticalScrollBarVisibility="Auto"
+                                                      ScrollViewer.IsScrollChainingEnabled="False"
+                                                      AutomationProperties.Name="{Binding ChatText}">
+                                            <Grid MinHeight="{Binding #scrMatchChat.Viewport.Height}">
+                                                <ItemsControl x:Name="lstMatchChat" VerticalAlignment="Bottom"
+                                                              ItemsSource="{Binding ChatMessages}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="rows:MatchChatRow">
+                                                            <StackPanel Margin="2,3" Spacing="2">
+                                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                                                    <TextBlock Text="{Binding Sender}" FontWeight="Bold"
+                                                                               TextTrimming="CharacterEllipsis"
+                                                                               Foreground="{DynamicResource ColorSnesBlue}"/>
+                                                                    <TextBlock
+                                                                               Grid.Column="1"
+                                                                               Text="{Binding LocalTimeText}"
+                                                                               FontSize="11"
+                                                                               VerticalAlignment="Center"
+                                                                               FontFamily="{DynamicResource FontMono}"
+                                                                               Foreground="{DynamicResource
+                                                                               ColorTextSecondary}"/>
+                                                                </Grid>
+                                                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
+                                        </ScrollViewer>
                                         <StackPanel Grid.Row="2" Spacing="3">
                                             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="5">
                                                 <TextBox

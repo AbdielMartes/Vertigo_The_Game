@@ -24,9 +24,9 @@ public sealed class SocialOperation
         if (session is null)
         {
             _guard.Invalidate();
-            return null;
         }
-        return session.IsGuest ? null : session;
+
+        return session is { IsGuest: false } ? session : null;
     }
 
     public bool IsCurrent(SessionSnapshot original)
@@ -36,16 +36,14 @@ public sealed class SocialOperation
 
     public bool Check<T>(ClientResult<T> result, SessionSnapshot original)
     {
-        if (!_guard.IsCurrent(original))
-        {
-            return false;
-        }
-        if (_errors.IsUnauthorized(result))
+        bool isCurrent = _guard.IsCurrent(original);
+        if (isCurrent && _errors.IsUnauthorized(result))
         {
             _guard.Invalidate(original);
-            return false;
+            isCurrent = false;
         }
-        return true;
+
+        return isCurrent;
     }
 
     public string Error<T>(ClientResult<T> result, string fallbackKey)

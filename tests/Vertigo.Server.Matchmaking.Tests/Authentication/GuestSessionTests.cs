@@ -13,6 +13,17 @@ namespace Vertigo.Server.Matchmaking.Tests.Authentication;
 public sealed class GuestSessionTests
 {
     [Fact]
+    public void Constructor_NullClock_ThrowsForTimeProvider()
+    {
+        FakeTokenGenerator tokens = new();
+
+        ArgumentNullException ex = Assert.Throws<ArgumentNullException>(
+            () => new GuestSessionRegistry(tokens, null!));
+
+        Assert.Equal("timeProvider", ex.ParamName);
+    }
+
+    [Fact]
     public void Find_AtExactExpiration_ReturnsNull()
     {
         ControlledTimeProvider clock = new(new DateTimeOffset(2026, 11, 16, 12, 0, 0, TimeSpan.Zero));

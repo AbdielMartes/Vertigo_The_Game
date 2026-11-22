@@ -1,3 +1,6 @@
+using System.Text.Json;
+using Vertigo.Server.CrossCutting.Recovery;
+using Vertigo.Server.Game.Matches.Recovery;
 using Vertigo.Contracts.Internal;
 using Vertigo.Server.Game.Matches.Models;
 using Vertigo.Contracts.Models;
@@ -7,7 +10,7 @@ namespace Vertigo.Server.Game.Matches.Implementations;
 // One synchronized in-memory registry for idempotent starts and terminal transitions.
 // Deliberately no automatic cancellation when lobby connections disappear (Phase 7B).
 public sealed class InMemoryMatchSessionStarter :
-    IMatchSessionStarter, IMatchLifecycle, IMatchPresence, IMatchStateReader, IMatchCommandService
+    IMatchSessionStarter, IMatchLifecycle, IMatchPresence, IMatchStateReader, IMatchCommandService, IMatchRecovery
 {
     private const int MinimumPlayerCount = 2;
     private const int MaximumPlayerCount = 6;
@@ -17,9 +20,111 @@ public sealed class InMemoryMatchSessionStarter :
     private readonly Dictionary<Guid, MatchRecord> _matchesById = new();
     private readonly TimeProvider _timeProvider;
 
-    public InMemoryMatchSessionStarter(TimeProvider timeProvider)
+    private readonly MatchJournal? _journal;
+    private readonly Dictionary<Guid, (MatchJournal.Header Header, int Sequence, DateTimeOffset LastEvent)> _journalPositions = new();
+    private readonly List<(MatchSessionSnapshot Session, RecoverableLobby Lobby, IReadOnlyList<Guid> ActivePlayers)>
+        _recoveredMatches = new();
+
+    public InMemoryMatchSessionStarter(TimeProvider timeProvider, RecoveryDirectory? recovery = null)
     {
+        ArgumentNullException.ThrowIfNull(timeProvider);
         _timeProvider = timeProvider;
+        if (recovery is not null)
+        {
+            _journal = new MatchJournal(recovery);
+            RecoverActiveMatches();
+        }
+    }
+
+    public IReadOnlyList<(MatchSessionSnapshot Session, RecoverableLobby Lobby, IReadOnlyList<Guid> ActivePlayers)>
+        GetRecoveredMatches()
+    {
+        return _recoveredMatches.AsReadOnly();
+    }
+
+    private void RecoverActiveMatches()
+    {
+        foreach (MatchJournal.Header header in _journal!.ReadStartedMatches())
+        {
+            MatchRecord record = Replay(header);
+            if (!record.IsTerminal)
+            {
+                Guid id = header.Session.MatchId;
+                _matchesById.Add(id, record);
+                _matchesByLobby.Add(header.Session.LobbyInstanceId, record);
+                DateTimeOffset lastEvent = _journalPositions[id].LastEvent;
+                Apply(record, new(lastEvent, new(nameof(MatchRecord.PauseForRecovery), Guid.Empty)),
+                    record.PauseForRecovery);
+                if (header.Lobby is not null)
+                {
+                    _recoveredMatches.Add((header.Session, header.Lobby, record.ActivePlayers));
+                }
+            }
+            else
+            {
+                _journalPositions.Remove(header.Session.MatchId);
+            }
+        }
+    }
+
+    private MatchRecord Replay(MatchJournal.Header header)
+    {
+        MatchRecord record = MatchJournal.CreateRecord(header);
+        int sequence = 0;
+        DateTimeOffset lastEvent = header.Session.CreatedAtUtc;
+        foreach (MatchJournal.Commit commit in _journal!.ReadEvents(header.Session.MatchId))
+        {
+            MatchJournal.Apply(record, commit.Entry);
+            if (record.BoardRevision != commit.BoardRevision || record.Lifecycle.Revision != commit.LifecycleRevision)
+            {
+                throw new InvalidDataException("The match event replay produced a different revision.");
+            }
+
+            sequence++;
+            lastEvent = commit.Entry.Time;
+        }
+
+        _journalPositions[header.Session.MatchId] = (header, sequence, lastEvent);
+        return record;
+    }
+
+    private T Apply<T>(MatchRecord record, MatchJournal.Entry entry, Func<DateTimeOffset, T> operation)
+    {
+        Guid id = record.Session.MatchId;
+        (long Board, long Lifecycle) previous = (record.BoardRevision, record.Lifecycle.Revision);
+        T result;
+        try
+        {
+            result = operation(entry.Time);
+            if (_journal is not null && previous != (record.BoardRevision, record.Lifecycle.Revision))
+            {
+                (MatchJournal.Header header, int sequence, _) = _journalPositions[id];
+                _journal.Append(id, sequence + 1,
+                    new MatchJournal.Commit(entry, record.BoardRevision, record.Lifecycle.Revision));
+                _journalPositions[id] = (header, sequence + 1, entry.Time);
+            }
+        }
+        catch
+        {
+            if (_journal is not null)
+            {
+                MatchRecord restored = Replay(_journalPositions[id].Header);
+                _matchesById[id] = restored;
+                _matchesByLobby[record.Session.LobbyInstanceId] = restored;
+            }
+
+            throw;
+        }
+
+        return result;
+    }
+
+    private MatchJournal.Entry Entry(string action, Guid player, object? payload = null)
+    {
+        JsonElement? data = _journal is not null && payload is not null
+            ? JsonSerializer.SerializeToElement(payload)
+            : null;
+        return new MatchJournal.Entry(_timeProvider.GetUtcNow(), new MatchJournal.Action(action, player, data));
     }
 
     public MatchSessionSnapshot Start(MatchStartRequest request)
@@ -84,7 +189,8 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                result = record.TryPlace(playerId, move, _timeProvider.GetUtcNow());
+                result = Apply(record, Entry(nameof(MatchRecord.TryPlace), playerId, move),
+                    now => record.TryPlace(playerId, move, now));
             }
         }
 
@@ -99,7 +205,8 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                result = record.TryUseMasterPlan(playerId, move, _timeProvider.GetUtcNow());
+                result = Apply(record, Entry(nameof(MatchRecord.TryUseMasterPlan), playerId, move),
+                    now => record.TryUseMasterPlan(playerId, move, now));
             }
         }
 
@@ -114,7 +221,8 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                result = record.TryDismantle(playerId, move, _timeProvider.GetUtcNow());
+                result = Apply(record, Entry(nameof(MatchRecord.TryDismantle), playerId, move),
+                    now => record.TryDismantle(playerId, move, now));
             }
         }
 
@@ -129,7 +237,8 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                result = record.TryVoteToExpel(voterId, vote, _timeProvider.GetUtcNow());
+                result = Apply(record, Entry(nameof(MatchRecord.TryVoteToExpel), voterId, vote),
+                    now => record.TryVoteToExpel(voterId, vote, now));
             }
         }
 
@@ -143,7 +252,8 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                result = record.TryLeaveMatch(playerId, _timeProvider.GetUtcNow());
+                result = Apply(record, Entry(nameof(MatchRecord.TryLeaveMatch), playerId),
+                    now => record.TryLeaveMatch(playerId, now));
             }
         }
 
@@ -157,7 +267,7 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                affectedPlayerId = record.TryExpireTurn(_timeProvider.GetUtcNow());
+                affectedPlayerId = Apply(record, Entry(nameof(MatchRecord.TryExpireTurn), Guid.Empty), record.TryExpireTurn);
             }
         }
 
@@ -211,7 +321,8 @@ public sealed class InMemoryMatchSessionStarter :
         lock (_syncRoot)
         {
             return _matchesById.TryGetValue(matchId, out MatchRecord? record)
-                && record.TryConfirmPresence(playerId, _timeProvider.GetUtcNow());
+                && Apply(record, Entry(nameof(MatchRecord.TryConfirmPresence), playerId),
+                    now => record.TryConfirmPresence(playerId, now));
         }
     }
 
@@ -227,7 +338,8 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                result = record.TryReconnect(playerId, _timeProvider.GetUtcNow());
+                result = Apply(record, Entry(nameof(MatchRecord.TryReconnect), playerId),
+                    now => record.TryReconnect(playerId, now));
             }
         }
 
@@ -241,7 +353,8 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                changed = record.TrySetConnected(playerId, isConnected, _timeProvider.GetUtcNow());
+                changed = Apply(record, Entry(nameof(MatchRecord.TrySetConnected), playerId),
+                    now => record.TrySetConnected(playerId, isConnected, now));
             }
         }
 
@@ -267,6 +380,7 @@ public sealed class InMemoryMatchSessionStarter :
                 {
                     MatchRecord record = _matchesById[matchId];
                     _matchesById.Remove(matchId);
+                    _journalPositions.Remove(matchId);
                     _matchesByLobby.Remove(record.Session.LobbyInstanceId);
                     removed++;
                 }
@@ -283,7 +397,8 @@ public sealed class InMemoryMatchSessionStarter :
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                changed = record.TryTransition(next, _timeProvider.GetUtcNow());
+                changed = Apply(record, Entry(nameof(MatchRecord.TryTransition), Guid.Empty, next),
+                    now => record.TryTransition(next, now));
             }
         }
 
@@ -303,7 +418,18 @@ public sealed class InMemoryMatchSessionStarter :
             PlayerIds = Array.AsReadOnly(players),
             CreatedAtUtc = now.UtcDateTime
         };
-        MatchRecord record = new(session, now);
+        MatchRecord record;
+        if (_journal is null)
+        {
+            record = new MatchRecord(session, now);
+        }
+        else
+        {
+            MatchJournal.Header header = new(session, request.Lobby, Guid.NewGuid());
+            record = MatchJournal.CreateRecord(header);
+            _journal.Start(header);
+            _journalPositions.Add(session.MatchId, (header, 0, now));
+        }
 
         return record;
     }

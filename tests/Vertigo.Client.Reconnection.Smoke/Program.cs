@@ -25,6 +25,7 @@ ILobbyClient resumedGuestLobby = guestReconnect.GetRequiredService<ILobbyClient>
 ILobbyClient observerLobby = suspensionObserver.GetRequiredService<ILobbyClient>();
 string? code = null;
 
+int exitCode = 0;
 try
 {
     string hostToken = CreateGuest(host);
@@ -133,12 +134,11 @@ try
     Require(restored.MatchId == matchId && !restored.IsSuspended, "Final restoration changed match state");
     Console.WriteLine("PASS: BOTH PARTICIPANTS RESTORED");
     Console.WriteLine("PASS: Reconnection smoke");
-    return 0;
 }
 catch (Exception exception)
 {
     Console.Error.WriteLine($"FAIL: {exception.GetType().Name}: {exception.Message}");
-    return 1;
+    exitCode = 1;
 }
 finally
 {
@@ -153,6 +153,8 @@ finally
     LogoutQuietly(guest);
     LogoutQuietly(outsider);
 }
+
+return exitCode;
 
 static ServiceProvider CreateClient()
 {

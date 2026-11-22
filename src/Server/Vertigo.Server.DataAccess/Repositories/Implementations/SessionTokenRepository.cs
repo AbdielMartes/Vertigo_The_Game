@@ -13,6 +13,7 @@ public class SessionTokenRepository : ISessionTokenRepository
 
     public SessionTokenRepository(VertigoDatabaseContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         _context = context;
     }
 

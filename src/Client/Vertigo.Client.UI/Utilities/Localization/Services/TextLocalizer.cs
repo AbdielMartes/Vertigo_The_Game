@@ -11,12 +11,13 @@ public sealed class TextLocalizer : ITextLocalizer
 
     public string Get(string key)
     {
-        if (string.IsNullOrWhiteSpace(key))
+        string? translation = null;
+        if (!string.IsNullOrWhiteSpace(key))
         {
-            return _resources.GetString("Error.Unknown", CultureInfo.CurrentUICulture) ?? "Ocurrió un error.";
+            translation = _resources.GetString(key, CultureInfo.CurrentUICulture);
         }
 
-        return _resources.GetString(key, CultureInfo.CurrentUICulture)
+        return translation
             ?? _resources.GetString("Error.Unknown", CultureInfo.CurrentUICulture)
             ?? "Ocurrió un error.";
     }

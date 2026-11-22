@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
@@ -210,8 +211,9 @@ public sealed class PlayViewModel : ObservableObject, INavigationAware
             {
                 await CreateLobbyForSessionAsync(current, generation);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Play view could not complete lobby creation: {ex.GetType().Name}");
                 if (IsCurrent(current, generation))
                 {
                     ErrorMessage = _text.Get("Play.NetworkError");

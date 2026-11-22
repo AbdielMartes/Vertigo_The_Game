@@ -58,12 +58,8 @@ public class BlockedPlayerService : IBlockedPlayerService
     private bool BlockPlayerBetween(PlayerPair pair)
     {
         EnsureValidPair(pair);
-        if (_blockedPlayerRepository.IsPlayerBlocked(pair.PlayerId, pair.OtherPlayerId))
-        {
-            return false;
-        }
-
-        return _blockedPlayerRepository.BlockPlayer(pair.PlayerId, pair.OtherPlayerId);
+        return !_blockedPlayerRepository.IsPlayerBlocked(pair.PlayerId, pair.OtherPlayerId)
+            && _blockedPlayerRepository.BlockPlayer(pair.PlayerId, pair.OtherPlayerId);
     }
 
     private bool UnblockPlayerBetween(PlayerPair pair)

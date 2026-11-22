@@ -2,6 +2,7 @@ using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
 using Vertigo.Client.UI.ViewModels;
 using Vertigo.Contracts.Models;
+using Vertigo.Contracts.Synchronization;
 using Vertigo.Client.UI.Utilities.Validation;
 using Vertigo.Client.UI.ViewModels.Presentation;
 
@@ -193,6 +194,25 @@ public sealed class MatchTurnPresentationTests
         turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
 
         Assert.Equal("6", turn.Model.TurnSecondsLabel);
+    }
+
+    [Theory]
+    [InlineData(5L, 23)]
+    [InlineData(4L, 15)]
+    [InlineData(null, 15)]
+    public void ApplySynchronizedBoard_OlderSnapshotOnlyReplacesItsSupersededRevision(
+        long? supersededRevision, int expectedCard)
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        turn.Board.Revision--;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Hand.Cards = [23];
+
+        turn.Model.ApplySynchronizedBoard(new MatchSyncState(turn.Board, turn.Hand),
+            turn.Clock.GetTimestamp(), supersededRevision);
+
+        Assert.Equal(expectedCard, Assert.Single(turn.Model.Hand).CardNumber);
     }
 
     [Fact]

@@ -171,14 +171,15 @@ public sealed class MatchResultsViewModel : ViewModelBase
     private MatchTowerResult? BuildRoundTower(IReadOnlyList<MatchRoundPlayerScore> scores)
     {
         MatchRoundPlayerScore? personal = scores.FirstOrDefault(score => score.PlayerId == _localPlayerId);
-        if (personal is null)
+        MatchTowerResult? result = null;
+        if (personal is not null)
         {
-            return null;
+            int tallest = scores.Max(score => score.FloorsBuilt);
+            result = new MatchTowerResult((personal.FloorsBuilt, personal.BonusFloors, personal.TotalFloors),
+                tallest, includeBonusInDrawing: false);
         }
 
-        int tallest = scores.Max(score => score.FloorsBuilt);
-        return new MatchTowerResult((personal.FloorsBuilt, personal.BonusFloors, personal.TotalFloors),
-            tallest, includeBonusInDrawing: false);
+        return result;
     }
 
     private string FormatTower(MatchTowerResult? tower)
@@ -212,19 +213,20 @@ public sealed class MatchResultsViewModel : ViewModelBase
     private MatchTowerResult? BuildFinalTower(MatchBoardSnapshot board)
     {
         MatchBoardPlayer? personal = board.Players.Find(player => player.PlayerId == _localPlayerId);
-        if (personal is null)
+        MatchTowerResult? result = null;
+        if (personal is not null)
         {
-            return null;
+            MatchRoundPlayerScore[] scores = _roundSummaries.SelectMany(round => round.Players)
+                .Where(score => score.PlayerId == personal.PlayerId).ToArray();
+            int built = scores.Sum(score => score.FloorsBuilt);
+            int bonus = scores.Sum(score => score.BonusFloors);
+            result = built + bonus == personal.GlobalFloors
+                ? new MatchTowerResult((built, bonus, personal.GlobalFloors),
+                    board.Players.Max(player => player.GlobalFloors), includeBonusInDrawing: true)
+                : null;
         }
 
-        MatchRoundPlayerScore[] scores = _roundSummaries.SelectMany(round => round.Players)
-            .Where(score => score.PlayerId == personal.PlayerId).ToArray();
-        int built = scores.Sum(score => score.FloorsBuilt);
-        int bonus = scores.Sum(score => score.BonusFloors);
-        return built + bonus == personal.GlobalFloors
-            ? new MatchTowerResult((built, bonus, personal.GlobalFloors),
-                board.Players.Max(player => player.GlobalFloors), includeBonusInDrawing: true)
-            : null;
+        return result;
     }
 
     private void RefreshLatestTower()

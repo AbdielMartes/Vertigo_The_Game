@@ -5,7 +5,6 @@ using Vertigo.Client.Networking.Results;
 using Vertigo.Client.Networking.Sessions.Interfaces;
 using Vertigo.Contracts.Models;
 
-// Two independent service providers represent two client applications.
 using ServiceProvider first = CreateClient();
 using ServiceProvider second = CreateClient();
 using ILobbyClient hostLobby = first.GetRequiredService<ILobbyClient>();
@@ -20,6 +19,7 @@ string? hostToken = null;
 string? guestToken = null;
 Guid guestId = Guid.Empty;
 
+int exitCode = 0;
 try
 {
     hostToken = CreateGuestToken(first);
@@ -81,12 +81,11 @@ try
 
     Require(hostLobby.LeaveLobby(code, hostToken), "Host could not leave");
     Console.WriteLine("PASS: Multiplayer smoke");
-    return 0;
 }
 catch (Exception exception)
 {
     Console.Error.WriteLine($"FAIL: {exception.GetType().Name}: {exception.Message}");
-    return 1;
+    exitCode = 1;
 }
 finally
 {
@@ -95,6 +94,8 @@ finally
     LogoutQuietly(first);
     LogoutQuietly(second);
 }
+
+return exitCode;
 
 static ServiceProvider CreateClient()
 {

@@ -54,57 +54,49 @@ public sealed class FriendsViewModel : SocialViewModelBase
 
     public async Task RefreshAsync()
     {
-        if (IsBusy)
+        if (!IsBusy && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
-        {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        ClearError();
-        try
-        {
-            ClientResult<List<FriendEntry>> friendsResult = await Task.Run(() => _client.GetFriends(token));
-            List<FriendEntry>? friends = ReadFriendListResult(friendsResult, session);
-            if (friends is null)
+            string token = session.Token;
+            IsBusy = true;
+            ClearError();
+            try
             {
-                return;
-            }
+                ClientResult<List<FriendEntry>> friendsResult = await Task.Run(() => _client.GetFriends(token));
+                List<FriendEntry>? friends = ReadFriendListResult(friendsResult, session);
+                if (friends is null)
+                {
+                    return;
+                }
 
-            ClientResult<List<FriendshipInvitationEntry>> pendingResult =
-                await Task.Run(() => _client.GetPendingFriendRequests(token));
-            List<FriendshipInvitationEntry>? pending = ReadFriendListResult(pendingResult, session);
-            if (pending is null)
-            {
-                return;
-            }
+                ClientResult<List<FriendshipInvitationEntry>> pendingResult =
+                    await Task.Run(() => _client.GetPendingFriendRequests(token));
+                List<FriendshipInvitationEntry>? pending = ReadFriendListResult(pendingResult, session);
+                if (pending is not null)
+                {
+                    Friends.Clear();
+                    foreach (FriendEntry friend in friends)
+                    {
+                        Friends.Add(friend);
+                    }
 
-            Friends.Clear();
-            foreach (FriendEntry friend in friends)
-            {
-                Friends.Add(friend);
+                    PendingRequests.Clear();
+                    foreach (FriendshipInvitationEntry request in pending)
+                    {
+                        PendingRequests.Add(request);
+                    }
+                }
             }
-
-            PendingRequests.Clear();
-            foreach (FriendshipInvitationEntry request in pending)
+            catch (Exception)
             {
-                PendingRequests.Add(request);
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.FriendsFailed");
+                }
             }
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+            finally
             {
-                ErrorMessage = Text.Get("Social.FriendsFailed");
+                IsBusy = false;
             }
-        }
-        finally
-        {
-            IsBusy = false;
         }
     }
 
@@ -128,117 +120,129 @@ public sealed class FriendsViewModel : SocialViewModelBase
 
     private async Task SearchAsync()
     {
-        if (IsBusy || SearchTerm.Trim().Length < 3) { ErrorMessage = Text.Get("Social.SearchLength"); return; }
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (IsBusy || SearchTerm.Trim().Length < 3)
         {
-            return;
+            ErrorMessage = Text.Get("Social.SearchLength");
         }
-        string token = session.Token;
-        IsBusy = true;
-        try
+        else if (Operation.GetRegisteredSession() is { } session)
         {
-            ClientResult<List<PlayerSearchEntry>> result = await Task.Run(() => _client.SearchPlayers(SearchTerm.Trim(), token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.SearchFailed"); return; }
-            SearchResults.Clear();
-            foreach (PlayerSearchEntry player in result.Value) SearchResults.Add(player);
-            ClearError();
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+            string token = session.Token;
+            IsBusy = true;
+            try
             {
-                ErrorMessage = Text.Get("Social.SearchFailed");
+                ClientResult<List<PlayerSearchEntry>> result = await Task.Run(() => _client.SearchPlayers(SearchTerm.Trim(), token));
+                if (!Operation.Check(result, session)) return;
+                if (!result.IsSuccess || result.Value is null)
+                {
+                    ErrorMessage = Operation.Error(result, "Social.SearchFailed");
+                }
+                else
+                {
+                    SearchResults.Clear();
+                    foreach (PlayerSearchEntry player in result.Value) SearchResults.Add(player);
+                    ClearError();
+                }
             }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.SearchFailed");
+                }
+            }
+            finally { IsBusy = false; }
         }
-        finally { IsBusy = false; }
     }
 
     private async Task SendRequestAsync()
     {
-        if (IsBusy || SelectedSearchPlayerId == Guid.Empty) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (!IsBusy && SelectedSearchPlayerId != Guid.Empty && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        string token = session.Token;
-        Guid targetPlayerId = SelectedSearchPlayerId;
-        IsBusy = true;
-        try
-        {
-            ClientResult<PlayerRelation> result = await Task.Run(() => _client.SendFriendRequest(targetPlayerId, token));
-            if (!Operation.Check(result, session)) return;
-            ErrorMessage = result.IsSuccess ? string.Empty : Operation.Error(result, "Social.RequestFailed");
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+            string token = session.Token;
+            Guid targetPlayerId = SelectedSearchPlayerId;
+            IsBusy = true;
+            try
             {
-                ErrorMessage = Text.Get("Social.RequestFailed");
+                ClientResult<PlayerRelation> result = await Task.Run(() => _client.SendFriendRequest(targetPlayerId, token));
+                if (!Operation.Check(result, session)) return;
+                ErrorMessage = result.IsSuccess ? string.Empty : Operation.Error(result, "Social.RequestFailed");
             }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.RequestFailed");
+                }
+            }
+            finally { IsBusy = false; }
         }
-        finally { IsBusy = false; }
     }
 
     private async Task RespondAsync(bool accept)
     {
-        if (IsBusy || PendingSenderId == Guid.Empty) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (!IsBusy && PendingSenderId != Guid.Empty && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<bool> result = await Task.Run(() => _client.RespondToFriendship(PendingSenderId, accept, token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || !result.Value) { ErrorMessage = Operation.Error(result, "Social.RequestFailed"); return; }
-        }
-        catch (Exception)
-        {
+            string token = session.Token;
+            IsBusy = true;
+            try
+            {
+                ClientResult<bool> result = await Task.Run(() => _client.RespondToFriendship(PendingSenderId, accept, token));
+                bool isCurrent = Operation.Check(result, session);
+                if (isCurrent && (!result.IsSuccess || !result.Value))
+                {
+                    ErrorMessage = Operation.Error(result, "Social.RequestFailed");
+                }
+                if (!isCurrent || !result.IsSuccess || !result.Value)
+                {
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.RequestFailed");
+                }
+            }
+            finally { IsBusy = false; }
             if (Operation.IsCurrent(session))
             {
-                ErrorMessage = Text.Get("Social.RequestFailed");
+                await RefreshAsync();
             }
-        }
-        finally { IsBusy = false; }
-        if (Operation.IsCurrent(session))
-        {
-            await RefreshAsync();
         }
     }
 
     private async Task RemoveAsync()
     {
-        if (IsBusy || SelectedPlayerId == Guid.Empty) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (!IsBusy && SelectedPlayerId != Guid.Empty && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<bool> result = await Task.Run(() => _client.RemoveFriendship(SelectedPlayerId, token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || !result.Value) { ErrorMessage = Operation.Error(result, "Social.RequestFailed"); return; }
-        }
-        catch (Exception)
-        {
+            string token = session.Token;
+            IsBusy = true;
+            try
+            {
+                ClientResult<bool> result = await Task.Run(() => _client.RemoveFriendship(SelectedPlayerId, token));
+                bool isCurrent = Operation.Check(result, session);
+                if (isCurrent && (!result.IsSuccess || !result.Value))
+                {
+                    ErrorMessage = Operation.Error(result, "Social.RequestFailed");
+                }
+                if (!isCurrent || !result.IsSuccess || !result.Value)
+                {
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.RequestFailed");
+                }
+            }
+            finally { IsBusy = false; }
             if (Operation.IsCurrent(session))
             {
-                ErrorMessage = Text.Get("Social.RequestFailed");
+                await RefreshAsync();
             }
-        }
-        finally { IsBusy = false; }
-        if (Operation.IsCurrent(session))
-        {
-            await RefreshAsync();
         }
     }
 

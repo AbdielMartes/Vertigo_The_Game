@@ -32,6 +32,8 @@ public interface ILobbyClient : IDisposable
 
     LobbyPreparation GetPreparation(string lobbyCode, string sessionToken);
 
+    MatchSyncUpdate GetMatchUpdate(MatchSyncRequest request);
+
     MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken);
 
     MatchPrivateHand GetMatchPrivateHand(string lobbyCode, string sessionToken);

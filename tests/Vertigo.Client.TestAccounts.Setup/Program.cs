@@ -15,70 +15,80 @@ string? hostPassword = Environment.GetEnvironmentVariable(HostPasswordKey);
 string? inviteeName = Environment.GetEnvironmentVariable(InviteeUsernameKey);
 string? inviteePassword = Environment.GetEnvironmentVariable(InviteePasswordKey);
 
+int exitCode = 2;
 if (string.IsNullOrWhiteSpace(hostName) || string.IsNullOrWhiteSpace(hostPassword)
     || string.IsNullOrWhiteSpace(inviteeName) || string.IsNullOrWhiteSpace(inviteePassword))
 {
     Console.Error.WriteLine("CONFIGURATION REQUIRED: set the four VERTIGO_TEST_* variables.");
-    return 2;
 }
-
-if (string.Equals(hostName, inviteeName, StringComparison.OrdinalIgnoreCase))
+else if (string.Equals(hostName, inviteeName, StringComparison.OrdinalIgnoreCase))
 {
     Console.Error.WriteLine("FAIL: Test accounts must have different usernames.");
-    return 2;
 }
-
-ServiceCollection registrations = new();
-registrations.AddVertigoClientNetworking();
-using ServiceProvider provider = registrations.BuildServiceProvider();
-IAccountClient accounts = provider.GetRequiredService<IAccountClient>();
-IAuthClient authentication = provider.GetRequiredService<IAuthClient>();
-
-bool hostReady = PrepareAccount(new LoginCredentials { Username = hostName, Password = hostPassword }, "host");
-bool inviteeReady = PrepareAccount(new LoginCredentials { Username = inviteeName, Password = inviteePassword }, "invitee");
-
-if (!hostReady || !inviteeReady)
+else
 {
-    Console.Error.WriteLine("FAIL: Registered test accounts are not ready.");
-    return 1;
+    ServiceCollection registrations = new();
+    registrations.AddVertigoClientNetworking();
+    using ServiceProvider provider = registrations.BuildServiceProvider();
+    IAccountClient accounts = provider.GetRequiredService<IAccountClient>();
+    IAuthClient authentication = provider.GetRequiredService<IAuthClient>();
+
+    bool hostReady = PrepareAccount(new LoginCredentials { Username = hostName, Password = hostPassword }, "host");
+    bool inviteeReady = PrepareAccount(new LoginCredentials { Username = inviteeName, Password = inviteePassword }, "invitee");
+
+    bool accountsReady = hostReady && inviteeReady;
+    if (accountsReady)
+    {
+        Console.WriteLine("PASS: Both registered test accounts are ready.");
+    }
+    else
+    {
+        Console.Error.WriteLine("FAIL: Registered test accounts are not ready.");
+    }
+
+    exitCode = accountsReady ? 0 : 1;
+
+    bool PrepareAccount(LoginCredentials credentials, string label)
+    {
+        // The test identity never needs incoming email; use a unique, reserved example address.
+        string email = $"vertigo-test-{Guid.NewGuid():N}@example.com";
+        AccountRegistration registration = new()
+        {
+            Username = credentials.Username,
+            Email = email,
+            Password = credentials.Password
+        };
+
+        ClientResult<bool> register = accounts.RegisterAccount(registration);
+        bool ready = false;
+        if (!register.IsSuccess && register.ErrorCode != ServiceErrorCodes.UsernameAlreadyRegistered)
+        {
+            Console.Error.WriteLine($"FAIL: {label} registration: {register.Failure} ({register.ErrorCode}).");
+        }
+        else
+        {
+            ClientResult<UserSession> login = authentication.Login(credentials);
+            if (!login.IsSuccess || login.Value is null || login.Value.IsGuest)
+            {
+                Console.Error.WriteLine($"FAIL: {label} authentication: {login.Failure} ({login.ErrorCode}).");
+            }
+            else
+            {
+                ClientResult<bool> logout = authentication.Logout(login.Value.Token);
+                if (!logout.IsSuccess || !logout.Value)
+                {
+                    Console.Error.WriteLine($"FAIL: {label} logout: {logout.Failure} ({logout.ErrorCode}).");
+                }
+                else
+                {
+                    Console.WriteLine($"PASS: {label} registered account verified.");
+                    ready = true;
+                }
+            }
+        }
+
+        return ready;
+    }
 }
 
-Console.WriteLine("PASS: Both registered test accounts are ready.");
-return 0;
-
-bool PrepareAccount(LoginCredentials credentials, string label)
-{
-    // The test identity never needs incoming email; use a unique, reserved example address.
-    string email = $"vertigo-test-{Guid.NewGuid():N}@example.com";
-    AccountRegistration registration = new()
-    {
-        Username = credentials.Username,
-        Email = email,
-        Password = credentials.Password
-    };
-
-    ClientResult<bool> register = accounts.RegisterAccount(registration);
-    if (!register.IsSuccess && register.ErrorCode != ServiceErrorCodes.UsernameAlreadyRegistered)
-    {
-        Console.Error.WriteLine($"FAIL: {label} registration: {register.Failure} ({register.ErrorCode}).");
-        return false;
-    }
-
-    ClientResult<UserSession> login = authentication.Login(credentials);
-
-    if (!login.IsSuccess || login.Value is null || login.Value.IsGuest)
-    {
-        Console.Error.WriteLine($"FAIL: {label} authentication: {login.Failure} ({login.ErrorCode}).");
-        return false;
-    }
-
-    ClientResult<bool> logout = authentication.Logout(login.Value.Token);
-    if (!logout.IsSuccess || !logout.Value)
-    {
-        Console.Error.WriteLine($"FAIL: {label} logout: {logout.Failure} ({logout.ErrorCode}).");
-        return false;
-    }
-
-    Console.WriteLine($"PASS: {label} registered account verified.");
-    return true;
-}
+return exitCode;

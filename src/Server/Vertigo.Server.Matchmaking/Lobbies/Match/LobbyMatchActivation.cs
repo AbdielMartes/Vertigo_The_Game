@@ -28,7 +28,14 @@ public sealed class LobbyMatchActivation
             LobbyInstanceId = lobby.LobbyInstanceId,
             LobbyCode = lobby.LobbyCode,
             HostPlayerId = lobby.HostPlayerId,
-            PlayerIds = Array.AsReadOnly(players)
+            PlayerIds = Array.AsReadOnly(players),
+            Lobby = new RecoverableLobby
+            {
+                Members = lobby.GetMembersExcept(Guid.Empty),
+                IsPublic = lobby.IsPublic,
+                MaxPlayers = lobby.MaxPlayers,
+                CreatedAtUtc = lobby.CreatedAtUtc
+            }
         };
 
         // If Game fails, LobbyState is unchanged and remains Waiting.

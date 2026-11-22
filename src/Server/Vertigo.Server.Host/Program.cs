@@ -1,3 +1,4 @@
+using Vertigo.Server.CrossCutting.Recovery;
 using System.Net;
 using CoreWCF.Configuration;
 using CoreWCF;
@@ -36,6 +37,9 @@ try
     builder.Services.AddServiceModelServices();
     builder.Services.AddVertigoDataAccess(builder.Configuration);
 
+    builder.Services.AddSingleton<RecoveryDirectory>(_ => new RecoveryDirectory(
+        builder.Configuration["MatchRecovery:Directory"] ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vertigo", "Server", "Recovery")));
     builder.Services.AddSingleton(TimeProvider.System);
     builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
     builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>();
@@ -72,8 +76,9 @@ try
     builder.Services.AddScoped<ChatServiceDependencies>();
     builder.Services.AddTransient<ChatService>();
 
-    WebApplication app = builder.Build();
-    ((IApplicationBuilder)app).UseServiceModel(ConfigureServices);
+    await using WebApplication app = builder.Build();
+    ILogger<LobbyDispatchErrors> lobbyLogger = app.Services.GetRequiredService<ILogger<LobbyDispatchErrors>>();
+    ((IApplicationBuilder)app).UseServiceModel(services => ConfigureServices(services, lobbyLogger));
     app.Run();
 }
 finally
@@ -89,7 +94,7 @@ finally
     }
 }
 
-static void ConfigureServices(IServiceBuilder services)
+static void ConfigureServices(IServiceBuilder services, ILogger<LobbyDispatchErrors> lobbyLogger)
 {
     NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
     services.AddService<AccountService>()
@@ -108,6 +113,8 @@ static void ConfigureServices(IServiceBuilder services)
         .AddServiceEndpoint<ChatService, IChatService>(binding, ServiceEndpoints.ChatServiceAddress);
     services.AddService<LobbyService>()
         .AddServiceEndpoint<LobbyService, ILobbyService>(binding, ServiceEndpoints.LobbyServiceAddress);
+    services.ConfigureServiceHostBase<LobbyService>(host =>
+        host.Description.Behaviors.Add(new LobbyDispatchErrors(lobbyLogger)));
     services.AddService<LobbyInvitationService>()
         .AddServiceEndpoint<LobbyInvitationService, ILobbyInvitationService>(
             binding, ServiceEndpoints.LobbyInvitationServiceAddress);

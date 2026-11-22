@@ -18,6 +18,8 @@ public sealed class ServiceCaller : IServiceCaller
         TArgument argument)
         where TChannel : class
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(address);
+        ArgumentNullException.ThrowIfNull(operation);
         ChannelFactory<TChannel>? channelFactory = null;
         TChannel? channel = null;
         ClientResult<TResult> result;
@@ -29,28 +31,28 @@ public sealed class ServiceCaller : IServiceCaller
             TResult value = operation(channel, argument);
             result = ClientResult<TResult>.Success(value);
         }
-        catch (FaultException<ServiceFault> exception)
+        catch (FaultException<ServiceFault> ex)
         {
-            result = ClientResult<TResult>.BusinessFailure(exception.Detail.ErrorCode, exception.Detail.MessageKey);
+            result = ClientResult<TResult>.BusinessFailure(ex.Detail.ErrorCode, ex.Detail.MessageKey);
         }
-        catch (FaultException exception)
+        catch (FaultException ex)
         {
-            Debug.WriteLine($"ServiceCaller: server fault at {address}: {exception}");
+            Debug.WriteLine($"ServiceCaller: server fault at {address}: {ex.GetType().Name}");
             result = ClientResult<TResult>.TechnicalFailure(FailureKind.Unexpected);
         }
-        catch (TimeoutException exception)
+        catch (TimeoutException ex)
         {
-            Debug.WriteLine($"ServiceCaller: timeout at {address}: {exception.Message}");
+            Debug.WriteLine($"ServiceCaller: timeout at {address}: {ex.GetType().Name}");
             result = ClientResult<TResult>.TechnicalFailure(FailureKind.Timeout);
         }
-        catch (CommunicationException exception)
+        catch (CommunicationException ex)
         {
-            Debug.WriteLine($"ServiceCaller: unreachable {address}: {exception.Message}");
+            Debug.WriteLine($"ServiceCaller: unreachable {address}: {ex.GetType().Name}");
             result = ClientResult<TResult>.TechnicalFailure(FailureKind.ServerUnreachable);
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"ServiceCaller: unexpected failure at {address}: {exception}");
+            Debug.WriteLine($"ServiceCaller: unexpected failure at {address}: {ex.GetType().Name}");
             result = ClientResult<TResult>.TechnicalFailure(FailureKind.Unexpected);
         }
         finally

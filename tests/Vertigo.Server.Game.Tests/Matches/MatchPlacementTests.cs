@@ -131,9 +131,9 @@ public sealed class MatchPlacementTests
     [Fact]
     public void TryPlace_ValidCard_ConsumesItAndAdvancesTurn()
     {
-        // Repeatedly create a randomized initial board until a valid move is available.
-        // Avoid probabilistic test failure: check only within a bounded number of attempts.
-        for (int attempt = 0; attempt < 100; attempt++)
+        const int MaximumAttempts = 100;
+        bool verified = false;
+        for (int attempt = 0; attempt < MaximumAttempts && !verified; attempt++)
         {
             var state = Create();
             var board = state.Game.GetBoard(state.MatchId)!;
@@ -161,9 +161,10 @@ public sealed class MatchPlacementTests
             Assert.Equal(MatchPlacementResult.StaleRevision,
                 state.Game.TryPlace(state.MatchId, openingPlayer, move));
             AssertPlacementStateUnchanged(state.Game, next, afterMove);
-            return;
+            verified = true;
         }
-        throw new InvalidOperationException("No playable test board generated in 100 attempts.");
+
+        Assert.True(verified, "No playable test board was generated.");
     }
 
     [Fact]

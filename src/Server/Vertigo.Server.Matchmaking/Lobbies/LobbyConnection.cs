@@ -7,7 +7,7 @@ namespace Vertigo.Server.Matchmaking.Lobbies;
 
 public sealed class LobbyConnection
 {
-    public LobbyConnection(LobbyMember member, ILobbyCallback callback, string sessionId)
+    public LobbyConnection(LobbyMember member, ILobbyCallback? callback, string sessionId)
     {
         Member = member;
         Callback = callback;
@@ -18,5 +18,5 @@ public sealed class LobbyConnection
 
     public LobbyMember Member { get; }
 
-    public ILobbyCallback Callback { get; }
+    public ILobbyCallback? Callback { get; }
 }

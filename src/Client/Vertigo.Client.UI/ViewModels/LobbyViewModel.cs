@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 using Vertigo.Client.Core.Navigation;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
 using Vertigo.Client.UI.ViewModels.Dependencies;
 using Vertigo.Client.UI.ViewModels.Lifecycle;
@@ -39,6 +41,17 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
 
     public LobbyViewModel(ILobbyClient lobbyClient, IChatClient chatClient, LobbyContext context)
     {
+        ArgumentNullException.ThrowIfNull(lobbyClient);
+        ArgumentNullException.ThrowIfNull(chatClient);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(context.PlayerSession);
+        ArgumentNullException.ThrowIfNull(context.Ui);
+        ArgumentNullException.ThrowIfNull(context.Ui.Navigation);
+        ArgumentNullException.ThrowIfNull(context.Ui.Services);
+        ArgumentNullException.ThrowIfNull(context.Ui.Services.Errors);
+        ArgumentNullException.ThrowIfNull(context.Ui.Services.SessionGuard);
+        ArgumentNullException.ThrowIfNull(context.Ui.Services.Text);
+        ArgumentNullException.ThrowIfNull(context.Match);
         _lobbyClient = lobbyClient;
         _chatClient = chatClient;
         _playerSession = context.PlayerSession;
@@ -150,76 +163,119 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
 
     public async Task<bool> CreateAsync(bool isPublic, int maxPlayers)
     {
-        if (IsBusy || !string.IsNullOrEmpty(LobbyCode)) return false;
-        SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null) { _coordinator.Invalidate(); return false; }
+        bool succeeded = false;
+        if (!IsBusy && string.IsNullOrEmpty(LobbyCode))
+        {
+            SessionSnapshot? session = _playerSession.GetActiveSession();
+            if (session is null)
+            {
+                _coordinator.Invalidate();
+            }
+            else
+            {
+                succeeded = await CreateForSessionAsync(session, isPublic, maxPlayers);
+            }
+        }
 
+        return succeeded;
+    }
+
+    private async Task<bool> CreateForSessionAsync(SessionSnapshot session, bool isPublic, int maxPlayers)
+    {
+        bool succeeded = false;
         IsBusy = true;
         ErrorMessage = string.Empty;
         try
         {
             string code = await Task.Run(() => _lobbyClient.CreateLobby(isPublic, maxPlayers, session.Token));
-            if (!IsCurrentSession(session))
+            if (IsCurrentSession(session))
             {
-                return false;
+                Members.Clear();
+                Messages.Clear();
+                Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
+                    IsGuest = session.IsGuest });
+                LobbyCode = code;
+                HostPlayerId = session.PlayerId;
+                ReadyPlayerIds.Clear();
+                _preparationRevision.Reset();
+                IsMatchStarted = false;
+                _navigation.NavigateTo(NavigationPage.Lobby);
+                _lobbyClient.ReplayPendingEvents();
+                await RefreshPreparationAsync(session);
+                succeeded = IsCurrentSession(session);
             }
-            Members.Clear();
-            Messages.Clear();
-            Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
-                IsGuest = session.IsGuest });
-            LobbyCode = code;
-            HostPlayerId = session.PlayerId;
-            ReadyPlayerIds.Clear();
-            _preparationRevision.Reset();
-            IsMatchStarted = false;
-            _navigation.NavigateTo(NavigationPage.Lobby);
-            _lobbyClient.ReplayPendingEvents();
-            await RefreshPreparationAsync(session);
-            return true;
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            return HandleServiceFailure(exception, session, "Lobby.CreateFailed");
+            HandleServiceFailure(ex, session, "Lobby.CreateFailed");
         }
-        finally { IsBusy = false; }
+        finally
+        {
+            IsBusy = false;
+        }
+
+        return succeeded;
     }
 
     public async Task<bool> JoinAsync(string code)
     {
-        if (IsBusy || !string.IsNullOrEmpty(LobbyCode)) return false;
-        SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null) { _coordinator.Invalidate(); return false; }
-        if (string.IsNullOrWhiteSpace(code)) return Fail("Lobby.CodeRequired");
+        bool succeeded = false;
+        if (!IsBusy && string.IsNullOrEmpty(LobbyCode))
+        {
+            SessionSnapshot? session = _playerSession.GetActiveSession();
+            if (session is null)
+            {
+                _coordinator.Invalidate();
+            }
+            else if (string.IsNullOrWhiteSpace(code))
+            {
+                Fail("Lobby.CodeRequired");
+            }
+            else
+            {
+                succeeded = await JoinForSessionAsync(session, code);
+            }
+        }
 
+        return succeeded;
+    }
+
+    private async Task<bool> JoinForSessionAsync(SessionSnapshot session, string code)
+    {
+        bool succeeded = false;
         IsBusy = true;
         ErrorMessage = string.Empty;
         try
         {
             LobbyAdmission admission = await Task.Run(() => _lobbyClient.JoinLobby(code.Trim(), session.Token));
-            if (!IsCurrentSession(session))
+            if (IsCurrentSession(session))
             {
-                return false;
+                Members.Clear();
+                Messages.Clear();
+                foreach (LobbyMember member in admission.ExistingMembers) Members.Add(member);
+                Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
+                    IsGuest = session.IsGuest });
+                LobbyCode = admission.LobbyCode;
+                HostPlayerId = admission.HostPlayerId;
+                ReadyPlayerIds.Clear();
+                _preparationRevision.Reset();
+                IsMatchStarted = false;
+                _navigation.NavigateTo(NavigationPage.Lobby);
+                _lobbyClient.ReplayPendingEvents();
+                await RefreshPreparationAsync(session);
+                succeeded = IsCurrentSession(session);
             }
-            Members.Clear();
-            Messages.Clear();
-            foreach (LobbyMember member in admission.ExistingMembers) Members.Add(member);
-            Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
-                IsGuest = session.IsGuest });
-            LobbyCode = admission.LobbyCode;
-            HostPlayerId = admission.HostPlayerId;
-            ReadyPlayerIds.Clear();
-            _preparationRevision.Reset();
-            IsMatchStarted = false;
-            _navigation.NavigateTo(NavigationPage.Lobby);
-            _lobbyClient.ReplayPendingEvents();
-            await RefreshPreparationAsync(session);
-            return true;
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            return HandleServiceFailure(exception, session, "Lobby.JoinFailed");
+            HandleServiceFailure(ex, session, "Lobby.JoinFailed");
         }
-        finally { IsBusy = false; }
+        finally
+        {
+            IsBusy = false;
+        }
+
+        return succeeded;
     }
 
     private async Task RefreshPreparationAsync(SessionSnapshot session)
@@ -233,13 +289,9 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
                 ApplyPreparation(preparation);
             }
         }
-        catch (Exception exception)
+        catch (Exception ex) when (ex is CommunicationException or TimeoutException)
         {
-            // Creation/join already succeeded; do not report a failed admission.
-            if (_errors.IsUnauthorized(exception))
-            {
-                _coordinator.Invalidate(session);
-            }
+            HandleServiceFailure(ex, session, "Error.Unknown");
         }
     }
 
@@ -253,26 +305,28 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         if (session is null)
         {
             _coordinator.Invalidate();
-            return;
         }
-        IsBusy = true;
-        string code = LobbyCode;
-        bool ready = !IsReady;
-        try
+        else
         {
-            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.SetReady(code, ready, session.Token));
-            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+            IsBusy = true;
+            string code = LobbyCode;
+            bool ready = !IsReady;
+            try
             {
-                ApplyPreparation(preparation);
+                LobbyPreparation preparation = await Task.Run(() => _lobbyClient.SetReady(code, ready, session.Token));
+                if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+                {
+                    ApplyPreparation(preparation);
+                }
             }
-        }
-        catch (Exception exception)
-        {
-            HandleServiceFailure(exception, session, "Lobby.ReadyFailed");
-        }
-        finally
-        {
-            IsBusy = false;
+            catch (Exception ex)
+            {
+                HandleServiceFailure(ex, session, "Lobby.ReadyFailed");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 
@@ -286,25 +340,27 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         if (session is null)
         {
             _coordinator.Invalidate();
-            return;
         }
-        IsBusy = true;
-        string code = LobbyCode;
-        try
+        else
         {
-            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.StartMatch(code, session.Token));
-            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+            IsBusy = true;
+            string code = LobbyCode;
+            try
             {
-                ApplyPreparation(preparation);
+                LobbyPreparation preparation = await Task.Run(() => _lobbyClient.StartMatch(code, session.Token));
+                if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+                {
+                    ApplyPreparation(preparation);
+                }
             }
-        }
-        catch (Exception exception)
-        {
-            HandleServiceFailure(exception, session, "Lobby.StartFailed");
-        }
-        finally
-        {
-            IsBusy = false;
+            catch (Exception ex)
+            {
+                HandleServiceFailure(ex, session, "Lobby.StartFailed");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 
@@ -355,49 +411,74 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
     {
         if (IsBusy || string.IsNullOrWhiteSpace(MessageText) || string.IsNullOrEmpty(LobbyCode)) return;
         SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null) { _coordinator.Invalidate(); return; }
-        string text = MessageText.Trim();
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
+        if (session is null)
         {
-            var result = await Task.Run(() => _chatClient.SendMessage(LobbyCode, text, session.Token));
-            if (_errors.IsUnauthorized(result)) { _coordinator.Invalidate(session); return; }
-            if (!IsCurrentSession(session))
-            {
-                return;
-            }
-            if (result.IsSuccess && result.Value) MessageText = string.Empty;
-            else ErrorMessage = _errors.FromResult(result, "Lobby.MessageFailed");
+            _coordinator.Invalidate();
         }
-        catch (Exception exception) { HandleServiceFailure(exception, session, "Lobby.MessageFailed"); }
-        finally { IsBusy = false; }
+        else
+        {
+            string text = MessageText.Trim();
+            IsBusy = true;
+            ErrorMessage = string.Empty;
+            try
+            {
+                var result = await Task.Run(() => _chatClient.SendMessage(LobbyCode, text, session.Token));
+                if (_errors.IsUnauthorized(result))
+                {
+                    _coordinator.Invalidate(session);
+                }
+                else if (IsCurrentSession(session))
+                {
+                    if (result.IsSuccess && result.Value)
+                    {
+                        MessageText = string.Empty;
+                    }
+                    else
+                    {
+                        ErrorMessage = _errors.FromResult(result, "Lobby.MessageFailed");
+                    }
+                }
+            }
+            catch (Exception ex) { HandleServiceFailure(ex, session, "Lobby.MessageFailed"); }
+            finally { IsBusy = false; }
+        }
     }
 
     private async Task LeaveAsync()
     {
         if (IsBusy || string.IsNullOrEmpty(LobbyCode)) return;
         SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null) { _coordinator.Invalidate(); return; }
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
+        if (session is null)
         {
-            bool left = await Task.Run(() => _lobbyClient.LeaveLobby(LobbyCode, session.Token));
-            if (!IsCurrentSession(session))
+            _coordinator.Invalidate();
+        }
+        else
+        {
+            IsBusy = true;
+            ErrorMessage = string.Empty;
+            try
             {
-                return;
+                bool left = await Task.Run(() => _lobbyClient.LeaveLobby(LobbyCode, session.Token));
+                if (IsCurrentSession(session))
+                {
+                    if (left)
+                    {
+                        _lobbyClient.Disconnect();
+                        ResetState();
+                        _navigation.NavigateTo(NavigationPage.Home);
+                    }
+                    else
+                    {
+                        Fail("Lobby.LeaveFailed");
+                    }
+                }
             }
-            if (!left) { Fail("Lobby.LeaveFailed"); return; }
-            _lobbyClient.Disconnect();
-            ResetState();
-            _navigation.NavigateTo(NavigationPage.Home);
+            catch (Exception ex)
+            {
+                HandleServiceFailure(ex, session, "Lobby.LeaveFailed");
+            }
+            finally { IsBusy = false; }
         }
-        catch (Exception exception)
-        {
-            HandleServiceFailure(exception, session, "Lobby.LeaveFailed");
-        }
-        finally { IsBusy = false; }
     }
 
     private void OnPlayerJoined(object? sender, LobbyMember member)
@@ -407,11 +488,11 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         Dispatcher.UIThread.Post(() =>
         {
             if (eventSession is null || !ReferenceEquals(_playerSession.GetActiveSession(), eventSession)
-                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
+                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase)
+                || _disposed || string.IsNullOrEmpty(LobbyCode))
             {
                 return;
             }
-            if (_disposed || string.IsNullOrEmpty(LobbyCode)) return;
             if (Members.All(existing => existing.PlayerId != member.PlayerId)) Members.Add(member);
         });
     }
@@ -423,11 +504,11 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         Dispatcher.UIThread.Post(() =>
         {
             if (eventSession is null || !ReferenceEquals(_playerSession.GetActiveSession(), eventSession)
-                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
+                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase)
+                || _disposed || string.IsNullOrEmpty(LobbyCode))
             {
                 return;
             }
-            if (_disposed || string.IsNullOrEmpty(LobbyCode)) return;
             LobbyMember? member = Members.FirstOrDefault(existing => existing.PlayerId == playerId);
             if (member is not null) Members.Remove(member);
         });
@@ -491,16 +572,25 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         return ReferenceEquals(current, previous);
     }
 
-    private bool HandleServiceFailure(Exception exception, SessionSnapshot session, string fallbackKey)
+    private void HandleServiceFailure(Exception ex, SessionSnapshot session, string fallbackKey)
     {
-        if (_errors.IsUnauthorized(exception) || !_coordinator.HasActiveSession())
+        if (ex is not FaultException<ServiceFault>)
         {
-            _coordinator.Invalidate(session);
-            return false;
+            Debug.WriteLine($"Lobby action {fallbackKey} failed: {ex.GetType().Name}");
         }
 
-        ErrorMessage = _errors.FromException(exception, fallbackKey);
-        return false;
+        if (_errors.IsUnauthorized(ex))
+        {
+            _coordinator.Invalidate(session, ServiceMessageKeys.Unauthorized);
+        }
+        else if (_coordinator.IsCurrent(session))
+        {
+            ErrorMessage = _errors.FromException(ex, fallbackKey);
+        }
+        else if (_playerSession.GetActiveSession() is null)
+        {
+            _coordinator.Invalidate(session);
+        }
     }
 
     private bool Fail(string key)

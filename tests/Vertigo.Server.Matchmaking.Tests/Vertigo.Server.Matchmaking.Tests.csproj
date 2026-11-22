@@ -7,6 +7,9 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CoreWCF.NetTcp" Version="1.9.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="11.0.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="10.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
@@ -14,6 +17,8 @@
   </ItemGroup>
   <ItemGroup>
     <Using Include="Xunit" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../src/Server/Vertigo.Server.Game/Vertigo.Server.Game.csproj" />
     <ProjectReference Include="../../src/Server/Vertigo.Server.Matchmaking/Vertigo.Server.Matchmaking.csproj" />
     <ProjectReference Include="../../src/Server/Vertigo.Server.PlayerManagement/Vertigo.Server.PlayerManagement.csproj" />
   </ItemGroup>

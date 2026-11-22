@@ -167,17 +167,17 @@ public sealed class AccountServiceTests
             _identity = new SessionIdentity(playerId, Username, false);
         }
 
-        public SessionIdentity? Resolve(string token)
+        public SessionIdentity? Resolve(string? token)
         {
             return _identity;
         }
 
-        public SessionIdentity Require(string token)
+        public SessionIdentity Require(string? token, string operation = "")
         {
             return _identity;
         }
 
-        public SessionIdentity RequireRegistered(string token)
+        public SessionIdentity RequireRegistered(string? token, string operation = "")
         {
             return _identity;
         }

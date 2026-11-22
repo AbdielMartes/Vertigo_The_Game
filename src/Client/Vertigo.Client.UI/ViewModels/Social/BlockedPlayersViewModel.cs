@@ -34,31 +34,34 @@ public sealed class BlockedPlayersViewModel : SocialViewModelBase
 
     public async Task RefreshAsync()
     {
-        if (IsBusy) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (!IsBusy && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<List<BlockedPlayerSummary>> result = await Task.Run(() => _client.GetBlockedPlayers(token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.BlockFailed"); return; }
-            BlockedPlayers.Clear();
-            foreach (BlockedPlayerSummary player in result.Value) BlockedPlayers.Add(player);
-            ClearError();
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+            string token = session.Token;
+            IsBusy = true;
+            try
             {
-                ErrorMessage = Text.Get("Social.BlockFailed");
+                ClientResult<List<BlockedPlayerSummary>> result = await Task.Run(() => _client.GetBlockedPlayers(token));
+                if (!Operation.Check(result, session)) return;
+                if (!result.IsSuccess || result.Value is null)
+                {
+                    ErrorMessage = Operation.Error(result, "Social.BlockFailed");
+                }
+                else
+                {
+                    BlockedPlayers.Clear();
+                    foreach (BlockedPlayerSummary player in result.Value) BlockedPlayers.Add(player);
+                    ClearError();
+                }
             }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.BlockFailed");
+                }
+            }
+            finally { IsBusy = false; }
         }
-        finally { IsBusy = false; }
     }
 
     private Task BlockAsync() => ChangeAsync(true);
@@ -66,41 +69,35 @@ public sealed class BlockedPlayersViewModel : SocialViewModelBase
 
     private async Task ChangeAsync(bool block)
     {
-        if (IsBusy || SelectedPlayerId == Guid.Empty)
+        if (!IsBusy && SelectedPlayerId != Guid.Empty && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
-        {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<bool> result = await Task.Run(() => block
-                ? _client.BlockPlayer(SelectedPlayerId, token)
-                : _client.UnblockPlayer(SelectedPlayerId, token));
-            if (!CanApplyBlockChange(result, session))
+            string token = session.Token;
+            IsBusy = true;
+            try
             {
-                return;
+                ClientResult<bool> result = await Task.Run(() => block
+                    ? _client.BlockPlayer(SelectedPlayerId, token)
+                    : _client.UnblockPlayer(SelectedPlayerId, token));
+                if (!CanApplyBlockChange(result, session))
+                {
+                    return;
+                }
             }
-        }
-        catch (Exception)
-        {
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.BlockFailed");
+                }
+            }
+            finally
+            {
+                IsBusy = false;
+            }
             if (Operation.IsCurrent(session))
             {
-                ErrorMessage = Text.Get("Social.BlockFailed");
+                await RefreshAsync();
             }
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-        if (Operation.IsCurrent(session))
-        {
-            await RefreshAsync();
         }
     }
 

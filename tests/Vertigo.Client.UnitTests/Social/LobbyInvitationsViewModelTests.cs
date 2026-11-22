@@ -228,6 +228,8 @@ public sealed class LobbyInvitationsViewModelTests
             throw new NotSupportedException();
         }
 
+        public MatchSyncUpdate GetMatchUpdate(MatchSyncRequest request) => throw new NotSupportedException();
+
         public MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken)
         {
             throw new NotSupportedException();

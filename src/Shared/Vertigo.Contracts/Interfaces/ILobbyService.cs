@@ -9,7 +9,7 @@ public interface ILobbyService
 {
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
-    string CreateLobby(bool isPublic, int maxPlayers, string sessionToken);
+    string CreateLobby(bool isPublic, int maxPlayers, string? sessionToken);
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
@@ -38,6 +38,10 @@ public interface ILobbyService
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
     LobbyPreparation GetPreparation(string lobbyCode, string sessionToken);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    MatchSyncUpdate GetMatchUpdate(MatchSyncRequest request);
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]

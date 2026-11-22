@@ -94,11 +94,11 @@ public sealed class ChatServiceTests
     {
         public SessionIdentity Identity { get; } = new(Guid.NewGuid(), "Ana", true);
 
-        public SessionIdentity? Resolve(string token) => throw new NotSupportedException();
+        public SessionIdentity? Resolve(string? token) => throw new NotSupportedException();
 
-        public SessionIdentity Require(string token) => Identity;
+        public SessionIdentity Require(string? token, string operation = "") => Identity;
 
-        public SessionIdentity RequireRegistered(string token) => throw new NotSupportedException();
+        public SessionIdentity RequireRegistered(string? token, string operation = "") => throw new NotSupportedException();
     }
 
     private sealed class RecordingLobbyDirectory : ILobbyDirectory

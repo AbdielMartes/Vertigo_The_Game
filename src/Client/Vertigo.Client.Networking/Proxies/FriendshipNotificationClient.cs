@@ -152,52 +152,58 @@ public sealed class FriendshipNotificationClient : IFriendshipNotificationClient
         lock (_syncRoot)
         {
             ObjectDisposedException.ThrowIf(_isDisposed, this);
-            if (_channel is not null && !IsUnusable((ICommunicationObject)_channel))
+            if (_channel is null || IsUnusable((ICommunicationObject)_channel))
             {
-                return _channel;
+                _channel = OpenChannel();
             }
-            _channelFactory?.Abort();
-            _callbackHandler = new FriendshipCallbackHandler();
-            FriendshipCallbackHandler handler = _callbackHandler;
-            handler.FriendRequestReceived += (sender, value) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    _friendRequestReceived?.Invoke(this, value);
-                }
-            };
-            handler.FriendshipEstablished += (sender, value) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    _friendshipEstablished?.Invoke(this, value);
-                }
-            };
-            handler.LobbyInvitationReceived += (sender, value) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    _lobbyInvitationReceived?.Invoke(this, value);
-                }
-            };
-            handler.LobbyInvitationWithdrawn += (sender, value) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    _lobbyInvitationWithdrawn?.Invoke(this, value);
-                }
-            };
-            NetTcpBinding binding = new(SecurityMode.None)
-            {
-                OpenTimeout = OperationTimeout,
-                SendTimeout = OperationTimeout
-            };
-            _channelFactory = new DuplexChannelFactory<IFriendshipNotificationService>(
-                new InstanceContext(handler), binding,
-                new EndpointAddress(ServiceEndpoints.FriendshipNotificationServiceAddress));
-            _channel = _channelFactory.CreateChannel();
+
             return _channel;
         }
+    }
+
+    private IFriendshipNotificationService OpenChannel()
+    {
+        _channelFactory?.Abort();
+        _callbackHandler = new FriendshipCallbackHandler();
+        FriendshipCallbackHandler handler = _callbackHandler;
+        handler.FriendRequestReceived += (sender, value) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                _friendRequestReceived?.Invoke(this, value);
+            }
+        };
+        handler.FriendshipEstablished += (sender, value) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                _friendshipEstablished?.Invoke(this, value);
+            }
+        };
+        handler.LobbyInvitationReceived += (sender, value) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                _lobbyInvitationReceived?.Invoke(this, value);
+            }
+        };
+        handler.LobbyInvitationWithdrawn += (sender, value) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                _lobbyInvitationWithdrawn?.Invoke(this, value);
+            }
+        };
+        NetTcpBinding binding = new(SecurityMode.None)
+        {
+            OpenTimeout = OperationTimeout,
+            SendTimeout = OperationTimeout
+        };
+        _channelFactory = new DuplexChannelFactory<IFriendshipNotificationService>(
+            new InstanceContext(handler), binding,
+            new EndpointAddress(ServiceEndpoints.FriendshipNotificationServiceAddress));
+        IFriendshipNotificationService channel = _channelFactory.CreateChannel();
+        return channel;
     }
 
     private void AbortChannel(IFriendshipNotificationService channel)

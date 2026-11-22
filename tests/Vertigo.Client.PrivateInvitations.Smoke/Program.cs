@@ -18,161 +18,165 @@ string? hostPassword = Environment.GetEnvironmentVariable(HostPasswordVariable);
 string? inviteeUsername = Environment.GetEnvironmentVariable(GuestUsernameVariable);
 string? inviteePassword = Environment.GetEnvironmentVariable(GuestPasswordVariable);
 
+int exitCode = 2;
 if (string.IsNullOrWhiteSpace(hostUsername) || string.IsNullOrWhiteSpace(hostPassword)
     || string.IsNullOrWhiteSpace(inviteeUsername) || string.IsNullOrWhiteSpace(inviteePassword))
 {
     Console.Error.WriteLine("CONFIGURATION REQUIRED: set the four VERTIGO_TEST_* environment variables in Rider or your shell.");
-    return 2;
 }
-
-using ServiceProvider host = CreateClient();
-using ServiceProvider invitee = CreateClient();
-ILobbyClient hostLobby = host.GetRequiredService<ILobbyClient>();
-ILobbyClient inviteeLobby = invitee.GetRequiredService<ILobbyClient>();
-IFriendshipNotificationClient inviteeNotifications = invitee.GetRequiredService<IFriendshipNotificationClient>();
-string? hostToken = null;
-string? inviteeToken = null;
-string? liveLobbyCode = null;
-string? closedLobbyCode = null;
-string? disconnectedLobbyCode = null;
-TaskCompletionSource<LobbyInvitationEntry> invitationReceived = new(TaskCreationOptions.RunContinuationsAsynchronously);
-TaskCompletionSource<string> invitationWithdrawn = new(TaskCreationOptions.RunContinuationsAsynchronously);
-TaskCompletionSource<string> disconnectedWithdrawal = new(TaskCreationOptions.RunContinuationsAsynchronously);
-inviteeNotifications.LobbyInvitationReceived += ObserveInvitation;
-inviteeNotifications.LobbyInvitationWithdrawn += ObserveWithdrawal;
-
-try
+else
 {
-    UserSession hostSession = Login(host, hostUsername, hostPassword);
-    UserSession inviteeSession = Login(invitee, inviteeUsername, inviteePassword);
-    Require(hostSession.PlayerId != inviteeSession.PlayerId, "Use two different registered accounts.");
-    hostToken = hostSession.Token;
-    inviteeToken = inviteeSession.Token;
+    using ServiceProvider host = CreateClient();
+    using ServiceProvider invitee = CreateClient();
+    ILobbyClient hostLobby = host.GetRequiredService<ILobbyClient>();
+    ILobbyClient inviteeLobby = invitee.GetRequiredService<ILobbyClient>();
+    IFriendshipNotificationClient inviteeNotifications = invitee.GetRequiredService<IFriendshipNotificationClient>();
+    string? hostToken = null;
+    string? inviteeToken = null;
+    string? liveLobbyCode = null;
+    string? closedLobbyCode = null;
+    string? disconnectedLobbyCode = null;
+    TaskCompletionSource<LobbyInvitationEntry> invitationReceived = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    TaskCompletionSource<string> invitationWithdrawn = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    TaskCompletionSource<string> disconnectedWithdrawal = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    inviteeNotifications.LobbyInvitationReceived += ObserveInvitation;
+    inviteeNotifications.LobbyInvitationWithdrawn += ObserveWithdrawal;
 
-    RegisteredClient owner = new(host, hostSession);
-    RegisteredClient invitedPlayer = new(invitee, inviteeSession);
-    EnsureFriendship(owner, invitedPlayer);
-    Require(inviteeNotifications.Subscribe(inviteeToken), "Invitee notification subscription was rejected.");
-    Console.WriteLine("Registered accounts: AUTHENTICATED, FRIENDS, INVITEE ONLINE");
-
-    // Positive scenario: the server must authorize admission to a PRIVATE room.
-    liveLobbyCode = hostLobby.CreateLobby(false, 2, hostToken);
-    ClientResult<List<FriendEntry>> eligible = host.GetRequiredService<ILobbyInvitationClient>()
-        .GetInvitableFriends(liveLobbyCode, hostToken);
-    Require(eligible.IsSuccess && eligible.Value?.Any(friend => friend.PlayerId == inviteeSession.PlayerId) == true,
-        "The online friend was missing from the list of eligible invitees.");
-    SendInvitation(owner, liveLobbyCode, inviteeSession.PlayerId);
-    LobbyInvitationEntry notice = await invitationReceived.Task.WaitAsync(TimeSpan.FromSeconds(10));
-    Require(notice.LobbyCode == liveLobbyCode, "Invitation callback named the wrong lobby.");
-    Require(HasInvitation(invitee, liveLobbyCode, inviteeToken), "Valid invitation not visible to invitee.");
-    LobbyAdmission admission = inviteeLobby.JoinLobby(liveLobbyCode, inviteeToken);
-    Require(string.Equals(admission.LobbyCode, liveLobbyCode, StringComparison.OrdinalIgnoreCase),
-        "Private lobby admission did not return the expected code.");
-    Require(!HasInvitation(invitee, liveLobbyCode, inviteeToken),
-        "Accepted invitation was still pending.");
-    Console.WriteLine("PASS: valid private invitation accepted and consumed by server");
-
-    Require(inviteeLobby.LeaveLobby(liveLobbyCode, inviteeToken), "Invitee failed to leave private room.");
-    SendInvitation(owner, liveLobbyCode, inviteeSession.PlayerId);
-    Require(HasInvitation(invitee, liveLobbyCode, inviteeToken), "The invitation to decline was not pending.");
-    ClientResult<bool> declined = invitee.GetRequiredService<ILobbyInvitationClient>()
-        .DeclineLobbyInvitation(liveLobbyCode, inviteeToken);
-    Require(declined.IsSuccess && declined.Value && !HasInvitation(invitee, liveLobbyCode, inviteeToken),
-        "Declining the invitation did not remove it from the pending list.");
-    Console.WriteLine("PASS: eligible friend can decline an invitation");
-    Require(hostLobby.LeaveLobby(liveLobbyCode, hostToken), "Host failed to leave private room.");
-    liveLobbyCode = null;
-
-    // Negative scenario: an already issued invitation must not admit the player
-    // after the host closes the room, even if a stale UI item remains visible.
-    closedLobbyCode = hostLobby.CreateLobby(false, 2, hostToken);
-    SendInvitation(owner, closedLobbyCode, inviteeSession.PlayerId);
-    Require(HasInvitation(invitee, closedLobbyCode, inviteeToken), "Second invitation was not created.");
-    Require(hostLobby.LeaveLobby(closedLobbyCode, hostToken), "Host did not close second room.");
-    string withdrawn = await invitationWithdrawn.Task.WaitAsync(TimeSpan.FromSeconds(10));
-    Require(withdrawn == closedLobbyCode, "Invitation withdrawal callback named the wrong lobby.");
-
-    bool rejected = false;
+    exitCode = 0;
     try
     {
-        inviteeLobby.JoinLobby(closedLobbyCode, inviteeToken);
-    }
-    catch (FaultException<ServiceFault> fault)
-    {
-        Require(fault.Detail.ErrorCode == ServiceErrorCodes.LobbyNotFound,
-            $"Expected LobbyNotFound; received '{fault.Detail.ErrorCode}'.");
-        string playerMessage = new ClientErrorText(new TextLocalizer())
-            .FromException(fault, "Social.InvitationUnavailable");
-        Require(!string.IsNullOrWhiteSpace(playerMessage)
-            && !string.Equals(playerMessage, fault.Detail.MessageKey, StringComparison.Ordinal),
-            "The server error was not converted into localized player text.");
-        rejected = true;
-    }
-    Require(rejected, "Server admitted the invitee to a closed private room.");
-    Console.WriteLine("PASS: closed private room rejected admission with localized error");
-    disconnectedLobbyCode = hostLobby.CreateLobby(false, 2, hostToken);
-    SendInvitation(owner, disconnectedLobbyCode, inviteeSession.PlayerId);
-    Require(HasInvitation(invitee, disconnectedLobbyCode, inviteeToken), "Disconnect test invitation was not pending.");
-    hostLobby.Disconnect();
+        UserSession hostSession = Login(host, hostUsername, hostPassword);
+        UserSession inviteeSession = Login(invitee, inviteeUsername, inviteePassword);
+        Require(hostSession.PlayerId != inviteeSession.PlayerId, "Use two different registered accounts.");
+        hostToken = hostSession.Token;
+        inviteeToken = inviteeSession.Token;
 
-    string removedLobby = await disconnectedWithdrawal.Task.WaitAsync(TimeSpan.FromSeconds(10));
-    Require(removedLobby == disconnectedLobbyCode && !HasInvitation(invitee, removedLobby, inviteeToken),
-        "Disconnecting the last member did not withdraw the invitation.");
-    Require(hostLobby.GetCurrentLobby(hostToken) is null, "The disconnected host still belongs to the lobby.");
-    Console.WriteLine("PASS: disconnecting the last member removes the lobby and withdraws its invitation");
-    IBlockedPlayerClient blocks = host.GetRequiredService<IBlockedPlayerClient>();
-    ClientResult<bool> blocked = blocks.BlockPlayer(inviteeSession.PlayerId, hostToken);
-    Require(blocked.IsSuccess && blocked.Value, "Host could not block the test account.");
-    try
+        RegisteredClient owner = new(host, hostSession);
+        RegisteredClient invitedPlayer = new(invitee, inviteeSession);
+        EnsureFriendship(owner, invitedPlayer);
+        Require(inviteeNotifications.Subscribe(inviteeToken), "Invitee notification subscription was rejected.");
+        Console.WriteLine("Registered accounts: AUTHENTICATED, FRIENDS, INVITEE ONLINE");
+
+        // Positive scenario: the server must authorize admission to a PRIVATE room.
+        liveLobbyCode = hostLobby.CreateLobby(false, 2, hostToken);
+        ClientResult<List<FriendEntry>> eligible = host.GetRequiredService<ILobbyInvitationClient>()
+            .GetInvitableFriends(liveLobbyCode, hostToken);
+        Require(eligible.IsSuccess && eligible.Value?.Any(friend => friend.PlayerId == inviteeSession.PlayerId) == true,
+            "The online friend was missing from the list of eligible invitees.");
+        SendInvitation(owner, liveLobbyCode, inviteeSession.PlayerId);
+        LobbyInvitationEntry notice = await invitationReceived.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        Require(notice.LobbyCode == liveLobbyCode, "Invitation callback named the wrong lobby.");
+        Require(HasInvitation(invitee, liveLobbyCode, inviteeToken), "Valid invitation not visible to invitee.");
+        LobbyAdmission admission = inviteeLobby.JoinLobby(liveLobbyCode, inviteeToken);
+        Require(string.Equals(admission.LobbyCode, liveLobbyCode, StringComparison.OrdinalIgnoreCase),
+            "Private lobby admission did not return the expected code.");
+        Require(!HasInvitation(invitee, liveLobbyCode, inviteeToken),
+            "Accepted invitation was still pending.");
+        Console.WriteLine("PASS: valid private invitation accepted and consumed by server");
+
+        Require(inviteeLobby.LeaveLobby(liveLobbyCode, inviteeToken), "Invitee failed to leave private room.");
+        SendInvitation(owner, liveLobbyCode, inviteeSession.PlayerId);
+        Require(HasInvitation(invitee, liveLobbyCode, inviteeToken), "The invitation to decline was not pending.");
+        ClientResult<bool> declined = invitee.GetRequiredService<ILobbyInvitationClient>()
+            .DeclineLobbyInvitation(liveLobbyCode, inviteeToken);
+        Require(declined.IsSuccess && declined.Value && !HasInvitation(invitee, liveLobbyCode, inviteeToken),
+            "Declining the invitation did not remove it from the pending list.");
+        Console.WriteLine("PASS: eligible friend can decline an invitation");
+        Require(hostLobby.LeaveLobby(liveLobbyCode, hostToken), "Host failed to leave private room.");
+        liveLobbyCode = null;
+
+        // Negative scenario: an already issued invitation must not admit the player
+        // after the host closes the room, even if a stale UI item remains visible.
+        closedLobbyCode = hostLobby.CreateLobby(false, 2, hostToken);
+        SendInvitation(owner, closedLobbyCode, inviteeSession.PlayerId);
+        Require(HasInvitation(invitee, closedLobbyCode, inviteeToken), "Second invitation was not created.");
+        Require(hostLobby.LeaveLobby(closedLobbyCode, hostToken), "Host did not close second room.");
+        string withdrawn = await invitationWithdrawn.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        Require(withdrawn == closedLobbyCode, "Invitation withdrawal callback named the wrong lobby.");
+
+        bool rejected = false;
+        try
+        {
+            inviteeLobby.JoinLobby(closedLobbyCode, inviteeToken);
+        }
+        catch (FaultException<ServiceFault> fault)
+        {
+            Require(fault.Detail.ErrorCode == ServiceErrorCodes.LobbyNotFound,
+                $"Expected LobbyNotFound; received '{fault.Detail.ErrorCode}'.");
+            string playerMessage = new ClientErrorText(new TextLocalizer())
+                .FromException(fault, "Social.InvitationUnavailable");
+            Require(!string.IsNullOrWhiteSpace(playerMessage)
+                && !string.Equals(playerMessage, fault.Detail.MessageKey, StringComparison.Ordinal),
+                "The server error was not converted into localized player text.");
+            rejected = true;
+        }
+        Require(rejected, "Server admitted the invitee to a closed private room.");
+        Console.WriteLine("PASS: closed private room rejected admission with localized error");
+        disconnectedLobbyCode = hostLobby.CreateLobby(false, 2, hostToken);
+        SendInvitation(owner, disconnectedLobbyCode, inviteeSession.PlayerId);
+        Require(HasInvitation(invitee, disconnectedLobbyCode, inviteeToken), "Disconnect test invitation was not pending.");
+        hostLobby.Disconnect();
+
+        string removedLobby = await disconnectedWithdrawal.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        Require(removedLobby == disconnectedLobbyCode && !HasInvitation(invitee, removedLobby, inviteeToken),
+            "Disconnecting the last member did not withdraw the invitation.");
+        Require(hostLobby.GetCurrentLobby(hostToken) is null, "The disconnected host still belongs to the lobby.");
+        Console.WriteLine("PASS: disconnecting the last member removes the lobby and withdraws its invitation");
+        IBlockedPlayerClient blocks = host.GetRequiredService<IBlockedPlayerClient>();
+        ClientResult<bool> blocked = blocks.BlockPlayer(inviteeSession.PlayerId, hostToken);
+        Require(blocked.IsSuccess && blocked.Value, "Host could not block the test account.");
+        try
+        {
+            Require(FindRelation(host.GetRequiredService<IFriendshipClient>(), hostSession, inviteeSession)
+                == PlayerRelation.Blocked, "The blocker did not see the blocked relationship.");
+            Require(FindRelation(invitee.GetRequiredService<IFriendshipClient>(), inviteeSession, hostSession) is null,
+                "The blocked account could still find the player who blocked it.");
+        }
+        finally
+        {
+            ClientResult<bool> unblocked = blocks.UnblockPlayer(inviteeSession.PlayerId, hostToken);
+            Require(unblocked.IsSuccess && unblocked.Value, "Host could not undo the test block.");
+        }
+        Console.WriteLine("PASS: player search preserves relationships and blocking direction");
+        Console.WriteLine("PASS: Private invitations smoke");
+    }
+    catch (Exception exception)
     {
-        Require(FindRelation(host.GetRequiredService<IFriendshipClient>(), hostSession, inviteeSession)
-            == PlayerRelation.Blocked, "The blocker did not see the blocked relationship.");
-        Require(FindRelation(invitee.GetRequiredService<IFriendshipClient>(), inviteeSession, hostSession) is null,
-            "The blocked account could still find the player who blocked it.");
+        // Never print session tokens or passwords.
+        Console.Error.WriteLine($"FAIL: {exception.GetType().Name}: {SafeError(exception)}");
+        exitCode = 1;
     }
     finally
     {
-        ClientResult<bool> unblocked = blocks.UnblockPlayer(inviteeSession.PlayerId, hostToken);
-        Require(unblocked.IsSuccess && unblocked.Value, "Host could not undo the test block.");
+        inviteeNotifications.Disconnect();
+        inviteeLobby.Disconnect();
+        hostLobby.Disconnect();
+        LogoutQuietly(host);
+        LogoutQuietly(invitee);
     }
-    Console.WriteLine("PASS: player search preserves relationships and blocking direction");
-    Console.WriteLine("PASS: Private invitations smoke");
-    return 0;
-}
-catch (Exception exception)
-{
-    // Never print session tokens or passwords.
-    Console.Error.WriteLine($"FAIL: {exception.GetType().Name}: {SafeError(exception)}");
-    return 1;
-}
-finally
-{
-    inviteeNotifications.Disconnect();
-    inviteeLobby.Disconnect();
-    hostLobby.Disconnect();
-    LogoutQuietly(host);
-    LogoutQuietly(invitee);
-}
 
-void ObserveInvitation(object? sender, LobbyInvitationEntry invitation)
-{
-    if (invitation.LobbyCode == liveLobbyCode)
+    void ObserveInvitation(object? sender, LobbyInvitationEntry invitation)
     {
-        invitationReceived.TrySetResult(invitation);
+        if (invitation.LobbyCode == liveLobbyCode)
+        {
+            invitationReceived.TrySetResult(invitation);
+        }
+    }
+
+    void ObserveWithdrawal(object? sender, string lobbyCode)
+    {
+        if (lobbyCode == closedLobbyCode)
+        {
+            invitationWithdrawn.TrySetResult(lobbyCode);
+        }
+        else if (lobbyCode == disconnectedLobbyCode)
+        {
+            disconnectedWithdrawal.TrySetResult(lobbyCode);
+        }
     }
 }
 
-void ObserveWithdrawal(object? sender, string lobbyCode)
-{
-    if (lobbyCode == closedLobbyCode)
-    {
-        invitationWithdrawn.TrySetResult(lobbyCode);
-    }
-    else if (lobbyCode == disconnectedLobbyCode)
-    {
-        disconnectedWithdrawal.TrySetResult(lobbyCode);
-    }
-}
+return exitCode;
 
 static string SafeError(Exception exception)
 {

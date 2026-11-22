@@ -18,6 +18,9 @@ public sealed class RegisteredPlayerSessions
         ITokenGenerator tokenGenerator,
         TimeProvider timeProvider)
     {
+        ArgumentNullException.ThrowIfNull(sessionTokens);
+        ArgumentNullException.ThrowIfNull(tokenGenerator);
+        ArgumentNullException.ThrowIfNull(timeProvider);
         _sessionTokens = sessionTokens;
         _tokenGenerator = tokenGenerator;
         _timeProvider = timeProvider;

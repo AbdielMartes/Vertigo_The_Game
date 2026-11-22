@@ -9,6 +9,8 @@ public sealed class LobbyLifecycle
 
     public LobbyLifecycle(TimeProvider timeProvider, IFriendshipNotifier notifier)
     {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        ArgumentNullException.ThrowIfNull(notifier);
         _timeProvider = timeProvider;
         _notifier = notifier;
     }

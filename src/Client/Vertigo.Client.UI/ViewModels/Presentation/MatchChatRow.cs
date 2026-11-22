@@ -13,14 +13,16 @@ public sealed class MatchChatRow
 
     internal static string FormatTime(DateTime sentAt, TimeZoneInfo timeZone)
     {
-        if (sentAt == default)
+        string result = string.Empty;
+        if (sentAt != default)
         {
-            return string.Empty;
+
+            DateTime utc = sentAt.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(sentAt, DateTimeKind.Utc)
+                : sentAt.ToUniversalTime();
+            result = TimeZoneInfo.ConvertTimeFromUtc(utc, timeZone).ToString("HH:mm", CultureInfo.InvariantCulture);
         }
-        
-        DateTime utc = sentAt.Kind == DateTimeKind.Unspecified
-            ? DateTime.SpecifyKind(sentAt, DateTimeKind.Utc)
-            : sentAt.ToUniversalTime();
-        return TimeZoneInfo.ConvertTimeFromUtc(utc, timeZone).ToString("HH:mm", CultureInfo.InvariantCulture);
+
+        return result;
     }
 }

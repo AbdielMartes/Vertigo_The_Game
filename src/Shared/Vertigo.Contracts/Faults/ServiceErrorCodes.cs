@@ -10,6 +10,7 @@ public static class ServiceErrorCodes
     public const string LobbyAlreadyStarted = "MSG-ROOM-009";
     public const string InvalidLobbyCapacity = "INVALID_ROOM_CAPACITY";
     public const string InvalidData = "INVALID_DATA";
+    public const string Unexpected = "UNEXPECTED_ERROR";
     public const string UserNotFound = "USER_NOT_FOUND";
     public const string InvalidCode = "INVALID_CODE";
     public const string InvalidCredentials = "INVALID_CREDENTIALS";

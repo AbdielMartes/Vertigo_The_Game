@@ -2,7 +2,7 @@ using Vertigo.Client.Core.Navigation;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking.Sessions.Interfaces;
 using Vertigo.Client.UI.Utilities.Sessions.Services;
-using Vertigo.Client.UnitTests.Sessions;
+using Vertigo.Contracts.Faults;
 
 namespace Vertigo.Client.UnitTests.Sessions;
 
@@ -19,11 +19,13 @@ public sealed class SessionGuardTests
         FakeTransportCleaner transport = new();
         SessionGuard guard = new(sessions, navigator, transport);
 
-        guard.Invalidate(current);
+        guard.Invalidate(current, ServiceMessageKeys.Unauthorized);
 
         Assert.False(sessions.IsAuthenticated);
         Assert.Equal(NavigationPage.Access, navigator.CurrentPage);
         Assert.Equal(1, transport.DisconnectCount);
+        Assert.Equal(ServiceMessageKeys.Unauthorized, guard.TakeInvalidationMessage());
+        Assert.Null(guard.TakeInvalidationMessage());
     }
 
     [Fact]
@@ -39,11 +41,12 @@ public sealed class SessionGuardTests
         FakeTransportCleaner transport = new();
         SessionGuard guard = new(sessions, navigator, transport);
 
-        guard.Invalidate(previous);
+        guard.Invalidate(previous, ServiceMessageKeys.Unauthorized);
 
         Assert.Same(current, sessions.GetActiveSession());
         Assert.Equal(NavigationPage.Home, navigator.CurrentPage);
         Assert.Equal(0, transport.DisconnectCount);
+        Assert.Null(guard.TakeInvalidationMessage());
     }
 
     [Fact]

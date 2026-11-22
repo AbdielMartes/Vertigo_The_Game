@@ -49,87 +49,91 @@ public sealed class LobbyInvitationsViewModel : SocialViewModelBase
 
     public async Task RefreshAsync()
     {
-        if (IsBusy) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (!IsBusy && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<List<LobbyInvitationEntry>> result = await Task.Run(() => _client.GetPendingLobbyInvitations(token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
-            PendingInvitations.Clear();
-            foreach (LobbyInvitationEntry invitation in result.Value) PendingInvitations.Add(invitation);
-            ClearError();
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+            string token = session.Token;
+            IsBusy = true;
+            try
             {
-                ErrorMessage = Text.Get("Social.InvitationFailed");
+                ClientResult<List<LobbyInvitationEntry>> result = await Task.Run(() => _client.GetPendingLobbyInvitations(token));
+                if (!Operation.Check(result, session)) return;
+                if (!result.IsSuccess || result.Value is null)
+                {
+                    ErrorMessage = Operation.Error(result, "Social.InvitationFailed");
+                }
+                else
+                {
+                    PendingInvitations.Clear();
+                    foreach (LobbyInvitationEntry invitation in result.Value) PendingInvitations.Add(invitation);
+                    ClearError();
+                }
             }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.InvitationFailed");
+                }
+            }
+            finally { IsBusy = false; }
         }
-        finally { IsBusy = false; }
     }
 
     private async Task GetInvitableAsync()
     {
-        if (IsBusy || string.IsNullOrWhiteSpace(LobbyCode)) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (!IsBusy && !string.IsNullOrWhiteSpace(LobbyCode) && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<List<FriendEntry>> result = await Task.Run(() => _client.GetInvitableFriends(LobbyCode.Trim(), token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
-            InvitableFriends.Clear();
-            foreach (FriendEntry friend in result.Value) InvitableFriends.Add(friend);
-            ClearError();
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+            string token = session.Token;
+            IsBusy = true;
+            try
             {
-                ErrorMessage = Text.Get("Social.InvitationFailed");
+                ClientResult<List<FriendEntry>> result = await Task.Run(() => _client.GetInvitableFriends(LobbyCode.Trim(), token));
+                if (!Operation.Check(result, session)) return;
+                if (!result.IsSuccess || result.Value is null)
+                {
+                    ErrorMessage = Operation.Error(result, "Social.InvitationFailed");
+                }
+                else
+                {
+                    InvitableFriends.Clear();
+                    foreach (FriendEntry friend in result.Value) InvitableFriends.Add(friend);
+                    ClearError();
+                }
             }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.InvitationFailed");
+                }
+            }
+            finally { IsBusy = false; }
         }
-        finally { IsBusy = false; }
     }
 
     private async Task InviteAsync()
     {
-        if (IsBusy || TargetPlayerId == Guid.Empty || string.IsNullOrWhiteSpace(LobbyCode)) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (!IsBusy && TargetPlayerId != Guid.Empty && !string.IsNullOrWhiteSpace(LobbyCode)
+            && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            List<Guid> targets = new() { TargetPlayerId };
-            ClientResult<List<Guid>> result = await Task.Run(() => _client.SendLobbyInvitations(LobbyCode.Trim(), targets, token));
-            if (!Operation.Check(result, session)) return;
-            ErrorMessage = result.IsSuccess ? string.Empty : Operation.Error(result, "Social.InvitationFailed");
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+            string token = session.Token;
+            IsBusy = true;
+            try
             {
-                ErrorMessage = Text.Get("Social.InvitationFailed");
+                List<Guid> targets = new() { TargetPlayerId };
+                ClientResult<List<Guid>> result = await Task.Run(() => _client.SendLobbyInvitations(LobbyCode.Trim(), targets, token));
+                if (!Operation.Check(result, session)) return;
+                ErrorMessage = result.IsSuccess ? string.Empty : Operation.Error(result, "Social.InvitationFailed");
             }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.InvitationFailed");
+                }
+            }
+            finally { IsBusy = false; }
         }
-        finally { IsBusy = false; }
     }
 
     // Joining the lobby is the server-side acceptance of an invitation.
@@ -198,31 +202,35 @@ public sealed class LobbyInvitationsViewModel : SocialViewModelBase
 
     private async Task DeclineAsync()
     {
-        if (IsBusy || string.IsNullOrWhiteSpace(DeclinedCode)) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        if (!IsBusy && !string.IsNullOrWhiteSpace(DeclinedCode) && Operation.GetRegisteredSession() is { } session)
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<bool> result = await Task.Run(() => _client.DeclineLobbyInvitation(DeclinedCode.Trim(), token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || !result.Value) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
-        }
-        catch (Exception)
-        {
+            string token = session.Token;
+            IsBusy = true;
+            try
+            {
+                ClientResult<bool> result = await Task.Run(() => _client.DeclineLobbyInvitation(DeclinedCode.Trim(), token));
+                bool isCurrent = Operation.Check(result, session);
+                if (isCurrent && (!result.IsSuccess || !result.Value))
+                {
+                    ErrorMessage = Operation.Error(result, "Social.InvitationFailed");
+                }
+                if (!isCurrent || !result.IsSuccess || !result.Value)
+                {
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                if (Operation.IsCurrent(session))
+                {
+                    ErrorMessage = Text.Get("Social.InvitationFailed");
+                }
+            }
+            finally { IsBusy = false; }
             if (Operation.IsCurrent(session))
             {
-                ErrorMessage = Text.Get("Social.InvitationFailed");
+                await RefreshAsync();
             }
-        }
-        finally { IsBusy = false; }
-        if (Operation.IsCurrent(session))
-        {
-            await RefreshAsync();
         }
     }
 

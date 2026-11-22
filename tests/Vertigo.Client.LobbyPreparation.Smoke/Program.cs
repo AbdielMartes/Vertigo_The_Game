@@ -20,6 +20,7 @@ using ManualResetEventSlim hostTransferredEvent = new(false);
 
 string? firstCode = null;
 string? secondCode = null;
+int exitCode = 0;
 try
 {
     string hostToken = CreateGuest(first);
@@ -167,12 +168,11 @@ try
     Console.WriteLine("PASS: HOST TRANSFER CALLBACK");
     Require(guestLobby.LeaveLobby(secondCode, guestToken), "New host could not leave");
     Console.WriteLine("PASS: Lobby preparation smoke");
-    return 0;
 }
 catch (Exception exception)
 {
     Console.Error.WriteLine($"FAIL: {exception.GetType().Name}: {exception.Message}");
-    return 1;
+    exitCode = 1;
 }
 finally
 {
@@ -181,6 +181,8 @@ finally
     LogoutQuietly(first);
     LogoutQuietly(second);
 }
+
+return exitCode;
 
 static ServiceProvider CreateClient()
 {

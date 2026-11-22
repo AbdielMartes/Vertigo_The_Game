@@ -144,8 +144,8 @@ public sealed class MatchViewModelTests
         }
 
         Assert.Equal(100, model.ChatMessages.Count);
-        Assert.Equal("#100", model.ChatMessages[0].Text);
-        Assert.Equal("#1", model.ChatMessages[^1].Text);
+        Assert.Equal("#1", model.ChatMessages[0].Text);
+        Assert.Equal("#100", model.ChatMessages[^1].Text);
     }
 
     [Fact]
@@ -237,7 +237,7 @@ public sealed class MatchViewModelTests
     }
 
     [Fact]
-    public void ApplyBoard_WithRecentMoves_ShowsMostRecentFirst()
+    public void ApplyBoard_WithRecentMoves_ShowsMostRecentLast()
     {
         MatchViewModel model = CreateModel();
         Guid matchId = Guid.NewGuid();
@@ -259,11 +259,47 @@ public sealed class MatchViewModelTests
         Assert.True(model.ApplyBoard(board));
         Assert.False(model.ApplyBoard(new MatchBoardSnapshot { MatchId = matchId, Revision = 4 }));
 
-        string[] expected = { "Ana usó un Plano Maestro: 20 → 24 → 30 · torre 3",
-            "Beto desmontó la torre 2.", "Ana jugó 12 → 15 · torre 1" };
+        string[] expected = { "Ana jugó 12 → 15 · torre 1",
+            "Beto desmontó la torre 2.", "Ana usó un Plano Maestro: 20 → 24 → 30 · torre 3" };
         Assert.Equal(expected, model.RecentMoves.Select(move => move.Text));
         model.Reset();
         Assert.Empty(model.RecentMoves);
+    }
+
+    [Fact]
+    public void ApplyBoard_OnlyNewMovesNotifyHistoryObservers()
+    {
+        MatchViewModel model = CreateModel();
+        Guid matchId = Guid.NewGuid();
+        model.Activate(matchId, "ABC234");
+        int changes = 0;
+        model.RecentMoves.CollectionChanged += (_, _) => changes++;
+        ApplyMove(revision: 5, moveRevision: 5);
+        Assert.True(changes > 0);
+
+        changes = 0;
+        ApplyMove(revision: 6, moveRevision: 5);
+        Assert.Equal(0, changes);
+
+        ApplyMove(revision: 7, moveRevision: 7);
+        Assert.True(changes > 0);
+        Assert.Equal(7, Assert.Single(model.RecentMoves).Revision);
+
+        void ApplyMove(long revision, long moveRevision)
+        {
+            Assert.True(model.ApplyBoard(new MatchBoardSnapshot
+            {
+                MatchId = matchId,
+                Revision = revision,
+                RecentMoves = [new MatchBoardMove
+                {
+                    Revision = moveRevision,
+                    PlayerUsername = "Ana",
+                    ActionKind = MatchBoardActionKind.Dismantle,
+                    PilePosition = 1
+                }]
+            }));
+        }
     }
 
     [Fact]

@@ -8,6 +8,7 @@ public sealed class PlayerSession
 
     public PlayerSession(TimeProvider timeProvider)
     {
+        ArgumentNullException.ThrowIfNull(timeProvider);
         _timeProvider = timeProvider;
     }
 

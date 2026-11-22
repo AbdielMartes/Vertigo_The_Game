@@ -196,15 +196,12 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
             if (session is null)
             {
                 _guard.Invalidate();
-                return;
             }
-            if (session.IsGuest)
+            else if (session.IsGuest)
             {
                 _navigation.NavigateTo(NavigationPage.Home);
-                return;
             }
-            bool isSubscribed = await EnsureSubscribedAsync(session, generation);
-            if (isSubscribed)
+            else if (await EnsureSubscribedAsync(session, generation))
             {
                 await RefreshSectionsAsync(session, generation);
             }
@@ -268,18 +265,14 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
         }
 
         await Friends.RefreshAsync();
-        if (!IsActive(session, generation))
+        if (IsActive(session, generation))
         {
-            return;
+            await Blocked.RefreshAsync();
+            if (IsActive(session, generation))
+            {
+                await Invitations.RefreshAsync();
+            }
         }
-
-        await Blocked.RefreshAsync();
-        if (!IsActive(session, generation))
-        {
-            return;
-        }
-
-        await Invitations.RefreshAsync();
     }
 
     private bool IsActive(SessionSnapshot session, int generation)

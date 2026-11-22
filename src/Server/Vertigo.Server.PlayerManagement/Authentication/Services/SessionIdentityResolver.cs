@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using CoreWCF;
 using Microsoft.Extensions.Logging;
 using Vertigo.Contracts.Faults;
@@ -31,17 +32,33 @@ public sealed class SessionIdentityResolver : ISessionIdentityResolver
         SessionIdentityResolverDependencies dependencies,
         ILogger<SessionIdentityResolver> logger)
     {
+        ArgumentNullException.ThrowIfNull(dependencies);
+        ArgumentNullException.ThrowIfNull(logger);
         _sessionTokenRepository = dependencies.SessionTokenRepository;
         _tokenGenerator = dependencies.TokenGenerator;
         _guests = dependencies.Guests;
         _logger = logger;
     }
 
-    public SessionIdentity? Resolve(string token)
+    public SessionIdentity? Resolve(string? token)
+    {
+        return Resolve(token, out _);
+    }
+
+    private SessionIdentity? Resolve(string? token, out string rejection)
     {
         SessionIdentity? identity = null;
-        if (!string.IsNullOrWhiteSpace(token) && token.Length == SessionTokenLength)
+        if (string.IsNullOrWhiteSpace(token))
         {
+            rejection = "MissingToken";
+        }
+        else if (token.Length != SessionTokenLength || !token.All(char.IsAsciiHexDigit))
+        {
+            rejection = "MalformedToken";
+        }
+        else
+        {
+            rejection = "UnknownOrInactiveToken";
             string tokenHash = _tokenGenerator.HashSessionToken(token);
             identity = _guests.Find(tokenHash);
             if (identity is null)
@@ -57,31 +74,32 @@ public sealed class SessionIdentityResolver : ISessionIdentityResolver
         return identity;
     }
 
-    public SessionIdentity Require(string token)
+    public SessionIdentity Require(string? token, [CallerMemberName] string operation = "")
     {
-        SessionIdentity? identity = Resolve(token);
+        SessionIdentity? identity = Resolve(token, out string rejection);
         if (identity is null)
         {
-            LogSecurityEvent(SessionValidationFailedEvent, FailedResult, null);
+            LogSecurityEvent(SessionValidationFailedEvent, operation, (FailedResult, rejection, null));
             throw CreateUnauthorizedFault();
         }
 
         return identity;
     }
 
-    public SessionIdentity RequireRegistered(string token)
+    public SessionIdentity RequireRegistered(string? token, [CallerMemberName] string operation = "")
     {
-        SessionIdentity identity = Require(token);
+        SessionIdentity identity = Require(token, operation);
         if (identity.IsGuest)
         {
-            LogSecurityEvent(UnauthorizedAccessEvent, DeniedResult, identity.PlayerId);
+            LogSecurityEvent(UnauthorizedAccessEvent, operation, (DeniedResult, "RegisteredPlayerRequired", identity.PlayerId));
             throw CreateUnauthorizedFault();
         }
 
         return identity;
     }
 
-    private void LogSecurityEvent(EventId eventId, string result, Guid? playerId)
+    private void LogSecurityEvent(EventId eventId, string operation,
+        (string Result, string Reason, Guid? PlayerId) rejection)
     {
         Dictionary<string, object> properties = new()
         {
@@ -90,7 +108,8 @@ public sealed class SessionIdentityResolver : ISessionIdentityResolver
 
         using (IDisposable? scope = _logger.BeginScope(properties))
         {
-            _logger.LogWarning(eventId, "Session access {Result}. PlayerId: {PlayerId}", result, playerId);
+            _logger.LogWarning(eventId, "Session access {Result} for {Operation}. Reason: {Reason}. PlayerId: {PlayerId}",
+                rejection.Result, operation, rejection.Reason, rejection.PlayerId);
         }
     }
 

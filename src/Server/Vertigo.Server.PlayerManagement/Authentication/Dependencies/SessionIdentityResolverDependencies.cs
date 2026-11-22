@@ -17,6 +17,9 @@ public sealed class SessionIdentityResolverDependencies
         ITokenGenerator tokenGenerator,
         IGuestSessionRegistry guests)
     {
+        ArgumentNullException.ThrowIfNull(sessionTokenRepository);
+        ArgumentNullException.ThrowIfNull(tokenGenerator);
+        ArgumentNullException.ThrowIfNull(guests);
         SessionTokenRepository = sessionTokenRepository;
         TokenGenerator = tokenGenerator;
         Guests = guests;

@@ -170,31 +170,38 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
         if (session is null)
         {
             _coordinator.Invalidate();
-            return;
         }
-        if (session.IsGuest)
+        else if (session.IsGuest)
         {
             ErrorMessage = _text.Get("Social.RegisteredOnly");
-            return;
         }
-        _navigation.NavigateTo(NavigationPage.Social);
+        else
+        {
+            _navigation.NavigateTo(NavigationPage.Social);
+        }
     }
 
     private async Task LogoutAsync()
     {
-        if (IsBusy || !string.IsNullOrEmpty(_lobby.LobbyCode)) return;
-        if (!_coordinator.HasActiveSession()) return;
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
+        if (!IsBusy && string.IsNullOrEmpty(_lobby.LobbyCode) && _coordinator.HasActiveSession())
         {
-            SessionSnapshot? session = _playerSession.GetActiveSession();
-            ClientResult<bool> result = await Task.Run(_sessions.Logout);
-            if (_errors.IsUnauthorized(result)) { _coordinator.Invalidate(session); return; }
-            if (result.IsSuccess && result.Value) _coordinator.Invalidate(session);
-            else ErrorMessage = _errors.FromResult(result, "Home.LogoutFailed");
+            IsBusy = true;
+            ErrorMessage = string.Empty;
+            try
+            {
+                SessionSnapshot? session = _playerSession.GetActiveSession();
+                ClientResult<bool> result = await Task.Run(_sessions.Logout);
+                if (_errors.IsUnauthorized(result) || (result.IsSuccess && result.Value))
+                {
+                    _coordinator.Invalidate(session);
+                }
+                else
+                {
+                    ErrorMessage = _errors.FromResult(result, "Home.LogoutFailed");
+                }
+            }
+            catch (Exception exception) { ErrorMessage = _errors.FromException(exception, "Home.LogoutFailed"); }
+            finally { IsBusy = false; }
         }
-        catch (Exception exception) { ErrorMessage = _errors.FromException(exception, "Home.LogoutFailed"); }
-        finally { IsBusy = false; }
     }
 }

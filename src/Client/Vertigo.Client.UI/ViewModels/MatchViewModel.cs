@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
+using Vertigo.Contracts.Synchronization;
 using CommunityToolkit.Mvvm.Input;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
 using Vertigo.Client.UI.Utilities.Validation;
@@ -59,6 +61,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     private MatchCardRow? _selectedCard;
     private MatchPileRow? _selectedPile;
     private long _currentBoardRevision;
+    private (SessionSnapshot Session, MatchSyncState State)? _syncBaseline;
     private bool _pendingBoardRefresh;
     private long _notifiedRevision;
     private IReadOnlyList<MatchBoardMove> _recentMoves = Array.Empty<MatchBoardMove>();
@@ -177,6 +180,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         SelectedCard = null;
         SelectedPile = null;
         _currentBoardRevision = 0;
+        _syncBaseline = null;
         _pendingBoardRefresh = false;
         _notifiedRevision = 0;
         _recentMoves = Array.Empty<MatchBoardMove>();
@@ -316,12 +320,13 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         _hasCurrentHand = false;
         IsLoadingBoard = true;
         int lossCount = _connectionLossCount;
+        MatchSyncState? baseline = _syncBaseline is { } cached && ReferenceEquals(cached.Session, request.Session)
+            ? cached.State : null;
         try
         {
-            (MatchBoardSnapshot board, MatchPrivateHand? hand, long receivedAt) =
-                await Task.Run(() => ReadBoard(lobbies, options, request));
+            var state = await Task.Run(() => ReadBoard(lobbies, (options.LobbyCode, options.Reconnect, baseline), request));
             await Dispatcher.UIThread.InvokeAsync(() =>
-                ApplyLoadedBoard((board, hand, receivedAt), request, (options.Reconnect, lossCount)));
+                ApplyLoadedBoard(state, request, (options.Reconnect, lossCount)));
         }
         catch (FaultException<ServiceFault> exception) when (options.Reconnect
             && exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotFound)
@@ -347,16 +352,24 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     }
 
     private void ApplyLoadedBoard(
-        (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) state,
+        (MatchSyncState Snapshot, long ReceivedAt, long? SupersededRevision) state,
         BoardRequestIdentity request,
         (bool Requested, int LossCount) reconnect)
     {
         if (IsCurrent(request.Session, request.MatchId, request.Generation))
         {
-            ApplyBoardAndHand(state.Board, state.Hand, state.ReceivedAt);
+            MatchBoardSnapshot board = state.Snapshot.Board;
+            long? supersededRevision = reconnect.Requested && reconnect.LossCount == _connectionLossCount
+                ? state.SupersededRevision : null;
+            ApplySynchronizedBoard(state.Snapshot, state.ReceivedAt, supersededRevision);
+            if (board.Revision == _currentBoardRevision)
+            {
+                _syncBaseline = (request.Session, state.Snapshot);
+            }
+
             if (reconnect.Requested && reconnect.LossCount == _connectionLossCount
-                && state.Board.MatchId == request.MatchId && state.Board.Revision == _currentBoardRevision
-                && (_hasCurrentHand || state.Board.ExpelledPlayerIds.Contains(request.Session.PlayerId)))
+                && board.Revision == _currentBoardRevision
+                && (_hasCurrentHand || board.ExpelledPlayerIds.Contains(request.Session.PlayerId)))
             {
                 SetNeedsReconnect(false);
             }
@@ -367,53 +380,46 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         }
     }
 
-    private (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadBoard(
-        ILobbyClient lobbies, (string LobbyCode, bool Reconnect) options, BoardRequestIdentity request)
+    internal void ApplySynchronizedBoard(MatchSyncState state, long receivedAt, long? supersededRevision)
+    {
+        if (state.Board.MatchId == _matchId && supersededRevision == _currentBoardRevision
+            && state.Board.Revision < _currentBoardRevision)
+        {
+            _boardRevision.Reset();
+            _currentBoardRevision = 0;
+            _notifiedRevision = state.Board.Revision;
+        }
+
+        ApplyBoardAndHand(state.Board, state.Hand, receivedAt);
+    }
+
+    private (MatchSyncState Snapshot, long ReceivedAt, long? SupersededRevision) ReadBoard(
+        ILobbyClient lobbies, (string LobbyCode, bool Reconnect, MatchSyncState? Baseline) options,
+        BoardRequestIdentity request)
     {
         if (options.Reconnect)
         {
             lobbies.ReconnectMatch(CreatePresenceRequest(options.LobbyCode, request.MatchId, request.Session.Token));
         }
 
-        return ReadBoardAndHand(lobbies, options.LobbyCode, request.Session);
-    }
-
-    private (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadBoardAndHand(
-        ILobbyClient lobbies, string lobbyCode, SessionSnapshot session)
-    {
-        (MatchBoardSnapshot board, MatchPrivateHand? hand, long receivedAt) = ReadSnapshot();
-        if (hand?.Revision is long revision && revision != board.Revision)
+        MatchSyncRequest sync = new()
         {
-            (board, hand, receivedAt) = ReadSnapshot();
+            LobbyCode = options.LobbyCode,
+            MatchId = request.MatchId,
+            SessionToken = request.Session.Token,
+            Known = options.Baseline is null ? null : MatchSynchronization.Describe(options.Baseline)
+        };
+        MatchSyncUpdate update = lobbies.GetMatchUpdate(sync);
+        long sampleTimestamp = _turnClock.GetTimestamp();
+        if (update.MatchId != request.MatchId)
+        {
+            throw new InvalidDataException("The match update belongs to a different match.");
         }
 
-        return (board, hand, receivedAt);
-
-        (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadSnapshot()
-        {
-            MatchBoardSnapshot snapshot = lobbies.GetMatchBoard(lobbyCode, session.Token);
-            long sampleTimestamp = _turnClock.GetTimestamp();
-            MatchPrivateHand? privateHand = null;
-            if (!snapshot.ExpelledPlayerIds.Contains(session.PlayerId))
-            {
-                try
-                {
-                    privateHand = lobbies.GetMatchPrivateHand(lobbyCode, session.Token);
-                }
-                catch (FaultException<ServiceFault> exception)
-                    when (exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotFound)
-                {
-                    snapshot = lobbies.GetMatchBoard(lobbyCode, session.Token);
-                    sampleTimestamp = _turnClock.GetTimestamp();
-                    if (!snapshot.ExpelledPlayerIds.Contains(session.PlayerId))
-                    {
-                        throw;
-                    }
-                }
-            }
-
-            return (snapshot, privateHand, sampleTimestamp);
-        }
+        MatchSyncState state = MatchSynchronization.Apply(update, options.Baseline, request.Session.PlayerId);
+        long? supersededRevision = update.BaseRevision is null && sync.Known?.Revision > update.Revision
+            ? sync.Known.Revision : null;
+        return (state, sampleTimestamp, supersededRevision);
     }
 
     internal void ApplyBoardAndHand(MatchBoardSnapshot board, MatchPrivateHand? hand, long? receivedAt = null)
@@ -1162,10 +1168,14 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
 
     private void RefreshMoveHistory()
     {
-        RecentMoves.Clear();
-        foreach (MatchBoardMove move in _recentMoves.Reverse())
+        MatchMoveRow[] rows = _recentMoves.Select(move => new MatchMoveRow(FormatMove(move), move.Revision)).ToArray();
+        if (!RecentMoves.SequenceEqual(rows))
         {
-            RecentMoves.Add(new MatchMoveRow(FormatMove(move)));
+            RecentMoves.Clear();
+            foreach (MatchMoveRow row in rows)
+            {
+                RecentMoves.Add(row);
+            }
         }
     }
 

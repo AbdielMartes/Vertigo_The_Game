@@ -1,3 +1,4 @@
+using System;
 using Vertigo.Client.Core.Navigation;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking.Sessions.Interfaces;
@@ -10,9 +11,13 @@ public sealed class SessionGuard : ISessionGuard
     private readonly PlayerSession _session;
     private readonly INavigator _navigation;
     private readonly ISessionTransportCleaner _transport;
+    private string? _invalidationMessage;
 
     public SessionGuard(PlayerSession session, INavigator navigation, ISessionTransportCleaner transport)
     {
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(navigation);
+        ArgumentNullException.ThrowIfNull(transport);
         _session = session;
         _navigation = navigation;
         _transport = transport;
@@ -20,13 +25,13 @@ public sealed class SessionGuard : ISessionGuard
 
     public bool HasActiveSession()
     {
-        if (_session.GetActiveSession() is not null)
+        bool isActive = _session.GetActiveSession() is not null;
+        if (!isActive)
         {
-            return true;
+            Invalidate();
         }
 
-        Invalidate();
-        return false;
+        return isActive;
     }
 
     public bool IsCurrent(SessionSnapshot session)
@@ -34,25 +39,36 @@ public sealed class SessionGuard : ISessionGuard
         return ReferenceEquals(_session.GetActiveSession(), session);
     }
 
-    public void Invalidate(SessionSnapshot? session = null)
+    public void Invalidate(SessionSnapshot? session = null, string? messageKey = null)
     {
-        // A late response from an older session cannot close the current channels.
-        if (session is not null)
-        {
-            SessionSnapshot? current = _session.GetActiveSession();
-            if (current is not null && !ReferenceEquals(current, session))
-            {
-                return;
-            }
-            _session.Clear(session);
-        }
 
-        if (_session.GetActiveSession() is not null)
+        SessionSnapshot? current = session is null ? null : _session.GetActiveSession();
+        if (current is not null && !ReferenceEquals(current, session))
         {
             return;
         }
 
-        _transport.DisconnectAll();
-        _navigation.NavigateTo(NavigationPage.Access);
+        if (session is not null)
+        {
+            _session.Clear(session);
+        }
+
+        if (_session.GetActiveSession() is null)
+        {
+            if (messageKey is not null)
+            {
+                _invalidationMessage = messageKey;
+            }
+
+            _transport.DisconnectAll();
+            _navigation.NavigateTo(NavigationPage.Access);
+        }
+    }
+
+    public string? TakeInvalidationMessage()
+    {
+        string? message = _invalidationMessage;
+        _invalidationMessage = null;
+        return message;
     }
 }

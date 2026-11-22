@@ -36,20 +36,21 @@ public sealed class ChatLanguageFilter
     public bool ContainsBlockedLanguage(string message)
     {
         string spelling = NormalizeSpelling(message);
-        if (MatchesBlockedTerm(spelling))
-        {
-            return true;
-        }
+        return MatchesBlockedTerm(spelling) || MatchesAlternateSpelling(spelling);
+    }
 
+    private bool MatchesAlternateSpelling(string spelling)
+    {
         string obfuscatedSpelling = string.Concat(spelling.Select(ReplaceDigit));
-        if (spelling != obfuscatedSpelling && MatchesBlockedTerm(obfuscatedSpelling))
+        bool blocked = spelling != obfuscatedSpelling && MatchesBlockedTerm(obfuscatedSpelling);
+        if (!blocked)
         {
-            return true;
+            string joined = SpelledWordPattern.Replace(obfuscatedSpelling,
+                match => SeparatorPattern.Replace(match.Value, string.Empty));
+            blocked = joined != obfuscatedSpelling && MatchesBlockedTerm(joined);
         }
 
-        string joined = SpelledWordPattern.Replace(obfuscatedSpelling,
-            match => SeparatorPattern.Replace(match.Value, string.Empty));
-        return joined != obfuscatedSpelling && MatchesBlockedTerm(joined);
+        return blocked;
     }
 
     private bool MatchesBlockedTerm(string spelling)

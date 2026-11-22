@@ -9,6 +9,7 @@ using Vertigo.Contracts.Faults;
 
 const int MaximumMatchAttempts = 12;
 
+int exitCode = 0;
 try
 {
     bool played = false;
@@ -21,28 +22,29 @@ try
     await RunMatchChatAsync();
     await RunExpulsionVoteAsync();
     await RunMatchExitAsync();
-    return 0;
 }
 catch (FaultException<ServiceFault> exception)
 {
     Console.Error.WriteLine($"FAIL BUSINESS: {exception.Detail.ErrorCode}; Key={exception.Detail.MessageKey}");
-    return 1;
+    exitCode = 1;
 }
 catch (TimeoutException)
 {
     Console.Error.WriteLine("FAIL TIMEOUT: GetMatchBoard smoke timed out.");
-    return 1;
+    exitCode = 1;
 }
 catch (CommunicationException exception)
 {
     Console.Error.WriteLine($"FAIL TRANSPORT: {exception.GetType().Name}");
-    return 1;
+    exitCode = 1;
 }
 catch (Exception exception)
 {
     Console.Error.WriteLine($"FAIL UNEXPECTED: {exception.GetType().Name} (0x{exception.HResult:X8})");
-    return 1;
+    exitCode = 1;
 }
+
+return exitCode;
 
 static async Task<bool> RunMatchAsync()
 {
@@ -53,6 +55,7 @@ static async Task<bool> RunMatchAsync()
     using ILobbyClient memberLobby = member.GetRequiredService<ILobbyClient>();
     using ILobbyClient outsiderLobby = outsider.GetRequiredService<ILobbyClient>();
 
+    bool dismantled = false;
     try
     {
         UserSession hostSession = CreateGuest(host);
@@ -77,32 +80,28 @@ static async Task<bool> RunMatchAsync()
         VerifyUnearnedMasterPlan(opening, first, lobbyCode);
 
         (int CardNumber, int PilePosition) move = FindPlacement(first, opening.Hand);
-        if (move.PilePosition == 0)
+        if (move.PilePosition != 0)
         {
-            return false;
+            await VerifyPlacementAsync(
+                opening.Player, waiting.Player, (lobbyCode, first, opening.Hand, move));
+
+            IEnumerable<int> expectedMemberCards = isHostOpening
+                ? memberHand.Cards
+                : memberHand.Cards.Where(card => card != move.CardNumber);
+
+            UserSession outsiderSession = CreateGuest(outsider);
+            VerifyOutsiderDenial(new SmokeParticipant(outsiderLobby, outsiderSession),
+                lobbyCode, first.Revision + 1);
+            VerifyReconnectedMember(memberPlayer, (lobbyCode, memberHand, expectedMemberCards),
+                (opening.Player.Session, move));
+
+            dismantled = await RoundClosureSmoke.VerifyAsync((hostLobby, hostSession), (memberLobby, memberSession),
+                lobbyCode);
+            if (dismantled)
+            {
+                Console.WriteLine("PASS: ROUND SUMMARY AFTER RECONNECTION, TURN EXPIRY AND ABANDONMENT FOR BOTH CLIENTS");
+            }
         }
-
-        await VerifyPlacementAsync(
-            opening.Player, waiting.Player, (lobbyCode, first, opening.Hand, move));
-
-        IEnumerable<int> expectedMemberCards = isHostOpening
-            ? memberHand.Cards
-            : memberHand.Cards.Where(card => card != move.CardNumber);
-
-        UserSession outsiderSession = CreateGuest(outsider);
-        VerifyOutsiderDenial(new SmokeParticipant(outsiderLobby, outsiderSession),
-            lobbyCode, first.Revision + 1);
-        VerifyReconnectedMember(memberPlayer, (lobbyCode, memberHand, expectedMemberCards),
-            (opening.Player.Session, move));
-
-        bool dismantled = await RoundClosureSmoke.VerifyAsync((hostLobby, hostSession), (memberLobby, memberSession),
-            lobbyCode);
-        if (dismantled)
-        {
-            Console.WriteLine("PASS: ROUND SUMMARY AFTER RECONNECTION, TURN EXPIRY AND ABANDONMENT FOR BOTH CLIENTS");
-        }
-
-        return dismantled;
     }
     finally
     {
@@ -112,6 +111,8 @@ static async Task<bool> RunMatchAsync()
         member.GetRequiredService<ISessionCoordinator>().Logout();
         outsider.GetRequiredService<ISessionCoordinator>().Logout();
     }
+
+    return dismantled;
 }
 
 static (string LobbyCode, Guid MatchId) StartSmokeMatch(

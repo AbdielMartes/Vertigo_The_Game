@@ -1,13 +1,17 @@
 using Vertigo.Contracts.Internal;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using CoreWCF;
 using Vertigo.Contracts.Callbacks;
 using Vertigo.Contracts.Models;
+using Vertigo.Contracts.Synchronization;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Server.Matchmaking.Lobbies;
 using Vertigo.Server.Matchmaking.Lobbies.Match;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
 using Vertigo.Server.PlayerManagement.Authentication.Models;
 
@@ -18,10 +22,10 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 {
     private const string LobbyCodeAlphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     private const int LobbyCodeLength = 6;
-    private const int MinimumMaxPlayers = 2;
-    private const int MaximumMaxPlayers = 6;
+    private static readonly EventId InvalidSessionHeaderEvent = new(2104, "InvalidLobbySessionHeader");
 
     private readonly Dictionary<string, LobbyState> _lobbies = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<Guid> _turnClockWriteFailures = new();
     private readonly object _lobbyLock = new();
     private readonly HashSet<string> _watchedSessions = new();
     private readonly LobbyLifecycle _lifecycle;
@@ -31,21 +35,49 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     public LobbyService(LobbyLifecycle lifecycle, IServiceScopeFactory scopeFactory,
         LobbyGameOperations gameOperations)
     {
+        ArgumentNullException.ThrowIfNull(lifecycle);
+        ArgumentNullException.ThrowIfNull(scopeFactory);
+        ArgumentNullException.ThrowIfNull(gameOperations);
         _lifecycle = lifecycle;
         _scopeFactory = scopeFactory;
         _gameOperations = gameOperations;
+        using IServiceScope scope = scopeFactory.CreateScope();
+        IMatchRecovery? recovery = scope.ServiceProvider.GetService<IMatchRecovery>();
+        if (recovery is not null)
+        {
+            RestoreLobbies(recovery);
+        }
     }
 
-    public string CreateLobby(bool isPublic, int maxPlayers, string sessionToken)
+    private void RestoreLobbies(IMatchRecovery recovery)
     {
-        if (maxPlayers < MinimumMaxPlayers || maxPlayers > MaximumMaxPlayers)
+        foreach ((MatchSessionSnapshot session, RecoverableLobby data, IReadOnlyList<Guid> players)
+            in recovery.GetRecoveredMatches())
+        {
+            LobbySettings settings = new()
+            {
+                LobbyCode = session.LobbyCode,
+                HostPlayerId = players.Contains(session.InitialHostPlayerId)
+                    ? session.InitialHostPlayerId : players[0],
+                IsPublic = data.IsPublic,
+                MaxPlayers = data.MaxPlayers,
+                CreatedAtUtc = data.CreatedAtUtc
+            };
+            LobbyState lobby = new(settings, session.LobbyInstanceId);
+            lobby.RestoreMatch(session.MatchId, data, players);
+            _lobbies.Add(lobby.LobbyCode, lobby);
+        }
+    }
+
+    public string CreateLobby(bool isPublic, int maxPlayers, string? sessionToken)
+    {
+        if (!LobbyState.IsValidCapacity(maxPlayers))
         {
             throw CreateFault(ServiceErrorCodes.InvalidLobbyCapacity, ServiceMessageKeys.InvalidLobbyCapacity);
         }
 
-        SessionIdentity identity = ResolveIdentity(sessionToken);
+        SessionIdentity identity = ResolveIdentity(ReadCreationToken(sessionToken));
         LobbyMember host = CreateMember(identity);
-        LobbyConnection hostConnection = new(host, GetCurrentCallback(), WatchCurrentSession());
         LobbyCreation creation = _lifecycle.PrepareCreation(isPublic, maxPlayers);
         string lobbyCode;
 
@@ -56,6 +88,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 throw CreateFault(ServiceErrorCodes.PlayerAlreadyInLobby, ServiceMessageKeys.PlayerAlreadyInLobby);
             }
 
+            LobbyConnection hostConnection = new(host, GetCurrentCallback(), WatchCurrentSession());
             lobbyCode = GenerateUniqueLobbyCode();
             LobbyState lobby = _lifecycle.CreateLobby(lobbyCode, hostConnection, creation);
             _lobbies.Add(lobbyCode, lobby);
@@ -66,21 +99,21 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public LobbyAdmission JoinLobby(string lobbyCode, string sessionToken)
     {
-        return JoinLobby(lobbyCode, sessionToken, null);
+        return JoinLobby((lobbyCode, sessionToken), null);
     }
 
     public LobbyAdmission ReconnectMatch(MatchPresenceRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
-        return JoinLobby(request.LobbyCode, request.SessionToken, request.MatchId);
+        RequireRequest(request);
+        return JoinLobby((request.LobbyCode, request.SessionToken), request.MatchId);
     }
 
-    private LobbyAdmission JoinLobby(string lobbyCode, string sessionToken, Guid? matchId)
+    private LobbyAdmission JoinLobby((string LobbyCode, string SessionToken) access, Guid? matchId,
+        [CallerMemberName] string operation = "")
     {
-        SessionIdentity identity = ResolveIdentity(sessionToken);
+        SessionIdentity identity = ResolveIdentity(access.SessionToken, operation);
+        string normalizedCode = RequireLobbyCode(access.LobbyCode);
         LobbyMember player = CreateMember(identity);
-        LobbyConnection connection = new(player, GetCurrentCallback(), WatchCurrentSession());
-        string normalizedCode = lobbyCode?.Trim() ?? string.Empty;
         List<ILobbyCallback> callbacksToNotify = new();
         List<ILobbyCallback> preparationCallbacks = new();
         LobbyPreparation preparation;
@@ -102,10 +135,16 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
             if (lobby.Contains(player.PlayerId))
             {
+                LobbyConnection connection = new(player, GetCurrentCallback(), WatchCurrentSession());
                 if (lobby.Status == LobbyStatus.InGame)
                 {
                     if (!_gameOperations.TryReconnect(lobby, player.PlayerId))
                     {
+                        if (matchId.HasValue)
+                        {
+                            throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+                        }
+
                         throw CreateFault(ServiceErrorCodes.LobbyAlreadyStarted, ServiceMessageKeys.LobbyAlreadyStarted);
                     }
                 }
@@ -118,6 +157,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 EnsureNewMemberCanJoin(lobby, player.PlayerId);
                 response = CreateJoinResponse(lobby, player.PlayerId);
                 callbacksToNotify = lobby.GetCallbacksExcept(player.PlayerId);
+                LobbyConnection connection = new(player, GetCurrentCallback(), WatchCurrentSession());
                 lobby.CancelInvitation(player.PlayerId);
                 lobby.AddOrReplace(connection);
             }
@@ -163,7 +203,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     {
         SessionIdentity identity = ResolveIdentity(sessionToken);
         Guid playerId = identity.PlayerId;
-        string normalizedCode = lobbyCode?.Trim() ?? string.Empty;
+        string normalizedCode = RequireLobbyCode(lobbyCode);
         List<ILobbyCallback> callbacksToNotify = new();
         List<Guid> withdrawnInvitedIds = new();
         LobbyPreparation? preparation = null;
@@ -199,9 +239,9 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public bool LeaveMatch(MatchLeaveRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        RequireRequest(request);
         SessionIdentity identity = ResolveIdentity(request.SessionToken);
-        string lobbyCode = request.LobbyCode?.Trim() ?? string.Empty;
+        string lobbyCode = RequireLobbyCode(request.LobbyCode);
         List<ILobbyCallback> callbacks = new();
         List<Guid> withdrawnInvitedIds = new();
         MatchBoardChanged? notice = null;
@@ -308,6 +348,29 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         }
     }
 
+    public MatchSyncUpdate GetMatchUpdate(MatchSyncRequest request)
+    {
+        RequireRequest(request);
+        SessionIdentity identity = ResolveIdentity(request.SessionToken);
+        MatchSyncState state;
+        lock (_lobbyLock)
+        {
+            LobbyState lobby = RequireLobbyMember(request.LobbyCode, identity.PlayerId);
+            EnsureReconnectMatchesLobby(lobby, identity.PlayerId, request.MatchId);
+            MatchBoardSnapshot board = _gameOperations.GetBoard(lobby)
+                ?? throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+            MatchPrivateHand? hand = _gameOperations.GetPrivateHand(lobby.MatchId, identity.PlayerId);
+            if (hand is null && !board.ExpelledPlayerIds.Contains(identity.PlayerId))
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+            }
+
+            state = new MatchSyncState(board, hand);
+        }
+
+        return MatchSynchronization.Compare(state, identity.PlayerId, request.Known);
+    }
+
     public MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken)
     {
         SessionIdentity identity = ResolveIdentity(sessionToken);
@@ -330,10 +393,10 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public MatchBoardSnapshot PlaceMatchCard(MatchPlaceRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        RequireRequest(request);
         MatchPlacement move = new(request.CardNumber, request.PilePosition, request.ExpectedRevision);
 
-        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken, nameof(PlaceMatchCard)),
             (move.PilePosition, move.CardNumber), ApplyPlacement);
 
         MatchBoardActionKind? ApplyPlacement(Guid matchId, Guid playerId)
@@ -350,10 +413,10 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public MatchBoardSnapshot DismantleMatchTower(MatchDismantleRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        RequireRequest(request);
         MatchDismantle move = new(request.PilePosition, request.ExpectedRevision);
 
-        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken, nameof(DismantleMatchTower)),
             (move.PilePosition, 0), ApplyDismantle);
 
         MatchBoardActionKind? ApplyDismantle(Guid matchId, Guid playerId)
@@ -370,11 +433,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public MatchBoardSnapshot UseMatchMasterPlan(MatchMasterPlanRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        RequireRequest(request);
         int[] modules = request.CardNumbers?.ToArray() ?? Array.Empty<int>();
         MatchMasterPlan move = new(modules, request.PilePosition, request.ExpectedRevision);
 
-        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken, nameof(UseMatchMasterPlan)),
             (move.PilePosition, modules.LastOrDefault()), ApplyMasterPlan);
 
         MatchBoardActionKind? ApplyMasterPlan(Guid matchId, Guid playerId)
@@ -391,11 +454,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public MatchBoardSnapshot VoteToExpelMatchPlayer(MatchExpulsionVoteRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        RequireRequest(request);
         Guid matchToVote = request.MatchId;
         MatchExpulsionVote vote = new(request.TargetPlayerId, request.ExpectedVotingRevision);
 
-        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken), (0, 0), ApplyVote);
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken, nameof(VoteToExpelMatchPlayer)), (0, 0), ApplyVote);
 
         MatchBoardActionKind? ApplyVote(Guid matchId, Guid voterId)
         {
@@ -414,8 +477,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
-        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken), (0, 0), Confirm);
+        RequireRequest(request);
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken, nameof(ConfirmMatchPresence)), (0, 0), Confirm);
 
         MatchBoardActionKind? Confirm(Guid matchId, Guid playerId)
         {
@@ -430,11 +493,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     }
 
     private MatchBoardSnapshot ApplyMatchBoardAction(
-        (string LobbyCode, string SessionToken) access,
+        (string LobbyCode, string SessionToken, string Operation) access,
         (int PilePosition, int CardNumber) action,
         Func<Guid, Guid, MatchBoardActionKind?> apply)
     {
-        SessionIdentity identity = ResolveIdentity(access.SessionToken);
+        SessionIdentity identity = ResolveIdentity(access.SessionToken, access.Operation);
         MatchBoardSnapshot board;
         MatchBoardActionKind? kind;
         List<ILobbyCallback> callbacks;
@@ -452,27 +515,26 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
 
-        if (!kind.HasValue)
+        if (kind.HasValue)
         {
-            return board;
+            MatchBoardChanged changed = new()
+            {
+                LobbyCode = access.LobbyCode,
+                MatchId = board.MatchId,
+                Revision = board.Revision,
+                PlayerUsername = kind switch
+                {
+                    MatchBoardActionKind.ExpelledByVote => board.RecentMoves.Last().PlayerUsername,
+                    MatchBoardActionKind.ExpulsionVoteRecorded => string.Empty,
+                    _ => identity.Username
+                },
+                ActionKind = kind.Value,
+                CardNumber = action.CardNumber,
+                PilePosition = action.PilePosition
+            };
+            Notify(callbacks, CreateBoardNotification(changed));
         }
 
-        MatchBoardChanged changed = new()
-        {
-            LobbyCode = access.LobbyCode,
-            MatchId = board.MatchId,
-            Revision = board.Revision,
-            PlayerUsername = kind switch
-            {
-                MatchBoardActionKind.ExpelledByVote => board.RecentMoves.Last().PlayerUsername,
-                MatchBoardActionKind.ExpulsionVoteRecorded => string.Empty,
-                _ => identity.Username
-            },
-            ActionKind = kind.Value,
-            CardNumber = action.CardNumber,
-            PilePosition = action.PilePosition
-        };
-        Notify(callbacks, CreateBoardNotification(changed));
         return board;
     }
 
@@ -481,10 +543,12 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         List<(List<ILobbyCallback> Callbacks, MatchBoardChanged Notice)> notifications = new();
         lock (_lobbyLock)
         {
+            _turnClockWriteFailures.RemoveWhere(matchId =>
+                !_lobbies.Values.Any(lobby => lobby.MatchId == matchId));
             foreach (LobbyState lobby in _lobbies.Values)
             {
                 if (lobby.Status == LobbyStatus.InGame
-                    && _gameOperations.TryExpireTurn(lobby.MatchId) is Guid affectedPlayerId)
+                    && TryExpireMatchTurn(lobby.MatchId) is Guid affectedPlayerId)
                 {
                     MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
                     MatchBoardMove? move = board?.RecentMoves.LastOrDefault();
@@ -508,6 +572,28 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         {
             Notify(callbacks, CreateBoardNotification(notice));
         }
+    }
+
+    private Guid? TryExpireMatchTurn(Guid matchId)
+    {
+        Guid? affectedPlayerId = null;
+        try
+        {
+            affectedPlayerId = _gameOperations.TryExpireTurn(matchId);
+            _turnClockWriteFailures.Remove(matchId);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            if (_turnClockWriteFailures.Add(matchId))
+            {
+                using IServiceScope scope = _scopeFactory.CreateScope();
+                ILogger<LobbyService> logger = scope.ServiceProvider.GetRequiredService<ILogger<LobbyService>>();
+                logger.LogError("Could not persist the turn expiration for match {MatchId}. The clock will retry.",
+                    matchId);
+            }
+        }
+
+        return affectedPlayerId;
     }
 
     public LobbyPreparation SetReady(string lobbyCode, bool isReady, string sessionToken)
@@ -568,7 +654,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     // Callers already hold the lobby lock.
     private LobbyState RequireLobbyMember(string lobbyCode, Guid playerId)
     {
-        string normalizedCode = lobbyCode?.Trim() ?? string.Empty;
+        string normalizedCode = RequireLobbyCode(lobbyCode);
         if (!_lobbies.TryGetValue(normalizedCode, out LobbyState? lobby))
         {
             throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
@@ -675,53 +761,96 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public bool PublishChatMessage(LobbyChatMessage message)
     {
-        List<ILobbyCallback>? callbacks;
+        List<ILobbyCallback> callbacks = new();
+        bool accepted = false;
         lock (_lobbyLock)
         {
-            if (!_lobbies.TryGetValue(message.LobbyCode, out LobbyState? lobby)
-                || !lobby.Contains(message.SenderId))
+            if (_lobbies.TryGetValue(message.LobbyCode, out LobbyState? lobby)
+                && lobby.Contains(message.SenderId))
             {
-                return false;
+                accepted = message.MatchId.HasValue
+                    ? TryGetMatchChatCallbacks(lobby, message, out callbacks)
+                    : lobby.Status == LobbyStatus.Waiting;
+                if (accepted && !message.MatchId.HasValue)
+                {
+                    callbacks = lobby.GetCallbacksExcept(Guid.Empty);
+                }
             }
-
-            callbacks = message.MatchId.HasValue
-                ? GetMatchChatCallbacks(lobby, message)
-                : lobby.Status == LobbyStatus.Waiting ? lobby.GetCallbacksExcept(Guid.Empty) : null;
         }
 
-        if (callbacks is null)
+        if (accepted)
         {
-            return false;
+            Notify(callbacks, CreateChatNotification(message));
         }
 
-        Notify(callbacks, CreateChatNotification(message));
-        return true;
+        return accepted;
     }
 
-    private List<ILobbyCallback>? GetMatchChatCallbacks(LobbyState lobby, LobbyChatMessage message)
+    private bool TryGetMatchChatCallbacks(LobbyState lobby, LobbyChatMessage message,
+        out List<ILobbyCallback> callbacks)
     {
-        if (lobby.Status != LobbyStatus.InGame || lobby.MatchId != message.MatchId
-            || lobby.IsDisconnected(message.SenderId))
+        callbacks = new();
+        bool canSend = false;
+        if (lobby.Status == LobbyStatus.InGame && lobby.MatchId == message.MatchId
+            && !lobby.IsDisconnected(message.SenderId))
         {
-            return null;
+            MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
+            if (board is { EndReason: MatchEndReason.None, TurnDeadlineUtc: not null }
+                && board.Players.Exists(player => player.PlayerId == message.SenderId))
+            {
+                canSend = true;
+                HashSet<Guid> activePlayers = board.Players.Select(player => player.PlayerId).ToHashSet();
+                callbacks = lobby.GetConnectedCallbacks(activePlayers.Contains);
+            }
         }
 
-        MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
-        if (board is not { EndReason: MatchEndReason.None, TurnDeadlineUtc: not null }
-            || !board.Players.Exists(player => player.PlayerId == message.SenderId))
-        {
-            return null;
-        }
-
-        HashSet<Guid> activePlayers = board.Players.Select(player => player.PlayerId).ToHashSet();
-        return lobby.GetConnectedCallbacks(activePlayers.Contains);
+        return canSend;
     }
 
-    private SessionIdentity ResolveIdentity(string sessionToken)
+    private static void RequireRequest([NotNull] object? request)
+    {
+        if (request is null)
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+    }
+
+    private static string RequireLobbyCode(string? lobbyCode)
+    {
+        if (string.IsNullOrWhiteSpace(lobbyCode))
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        return lobbyCode.Trim();
+    }
+
+    private string? ReadCreationToken(string? bodyToken)
+    {
+        (string? token, string? rejection) = LobbySessionHeader.Read(
+            OperationContext.Current?.IncomingMessageHeaders, bodyToken);
+        if (rejection is not null)
+        {
+            using IServiceScope scope = _scopeFactory.CreateScope();
+            ILogger<LobbyService> logger = scope.ServiceProvider.GetRequiredService<ILogger<LobbyService>>();
+            Dictionary<string, object> properties = new() { ["EventCategory"] = "Security" };
+            using IDisposable? logScope = logger.BeginScope(properties);
+            logger.LogWarning(InvalidSessionHeaderEvent, "Operation {Operation} rejected credentials. Reason: {Reason}.",
+                nameof(CreateLobby), rejection);
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        return token;
+    }
+
+    private SessionIdentity ResolveIdentity(string? sessionToken, [CallerMemberName] string operation = "")
     {
         using IServiceScope scope = _scopeFactory.CreateScope();
         ISessionIdentityResolver resolver = scope.ServiceProvider.GetRequiredService<ISessionIdentityResolver>();
-        return resolver.Require(sessionToken);
+        ILogger<LobbyService> logger = scope.ServiceProvider.GetRequiredService<ILogger<LobbyService>>();
+        Dictionary<string, object> properties = new() { [LobbyDispatchErrors.SessionLookupScopeProperty] = true };
+        using IDisposable? diagnosticsScope = logger.BeginScope(properties);
+        return resolver.Require(sessionToken, operation);
     }
 
     private static LobbyMember CreateMember(SessionIdentity identity)
@@ -767,20 +896,24 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         string sessionId = OperationContext.Current.SessionId ?? string.Empty;
         if (string.IsNullOrWhiteSpace(sessionId))
         {
-            throw CreateFault(ServiceErrorCodes.Unauthorized, ServiceMessageKeys.Unauthorized);
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
         }
-
-        bool isNewSession;
 
         lock (_lobbyLock)
         {
-            isNewSession = _watchedSessions.Add(sessionId);
-        }
+            if (_watchedSessions.Add(sessionId))
+            {
+                channel.Closed += OnChannelClosed;
+                channel.Faulted += OnChannelClosed;
+            }
 
-        if (isNewSession)
-        {
-            channel.Closed += OnChannelClosed;
-            channel.Faulted += OnChannelClosed;
+            if (channel.State is CommunicationState.Closing or CommunicationState.Closed or CommunicationState.Faulted)
+            {
+                _watchedSessions.Remove(sessionId);
+                channel.Closed -= OnChannelClosed;
+                channel.Faulted -= OnChannelClosed;
+                throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+            }
         }
 
         return sessionId;
@@ -788,7 +921,14 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     private void OnChannelClosed(object? sender, EventArgs eventArgs)
     {
-        string sessionId = (sender as IContextChannel)?.SessionId ?? string.Empty;
+        if (sender is not IContextChannel channel)
+        {
+            return;
+        }
+
+        channel.Closed -= OnChannelClosed;
+        channel.Faulted -= OnChannelClosed;
+        string sessionId = channel.SessionId ?? string.Empty;
         List<(List<ILobbyCallback> Callbacks, List<Guid> LeftIds, LobbyPreparation State)> notifications = new();
         List<(string LobbyCode, List<Guid> InvitedIds)> withdrawals = new();
 
@@ -904,17 +1044,17 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             {
                 callback.Notify(notification);
             }
-            catch (CommunicationException exception)
+            catch (CommunicationException ex)
             {
-                System.Diagnostics.Trace.TraceWarning("Lobby callback failed: " + exception.Message);
+                System.Diagnostics.Trace.TraceWarning("Lobby callback failed: " + ex.GetType().Name);
             }
-            catch (TimeoutException exception)
+            catch (TimeoutException ex)
             {
-                System.Diagnostics.Trace.TraceWarning("Lobby callback failed: " + exception.Message);
+                System.Diagnostics.Trace.TraceWarning("Lobby callback failed: " + ex.GetType().Name);
             }
-            catch (ObjectDisposedException exception)
+            catch (ObjectDisposedException ex)
             {
-                System.Diagnostics.Trace.TraceWarning("Lobby callback failed: " + exception.Message);
+                System.Diagnostics.Trace.TraceWarning("Lobby callback failed: " + ex.GetType().Name);
             }
         }
     }

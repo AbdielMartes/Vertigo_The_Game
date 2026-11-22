@@ -15,6 +15,9 @@ public class SessionService
         RegisteredPlayerSessions registeredSessions,
         IGuestSessionRegistry guests)
     {
+        ArgumentNullException.ThrowIfNull(credentials);
+        ArgumentNullException.ThrowIfNull(registeredSessions);
+        ArgumentNullException.ThrowIfNull(guests);
         _credentials = credentials;
         _registeredSessions = registeredSessions;
         _guests = guests;
@@ -42,6 +45,17 @@ public class SessionService
             if (session is null)
             {
                 session = _registeredSessions.Resume(sessionToken, tokenHash);
+            }
+            else if (session.Token.Length == 0)
+            {
+                session = new AuthenticatedSession
+                {
+                    PlayerId = session.PlayerId,
+                    Username = session.Username,
+                    Token = sessionToken,
+                    ExpiresAt = session.ExpiresAt,
+                    IsGuest = true
+                };
             }
         }
 

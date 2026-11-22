@@ -9,4 +9,5 @@ public sealed record MatchStartRequest
     public required Guid HostPlayerId { get; init; }
 
     public required IReadOnlyList<Guid> PlayerIds { get; init; }
+    public RecoverableLobby? Lobby { get; init; }
 }

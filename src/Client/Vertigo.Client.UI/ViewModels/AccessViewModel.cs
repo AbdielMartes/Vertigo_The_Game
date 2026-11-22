@@ -14,6 +14,7 @@ using Vertigo.Client.UI.ViewModels.Lifecycle;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
 using Vertigo.Client.Networking.Sessions.Interfaces;
 using Vertigo.Contracts.Models;
+using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
 using Vertigo.Registration;
 
 namespace Vertigo.Client.UI.ViewModels;
@@ -26,6 +27,7 @@ public sealed class AccessViewModel : ObservableObject, INavigationAware
     private readonly INavigator _navigation;
     private readonly IClientErrorText _errors;
     private readonly ITextLocalizer _text;
+    private readonly ISessionGuard _guard;
     private string _username = string.Empty;
     private string _password = string.Empty;
     private string _errorMessage = string.Empty;
@@ -49,6 +51,7 @@ public sealed class AccessViewModel : ObservableObject, INavigationAware
         _navigation = context.Ui.Navigation;
         _errors = context.Ui.Services.Errors;
         _text = context.Ui.Services.Text;
+        _guard = context.Ui.Services.SessionGuard;
         LoginCommand = new AsyncRelayCommand(LoginAsync);
         GuestCommand = new AsyncRelayCommand(EnterAsGuestAsync);
         ResumeCommand = new AsyncRelayCommand<string>(ResumeSessionAsync);
@@ -328,31 +331,34 @@ public sealed class AccessViewModel : ObservableObject, INavigationAware
 
     private async Task LoginAsync()
     {
-        if (IsBusy) return;
-        if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+        if (!IsBusy)
         {
-            ErrorMessage = _text.Get("Access.MissingCredentials");
-            return;
-        }
-
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
-        {
-            // Existing WCF proxies are synchronous; offload their blocking calls from the UI thread.
-            string username = Username.Trim();
-            string password = Password;
-            ClientResult<UserSession> result = await Task.Run(() => _sessions.Login(username, password));
-            CompleteAccess(result);
-        }
-        catch (Exception)
-        {
-            ErrorMessage = _text.Get("Access.LoginFailed");
-        }
-        finally
-        {
-            Password = string.Empty;
-            IsBusy = false;
+            if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+            {
+                ErrorMessage = _text.Get("Access.MissingCredentials");
+            }
+            else
+            {
+                IsBusy = true;
+                ErrorMessage = string.Empty;
+                try
+                {
+                    // Existing WCF proxies are synchronous; offload their blocking calls from the UI thread.
+                    string username = Username.Trim();
+                    string password = Password;
+                    ClientResult<UserSession> result = await Task.Run(() => _sessions.Login(username, password));
+                    CompleteAccess(result);
+                }
+                catch (Exception)
+                {
+                    ErrorMessage = _text.Get("Access.LoginFailed");
+                }
+                finally
+                {
+                    Password = string.Empty;
+                    IsBusy = false;
+                }
+            }
         }
     }
 
@@ -378,33 +384,37 @@ public sealed class AccessViewModel : ObservableObject, INavigationAware
 
     private async Task ResumeSessionAsync(string? sessionToken)
     {
-        if (IsBusy) return;
-        if (string.IsNullOrWhiteSpace(sessionToken))
+        if (!IsBusy)
         {
-            ErrorMessage = _text.Get("Access.MissingToken");
-            return;
-        }
-
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
-        {
-            ClientResult<UserSession> result = await Task.Run(() => _sessions.ResumeSession(sessionToken));
-            CompleteAccess(result);
-        }
-        catch (Exception)
-        {
-            ErrorMessage = _text.Get("Access.ResumeFailed");
-        }
-        finally
-        {
-            IsBusy = false;
+            if (string.IsNullOrWhiteSpace(sessionToken))
+            {
+                ErrorMessage = _text.Get("Access.MissingToken");
+            }
+            else
+            {
+                IsBusy = true;
+                ErrorMessage = string.Empty;
+                try
+                {
+                    ClientResult<UserSession> result = await Task.Run(() => _sessions.ResumeSession(sessionToken));
+                    CompleteAccess(result);
+                }
+                catch (Exception)
+                {
+                    ErrorMessage = _text.Get("Access.ResumeFailed");
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }
         }
     }
 
     public void OnNavigatedTo()
     {
-        ErrorMessage = string.Empty;
+        string? message = _guard.TakeInvalidationMessage();
+        ErrorMessage = message is null ? string.Empty : _text.Get(message);
         Password = string.Empty;
         ClearRegistrationSecrets();
         ClearRegistrationErrors();

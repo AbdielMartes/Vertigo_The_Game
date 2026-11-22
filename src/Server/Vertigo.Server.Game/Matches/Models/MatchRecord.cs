@@ -40,6 +40,7 @@ internal sealed class MatchRecord
     private long _boardRevision = InitialBoardRevision;
     private long _latestGameplayRevision = InitialBoardRevision;
     private long _votingRevision;
+    private DateTimeOffset? _recoveryPausedAt;
 
     private int ExpulsionVotesRequired => _activePlayerIds.Count / 2 + 1;
 
@@ -86,6 +87,10 @@ internal sealed class MatchRecord
     }
 
     public MatchSessionSnapshot Session { get; }
+
+    public long BoardRevision => _boardRevision;
+
+    public IReadOnlyList<Guid> ActivePlayers => Session.PlayerIds.Where(_activePlayerIds.Contains).ToArray();
 
     public MatchLifecycleSnapshot Lifecycle { get; private set; }
 
@@ -404,34 +409,32 @@ internal sealed class MatchRecord
 
     public Guid? TryExpireTurn(DateTimeOffset now)
     {
-        if (IsTerminal)
+        Guid? affectedPlayerId = null;
+        if (!IsTerminal && !_recoveryPausedAt.HasValue)
         {
-            return null;
+            Guid expiredPlayerId = _presenceDeadlinesUtc
+                .Where(entry => entry.Value <= now)
+                .OrderBy(entry => entry.Value)
+                .Select(entry => entry.Key)
+                .FirstOrDefault();
+            if (expiredPlayerId != Guid.Empty)
+            {
+                _inactivePlayerIds.Add(expiredPlayerId);
+                RemoveActivePlayer(expiredPlayerId, MatchBoardActionKind.TurnExpired, now);
+                affectedPlayerId = expiredPlayerId;
+            }
+            else if (IsTurnExpired(now))
+            {
+                Guid skippedPlayerId = _currentTurnPlayerId;
+                _presenceDeadlinesUtc.Add(skippedPlayerId, _turnDeadlineUtc!.Value + PresenceGraceDuration);
+                RecordMove(skippedPlayerId, (MatchBoardActionKind.TurnSkipped, 0, null), Array.Empty<int>());
+                AdvanceGameplayRevision();
+                BeginTurn(GetActivePlayersAfter(skippedPlayerId).First(), now);
+                affectedPlayerId = skippedPlayerId;
+            }
         }
 
-        Guid expiredPlayerId = _presenceDeadlinesUtc
-            .Where(entry => entry.Value <= now)
-            .OrderBy(entry => entry.Value)
-            .Select(entry => entry.Key)
-            .FirstOrDefault();
-        if (expiredPlayerId != Guid.Empty)
-        {
-            _inactivePlayerIds.Add(expiredPlayerId);
-            RemoveActivePlayer(expiredPlayerId, MatchBoardActionKind.TurnExpired, now);
-            return expiredPlayerId;
-        }
-
-        if (!IsTurnExpired(now))
-        {
-            return null;
-        }
-
-        Guid skippedPlayerId = _currentTurnPlayerId;
-        _presenceDeadlinesUtc.Add(skippedPlayerId, _turnDeadlineUtc!.Value + PresenceGraceDuration);
-        RecordMove(skippedPlayerId, (MatchBoardActionKind.TurnSkipped, 0, null), Array.Empty<int>());
-        AdvanceGameplayRevision();
-        BeginTurn(GetActivePlayersAfter(skippedPlayerId).First(), now);
-        return skippedPlayerId;
+        return affectedPlayerId;
     }
 
     public bool TryConfirmPresence(Guid playerId, DateTimeOffset now)
@@ -689,10 +692,12 @@ internal sealed class MatchRecord
     public MatchReconnectResult TryReconnect(Guid playerId, DateTimeOffset now)
     {
         MatchReconnectResult result = MatchReconnectResult.Rejected;
-        if (!IsTerminal && _activePlayerIds.Contains(playerId) && !HasPresenceExpired(playerId, now))
+        if (!IsTerminal && _activePlayerIds.Contains(playerId)
+            && !HasPresenceExpired(playerId, _recoveryPausedAt ?? now))
         {
             if (_disconnectedPlayerIds.Remove(playerId))
             {
+                ResumeAfterRecovery(now);
                 Lifecycle = Lifecycle with
                 {
                     Status = MatchLifecycleStatus.Running,
@@ -708,6 +713,42 @@ internal sealed class MatchRecord
         }
 
         return result;
+    }
+
+    public bool PauseForRecovery(DateTimeOffset lastEvent)
+    {
+        bool paused = !IsTerminal && !_recoveryPausedAt.HasValue;
+        if (paused)
+        {
+            _disconnectedPlayerIds.UnionWith(_activePlayerIds);
+            _recoveryPausedAt = lastEvent;
+            _turnDeadlineUtc = null;
+            AdvanceGameplayRevision();
+            Lifecycle = Lifecycle with
+            {
+                Status = MatchLifecycleStatus.Suspended,
+                Revision = Lifecycle.Revision + 1,
+                UpdatedAtUtc = lastEvent
+            };
+        }
+
+        return paused;
+    }
+
+    private void ResumeAfterRecovery(DateTimeOffset now)
+    {
+        if (_recoveryPausedAt is DateTimeOffset pausedAt)
+        {
+            TimeSpan elapsed = now >= pausedAt ? now - pausedAt : TimeSpan.Zero;
+            foreach (Guid playerId in _presenceDeadlinesUtc.Keys.ToArray())
+            {
+                _presenceDeadlinesUtc[playerId] += elapsed;
+            }
+
+            _recoveryPausedAt = null;
+            BeginTurn(_currentTurnPlayerId, now);
+            AdvanceGameplayRevision();
+        }
     }
 
     public bool IsTerminal => Lifecycle.Status is MatchLifecycleStatus.Finished or MatchLifecycleStatus.Cancelled;

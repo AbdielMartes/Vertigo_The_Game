@@ -1,4 +1,5 @@
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using Vertigo.Client.Networking.Callbacks;
 using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Contracts.Models;
@@ -131,7 +132,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             return channel.ReconnectMatch(request);
         }
-        catch (Exception exception) when (IsTransportFailure(exception))
+        catch (Exception ex) when (IsTransportFailure(ex))
         {
             AbortChannel(channel);
             throw;
@@ -150,9 +151,12 @@ public sealed class LobbyClient : ILobbyClient
         ILobbyService channel = GetOrCreateChannel();
         try
         {
-            return channel.CreateLobby(isPublic, maxPlayers, sessionToken);
+            using OperationContextScope operation = new((IClientChannel)channel);
+            MessageHeader header = MessageHeader.CreateHeader(SessionHeader.Name, SessionHeader.Namespace, sessionToken);
+            OperationContext.Current.OutgoingMessageHeaders.Add(header);
+            return channel.CreateLobby(isPublic, maxPlayers, null);
         }
-        catch (Exception exception) when (IsTransportFailure(exception))
+        catch (Exception ex) when (IsTransportFailure(ex))
         {
             AbortChannel(channel);
             throw;
@@ -167,7 +171,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             return channel.JoinLobby(lobbyCode, sessionToken);
         }
-        catch (Exception exception) when (IsTransportFailure(exception))
+        catch (Exception ex) when (IsTransportFailure(ex))
         {
             AbortChannel(channel);
             throw;
@@ -181,7 +185,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             return channel.LeaveLobby(lobbyCode, sessionToken);
         }
-        catch (Exception exception) when (IsTransportFailure(exception))
+        catch (Exception ex) when (IsTransportFailure(ex))
         {
             AbortChannel(channel);
             throw;
@@ -203,7 +207,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             lobbies = channel.GetPublicLobbies();
         }
-        catch (Exception exception) when (IsTransportFailure(exception))
+        catch (Exception ex) when (IsTransportFailure(ex))
         {
             AbortChannel(channel);
             throw;
@@ -219,11 +223,17 @@ public sealed class LobbyClient : ILobbyClient
         {
             return channel.GetPreparation(lobbyCode, sessionToken);
         }
-        catch (Exception exception) when (IsTransportFailure(exception))
+        catch (Exception ex) when (IsTransportFailure(ex))
         {
             AbortChannel(channel);
             throw;
         }
+    }
+
+    public MatchSyncUpdate GetMatchUpdate(MatchSyncRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ReadOnIndependentChannel(channel => channel.GetMatchUpdate(request));
     }
 
     public MatchBoardSnapshot GetMatchBoard(string lobbyCode, string sessionToken)
@@ -305,7 +315,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             return channel.SetReady(lobbyCode, isReady, sessionToken);
         }
-        catch (Exception exception) when (IsTransportFailure(exception))
+        catch (Exception ex) when (IsTransportFailure(ex))
         {
             AbortChannel(channel);
             throw;
@@ -319,7 +329,7 @@ public sealed class LobbyClient : ILobbyClient
         {
             return channel.StartMatch(lobbyCode, sessionToken);
         }
-        catch (Exception exception) when (IsTransportFailure(exception))
+        catch (Exception ex) when (IsTransportFailure(ex))
         {
             AbortChannel(channel);
             throw;
@@ -397,63 +407,70 @@ public sealed class LobbyClient : ILobbyClient
         lock (_syncRoot)
         {
             ObjectDisposedException.ThrowIf(_isDisposed, this);
-            if (_channel is not null && !IsUnusable((ICommunicationObject)_channel))
+            ILobbyService? channel = _channel;
+            if (channel is null || IsUnusable((ICommunicationObject)channel))
             {
-                return _channel;
+                channel = OpenChannel();
             }
-            _channelFactory?.Abort();
-            LobbyCallbackHandler handler = new();
-            _callbackHandler = handler;
-            handler.PlayerJoined += (sender, player) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    OnPlayerJoined(sender, player);
-                }
-            };
-            handler.PlayerLeft += (sender, playerId) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    OnPlayerLeft(sender, playerId);
-                }
-            };
-            handler.PreparationChanged += (sender, preparation) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    OnPreparationChanged(sender, preparation);
-                }
-            };
-            handler.MessageReceived += (sender, message) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    OnChatReceived(sender, message);
-                }
-            };
-            handler.MatchBoardUpdated += (sender, change) =>
-            {
-                if (ReferenceEquals(_callbackHandler, handler))
-                {
-                    OnMatchBoardUpdated(change);
-                }
-            };
-            NetTcpBinding binding = new(SecurityMode.None)
-            {
-                OpenTimeout = OperationTimeout,
-                SendTimeout = OperationTimeout
-            };
-            _channelFactory = new DuplexChannelFactory<ILobbyService>(
-                new InstanceContext(handler), binding,
-                new EndpointAddress(ServiceEndpoints.LobbyServiceAddress));
-            ILobbyService channel = _channelFactory.CreateChannel();
-            ICommunicationObject transport = (ICommunicationObject)channel;
-            _channel = channel;
-            transport.Faulted += (_, _) => OnConnectionLost(channel);
-            transport.Closed += (_, _) => OnConnectionLost(channel);
+
             return channel;
         }
+    }
+
+    private ILobbyService OpenChannel()
+    {
+        _channelFactory?.Abort();
+        LobbyCallbackHandler handler = new();
+        _callbackHandler = handler;
+        handler.PlayerJoined += (sender, player) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                OnPlayerJoined(sender, player);
+            }
+        };
+        handler.PlayerLeft += (sender, playerId) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                OnPlayerLeft(sender, playerId);
+            }
+        };
+        handler.PreparationChanged += (sender, preparation) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                OnPreparationChanged(sender, preparation);
+            }
+        };
+        handler.MessageReceived += (sender, message) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                OnChatReceived(sender, message);
+            }
+        };
+        handler.MatchBoardUpdated += (sender, change) =>
+        {
+            if (ReferenceEquals(_callbackHandler, handler))
+            {
+                OnMatchBoardUpdated(change);
+            }
+        };
+        NetTcpBinding binding = new(SecurityMode.None)
+        {
+            OpenTimeout = OperationTimeout,
+            SendTimeout = OperationTimeout
+        };
+        _channelFactory = new DuplexChannelFactory<ILobbyService>(
+            new InstanceContext(handler), binding,
+            new EndpointAddress(ServiceEndpoints.LobbyServiceAddress));
+        ILobbyService channel = _channelFactory.CreateChannel();
+        ICommunicationObject transport = (ICommunicationObject)channel;
+        _channel = channel;
+        transport.Faulted += (_, _) => OnConnectionLost(channel);
+        transport.Closed += (_, _) => OnConnectionLost(channel);
+        return channel;
     }
 
     private void OnConnectionLost(ILobbyService channel)

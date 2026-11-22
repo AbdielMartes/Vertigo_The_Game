@@ -72,13 +72,21 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             Dispatcher.UIThread.Post(() => OnPageChanged(sender, page));
             return;
         }
-        if (_disposed) return;
-        if (page != NavigationPage.Access && !_playerSession.IsAuthenticated)
+        if (!_disposed)
         {
-            _navigation.NavigateTo(NavigationPage.Access);
-            return;
+            if (page != NavigationPage.Access && !_playerSession.IsAuthenticated)
+            {
+                _navigation.NavigateTo(NavigationPage.Access);
+            }
+            else
+            {
+                ActivatePage(page);
+            }
         }
+    }
 
+    private void ActivatePage(NavigationPage page)
+    {
         bool returnedFromMatch = _previousPage == NavigationPage.Match && page == NavigationPage.Home;
         GetPage(_previousPage)?.OnNavigatedFrom();
         _previousPage = page;
