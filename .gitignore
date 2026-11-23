@@ -6,6 +6,13 @@
 # dotenv files
 .env
 
+# Repomix output
+repomix-output.*
+
+# SonarQube scanner output
+.sonarqube/
+.scannerwork/
+
 # User-specific files
 *.rsuser
 *.suo
