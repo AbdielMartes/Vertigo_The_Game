@@ -28,6 +28,9 @@
         <DataTemplate DataType="{x:Type homevm:ProfileViewModel}">
             <homeviews:ProfileView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type homevm:RankingViewModel}">
+            <homeviews:RankingView/>
+        </DataTemplate>
 
         <DataTemplate DataType="{x:Type homevm:LobbyViewModel}">
             <homeviews:LobbyView/>

@@ -34,6 +34,312 @@ The content is organized as follows:
 
 # Directory Structure
 ````
+.sonarqube/
+  conf/
+    0/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    1/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    10/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    11/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    12/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    13/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    14/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    15/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    16/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    17/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    2/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    3/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    4/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    5/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    6/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    7/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    8/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    9/
+      FilesToAnalyze.txt
+      SonarProjectConfig.xml
+    cs/
+      SonarLint.xml
+    vbnet/
+      SonarLint.xml
+    Sonar-cs-none.ruleset
+    Sonar-cs.ruleset
+    Sonar-vbnet-none.ruleset
+    Sonar-vbnet.ruleset
+    SonarQubeAnalysisConfig.xml
+  out/
+    .sonar/
+      .sonar_lock
+      report-task.txt
+    0/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    1/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    10/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    11/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    12/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    13/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    14/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    15/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    16/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    17/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    2/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    3/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    4/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    5/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    6/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    7/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    8/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    9/
+      output-cs/
+        file-metadata.pb
+        log.pb
+        metrics.pb
+        symrefs.pb
+        telemetry.pb
+        test-method-declarations.pb
+        token-cpd.pb
+        token-type.pb
+      Issues.json
+      ProjectInfo.xml
+      Telemetry.json
+    Processed.Telemetry.S4NET.json
+    Processed.Telemetry.Targets.S4NET.json
+    ScannerEngineInput.json
 src/
   Client/
     Vertigo.Client.Core/
@@ -133,7 +439,6 @@ src/
           LobbyCodeRules.cs
           MatchBoardIdentity.cs
           MatchBoardNotificationRules.cs
-          MatchChatRules.cs
           MatchTurnRules.cs
       ViewModels/
         Dependencies/
@@ -159,11 +464,14 @@ src/
           MatchCardRow.cs
           MatchChatRow.cs
           MatchExpulsionVoting.cs
+          MatchFinalStandingRow.cs
           MatchMasterPlanDraft.cs
+          MatchMasterPlanStep.cs
           MatchMoveRow.cs
           MatchPileRow.cs
           MatchPlayerRow.cs
           MatchRoundResultRow.cs
+          MatchTowerResult.cs
           MatchTurnClock.cs
         Social/
           BlockedPlayersViewModel.cs
@@ -177,6 +485,7 @@ src/
         LobbyViewModel.cs
         MainViewModel.cs
         MatchResultsViewModel.cs
+        MatchViewModel.Chat.cs
         MatchViewModel.cs
         PlayViewModel.cs
         ProfileViewModel.cs
@@ -192,6 +501,8 @@ src/
         LobbyView.axaml.cs
         MainWindow.axaml
         MainWindow.axaml.cs
+        MatchResultsView.axaml
+        MatchResultsView.axaml.cs
         MatchView.axaml
         MatchView.axaml.cs
         PlayView.axaml
@@ -272,7 +583,9 @@ src/
     Vertigo.Server.Matchmaking/
       Chat/
         Services/
+          ChatLanguageFilter.cs
           ChatService.cs
+          ChatServiceDependencies.cs
       Invitations/
         Services/
           LobbyInvitationFriendLookup.cs
@@ -304,11 +617,11 @@ src/
           SessionIdentity.cs
         Services/
           AuthenticationService.cs
-          AuthService.cs
           GuestSessionRegistry.cs
           PlayerCredentialsVerifier.cs
           RegisteredPlayerSessions.cs
           SessionIdentityResolver.cs
+          SessionService.cs
       Blocking/
         Services/
           BlockedPlayerService.cs
@@ -405,6 +718,8 @@ src/
         MatchBoardPile.cs
         MatchBoardPlayer.cs
         MatchBoardSnapshot.cs
+        MatchChatRequest.cs
+        MatchChatRules.cs
         MatchDismantleRequest.cs
         MatchEndReason.cs
         MatchExpulsionVoteRequest.cs
@@ -412,6 +727,7 @@ src/
         MatchLeaveRequest.cs
         MatchMasterPlanRequest.cs
         MatchPlaceRequest.cs
+        MatchPresenceRequest.cs
         MatchPrivateHand.cs
         MatchRoundPlayerScore.cs
         MatchRoundSummary.cs
@@ -510,6 +826,9 @@ tests/
   Vertigo.Server.Matchmaking.Tests/
     Authentication/
       GuestSessionTests.cs
+    Chat/
+      ChatLanguageFilterTests.cs
+      ChatServiceTests.cs
     Lobbies/
       LobbyDisconnectionTests.cs
       LobbyMatchActivationTests.cs
@@ -525,6 +844,5776 @@ Vertigo.Server.slnx
 ````
 
 # Files
+
+## File: .sonarqube/conf/0/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/FieldValidationError.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/RegistrationRules.cs
+````
+
+## File: .sonarqube/conf/0/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/Vertigo.Registration.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/0/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/0</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/1/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Navigation/INavigator.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Navigation/NavigationPage.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Navigation/Navigator.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Sessions/PlayerSession.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Sessions/SessionSnapshot.cs
+````
+
+## File: .sonarqube/conf/1/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Vertigo.Client.Core.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/1/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/1</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/10/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/RoundClosureSmoke.cs
+````
+
+## File: .sonarqube/conf/10/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Vertigo.Client.MatchBoard.Smoke.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/10/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/10</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/11/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Dependencies/SessionIdentityResolverDependencies.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Interfaces/IGuestSessionRegistry.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Interfaces/ISessionIdentityResolver.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Models/AuthenticatedSession.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Models/SessionIdentity.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthenticationService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/GuestSessionRegistry.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/PlayerCredentialsVerifier.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/RegisteredPlayerSessions.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/SessionIdentityResolver.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Blocking/Services/BlockedPlayerService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Friendships/Models/FriendshipSubscription.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Friendships/Services/FriendshipCommands.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Friendships/Services/FriendshipNotificationService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Friendships/Services/FriendshipNotifier.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Friendships/Services/FriendshipQueries.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Friendships/Services/FriendshipService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Registration/Services/AccountPasswordService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Registration/Services/AccountPasswordStore.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Registration/Services/AccountService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Registration/Services/PasswordChangeOutcome.cs
+````
+
+## File: .sonarqube/conf/11/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Vertigo.Server.PlayerManagement.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/11/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/11</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/12/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/App.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Program.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Interfaces/IClientErrorText.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Interfaces/ITextLocalizer.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Markup/LocalizeExtension.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Services/ClientErrorText.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Services/TextLocalizer.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Sessions/Interfaces/ISessionGuard.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Sessions/Services/SessionGuard.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Settings/Interfaces/IUserSettingsStore.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Settings/Models/UserSettings.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Settings/Services/JsonUserSettingsStore.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Settings/Services/UiLanguage.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Validation/LobbyCodeRules.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Validation/MatchBoardIdentity.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Validation/MatchBoardNotificationRules.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Validation/MatchTurnRules.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewLocator.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/AccessViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/AccessContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/HomeContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/LobbyContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/LobbyInvitationContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/MainContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/MainScreensContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/MainSocialContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/MatchBoardContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/SocialNavigationContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/SocialViewModelContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/UiNavigationContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/UiServices.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/HomeViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Lifecycle/INavigationAware.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Lifecycle/LobbyPreparationRevision.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Lifecycle/MatchBoardRevision.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Lifecycle/MatchEntryRules.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/LobbyViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MainViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MatchResultsViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MatchViewModel.Chat.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MatchViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/PlayViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/LobbyMemberRow.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchCardRow.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchChatRow.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchExpulsionVoting.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchFinalStandingRow.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMasterPlanDraft.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMasterPlanStep.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMoveRow.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchPileRow.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchPlayerRow.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchRoundResultRow.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchTowerResult.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchTurnClock.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/ProfileViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/SettingsViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Social/BlockedPlayersViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Social/FriendsViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Social/LobbyInvitationsViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Social/SocialViewModelBase.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/SocialViewModel.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Utilities/SocialOperation.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/ViewModelBase.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/AccessView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/HomeView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/LobbyView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/MainWindow.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/MatchResultsView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/MatchView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/PlayView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/ProfileView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/SettingsView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/SocialView.axaml.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/obj/Debug/net11.0/Avalonia/resources
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Resources/Localization/Strings.resx
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Resources/Localization/Strings.en.resx
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/app.manifest
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Assets/avalonia-logo.ico
+````
+
+## File: .sonarqube/conf/12/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Vertigo.Client.UI.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/12/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/12</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/13/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/Program.cs
+````
+
+## File: .sonarqube/conf/13/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/Vertigo.Client.Networking.Smoke.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/13/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/13</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/14/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Errors/ClientErrorTextTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Lobbies/LobbyCallbackHandlerTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Lobbies/LobbyPreparationRevisionTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Localization/AccessLanguageSwitchTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Localization/AccessLocalizationTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Localization/HomeLocalizationTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchBoardErrorHandlingTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchBoardNotificationRulesTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchBoardRevisionTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchEntryRulesTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchExpulsionVotingTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchLobbyContractTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchMasterPlanDraftTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchResultsViewModelTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchTurnPresentationTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchViewModelTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Navigation/NavigatorTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Sessions/PlayerSessionTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Sessions/SessionCoordinatorTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Sessions/SessionGuardTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Settings/JsonUserSettingsStoreTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Social/FriendshipCallbackHandlerTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Social/LobbyInvitationsViewModelTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Validation/LobbyCodeRulesTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Validation/MatchChatRulesTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Validation/RegistrationRulesTests.cs
+/Users/abdielmar/.nuget/packages/microsoft.net.test.sdk/17.14.1/build/net8.0/Microsoft.NET.Test.Sdk.Program.cs
+/Users/abdielmar/.nuget/packages/xunit.runner.visualstudio/3.1.5/build/net8.0/xunit.abstractions.dll
+/Users/abdielmar/.nuget/packages/xunit.runner.visualstudio/3.1.5/build/net8.0/xunit.runner.visualstudio.testadapter.dll
+````
+
+## File: .sonarqube/conf/14/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Vertigo.Client.UnitTests.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/14/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/14</OutPath>
+  <ProjectType>Test</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/15/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Chat/Services/ChatLanguageFilter.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Chat/Services/ChatService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Chat/Services/ChatServiceDependencies.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Invitations/Services/LobbyInvitationFriendLookup.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Invitations/Services/LobbyInvitationOperations.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Invitations/Services/LobbyInvitationService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/LobbyConnection.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/LobbyCreation.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/LobbySettings.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/LobbyState.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/LobbyStatus.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/Match/LobbyGameOperations.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/Match/LobbyMatchActivation.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/Match/LobbyMatchFault.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/Services/LobbyLifecycle.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/Services/LobbyService.cs
+````
+
+## File: .sonarqube/conf/15/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Vertigo.Server.Matchmaking.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/15/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/15</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/16/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/Program.cs
+````
+
+## File: .sonarqube/conf/16/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/Vertigo.Client.PrivateInvitations.Smoke.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/16/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/16</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/17/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Authentication/GuestSessionTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Chat/ChatLanguageFilterTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Chat/ChatServiceTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/CoreWcfServiceBehaviorTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyDisconnectionTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyMatchActivationTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyMembershipTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyStateTests.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Registration/AccountServiceTests.cs
+/Users/abdielmar/.nuget/packages/microsoft.net.test.sdk/17.14.1/build/net8.0/Microsoft.NET.Test.Sdk.Program.cs
+/Users/abdielmar/.nuget/packages/xunit.runner.visualstudio/3.1.5/build/net8.0/xunit.abstractions.dll
+/Users/abdielmar/.nuget/packages/xunit.runner.visualstudio/3.1.5/build/net8.0/xunit.runner.visualstudio.testadapter.dll
+````
+
+## File: .sonarqube/conf/17/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Vertigo.Server.Matchmaking.Tests.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/17/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/17</OutPath>
+  <ProjectType>Test</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/2/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Callbacks/IFriendshipCallback.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Callbacks/ILobbyCallback.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Endpoints/ServiceEndpoints.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Faults/ServiceErrorCodes.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Faults/ServiceMessageKeys.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IAccountService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IAuthService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IBlockedPlayerService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IChatService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IFriendshipNotificationService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IFriendshipService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/ILobbyInvitationService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/ILobbyService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IFriendshipNotifier.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/ILobbyDirectory.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchBoardReader.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchCommandService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchDepartureService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchDismantleService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchExpulsionVoteService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchLifecycle.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchPlacementService.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchPresence.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchPresenceCommands.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchPrivateHandReader.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchSessionStarter.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchStateReader.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchTurnClock.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/LobbyOverview.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchDepartureResult.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchDismantle.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchDismantleResult.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchExpulsionVote.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchExpulsionVoteResult.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchLifecycleSnapshot.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchLifecycleStatus.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchMasterPlan.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchPlacement.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchPlacementResult.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchPresenceSnapshot.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchReconnectResult.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchSessionSnapshot.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchStartRequest.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/AccountRegistration.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/BlockedPlayerSummary.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendEntry.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipDecision.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipInvitation.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipInvitationEntry.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipNotification.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipNotificationKind.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/InvitableFriendsQuery.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyAdmission.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyChatMessage.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyInvitationDecline.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyInvitationEntry.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyInvitations.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyMember.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyNotification.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyNotificationKind.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyPreparation.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbySummary.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LoginCredentials.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardActionKind.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardChanged.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardMove.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardPile.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardPlayer.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardSnapshot.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchChatRequest.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchChatRules.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchDismantleRequest.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchEndReason.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchExpulsionVoteRequest.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchExpulsionVoteSummary.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchLeaveRequest.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchMasterPlanRequest.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchPlaceRequest.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchPresenceRequest.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchPrivateHand.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchRoundPlayerScore.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchRoundSummary.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PasswordChange.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PlayerPair.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PlayerRelation.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PlayerSearch.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PlayerSearchEntry.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/ServiceFault.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/SessionLogout.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/UserSession.cs
+````
+
+## File: .sonarqube/conf/2/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Vertigo.Contracts.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/2/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/2</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/3/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Callbacks/FriendshipCallbackHandler.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Callbacks/LobbyCallbackHandler.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Callbacks/PendingLobbyEvent.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/DependencyInjection.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IAccountClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IAuthClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IBlockedPlayerClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IChatClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IFriendshipClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IFriendshipNotificationClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/ILobbyClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/ILobbyInvitationClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IServiceCaller.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/AccountClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/AuthClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/BlockedPlayerClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/ChatClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/FriendshipClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/FriendshipNotificationClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/LobbyClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/LobbyInvitationClient.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/ServiceCaller.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Results/ClientResult.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Results/FailureKind.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Sessions/Interfaces/ISessionCoordinator.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Sessions/Interfaces/ISessionTransportCleaner.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Sessions/Services/SessionTransportCleaner.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Sessions/SessionCoordinator.cs
+````
+
+## File: .sonarqube/conf/3/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Vertigo.Client.Networking.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/3/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/3</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/4/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/Security/Implementations/PasswordHasher.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/Security/Implementations/TokenGenerator.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/Security/Interfaces/IPasswordHasher.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/Security/Interfaces/ITokenGenerator.cs
+````
+
+## File: .sonarqube/conf/4/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/Vertigo.Server.CrossCutting.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/4/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/4</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/5/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Contexts/VertigoDatabaseContext.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/DependencyInjection.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Entities/Enums/FriendshipStatus.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Entities/Game/MatchHistory.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Entities/Identity/BlockedPlayer.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Entities/Identity/Friendship.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Entities/Identity/Player.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Entities/Identity/PlayerStats.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Entities/Identity/SessionToken.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Repositories/Implementations/BlockedPlayerRepository.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Repositories/Implementations/FriendshipRepository.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Repositories/Implementations/PlayerRepository.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Repositories/Implementations/SessionTokenRepository.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Repositories/Interfaces/IBlockedPlayerRepository.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Repositories/Interfaces/IFriendshipRepository.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Repositories/Interfaces/IPlayerRepository.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Repositories/Interfaces/ISessionTokenRepository.cs
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Sql/001_ReducePlayerRegistrationLengths.sql
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Sql/README.md
+````
+
+## File: .sonarqube/conf/5/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Vertigo.Server.DataAccess.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/5/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/5</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/6/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/Program.cs
+````
+
+## File: .sonarqube/conf/6/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/Vertigo.Client.Reconnection.Smoke.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/6/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/6</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/7/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/Program.cs
+````
+
+## File: .sonarqube/conf/7/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/Vertigo.Client.TestAccounts.Setup.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/7/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/7</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/8/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/Program.cs
+````
+
+## File: .sonarqube/conf/8/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/Vertigo.Client.Multiplayer.Smoke.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/8/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/8</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/9/FilesToAnalyze.txt
+````
+/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/Program.cs
+````
+
+## File: .sonarqube/conf/9/SonarProjectConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<SonarProjectConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/analyzer/2021/1">
+  <AnalysisConfigPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/SonarQubeAnalysisConfig.xml</AnalysisConfigPath>
+  <ProjectPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/Vertigo.Client.LobbyPreparation.Smoke.csproj</ProjectPath>
+  <FilesToAnalyzePath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/9/FilesToAnalyze.txt</FilesToAnalyzePath>
+  <OutPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/9</OutPath>
+  <ProjectType>Product</ProjectType>
+  <TargetFramework>net11.0</TargetFramework>
+</SonarProjectConfig>
+````
+
+## File: .sonarqube/conf/cs/SonarLint.xml
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<AnalysisInput>
+  <Settings>
+    <Setting>
+      <Key>sonar.cs.ignoreHeaderComments</Key>
+      <Value>true</Value>
+    </Setting>
+    <Setting>
+      <Key>sonar.cs.analyzeGeneratedCode</Key>
+      <Value>false</Value>
+    </Setting>
+    <Setting>
+      <Key>sonar.cs.file.suffixes</Key>
+      <Value>.cs,.razor</Value>
+    </Setting>
+    <Setting>
+      <Key>sonar.cs.analyzeRazorCode</Key>
+      <Value>true</Value>
+    </Setting>
+    <Setting>
+      <Key>sonar.cs.roslyn.ignoreIssues</Key>
+      <Value>false</Value>
+    </Setting>
+  </Settings>
+  <Rules>
+    <Rule>
+      <Key>S2114</Key>
+    </Rule>
+    <Rule>
+      <Key>S2115</Key>
+    </Rule>
+    <Rule>
+      <Key>S2201</Key>
+    </Rule>
+    <Rule>
+      <Key>S2225</Key>
+    </Rule>
+    <Rule>
+      <Key>S2445</Key>
+    </Rule>
+    <Rule>
+      <Key>S2688</Key>
+    </Rule>
+    <Rule>
+      <Key>S3433</Key>
+    </Rule>
+    <Rule>
+      <Key>S3443</Key>
+    </Rule>
+    <Rule>
+      <Key>S3449</Key>
+    </Rule>
+    <Rule>
+      <Key>S4502</Key>
+    </Rule>
+    <Rule>
+      <Key>S5856</Key>
+    </Rule>
+    <Rule>
+      <Key>S6800</Key>
+    </Rule>
+    <Rule>
+      <Key>S1048</Key>
+    </Rule>
+    <Rule>
+      <Key>S1244</Key>
+    </Rule>
+    <Rule>
+      <Key>S1313</Key>
+    </Rule>
+    <Rule>
+      <Key>S1656</Key>
+    </Rule>
+    <Rule>
+      <Key>S1751</Key>
+    </Rule>
+    <Rule>
+      <Key>S1764</Key>
+    </Rule>
+    <Rule>
+      <Key>S1848</Key>
+    </Rule>
+    <Rule>
+      <Key>S1862</Key>
+    </Rule>
+    <Rule>
+      <Key>S2123</Key>
+    </Rule>
+    <Rule>
+      <Key>S2245</Key>
+    </Rule>
+    <Rule>
+      <Key>S2251</Key>
+    </Rule>
+    <Rule>
+      <Key>S2252</Key>
+    </Rule>
+    <Rule>
+      <Key>S2257</Key>
+    </Rule>
+    <Rule>
+      <Key>S2275</Key>
+    </Rule>
+    <Rule>
+      <Key>S2306</Key>
+    </Rule>
+    <Rule>
+      <Key>S2368</Key>
+    </Rule>
+    <Rule>
+      <Key>S2437</Key>
+    </Rule>
+    <Rule>
+      <Key>S2551</Key>
+    </Rule>
+    <Rule>
+      <Key>S2612</Key>
+    </Rule>
+    <Rule>
+      <Key>S2699</Key>
+    </Rule>
+    <Rule>
+      <Key>S2755</Key>
+    </Rule>
+    <Rule>
+      <Key>S2757</Key>
+    </Rule>
+    <Rule>
+      <Key>S2761</Key>
+    </Rule>
+    <Rule>
+      <Key>S2857</Key>
+    </Rule>
+    <Rule>
+      <Key>S2930</Key>
+    </Rule>
+    <Rule>
+      <Key>S2953</Key>
+    </Rule>
+    <Rule>
+      <Key>S2970</Key>
+    </Rule>
+    <Rule>
+      <Key>S2995</Key>
+    </Rule>
+    <Rule>
+      <Key>S2996</Key>
+    </Rule>
+    <Rule>
+      <Key>S2997</Key>
+    </Rule>
+    <Rule>
+      <Key>S3005</Key>
+    </Rule>
+    <Rule>
+      <Key>S3237</Key>
+    </Rule>
+    <Rule>
+      <Key>S3244</Key>
+    </Rule>
+    <Rule>
+      <Key>S3330</Key>
+    </Rule>
+    <Rule>
+      <Key>S3343</Key>
+    </Rule>
+    <Rule>
+      <Key>S3346</Key>
+    </Rule>
+    <Rule>
+      <Key>S3427</Key>
+    </Rule>
+    <Rule>
+      <Key>S3453</Key>
+    </Rule>
+    <Rule>
+      <Key>S3464</Key>
+    </Rule>
+    <Rule>
+      <Key>S3466</Key>
+    </Rule>
+    <Rule>
+      <Key>S3598</Key>
+    </Rule>
+    <Rule>
+      <Key>S3603</Key>
+    </Rule>
+    <Rule>
+      <Key>S3610</Key>
+    </Rule>
+    <Rule>
+      <Key>S3869</Key>
+    </Rule>
+    <Rule>
+      <Key>S3875</Key>
+    </Rule>
+    <Rule>
+      <Key>S3877</Key>
+    </Rule>
+    <Rule>
+      <Key>S3889</Key>
+    </Rule>
+    <Rule>
+      <Key>S3903</Key>
+    </Rule>
+    <Rule>
+      <Key>S3923</Key>
+    </Rule>
+    <Rule>
+      <Key>S3926</Key>
+    </Rule>
+    <Rule>
+      <Key>S3927</Key>
+    </Rule>
+    <Rule>
+      <Key>S3981</Key>
+    </Rule>
+    <Rule>
+      <Key>S3984</Key>
+    </Rule>
+    <Rule>
+      <Key>S4210</Key>
+    </Rule>
+    <Rule>
+      <Key>S4211</Key>
+    </Rule>
+    <Rule>
+      <Key>S4423</Key>
+    </Rule>
+    <Rule>
+      <Key>S4426</Key>
+    </Rule>
+    <Rule>
+      <Key>S4428</Key>
+    </Rule>
+    <Rule>
+      <Key>S4433</Key>
+    </Rule>
+    <Rule>
+      <Key>S4507</Key>
+    </Rule>
+    <Rule>
+      <Key>S4790</Key>
+    </Rule>
+    <Rule>
+      <Key>S4830</Key>
+    </Rule>
+    <Rule>
+      <Key>S5542</Key>
+    </Rule>
+    <Rule>
+      <Key>S5547</Key>
+    </Rule>
+    <Rule>
+      <Key>S5659</Key>
+    </Rule>
+    <Rule>
+      <Key>S5753</Key>
+    </Rule>
+    <Rule>
+      <Key>S5766</Key>
+    </Rule>
+    <Rule>
+      <Key>S6377</Key>
+    </Rule>
+    <Rule>
+      <Key>S6422</Key>
+    </Rule>
+    <Rule>
+      <Key>S6930</Key>
+    </Rule>
+    <Rule>
+      <Key>S6932</Key>
+    </Rule>
+    <Rule>
+      <Key>S6962</Key>
+    </Rule>
+    <Rule>
+      <Key>S6964</Key>
+    </Rule>
+    <Rule>
+      <Key>S6966</Key>
+    </Rule>
+    <Rule>
+      <Key>S6967</Key>
+    </Rule>
+    <Rule>
+      <Key>S7039</Key>
+    </Rule>
+    <Rule>
+      <Key>S2068</Key>
+      <Parameters>
+        <Parameter>
+          <Key>credentialWords</Key>
+          <Value>password, passwd, pwd, passphrase</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S2077</Key>
+    </Rule>
+    <Rule>
+      <Key>S2092</Key>
+    </Rule>
+    <Rule>
+      <Key>S2178</Key>
+    </Rule>
+    <Rule>
+      <Key>S2187</Key>
+    </Rule>
+    <Rule>
+      <Key>S2190</Key>
+    </Rule>
+    <Rule>
+      <Key>S3060</Key>
+    </Rule>
+    <Rule>
+      <Key>S3168</Key>
+    </Rule>
+    <Rule>
+      <Key>S3172</Key>
+    </Rule>
+    <Rule>
+      <Key>S3263</Key>
+    </Rule>
+    <Rule>
+      <Key>S4036</Key>
+    </Rule>
+    <Rule>
+      <Key>S4143</Key>
+    </Rule>
+    <Rule>
+      <Key>S4159</Key>
+    </Rule>
+    <Rule>
+      <Key>S4260</Key>
+    </Rule>
+    <Rule>
+      <Key>S4275</Key>
+    </Rule>
+    <Rule>
+      <Key>S4277</Key>
+    </Rule>
+    <Rule>
+      <Key>S4583</Key>
+    </Rule>
+    <Rule>
+      <Key>S4586</Key>
+    </Rule>
+    <Rule>
+      <Key>S5122</Key>
+    </Rule>
+    <Rule>
+      <Key>S5332</Key>
+    </Rule>
+    <Rule>
+      <Key>S5344</Key>
+    </Rule>
+    <Rule>
+      <Key>S5443</Key>
+    </Rule>
+    <Rule>
+      <Key>S5445</Key>
+    </Rule>
+    <Rule>
+      <Key>S5693</Key>
+      <Parameters>
+        <Parameter>
+          <Key>fileUploadSizeLimit</Key>
+          <Value>8388608</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S6418</Key>
+      <Parameters>
+        <Parameter>
+          <Key>secretWords</Key>
+          <Value>api[_\-]?key, auth, credential, secret, token</Value>
+        </Parameter>
+        <Parameter>
+          <Key>randomnessSensibility</Key>
+          <Value>3</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S6424</Key>
+    </Rule>
+    <Rule>
+      <Key>S6444</Key>
+    </Rule>
+    <Rule>
+      <Key>S6640</Key>
+    </Rule>
+    <Rule>
+      <Key>S6674</Key>
+    </Rule>
+    <Rule>
+      <Key>S6677</Key>
+    </Rule>
+    <Rule>
+      <Key>S6797</Key>
+    </Rule>
+    <Rule>
+      <Key>S6798</Key>
+    </Rule>
+    <Rule>
+      <Key>S8949</Key>
+    </Rule>
+  </Rules>
+  <Files>
+  </Files>
+</AnalysisInput>
+````
+
+## File: .sonarqube/conf/vbnet/SonarLint.xml
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+<AnalysisInput>
+  <Settings>
+    <Setting>
+      <Key>sonar.vbnet.ignoreHeaderComments</Key>
+      <Value>true</Value>
+    </Setting>
+    <Setting>
+      <Key>sonar.vbnet.file.suffixes</Key>
+      <Value>.vb</Value>
+    </Setting>
+    <Setting>
+      <Key>sonar.vbnet.roslyn.ignoreIssues</Key>
+      <Value>false</Value>
+    </Setting>
+    <Setting>
+      <Key>sonar.vbnet.analyzeGeneratedCode</Key>
+      <Value>false</Value>
+    </Setting>
+  </Settings>
+  <Rules>
+    <Rule>
+      <Key>S2225</Key>
+    </Rule>
+    <Rule>
+      <Key>S5856</Key>
+    </Rule>
+    <Rule>
+      <Key>S1048</Key>
+    </Rule>
+    <Rule>
+      <Key>S1656</Key>
+    </Rule>
+    <Rule>
+      <Key>S1862</Key>
+    </Rule>
+    <Rule>
+      <Key>S2068</Key>
+      <Parameters>
+        <Parameter>
+          <Key>credentialWords</Key>
+          <Value>password, passwd, pwd, passphrase</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S2257</Key>
+    </Rule>
+    <Rule>
+      <Key>S2368</Key>
+    </Rule>
+    <Rule>
+      <Key>S3449</Key>
+    </Rule>
+    <Rule>
+      <Key>S3453</Key>
+    </Rule>
+    <Rule>
+      <Key>S3464</Key>
+    </Rule>
+    <Rule>
+      <Key>S3466</Key>
+    </Rule>
+    <Rule>
+      <Key>S3598</Key>
+    </Rule>
+    <Rule>
+      <Key>S3903</Key>
+    </Rule>
+    <Rule>
+      <Key>S3923</Key>
+    </Rule>
+    <Rule>
+      <Key>S3926</Key>
+    </Rule>
+    <Rule>
+      <Key>S3927</Key>
+    </Rule>
+    <Rule>
+      <Key>S4210</Key>
+    </Rule>
+    <Rule>
+      <Key>S4423</Key>
+    </Rule>
+    <Rule>
+      <Key>S4428</Key>
+    </Rule>
+    <Rule>
+      <Key>S4507</Key>
+    </Rule>
+    <Rule>
+      <Key>S4790</Key>
+    </Rule>
+    <Rule>
+      <Key>S5542</Key>
+    </Rule>
+    <Rule>
+      <Key>S5547</Key>
+    </Rule>
+    <Rule>
+      <Key>S5659</Key>
+    </Rule>
+    <Rule>
+      <Key>S5693</Key>
+      <Parameters>
+        <Parameter>
+          <Key>fileUploadSizeLimit</Key>
+          <Value>8388608</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S5753</Key>
+    </Rule>
+    <Rule>
+      <Key>S6930</Key>
+    </Rule>
+    <Rule>
+      <Key>S1313</Key>
+    </Rule>
+    <Rule>
+      <Key>S1751</Key>
+    </Rule>
+    <Rule>
+      <Key>S1764</Key>
+    </Rule>
+    <Rule>
+      <Key>S2077</Key>
+    </Rule>
+    <Rule>
+      <Key>S2178</Key>
+    </Rule>
+    <Rule>
+      <Key>S2437</Key>
+    </Rule>
+    <Rule>
+      <Key>S2551</Key>
+    </Rule>
+    <Rule>
+      <Key>S2612</Key>
+    </Rule>
+    <Rule>
+      <Key>S2757</Key>
+    </Rule>
+    <Rule>
+      <Key>S2761</Key>
+    </Rule>
+    <Rule>
+      <Key>S3603</Key>
+    </Rule>
+    <Rule>
+      <Key>S3869</Key>
+    </Rule>
+    <Rule>
+      <Key>S3889</Key>
+    </Rule>
+    <Rule>
+      <Key>S3981</Key>
+    </Rule>
+    <Rule>
+      <Key>S4036</Key>
+    </Rule>
+    <Rule>
+      <Key>S4143</Key>
+    </Rule>
+    <Rule>
+      <Key>S4159</Key>
+    </Rule>
+    <Rule>
+      <Key>S4260</Key>
+    </Rule>
+    <Rule>
+      <Key>S4275</Key>
+    </Rule>
+    <Rule>
+      <Key>S4277</Key>
+    </Rule>
+    <Rule>
+      <Key>S4583</Key>
+    </Rule>
+    <Rule>
+      <Key>S4586</Key>
+    </Rule>
+    <Rule>
+      <Key>S4830</Key>
+    </Rule>
+    <Rule>
+      <Key>S5443</Key>
+    </Rule>
+    <Rule>
+      <Key>S5445</Key>
+    </Rule>
+    <Rule>
+      <Key>S6418</Key>
+      <Parameters>
+        <Parameter>
+          <Key>randomnessSensibility</Key>
+          <Value>3</Value>
+        </Parameter>
+        <Parameter>
+          <Key>secretWords</Key>
+          <Value>api[_\-]?key, auth, credential, secret, token</Value>
+        </Parameter>
+      </Parameters>
+    </Rule>
+    <Rule>
+      <Key>S6444</Key>
+    </Rule>
+  </Rules>
+  <Files>
+  </Files>
+</AnalysisInput>
+````
+
+## File: .sonarqube/conf/Sonar-cs-none.ruleset
+````
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Rules for SonarQube" Description="This rule set was automatically generated from SonarQube" ToolsVersion="14.0">
+  <Rules AnalyzerId="SonarScannerFor.NET" RuleNamespace="SonarScannerFor.NET">
+    <Rule Id="S1110" Action="None" />
+    <Rule Id="S1117" Action="None" />
+    <Rule Id="S1118" Action="None" />
+    <Rule Id="S1133" Action="None" />
+    <Rule Id="S1134" Action="None" />
+    <Rule Id="S1135" Action="None" />
+    <Rule Id="S1144" Action="None" />
+    <Rule Id="S1147" Action="None" />
+    <Rule Id="S1264" Action="None" />
+    <Rule Id="S2114" Action="None" />
+    <Rule Id="S2115" Action="None" />
+    <Rule Id="S2201" Action="None" />
+    <Rule Id="S2221" Action="None" />
+    <Rule Id="S2223" Action="None" />
+    <Rule Id="S2225" Action="None" />
+    <Rule Id="S2234" Action="None" />
+    <Rule Id="S2325" Action="None" />
+    <Rule Id="S2326" Action="None" />
+    <Rule Id="S2328" Action="None" />
+    <Rule Id="S2342" Action="None" />
+    <Rule Id="S2344" Action="None" />
+    <Rule Id="S2345" Action="None" />
+    <Rule Id="S2346" Action="None" />
+    <Rule Id="S2357" Action="None" />
+    <Rule Id="S2445" Action="None" />
+    <Rule Id="S2479" Action="None" />
+    <Rule Id="S2681" Action="None" />
+    <Rule Id="S2688" Action="None" />
+    <Rule Id="S3431" Action="None" />
+    <Rule Id="S3433" Action="None" />
+    <Rule Id="S3440" Action="None" />
+    <Rule Id="S3441" Action="None" />
+    <Rule Id="S3442" Action="None" />
+    <Rule Id="S3443" Action="None" />
+    <Rule Id="S3444" Action="None" />
+    <Rule Id="S3445" Action="None" />
+    <Rule Id="S3447" Action="None" />
+    <Rule Id="S3449" Action="None" />
+    <Rule Id="S3532" Action="None" />
+    <Rule Id="S3776" Action="None" />
+    <Rule Id="S3897" Action="None" />
+    <Rule Id="S3898" Action="None" />
+    <Rule Id="S4502" Action="None" />
+    <Rule Id="S4524" Action="None" />
+    <Rule Id="S5856" Action="None" />
+    <Rule Id="S6800" Action="None" />
+    <Rule Id="S6802" Action="None" />
+    <Rule Id="S6803" Action="None" />
+    <Rule Id="S881" Action="None" />
+    <Rule Id="S1006" Action="None" />
+    <Rule Id="S1048" Action="None" />
+    <Rule Id="S1066" Action="None" />
+    <Rule Id="S1067" Action="None" />
+    <Rule Id="S1104" Action="None" />
+    <Rule Id="S1109" Action="None" />
+    <Rule Id="S1116" Action="None" />
+    <Rule Id="S1121" Action="None" />
+    <Rule Id="S1123" Action="None" />
+    <Rule Id="S1125" Action="None" />
+    <Rule Id="S1128" Action="None" />
+    <Rule Id="S1151" Action="None" />
+    <Rule Id="S1155" Action="None" />
+    <Rule Id="S1163" Action="None" />
+    <Rule Id="S1168" Action="None" />
+    <Rule Id="S1172" Action="None" />
+    <Rule Id="S1185" Action="None" />
+    <Rule Id="S1186" Action="None" />
+    <Rule Id="S1200" Action="None" />
+    <Rule Id="S1206" Action="None" />
+    <Rule Id="S1210" Action="None" />
+    <Rule Id="S1215" Action="None" />
+    <Rule Id="S1226" Action="None" />
+    <Rule Id="S1227" Action="None" />
+    <Rule Id="S1244" Action="None" />
+    <Rule Id="S125" Action="None" />
+    <Rule Id="S126" Action="None" />
+    <Rule Id="S127" Action="None" />
+    <Rule Id="S1301" Action="None" />
+    <Rule Id="S1309" Action="None" />
+    <Rule Id="S131" Action="None" />
+    <Rule Id="S1312" Action="None" />
+    <Rule Id="S1313" Action="None" />
+    <Rule Id="S134" Action="None" />
+    <Rule Id="S138" Action="None" />
+    <Rule Id="S1449" Action="None" />
+    <Rule Id="S1450" Action="None" />
+    <Rule Id="S1451" Action="None" />
+    <Rule Id="S1479" Action="None" />
+    <Rule Id="S1481" Action="None" />
+    <Rule Id="S1541" Action="None" />
+    <Rule Id="S1607" Action="None" />
+    <Rule Id="S1643" Action="None" />
+    <Rule Id="S1656" Action="None" />
+    <Rule Id="S1659" Action="None" />
+    <Rule Id="S1694" Action="None" />
+    <Rule Id="S1696" Action="None" />
+    <Rule Id="S1698" Action="None" />
+    <Rule Id="S1699" Action="None" />
+    <Rule Id="S1751" Action="None" />
+    <Rule Id="S1764" Action="None" />
+    <Rule Id="S1821" Action="None" />
+    <Rule Id="S1848" Action="None" />
+    <Rule Id="S1854" Action="None" />
+    <Rule Id="S1858" Action="None" />
+    <Rule Id="S1862" Action="None" />
+    <Rule Id="S1871" Action="None" />
+    <Rule Id="S1905" Action="None" />
+    <Rule Id="S1939" Action="None" />
+    <Rule Id="S1940" Action="None" />
+    <Rule Id="S1944" Action="None" />
+    <Rule Id="S1994" Action="None" />
+    <Rule Id="S2123" Action="None" />
+    <Rule Id="S2139" Action="None" />
+    <Rule Id="S2148" Action="None" />
+    <Rule Id="S2156" Action="None" />
+    <Rule Id="S2219" Action="None" />
+    <Rule Id="S2245" Action="None" />
+    <Rule Id="S2251" Action="None" />
+    <Rule Id="S2252" Action="None" />
+    <Rule Id="S2257" Action="None" />
+    <Rule Id="S2275" Action="None" />
+    <Rule Id="S2302" Action="None" />
+    <Rule Id="S2306" Action="None" />
+    <Rule Id="S2327" Action="None" />
+    <Rule Id="S2330" Action="None" />
+    <Rule Id="S2333" Action="None" />
+    <Rule Id="S2339" Action="None" />
+    <Rule Id="S2360" Action="None" />
+    <Rule Id="S2365" Action="None" />
+    <Rule Id="S2368" Action="None" />
+    <Rule Id="S2372" Action="None" />
+    <Rule Id="S2376" Action="None" />
+    <Rule Id="S2386" Action="None" />
+    <Rule Id="S2387" Action="None" />
+    <Rule Id="S2436" Action="None" />
+    <Rule Id="S2437" Action="None" />
+    <Rule Id="S2486" Action="None" />
+    <Rule Id="S2551" Action="None" />
+    <Rule Id="S2612" Action="None" />
+    <Rule Id="S2629" Action="None" />
+    <Rule Id="S2674" Action="None" />
+    <Rule Id="S2692" Action="None" />
+    <Rule Id="S2696" Action="None" />
+    <Rule Id="S2699" Action="None" />
+    <Rule Id="S2701" Action="None" />
+    <Rule Id="S2737" Action="None" />
+    <Rule Id="S2743" Action="None" />
+    <Rule Id="S2755" Action="None" />
+    <Rule Id="S2757" Action="None" />
+    <Rule Id="S2760" Action="None" />
+    <Rule Id="S2761" Action="None" />
+    <Rule Id="S2857" Action="None" />
+    <Rule Id="S2925" Action="None" />
+    <Rule Id="S2930" Action="None" />
+    <Rule Id="S2931" Action="None" />
+    <Rule Id="S2933" Action="None" />
+    <Rule Id="S2934" Action="None" />
+    <Rule Id="S2952" Action="None" />
+    <Rule Id="S2953" Action="None" />
+    <Rule Id="S2955" Action="None" />
+    <Rule Id="S2970" Action="None" />
+    <Rule Id="S2971" Action="None" />
+    <Rule Id="S2995" Action="None" />
+    <Rule Id="S2996" Action="None" />
+    <Rule Id="S2997" Action="None" />
+    <Rule Id="S3005" Action="None" />
+    <Rule Id="S3215" Action="None" />
+    <Rule Id="S3216" Action="None" />
+    <Rule Id="S3217" Action="None" />
+    <Rule Id="S3218" Action="None" />
+    <Rule Id="S3220" Action="None" />
+    <Rule Id="S3234" Action="None" />
+    <Rule Id="S3235" Action="None" />
+    <Rule Id="S3236" Action="None" />
+    <Rule Id="S3237" Action="None" />
+    <Rule Id="S3240" Action="None" />
+    <Rule Id="S3241" Action="None" />
+    <Rule Id="S3242" Action="None" />
+    <Rule Id="S3244" Action="None" />
+    <Rule Id="S3246" Action="None" />
+    <Rule Id="S3247" Action="None" />
+    <Rule Id="S3249" Action="None" />
+    <Rule Id="S3330" Action="None" />
+    <Rule Id="S3343" Action="None" />
+    <Rule Id="S3346" Action="None" />
+    <Rule Id="S3353" Action="None" />
+    <Rule Id="S3358" Action="None" />
+    <Rule Id="S3363" Action="None" />
+    <Rule Id="S3366" Action="None" />
+    <Rule Id="S3398" Action="None" />
+    <Rule Id="S3400" Action="None" />
+    <Rule Id="S3415" Action="None" />
+    <Rule Id="S3416" Action="None" />
+    <Rule Id="S3427" Action="None" />
+    <Rule Id="S3450" Action="None" />
+    <Rule Id="S3451" Action="None" />
+    <Rule Id="S3453" Action="None" />
+    <Rule Id="S3456" Action="None" />
+    <Rule Id="S3457" Action="None" />
+    <Rule Id="S3458" Action="None" />
+    <Rule Id="S3459" Action="None" />
+    <Rule Id="S3464" Action="None" />
+    <Rule Id="S3466" Action="None" />
+    <Rule Id="S3597" Action="None" />
+    <Rule Id="S3598" Action="None" />
+    <Rule Id="S3600" Action="None" />
+    <Rule Id="S3603" Action="None" />
+    <Rule Id="S3604" Action="None" />
+    <Rule Id="S3610" Action="None" />
+    <Rule Id="S3626" Action="None" />
+    <Rule Id="S3717" Action="None" />
+    <Rule Id="S3869" Action="None" />
+    <Rule Id="S3871" Action="None" />
+    <Rule Id="S3872" Action="None" />
+    <Rule Id="S3874" Action="None" />
+    <Rule Id="S3875" Action="None" />
+    <Rule Id="S3876" Action="None" />
+    <Rule Id="S3877" Action="None" />
+    <Rule Id="S3878" Action="None" />
+    <Rule Id="S3880" Action="None" />
+    <Rule Id="S3881" Action="None" />
+    <Rule Id="S3884" Action="None" />
+    <Rule Id="S3885" Action="None" />
+    <Rule Id="S3887" Action="None" />
+    <Rule Id="S3889" Action="None" />
+    <Rule Id="S3902" Action="None" />
+    <Rule Id="S3903" Action="None" />
+    <Rule Id="S3904" Action="None" />
+    <Rule Id="S3906" Action="None" />
+    <Rule Id="S3908" Action="None" />
+    <Rule Id="S3909" Action="None" />
+    <Rule Id="S3923" Action="None" />
+    <Rule Id="S3925" Action="None" />
+    <Rule Id="S3926" Action="None" />
+    <Rule Id="S3927" Action="None" />
+    <Rule Id="S3928" Action="None" />
+    <Rule Id="S3937" Action="None" />
+    <Rule Id="S3956" Action="None" />
+    <Rule Id="S3962" Action="None" />
+    <Rule Id="S3963" Action="None" />
+    <Rule Id="S3967" Action="None" />
+    <Rule Id="S3971" Action="None" />
+    <Rule Id="S3972" Action="None" />
+    <Rule Id="S3973" Action="None" />
+    <Rule Id="S3981" Action="None" />
+    <Rule Id="S3984" Action="None" />
+    <Rule Id="S3990" Action="None" />
+    <Rule Id="S3992" Action="None" />
+    <Rule Id="S3993" Action="None" />
+    <Rule Id="S3994" Action="None" />
+    <Rule Id="S3995" Action="None" />
+    <Rule Id="S3996" Action="None" />
+    <Rule Id="S3997" Action="None" />
+    <Rule Id="S3998" Action="None" />
+    <Rule Id="S4005" Action="None" />
+    <Rule Id="S4060" Action="None" />
+    <Rule Id="S4061" Action="None" />
+    <Rule Id="S4069" Action="None" />
+    <Rule Id="S4070" Action="None" />
+    <Rule Id="S4200" Action="None" />
+    <Rule Id="S4201" Action="None" />
+    <Rule Id="S4210" Action="None" />
+    <Rule Id="S4211" Action="None" />
+    <Rule Id="S4212" Action="None" />
+    <Rule Id="S4214" Action="None" />
+    <Rule Id="S4423" Action="None" />
+    <Rule Id="S4426" Action="None" />
+    <Rule Id="S4428" Action="None" />
+    <Rule Id="S4433" Action="None" />
+    <Rule Id="S4456" Action="None" />
+    <Rule Id="S4457" Action="None" />
+    <Rule Id="S4507" Action="None" />
+    <Rule Id="S4545" Action="None" />
+    <Rule Id="S4635" Action="None" />
+    <Rule Id="S4663" Action="None" />
+    <Rule Id="S4790" Action="None" />
+    <Rule Id="S4830" Action="None" />
+    <Rule Id="S5034" Action="None" />
+    <Rule Id="S5042" Action="None" />
+    <Rule Id="S5542" Action="None" />
+    <Rule Id="S5547" Action="None" />
+    <Rule Id="S5659" Action="None" />
+    <Rule Id="S5753" Action="None" />
+    <Rule Id="S5766" Action="None" />
+    <Rule Id="S6377" Action="None" />
+    <Rule Id="S6422" Action="None" />
+    <Rule Id="S6507" Action="None" />
+    <Rule Id="S6513" Action="None" />
+    <Rule Id="S6602" Action="None" />
+    <Rule Id="S6603" Action="None" />
+    <Rule Id="S6605" Action="None" />
+    <Rule Id="S6607" Action="None" />
+    <Rule Id="S6608" Action="None" />
+    <Rule Id="S6609" Action="None" />
+    <Rule Id="S6610" Action="None" />
+    <Rule Id="S6612" Action="None" />
+    <Rule Id="S6613" Action="None" />
+    <Rule Id="S6617" Action="None" />
+    <Rule Id="S6618" Action="None" />
+    <Rule Id="S6664" Action="None" />
+    <Rule Id="S6667" Action="None" />
+    <Rule Id="S6668" Action="None" />
+    <Rule Id="S6669" Action="None" />
+    <Rule Id="S6930" Action="None" />
+    <Rule Id="S6931" Action="None" />
+    <Rule Id="S6932" Action="None" />
+    <Rule Id="S6934" Action="None" />
+    <Rule Id="S6960" Action="None" />
+    <Rule Id="S6961" Action="None" />
+    <Rule Id="S6962" Action="None" />
+    <Rule Id="S6964" Action="None" />
+    <Rule Id="S6965" Action="None" />
+    <Rule Id="S6966" Action="None" />
+    <Rule Id="S6967" Action="None" />
+    <Rule Id="S6968" Action="None" />
+    <Rule Id="S7039" Action="None" />
+    <Rule Id="S818" Action="None" />
+    <Rule Id="S8367" Action="None" />
+    <Rule Id="S8368" Action="None" />
+    <Rule Id="S8380" Action="None" />
+    <Rule Id="S8381" Action="None" />
+    <Rule Id="S8969" Action="None" />
+    <Rule Id="S907" Action="None" />
+    <Rule Id="S927" Action="None" />
+    <Rule Id="S100" Action="None" />
+    <Rule Id="S101" Action="None" />
+    <Rule Id="S103" Action="None" />
+    <Rule Id="S104" Action="None" />
+    <Rule Id="S105" Action="None" />
+    <Rule Id="S106" Action="None" />
+    <Rule Id="S107" Action="None" />
+    <Rule Id="S1075" Action="None" />
+    <Rule Id="S108" Action="None" />
+    <Rule Id="S109" Action="None" />
+    <Rule Id="S110" Action="None" />
+    <Rule Id="S112" Action="None" />
+    <Rule Id="S113" Action="None" />
+    <Rule Id="S1192" Action="None" />
+    <Rule Id="S1199" Action="None" />
+    <Rule Id="S121" Action="None" />
+    <Rule Id="S122" Action="None" />
+    <Rule Id="S2068" Action="None" />
+    <Rule Id="S2077" Action="None" />
+    <Rule Id="S2092" Action="None" />
+    <Rule Id="S2094" Action="None" />
+    <Rule Id="S2166" Action="None" />
+    <Rule Id="S2178" Action="None" />
+    <Rule Id="S2183" Action="None" />
+    <Rule Id="S2184" Action="None" />
+    <Rule Id="S2187" Action="None" />
+    <Rule Id="S2190" Action="None" />
+    <Rule Id="S2197" Action="None" />
+    <Rule Id="S2198" Action="None" />
+    <Rule Id="S2290" Action="None" />
+    <Rule Id="S2291" Action="None" />
+    <Rule Id="S2292" Action="None" />
+    <Rule Id="S3010" Action="None" />
+    <Rule Id="S3011" Action="None" />
+    <Rule Id="S3052" Action="None" />
+    <Rule Id="S3059" Action="None" />
+    <Rule Id="S3060" Action="None" />
+    <Rule Id="S3063" Action="None" />
+    <Rule Id="S3168" Action="None" />
+    <Rule Id="S3169" Action="None" />
+    <Rule Id="S3172" Action="None" />
+    <Rule Id="S3251" Action="None" />
+    <Rule Id="S3253" Action="None" />
+    <Rule Id="S3254" Action="None" />
+    <Rule Id="S3256" Action="None" />
+    <Rule Id="S3257" Action="None" />
+    <Rule Id="S3260" Action="None" />
+    <Rule Id="S3261" Action="None" />
+    <Rule Id="S3262" Action="None" />
+    <Rule Id="S3263" Action="None" />
+    <Rule Id="S3264" Action="None" />
+    <Rule Id="S3265" Action="None" />
+    <Rule Id="S3267" Action="None" />
+    <Rule Id="S3376" Action="None" />
+    <Rule Id="S3397" Action="None" />
+    <Rule Id="S4000" Action="None" />
+    <Rule Id="S4002" Action="None" />
+    <Rule Id="S4004" Action="None" />
+    <Rule Id="S4015" Action="None" />
+    <Rule Id="S4016" Action="None" />
+    <Rule Id="S4017" Action="None" />
+    <Rule Id="S4018" Action="None" />
+    <Rule Id="S4019" Action="None" />
+    <Rule Id="S4022" Action="None" />
+    <Rule Id="S4023" Action="None" />
+    <Rule Id="S4025" Action="None" />
+    <Rule Id="S4026" Action="None" />
+    <Rule Id="S4027" Action="None" />
+    <Rule Id="S4035" Action="None" />
+    <Rule Id="S4036" Action="None" />
+    <Rule Id="S4039" Action="None" />
+    <Rule Id="S4040" Action="None" />
+    <Rule Id="S4041" Action="None" />
+    <Rule Id="S4047" Action="None" />
+    <Rule Id="S4049" Action="None" />
+    <Rule Id="S4050" Action="None" />
+    <Rule Id="S4052" Action="None" />
+    <Rule Id="S4055" Action="None" />
+    <Rule Id="S4056" Action="None" />
+    <Rule Id="S4057" Action="None" />
+    <Rule Id="S4058" Action="None" />
+    <Rule Id="S4059" Action="None" />
+    <Rule Id="S4136" Action="None" />
+    <Rule Id="S4143" Action="None" />
+    <Rule Id="S4144" Action="None" />
+    <Rule Id="S4159" Action="None" />
+    <Rule Id="S4220" Action="None" />
+    <Rule Id="S4225" Action="None" />
+    <Rule Id="S4226" Action="None" />
+    <Rule Id="S4260" Action="None" />
+    <Rule Id="S4261" Action="None" />
+    <Rule Id="S4275" Action="None" />
+    <Rule Id="S4277" Action="None" />
+    <Rule Id="S4462" Action="None" />
+    <Rule Id="S4487" Action="None" />
+    <Rule Id="S4581" Action="None" />
+    <Rule Id="S4583" Action="None" />
+    <Rule Id="S4586" Action="None" />
+    <Rule Id="S5122" Action="None" />
+    <Rule Id="S5332" Action="None" />
+    <Rule Id="S5344" Action="None" />
+    <Rule Id="S5443" Action="None" />
+    <Rule Id="S5445" Action="None" />
+    <Rule Id="S5693" Action="None" />
+    <Rule Id="S6354" Action="None" />
+    <Rule Id="S6418" Action="None" />
+    <Rule Id="S6419" Action="None" />
+    <Rule Id="S6420" Action="None" />
+    <Rule Id="S6421" Action="None" />
+    <Rule Id="S6423" Action="None" />
+    <Rule Id="S6424" Action="None" />
+    <Rule Id="S6444" Action="None" />
+    <Rule Id="S6561" Action="None" />
+    <Rule Id="S6562" Action="None" />
+    <Rule Id="S6563" Action="None" />
+    <Rule Id="S6566" Action="None" />
+    <Rule Id="S6575" Action="None" />
+    <Rule Id="S6580" Action="None" />
+    <Rule Id="S6585" Action="None" />
+    <Rule Id="S6588" Action="None" />
+    <Rule Id="S6640" Action="None" />
+    <Rule Id="S6670" Action="None" />
+    <Rule Id="S6672" Action="None" />
+    <Rule Id="S6673" Action="None" />
+    <Rule Id="S6674" Action="None" />
+    <Rule Id="S6675" Action="None" />
+    <Rule Id="S6677" Action="None" />
+    <Rule Id="S6678" Action="None" />
+    <Rule Id="S6797" Action="None" />
+    <Rule Id="S6798" Action="None" />
+    <Rule Id="S8949" Action="None" />
+    <Rule Id="S8970" Action="None" />
+  </Rules>
+</RuleSet>
+````
+
+## File: .sonarqube/conf/Sonar-cs.ruleset
+````
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Rules for SonarQube" Description="This rule set was automatically generated from SonarQube" ToolsVersion="14.0">
+  <Rules AnalyzerId="SonarScannerFor.NET" RuleNamespace="SonarScannerFor.NET">
+    <Rule Id="S1110" Action="None" />
+    <Rule Id="S1117" Action="None" />
+    <Rule Id="S1118" Action="None" />
+    <Rule Id="S1133" Action="None" />
+    <Rule Id="S1134" Action="None" />
+    <Rule Id="S1135" Action="None" />
+    <Rule Id="S1144" Action="None" />
+    <Rule Id="S1147" Action="None" />
+    <Rule Id="S1264" Action="None" />
+    <Rule Id="S2114" Action="Warning" />
+    <Rule Id="S2115" Action="Warning" />
+    <Rule Id="S2201" Action="Warning" />
+    <Rule Id="S2221" Action="None" />
+    <Rule Id="S2223" Action="None" />
+    <Rule Id="S2225" Action="Warning" />
+    <Rule Id="S2234" Action="None" />
+    <Rule Id="S2325" Action="None" />
+    <Rule Id="S2326" Action="None" />
+    <Rule Id="S2328" Action="None" />
+    <Rule Id="S2342" Action="None" />
+    <Rule Id="S2344" Action="None" />
+    <Rule Id="S2345" Action="None" />
+    <Rule Id="S2346" Action="None" />
+    <Rule Id="S2357" Action="None" />
+    <Rule Id="S2445" Action="Warning" />
+    <Rule Id="S2479" Action="None" />
+    <Rule Id="S2681" Action="None" />
+    <Rule Id="S2688" Action="Warning" />
+    <Rule Id="S3431" Action="None" />
+    <Rule Id="S3433" Action="Warning" />
+    <Rule Id="S3440" Action="None" />
+    <Rule Id="S3441" Action="None" />
+    <Rule Id="S3442" Action="None" />
+    <Rule Id="S3443" Action="Warning" />
+    <Rule Id="S3444" Action="None" />
+    <Rule Id="S3445" Action="None" />
+    <Rule Id="S3447" Action="None" />
+    <Rule Id="S3449" Action="Warning" />
+    <Rule Id="S3532" Action="None" />
+    <Rule Id="S3776" Action="None" />
+    <Rule Id="S3897" Action="None" />
+    <Rule Id="S3898" Action="None" />
+    <Rule Id="S4502" Action="Warning" />
+    <Rule Id="S4524" Action="None" />
+    <Rule Id="S5856" Action="Warning" />
+    <Rule Id="S6800" Action="Warning" />
+    <Rule Id="S6802" Action="None" />
+    <Rule Id="S6803" Action="None" />
+    <Rule Id="S881" Action="None" />
+    <Rule Id="S1006" Action="None" />
+    <Rule Id="S1048" Action="Warning" />
+    <Rule Id="S1066" Action="None" />
+    <Rule Id="S1067" Action="None" />
+    <Rule Id="S1104" Action="None" />
+    <Rule Id="S1109" Action="None" />
+    <Rule Id="S1116" Action="None" />
+    <Rule Id="S1121" Action="None" />
+    <Rule Id="S1123" Action="None" />
+    <Rule Id="S1125" Action="None" />
+    <Rule Id="S1128" Action="None" />
+    <Rule Id="S1151" Action="None" />
+    <Rule Id="S1155" Action="None" />
+    <Rule Id="S1163" Action="None" />
+    <Rule Id="S1168" Action="None" />
+    <Rule Id="S1172" Action="None" />
+    <Rule Id="S1185" Action="None" />
+    <Rule Id="S1186" Action="None" />
+    <Rule Id="S1200" Action="None" />
+    <Rule Id="S1206" Action="None" />
+    <Rule Id="S1210" Action="None" />
+    <Rule Id="S1215" Action="None" />
+    <Rule Id="S1226" Action="None" />
+    <Rule Id="S1227" Action="None" />
+    <Rule Id="S1244" Action="Warning" />
+    <Rule Id="S125" Action="None" />
+    <Rule Id="S126" Action="None" />
+    <Rule Id="S127" Action="None" />
+    <Rule Id="S1301" Action="None" />
+    <Rule Id="S1309" Action="None" />
+    <Rule Id="S131" Action="None" />
+    <Rule Id="S1312" Action="None" />
+    <Rule Id="S1313" Action="Warning" />
+    <Rule Id="S134" Action="None" />
+    <Rule Id="S138" Action="None" />
+    <Rule Id="S1449" Action="None" />
+    <Rule Id="S1450" Action="None" />
+    <Rule Id="S1451" Action="None" />
+    <Rule Id="S1479" Action="None" />
+    <Rule Id="S1481" Action="None" />
+    <Rule Id="S1541" Action="None" />
+    <Rule Id="S1607" Action="None" />
+    <Rule Id="S1643" Action="None" />
+    <Rule Id="S1656" Action="Warning" />
+    <Rule Id="S1659" Action="None" />
+    <Rule Id="S1694" Action="None" />
+    <Rule Id="S1696" Action="None" />
+    <Rule Id="S1698" Action="None" />
+    <Rule Id="S1699" Action="None" />
+    <Rule Id="S1751" Action="Warning" />
+    <Rule Id="S1764" Action="Warning" />
+    <Rule Id="S1821" Action="None" />
+    <Rule Id="S1848" Action="Warning" />
+    <Rule Id="S1854" Action="None" />
+    <Rule Id="S1858" Action="None" />
+    <Rule Id="S1862" Action="Warning" />
+    <Rule Id="S1871" Action="None" />
+    <Rule Id="S1905" Action="None" />
+    <Rule Id="S1939" Action="None" />
+    <Rule Id="S1940" Action="None" />
+    <Rule Id="S1944" Action="None" />
+    <Rule Id="S1994" Action="None" />
+    <Rule Id="S2123" Action="Warning" />
+    <Rule Id="S2139" Action="None" />
+    <Rule Id="S2148" Action="None" />
+    <Rule Id="S2156" Action="None" />
+    <Rule Id="S2219" Action="None" />
+    <Rule Id="S2245" Action="Warning" />
+    <Rule Id="S2251" Action="Warning" />
+    <Rule Id="S2252" Action="Warning" />
+    <Rule Id="S2257" Action="Warning" />
+    <Rule Id="S2275" Action="Warning" />
+    <Rule Id="S2302" Action="None" />
+    <Rule Id="S2306" Action="Warning" />
+    <Rule Id="S2327" Action="None" />
+    <Rule Id="S2330" Action="None" />
+    <Rule Id="S2333" Action="None" />
+    <Rule Id="S2339" Action="None" />
+    <Rule Id="S2360" Action="None" />
+    <Rule Id="S2365" Action="None" />
+    <Rule Id="S2368" Action="Warning" />
+    <Rule Id="S2372" Action="None" />
+    <Rule Id="S2376" Action="None" />
+    <Rule Id="S2386" Action="None" />
+    <Rule Id="S2387" Action="None" />
+    <Rule Id="S2436" Action="None" />
+    <Rule Id="S2437" Action="Warning" />
+    <Rule Id="S2486" Action="None" />
+    <Rule Id="S2551" Action="Warning" />
+    <Rule Id="S2612" Action="Warning" />
+    <Rule Id="S2629" Action="None" />
+    <Rule Id="S2674" Action="None" />
+    <Rule Id="S2692" Action="None" />
+    <Rule Id="S2696" Action="None" />
+    <Rule Id="S2699" Action="Warning" />
+    <Rule Id="S2701" Action="None" />
+    <Rule Id="S2737" Action="None" />
+    <Rule Id="S2743" Action="None" />
+    <Rule Id="S2755" Action="Warning" />
+    <Rule Id="S2757" Action="Warning" />
+    <Rule Id="S2760" Action="None" />
+    <Rule Id="S2761" Action="Warning" />
+    <Rule Id="S2857" Action="Warning" />
+    <Rule Id="S2925" Action="None" />
+    <Rule Id="S2930" Action="Warning" />
+    <Rule Id="S2931" Action="None" />
+    <Rule Id="S2933" Action="None" />
+    <Rule Id="S2934" Action="None" />
+    <Rule Id="S2952" Action="None" />
+    <Rule Id="S2953" Action="Warning" />
+    <Rule Id="S2955" Action="None" />
+    <Rule Id="S2970" Action="Warning" />
+    <Rule Id="S2971" Action="None" />
+    <Rule Id="S2995" Action="Warning" />
+    <Rule Id="S2996" Action="Warning" />
+    <Rule Id="S2997" Action="Warning" />
+    <Rule Id="S3005" Action="Warning" />
+    <Rule Id="S3215" Action="None" />
+    <Rule Id="S3216" Action="None" />
+    <Rule Id="S3217" Action="None" />
+    <Rule Id="S3218" Action="None" />
+    <Rule Id="S3220" Action="None" />
+    <Rule Id="S3234" Action="None" />
+    <Rule Id="S3235" Action="None" />
+    <Rule Id="S3236" Action="None" />
+    <Rule Id="S3237" Action="Warning" />
+    <Rule Id="S3240" Action="None" />
+    <Rule Id="S3241" Action="None" />
+    <Rule Id="S3242" Action="None" />
+    <Rule Id="S3244" Action="Warning" />
+    <Rule Id="S3246" Action="None" />
+    <Rule Id="S3247" Action="None" />
+    <Rule Id="S3249" Action="None" />
+    <Rule Id="S3330" Action="Warning" />
+    <Rule Id="S3343" Action="Warning" />
+    <Rule Id="S3346" Action="Warning" />
+    <Rule Id="S3353" Action="None" />
+    <Rule Id="S3358" Action="None" />
+    <Rule Id="S3363" Action="None" />
+    <Rule Id="S3366" Action="None" />
+    <Rule Id="S3398" Action="None" />
+    <Rule Id="S3400" Action="None" />
+    <Rule Id="S3415" Action="None" />
+    <Rule Id="S3416" Action="None" />
+    <Rule Id="S3427" Action="Warning" />
+    <Rule Id="S3450" Action="None" />
+    <Rule Id="S3451" Action="None" />
+    <Rule Id="S3453" Action="Warning" />
+    <Rule Id="S3456" Action="None" />
+    <Rule Id="S3457" Action="None" />
+    <Rule Id="S3458" Action="None" />
+    <Rule Id="S3459" Action="None" />
+    <Rule Id="S3464" Action="Warning" />
+    <Rule Id="S3466" Action="Warning" />
+    <Rule Id="S3597" Action="None" />
+    <Rule Id="S3598" Action="Warning" />
+    <Rule Id="S3600" Action="None" />
+    <Rule Id="S3603" Action="Warning" />
+    <Rule Id="S3604" Action="None" />
+    <Rule Id="S3610" Action="Warning" />
+    <Rule Id="S3626" Action="None" />
+    <Rule Id="S3717" Action="None" />
+    <Rule Id="S3869" Action="Warning" />
+    <Rule Id="S3871" Action="None" />
+    <Rule Id="S3872" Action="None" />
+    <Rule Id="S3874" Action="None" />
+    <Rule Id="S3875" Action="Warning" />
+    <Rule Id="S3876" Action="None" />
+    <Rule Id="S3877" Action="Warning" />
+    <Rule Id="S3878" Action="None" />
+    <Rule Id="S3880" Action="None" />
+    <Rule Id="S3881" Action="None" />
+    <Rule Id="S3884" Action="None" />
+    <Rule Id="S3885" Action="None" />
+    <Rule Id="S3887" Action="None" />
+    <Rule Id="S3889" Action="Warning" />
+    <Rule Id="S3902" Action="None" />
+    <Rule Id="S3903" Action="Warning" />
+    <Rule Id="S3904" Action="None" />
+    <Rule Id="S3906" Action="None" />
+    <Rule Id="S3908" Action="None" />
+    <Rule Id="S3909" Action="None" />
+    <Rule Id="S3923" Action="Warning" />
+    <Rule Id="S3925" Action="None" />
+    <Rule Id="S3926" Action="Warning" />
+    <Rule Id="S3927" Action="Warning" />
+    <Rule Id="S3928" Action="None" />
+    <Rule Id="S3937" Action="None" />
+    <Rule Id="S3956" Action="None" />
+    <Rule Id="S3962" Action="None" />
+    <Rule Id="S3963" Action="None" />
+    <Rule Id="S3967" Action="None" />
+    <Rule Id="S3971" Action="None" />
+    <Rule Id="S3972" Action="None" />
+    <Rule Id="S3973" Action="None" />
+    <Rule Id="S3981" Action="Warning" />
+    <Rule Id="S3984" Action="Warning" />
+    <Rule Id="S3990" Action="None" />
+    <Rule Id="S3992" Action="None" />
+    <Rule Id="S3993" Action="None" />
+    <Rule Id="S3994" Action="None" />
+    <Rule Id="S3995" Action="None" />
+    <Rule Id="S3996" Action="None" />
+    <Rule Id="S3997" Action="None" />
+    <Rule Id="S3998" Action="None" />
+    <Rule Id="S4005" Action="None" />
+    <Rule Id="S4060" Action="None" />
+    <Rule Id="S4061" Action="None" />
+    <Rule Id="S4069" Action="None" />
+    <Rule Id="S4070" Action="None" />
+    <Rule Id="S4200" Action="None" />
+    <Rule Id="S4201" Action="None" />
+    <Rule Id="S4210" Action="Warning" />
+    <Rule Id="S4211" Action="Warning" />
+    <Rule Id="S4212" Action="None" />
+    <Rule Id="S4214" Action="None" />
+    <Rule Id="S4423" Action="Warning" />
+    <Rule Id="S4426" Action="Warning" />
+    <Rule Id="S4428" Action="Warning" />
+    <Rule Id="S4433" Action="Warning" />
+    <Rule Id="S4456" Action="None" />
+    <Rule Id="S4457" Action="None" />
+    <Rule Id="S4507" Action="Warning" />
+    <Rule Id="S4545" Action="None" />
+    <Rule Id="S4635" Action="None" />
+    <Rule Id="S4663" Action="None" />
+    <Rule Id="S4790" Action="Warning" />
+    <Rule Id="S4830" Action="Warning" />
+    <Rule Id="S5034" Action="None" />
+    <Rule Id="S5042" Action="None" />
+    <Rule Id="S5542" Action="Warning" />
+    <Rule Id="S5547" Action="Warning" />
+    <Rule Id="S5659" Action="Warning" />
+    <Rule Id="S5753" Action="Warning" />
+    <Rule Id="S5766" Action="Warning" />
+    <Rule Id="S6377" Action="Warning" />
+    <Rule Id="S6422" Action="Warning" />
+    <Rule Id="S6507" Action="None" />
+    <Rule Id="S6513" Action="None" />
+    <Rule Id="S6602" Action="None" />
+    <Rule Id="S6603" Action="None" />
+    <Rule Id="S6605" Action="None" />
+    <Rule Id="S6607" Action="None" />
+    <Rule Id="S6608" Action="None" />
+    <Rule Id="S6609" Action="None" />
+    <Rule Id="S6610" Action="None" />
+    <Rule Id="S6612" Action="None" />
+    <Rule Id="S6613" Action="None" />
+    <Rule Id="S6617" Action="None" />
+    <Rule Id="S6618" Action="None" />
+    <Rule Id="S6664" Action="None" />
+    <Rule Id="S6667" Action="None" />
+    <Rule Id="S6668" Action="None" />
+    <Rule Id="S6669" Action="None" />
+    <Rule Id="S6930" Action="Warning" />
+    <Rule Id="S6931" Action="None" />
+    <Rule Id="S6932" Action="Warning" />
+    <Rule Id="S6934" Action="None" />
+    <Rule Id="S6960" Action="None" />
+    <Rule Id="S6961" Action="None" />
+    <Rule Id="S6962" Action="Warning" />
+    <Rule Id="S6964" Action="Warning" />
+    <Rule Id="S6965" Action="None" />
+    <Rule Id="S6966" Action="Warning" />
+    <Rule Id="S6967" Action="Warning" />
+    <Rule Id="S6968" Action="None" />
+    <Rule Id="S7039" Action="Warning" />
+    <Rule Id="S818" Action="None" />
+    <Rule Id="S8367" Action="None" />
+    <Rule Id="S8368" Action="None" />
+    <Rule Id="S8380" Action="None" />
+    <Rule Id="S8381" Action="None" />
+    <Rule Id="S8969" Action="None" />
+    <Rule Id="S907" Action="None" />
+    <Rule Id="S927" Action="None" />
+    <Rule Id="S100" Action="None" />
+    <Rule Id="S101" Action="None" />
+    <Rule Id="S103" Action="None" />
+    <Rule Id="S104" Action="None" />
+    <Rule Id="S105" Action="None" />
+    <Rule Id="S106" Action="None" />
+    <Rule Id="S107" Action="None" />
+    <Rule Id="S1075" Action="None" />
+    <Rule Id="S108" Action="None" />
+    <Rule Id="S109" Action="None" />
+    <Rule Id="S110" Action="None" />
+    <Rule Id="S112" Action="None" />
+    <Rule Id="S113" Action="None" />
+    <Rule Id="S1192" Action="None" />
+    <Rule Id="S1199" Action="None" />
+    <Rule Id="S121" Action="None" />
+    <Rule Id="S122" Action="None" />
+    <Rule Id="S2068" Action="Warning" />
+    <Rule Id="S2077" Action="Warning" />
+    <Rule Id="S2092" Action="Warning" />
+    <Rule Id="S2094" Action="None" />
+    <Rule Id="S2166" Action="None" />
+    <Rule Id="S2178" Action="Warning" />
+    <Rule Id="S2183" Action="None" />
+    <Rule Id="S2184" Action="None" />
+    <Rule Id="S2187" Action="Warning" />
+    <Rule Id="S2190" Action="Warning" />
+    <Rule Id="S2197" Action="None" />
+    <Rule Id="S2198" Action="None" />
+    <Rule Id="S2290" Action="None" />
+    <Rule Id="S2291" Action="None" />
+    <Rule Id="S2292" Action="None" />
+    <Rule Id="S3010" Action="None" />
+    <Rule Id="S3011" Action="None" />
+    <Rule Id="S3052" Action="None" />
+    <Rule Id="S3059" Action="None" />
+    <Rule Id="S3060" Action="Warning" />
+    <Rule Id="S3063" Action="None" />
+    <Rule Id="S3168" Action="Warning" />
+    <Rule Id="S3169" Action="None" />
+    <Rule Id="S3172" Action="Warning" />
+    <Rule Id="S3251" Action="None" />
+    <Rule Id="S3253" Action="None" />
+    <Rule Id="S3254" Action="None" />
+    <Rule Id="S3256" Action="None" />
+    <Rule Id="S3257" Action="None" />
+    <Rule Id="S3260" Action="None" />
+    <Rule Id="S3261" Action="None" />
+    <Rule Id="S3262" Action="None" />
+    <Rule Id="S3263" Action="Warning" />
+    <Rule Id="S3264" Action="None" />
+    <Rule Id="S3265" Action="None" />
+    <Rule Id="S3267" Action="None" />
+    <Rule Id="S3376" Action="None" />
+    <Rule Id="S3397" Action="None" />
+    <Rule Id="S4000" Action="None" />
+    <Rule Id="S4002" Action="None" />
+    <Rule Id="S4004" Action="None" />
+    <Rule Id="S4015" Action="None" />
+    <Rule Id="S4016" Action="None" />
+    <Rule Id="S4017" Action="None" />
+    <Rule Id="S4018" Action="None" />
+    <Rule Id="S4019" Action="None" />
+    <Rule Id="S4022" Action="None" />
+    <Rule Id="S4023" Action="None" />
+    <Rule Id="S4025" Action="None" />
+    <Rule Id="S4026" Action="None" />
+    <Rule Id="S4027" Action="None" />
+    <Rule Id="S4035" Action="None" />
+    <Rule Id="S4036" Action="Warning" />
+    <Rule Id="S4039" Action="None" />
+    <Rule Id="S4040" Action="None" />
+    <Rule Id="S4041" Action="None" />
+    <Rule Id="S4047" Action="None" />
+    <Rule Id="S4049" Action="None" />
+    <Rule Id="S4050" Action="None" />
+    <Rule Id="S4052" Action="None" />
+    <Rule Id="S4055" Action="None" />
+    <Rule Id="S4056" Action="None" />
+    <Rule Id="S4057" Action="None" />
+    <Rule Id="S4058" Action="None" />
+    <Rule Id="S4059" Action="None" />
+    <Rule Id="S4136" Action="None" />
+    <Rule Id="S4143" Action="Warning" />
+    <Rule Id="S4144" Action="None" />
+    <Rule Id="S4159" Action="Warning" />
+    <Rule Id="S4220" Action="None" />
+    <Rule Id="S4225" Action="None" />
+    <Rule Id="S4226" Action="None" />
+    <Rule Id="S4260" Action="Warning" />
+    <Rule Id="S4261" Action="None" />
+    <Rule Id="S4275" Action="Warning" />
+    <Rule Id="S4277" Action="Warning" />
+    <Rule Id="S4462" Action="None" />
+    <Rule Id="S4487" Action="None" />
+    <Rule Id="S4581" Action="None" />
+    <Rule Id="S4583" Action="Warning" />
+    <Rule Id="S4586" Action="Warning" />
+    <Rule Id="S5122" Action="Warning" />
+    <Rule Id="S5332" Action="Warning" />
+    <Rule Id="S5344" Action="Warning" />
+    <Rule Id="S5443" Action="Warning" />
+    <Rule Id="S5445" Action="Warning" />
+    <Rule Id="S5693" Action="Warning" />
+    <Rule Id="S6354" Action="None" />
+    <Rule Id="S6418" Action="Warning" />
+    <Rule Id="S6419" Action="None" />
+    <Rule Id="S6420" Action="None" />
+    <Rule Id="S6421" Action="None" />
+    <Rule Id="S6423" Action="None" />
+    <Rule Id="S6424" Action="Warning" />
+    <Rule Id="S6444" Action="Warning" />
+    <Rule Id="S6561" Action="None" />
+    <Rule Id="S6562" Action="None" />
+    <Rule Id="S6563" Action="None" />
+    <Rule Id="S6566" Action="None" />
+    <Rule Id="S6575" Action="None" />
+    <Rule Id="S6580" Action="None" />
+    <Rule Id="S6585" Action="None" />
+    <Rule Id="S6588" Action="None" />
+    <Rule Id="S6640" Action="Warning" />
+    <Rule Id="S6670" Action="None" />
+    <Rule Id="S6672" Action="None" />
+    <Rule Id="S6673" Action="None" />
+    <Rule Id="S6674" Action="Warning" />
+    <Rule Id="S6675" Action="None" />
+    <Rule Id="S6677" Action="Warning" />
+    <Rule Id="S6678" Action="None" />
+    <Rule Id="S6797" Action="Warning" />
+    <Rule Id="S6798" Action="Warning" />
+    <Rule Id="S8949" Action="Warning" />
+    <Rule Id="S8970" Action="None" />
+  </Rules>
+</RuleSet>
+````
+
+## File: .sonarqube/conf/Sonar-vbnet-none.ruleset
+````
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Rules for SonarQube" Description="This rule set was automatically generated from SonarQube" ToolsVersion="14.0">
+  <Rules AnalyzerId="SonarScannerFor.NET" RuleNamespace="SonarScannerFor.NET">
+    <Rule Id="S2225" Action="None" />
+    <Rule Id="S2346" Action="None" />
+    <Rule Id="S2347" Action="None" />
+    <Rule Id="S5856" Action="None" />
+    <Rule Id="S103" Action="None" />
+    <Rule Id="S1048" Action="None" />
+    <Rule Id="S105" Action="None" />
+    <Rule Id="S1066" Action="None" />
+    <Rule Id="S1067" Action="None" />
+    <Rule Id="S1110" Action="None" />
+    <Rule Id="S112" Action="None" />
+    <Rule Id="S1123" Action="None" />
+    <Rule Id="S1125" Action="None" />
+    <Rule Id="S1133" Action="None" />
+    <Rule Id="S1134" Action="None" />
+    <Rule Id="S1135" Action="None" />
+    <Rule Id="S1147" Action="None" />
+    <Rule Id="S1151" Action="None" />
+    <Rule Id="S1155" Action="None" />
+    <Rule Id="S1163" Action="None" />
+    <Rule Id="S1172" Action="None" />
+    <Rule Id="S1186" Action="None" />
+    <Rule Id="S126" Action="None" />
+    <Rule Id="S131" Action="None" />
+    <Rule Id="S134" Action="None" />
+    <Rule Id="S138" Action="None" />
+    <Rule Id="S139" Action="None" />
+    <Rule Id="S1479" Action="None" />
+    <Rule Id="S1481" Action="None" />
+    <Rule Id="S1654" Action="None" />
+    <Rule Id="S1656" Action="None" />
+    <Rule Id="S1659" Action="None" />
+    <Rule Id="S1821" Action="None" />
+    <Rule Id="S1862" Action="None" />
+    <Rule Id="S1940" Action="None" />
+    <Rule Id="S1944" Action="None" />
+    <Rule Id="S2068" Action="None" />
+    <Rule Id="S2234" Action="None" />
+    <Rule Id="S2257" Action="None" />
+    <Rule Id="S2339" Action="None" />
+    <Rule Id="S2340" Action="None" />
+    <Rule Id="S2342" Action="None" />
+    <Rule Id="S2343" Action="None" />
+    <Rule Id="S2344" Action="None" />
+    <Rule Id="S2345" Action="None" />
+    <Rule Id="S2348" Action="None" />
+    <Rule Id="S2349" Action="None" />
+    <Rule Id="S2352" Action="None" />
+    <Rule Id="S2354" Action="None" />
+    <Rule Id="S2355" Action="None" />
+    <Rule Id="S2357" Action="None" />
+    <Rule Id="S2358" Action="None" />
+    <Rule Id="S2359" Action="None" />
+    <Rule Id="S2360" Action="None" />
+    <Rule Id="S2362" Action="None" />
+    <Rule Id="S2363" Action="None" />
+    <Rule Id="S2364" Action="None" />
+    <Rule Id="S2365" Action="None" />
+    <Rule Id="S2366" Action="None" />
+    <Rule Id="S2367" Action="None" />
+    <Rule Id="S2368" Action="None" />
+    <Rule Id="S2369" Action="None" />
+    <Rule Id="S2370" Action="None" />
+    <Rule Id="S2372" Action="None" />
+    <Rule Id="S2373" Action="None" />
+    <Rule Id="S2374" Action="None" />
+    <Rule Id="S2375" Action="None" />
+    <Rule Id="S2376" Action="None" />
+    <Rule Id="S2387" Action="None" />
+    <Rule Id="S2692" Action="None" />
+    <Rule Id="S2925" Action="None" />
+    <Rule Id="S2951" Action="None" />
+    <Rule Id="S3358" Action="None" />
+    <Rule Id="S3363" Action="None" />
+    <Rule Id="S3431" Action="None" />
+    <Rule Id="S3449" Action="None" />
+    <Rule Id="S3453" Action="None" />
+    <Rule Id="S3464" Action="None" />
+    <Rule Id="S3466" Action="None" />
+    <Rule Id="S3598" Action="None" />
+    <Rule Id="S3776" Action="None" />
+    <Rule Id="S3898" Action="None" />
+    <Rule Id="S3903" Action="None" />
+    <Rule Id="S3904" Action="None" />
+    <Rule Id="S3923" Action="None" />
+    <Rule Id="S3926" Action="None" />
+    <Rule Id="S3927" Action="None" />
+    <Rule Id="S4060" Action="None" />
+    <Rule Id="S4201" Action="None" />
+    <Rule Id="S4210" Action="None" />
+    <Rule Id="S4423" Action="None" />
+    <Rule Id="S4428" Action="None" />
+    <Rule Id="S4507" Action="None" />
+    <Rule Id="S4545" Action="None" />
+    <Rule Id="S4663" Action="None" />
+    <Rule Id="S4790" Action="None" />
+    <Rule Id="S5042" Action="None" />
+    <Rule Id="S5542" Action="None" />
+    <Rule Id="S5547" Action="None" />
+    <Rule Id="S5659" Action="None" />
+    <Rule Id="S5693" Action="None" />
+    <Rule Id="S5753" Action="None" />
+    <Rule Id="S6145" Action="None" />
+    <Rule Id="S6146" Action="None" />
+    <Rule Id="S6513" Action="None" />
+    <Rule Id="S6602" Action="None" />
+    <Rule Id="S6603" Action="None" />
+    <Rule Id="S6605" Action="None" />
+    <Rule Id="S6607" Action="None" />
+    <Rule Id="S6608" Action="None" />
+    <Rule Id="S6609" Action="None" />
+    <Rule Id="S6610" Action="None" />
+    <Rule Id="S6612" Action="None" />
+    <Rule Id="S6613" Action="None" />
+    <Rule Id="S6617" Action="None" />
+    <Rule Id="S6930" Action="None" />
+    <Rule Id="S6931" Action="None" />
+    <Rule Id="S907" Action="None" />
+    <Rule Id="S927" Action="None" />
+    <Rule Id="S101" Action="None" />
+    <Rule Id="S104" Action="None" />
+    <Rule Id="S107" Action="None" />
+    <Rule Id="S1075" Action="None" />
+    <Rule Id="S108" Action="None" />
+    <Rule Id="S114" Action="None" />
+    <Rule Id="S117" Action="None" />
+    <Rule Id="S119" Action="None" />
+    <Rule Id="S1192" Action="None" />
+    <Rule Id="S1197" Action="None" />
+    <Rule Id="S122" Action="None" />
+    <Rule Id="S1226" Action="None" />
+    <Rule Id="S1301" Action="None" />
+    <Rule Id="S1313" Action="None" />
+    <Rule Id="S1451" Action="None" />
+    <Rule Id="S1541" Action="None" />
+    <Rule Id="S1542" Action="None" />
+    <Rule Id="S1643" Action="None" />
+    <Rule Id="S1645" Action="None" />
+    <Rule Id="S1751" Action="None" />
+    <Rule Id="S1764" Action="None" />
+    <Rule Id="S1871" Action="None" />
+    <Rule Id="S2077" Action="None" />
+    <Rule Id="S2094" Action="None" />
+    <Rule Id="S2166" Action="None" />
+    <Rule Id="S2178" Action="None" />
+    <Rule Id="S2302" Action="None" />
+    <Rule Id="S2304" Action="None" />
+    <Rule Id="S2429" Action="None" />
+    <Rule Id="S2437" Action="None" />
+    <Rule Id="S2551" Action="None" />
+    <Rule Id="S2612" Action="None" />
+    <Rule Id="S2737" Action="None" />
+    <Rule Id="S2757" Action="None" />
+    <Rule Id="S2761" Action="None" />
+    <Rule Id="S3011" Action="None" />
+    <Rule Id="S3063" Action="None" />
+    <Rule Id="S3385" Action="None" />
+    <Rule Id="S3603" Action="None" />
+    <Rule Id="S3860" Action="None" />
+    <Rule Id="S3866" Action="None" />
+    <Rule Id="S3869" Action="None" />
+    <Rule Id="S3871" Action="None" />
+    <Rule Id="S3878" Action="None" />
+    <Rule Id="S3884" Action="None" />
+    <Rule Id="S3889" Action="None" />
+    <Rule Id="S3981" Action="None" />
+    <Rule Id="S3990" Action="None" />
+    <Rule Id="S3992" Action="None" />
+    <Rule Id="S3998" Action="None" />
+    <Rule Id="S4025" Action="None" />
+    <Rule Id="S4036" Action="None" />
+    <Rule Id="S4136" Action="None" />
+    <Rule Id="S4143" Action="None" />
+    <Rule Id="S4144" Action="None" />
+    <Rule Id="S4159" Action="None" />
+    <Rule Id="S4225" Action="None" />
+    <Rule Id="S4260" Action="None" />
+    <Rule Id="S4275" Action="None" />
+    <Rule Id="S4277" Action="None" />
+    <Rule Id="S4581" Action="None" />
+    <Rule Id="S4583" Action="None" />
+    <Rule Id="S4586" Action="None" />
+    <Rule Id="S4830" Action="None" />
+    <Rule Id="S5443" Action="None" />
+    <Rule Id="S5445" Action="None" />
+    <Rule Id="S5944" Action="None" />
+    <Rule Id="S6354" Action="None" />
+    <Rule Id="S6418" Action="None" />
+    <Rule Id="S6444" Action="None" />
+    <Rule Id="S6561" Action="None" />
+    <Rule Id="S6562" Action="None" />
+    <Rule Id="S6563" Action="None" />
+    <Rule Id="S6566" Action="None" />
+    <Rule Id="S6575" Action="None" />
+    <Rule Id="S6580" Action="None" />
+    <Rule Id="S6585" Action="None" />
+    <Rule Id="S6588" Action="None" />
+  </Rules>
+</RuleSet>
+````
+
+## File: .sonarqube/conf/Sonar-vbnet.ruleset
+````
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Rules for SonarQube" Description="This rule set was automatically generated from SonarQube" ToolsVersion="14.0">
+  <Rules AnalyzerId="SonarScannerFor.NET" RuleNamespace="SonarScannerFor.NET">
+    <Rule Id="S2225" Action="Warning" />
+    <Rule Id="S2346" Action="None" />
+    <Rule Id="S2347" Action="None" />
+    <Rule Id="S5856" Action="Warning" />
+    <Rule Id="S103" Action="None" />
+    <Rule Id="S1048" Action="Warning" />
+    <Rule Id="S105" Action="None" />
+    <Rule Id="S1066" Action="None" />
+    <Rule Id="S1067" Action="None" />
+    <Rule Id="S1110" Action="None" />
+    <Rule Id="S112" Action="None" />
+    <Rule Id="S1123" Action="None" />
+    <Rule Id="S1125" Action="None" />
+    <Rule Id="S1133" Action="None" />
+    <Rule Id="S1134" Action="None" />
+    <Rule Id="S1135" Action="None" />
+    <Rule Id="S1147" Action="None" />
+    <Rule Id="S1151" Action="None" />
+    <Rule Id="S1155" Action="None" />
+    <Rule Id="S1163" Action="None" />
+    <Rule Id="S1172" Action="None" />
+    <Rule Id="S1186" Action="None" />
+    <Rule Id="S126" Action="None" />
+    <Rule Id="S131" Action="None" />
+    <Rule Id="S134" Action="None" />
+    <Rule Id="S138" Action="None" />
+    <Rule Id="S139" Action="None" />
+    <Rule Id="S1479" Action="None" />
+    <Rule Id="S1481" Action="None" />
+    <Rule Id="S1654" Action="None" />
+    <Rule Id="S1656" Action="Warning" />
+    <Rule Id="S1659" Action="None" />
+    <Rule Id="S1821" Action="None" />
+    <Rule Id="S1862" Action="Warning" />
+    <Rule Id="S1940" Action="None" />
+    <Rule Id="S1944" Action="None" />
+    <Rule Id="S2068" Action="Warning" />
+    <Rule Id="S2234" Action="None" />
+    <Rule Id="S2257" Action="Warning" />
+    <Rule Id="S2339" Action="None" />
+    <Rule Id="S2340" Action="None" />
+    <Rule Id="S2342" Action="None" />
+    <Rule Id="S2343" Action="None" />
+    <Rule Id="S2344" Action="None" />
+    <Rule Id="S2345" Action="None" />
+    <Rule Id="S2348" Action="None" />
+    <Rule Id="S2349" Action="None" />
+    <Rule Id="S2352" Action="None" />
+    <Rule Id="S2354" Action="None" />
+    <Rule Id="S2355" Action="None" />
+    <Rule Id="S2357" Action="None" />
+    <Rule Id="S2358" Action="None" />
+    <Rule Id="S2359" Action="None" />
+    <Rule Id="S2360" Action="None" />
+    <Rule Id="S2362" Action="None" />
+    <Rule Id="S2363" Action="None" />
+    <Rule Id="S2364" Action="None" />
+    <Rule Id="S2365" Action="None" />
+    <Rule Id="S2366" Action="None" />
+    <Rule Id="S2367" Action="None" />
+    <Rule Id="S2368" Action="Warning" />
+    <Rule Id="S2369" Action="None" />
+    <Rule Id="S2370" Action="None" />
+    <Rule Id="S2372" Action="None" />
+    <Rule Id="S2373" Action="None" />
+    <Rule Id="S2374" Action="None" />
+    <Rule Id="S2375" Action="None" />
+    <Rule Id="S2376" Action="None" />
+    <Rule Id="S2387" Action="None" />
+    <Rule Id="S2692" Action="None" />
+    <Rule Id="S2925" Action="None" />
+    <Rule Id="S2951" Action="None" />
+    <Rule Id="S3358" Action="None" />
+    <Rule Id="S3363" Action="None" />
+    <Rule Id="S3431" Action="None" />
+    <Rule Id="S3449" Action="Warning" />
+    <Rule Id="S3453" Action="Warning" />
+    <Rule Id="S3464" Action="Warning" />
+    <Rule Id="S3466" Action="Warning" />
+    <Rule Id="S3598" Action="Warning" />
+    <Rule Id="S3776" Action="None" />
+    <Rule Id="S3898" Action="None" />
+    <Rule Id="S3903" Action="Warning" />
+    <Rule Id="S3904" Action="None" />
+    <Rule Id="S3923" Action="Warning" />
+    <Rule Id="S3926" Action="Warning" />
+    <Rule Id="S3927" Action="Warning" />
+    <Rule Id="S4060" Action="None" />
+    <Rule Id="S4201" Action="None" />
+    <Rule Id="S4210" Action="Warning" />
+    <Rule Id="S4423" Action="Warning" />
+    <Rule Id="S4428" Action="Warning" />
+    <Rule Id="S4507" Action="Warning" />
+    <Rule Id="S4545" Action="None" />
+    <Rule Id="S4663" Action="None" />
+    <Rule Id="S4790" Action="Warning" />
+    <Rule Id="S5042" Action="None" />
+    <Rule Id="S5542" Action="Warning" />
+    <Rule Id="S5547" Action="Warning" />
+    <Rule Id="S5659" Action="Warning" />
+    <Rule Id="S5693" Action="Warning" />
+    <Rule Id="S5753" Action="Warning" />
+    <Rule Id="S6145" Action="None" />
+    <Rule Id="S6146" Action="None" />
+    <Rule Id="S6513" Action="None" />
+    <Rule Id="S6602" Action="None" />
+    <Rule Id="S6603" Action="None" />
+    <Rule Id="S6605" Action="None" />
+    <Rule Id="S6607" Action="None" />
+    <Rule Id="S6608" Action="None" />
+    <Rule Id="S6609" Action="None" />
+    <Rule Id="S6610" Action="None" />
+    <Rule Id="S6612" Action="None" />
+    <Rule Id="S6613" Action="None" />
+    <Rule Id="S6617" Action="None" />
+    <Rule Id="S6930" Action="Warning" />
+    <Rule Id="S6931" Action="None" />
+    <Rule Id="S907" Action="None" />
+    <Rule Id="S927" Action="None" />
+    <Rule Id="S101" Action="None" />
+    <Rule Id="S104" Action="None" />
+    <Rule Id="S107" Action="None" />
+    <Rule Id="S1075" Action="None" />
+    <Rule Id="S108" Action="None" />
+    <Rule Id="S114" Action="None" />
+    <Rule Id="S117" Action="None" />
+    <Rule Id="S119" Action="None" />
+    <Rule Id="S1192" Action="None" />
+    <Rule Id="S1197" Action="None" />
+    <Rule Id="S122" Action="None" />
+    <Rule Id="S1226" Action="None" />
+    <Rule Id="S1301" Action="None" />
+    <Rule Id="S1313" Action="Warning" />
+    <Rule Id="S1451" Action="None" />
+    <Rule Id="S1541" Action="None" />
+    <Rule Id="S1542" Action="None" />
+    <Rule Id="S1643" Action="None" />
+    <Rule Id="S1645" Action="None" />
+    <Rule Id="S1751" Action="Warning" />
+    <Rule Id="S1764" Action="Warning" />
+    <Rule Id="S1871" Action="None" />
+    <Rule Id="S2077" Action="Warning" />
+    <Rule Id="S2094" Action="None" />
+    <Rule Id="S2166" Action="None" />
+    <Rule Id="S2178" Action="Warning" />
+    <Rule Id="S2302" Action="None" />
+    <Rule Id="S2304" Action="None" />
+    <Rule Id="S2429" Action="None" />
+    <Rule Id="S2437" Action="Warning" />
+    <Rule Id="S2551" Action="Warning" />
+    <Rule Id="S2612" Action="Warning" />
+    <Rule Id="S2737" Action="None" />
+    <Rule Id="S2757" Action="Warning" />
+    <Rule Id="S2761" Action="Warning" />
+    <Rule Id="S3011" Action="None" />
+    <Rule Id="S3063" Action="None" />
+    <Rule Id="S3385" Action="None" />
+    <Rule Id="S3603" Action="Warning" />
+    <Rule Id="S3860" Action="None" />
+    <Rule Id="S3866" Action="None" />
+    <Rule Id="S3869" Action="Warning" />
+    <Rule Id="S3871" Action="None" />
+    <Rule Id="S3878" Action="None" />
+    <Rule Id="S3884" Action="None" />
+    <Rule Id="S3889" Action="Warning" />
+    <Rule Id="S3981" Action="Warning" />
+    <Rule Id="S3990" Action="None" />
+    <Rule Id="S3992" Action="None" />
+    <Rule Id="S3998" Action="None" />
+    <Rule Id="S4025" Action="None" />
+    <Rule Id="S4036" Action="Warning" />
+    <Rule Id="S4136" Action="None" />
+    <Rule Id="S4143" Action="Warning" />
+    <Rule Id="S4144" Action="None" />
+    <Rule Id="S4159" Action="Warning" />
+    <Rule Id="S4225" Action="None" />
+    <Rule Id="S4260" Action="Warning" />
+    <Rule Id="S4275" Action="Warning" />
+    <Rule Id="S4277" Action="Warning" />
+    <Rule Id="S4581" Action="None" />
+    <Rule Id="S4583" Action="Warning" />
+    <Rule Id="S4586" Action="Warning" />
+    <Rule Id="S4830" Action="Warning" />
+    <Rule Id="S5443" Action="Warning" />
+    <Rule Id="S5445" Action="Warning" />
+    <Rule Id="S5944" Action="None" />
+    <Rule Id="S6354" Action="None" />
+    <Rule Id="S6418" Action="Warning" />
+    <Rule Id="S6444" Action="Warning" />
+    <Rule Id="S6561" Action="None" />
+    <Rule Id="S6562" Action="None" />
+    <Rule Id="S6563" Action="None" />
+    <Rule Id="S6566" Action="None" />
+    <Rule Id="S6575" Action="None" />
+    <Rule Id="S6580" Action="None" />
+    <Rule Id="S6585" Action="None" />
+    <Rule Id="S6588" Action="None" />
+  </Rules>
+</RuleSet>
+````
+
+## File: .sonarqube/conf/SonarQubeAnalysisConfig.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<AnalysisConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <SonarConfigDir>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf</SonarConfigDir>
+  <SonarOutputDir>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out</SonarOutputDir>
+  <SonarBinDir>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/bin</SonarBinDir>
+  <SonarScannerWorkingDirectory>/Users/abdielmar/RiderProjects/Vertigo_The_Game</SonarScannerWorkingDirectory>
+  <JavaExePath>/Users/abdielmar/.sonar/cache/225bab0a09491ef06835488cd942f5d2befa9a0410a2484f0c8bbcf7506ec09a/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.13_9.tar.gz_extracted/jdk-21.0.13+9-jre/Contents/Home/bin/java</JavaExePath>
+  <EngineJarPath>/Users/abdielmar/.sonar/cache/9a7be36a1f937fca09ac330e32b3cb33e0386cb6bbb9fdc30b9301f98f82ab9e/sonar-scanner-engine-community-13.16.0.6705.jar</EngineJarPath>
+  <ScanAllAnalysis>true</ScanAllAnalysis>
+  <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>
+  <HasBeginStepCommandLineTruststorePassword>false</HasBeginStepCommandLineTruststorePassword>
+  <SonarQubeHostUrl>http://localhost:9000</SonarQubeHostUrl>
+  <SonarQubeVersion>26.11.0.134175</SonarQubeVersion>
+  <SonarProjectKey>vertigo-client</SonarProjectKey>
+  <AdditionalConfig>
+    <ConfigSetting Id="BuildUri" />
+    <ConfigSetting Id="UnchangedFilesPath" />
+    <ConfigSetting Id="sonar.pullrequest.cache.basepath" Value="/Users/abdielmar/RiderProjects/Vertigo_The_Game" />
+    <ConfigSetting Id="settings.file.path" Value="/Users/abdielmar/.dotnet/tools/.store/dotnet-sonarscanner/12.1.0/dotnet-sonarscanner/12.1.0/tools/netcoreapp3.1/any/SonarQube.Analysis.xml" />
+  </AdditionalConfig>
+  <ServerSettings>
+    <Property Name="sonar.secrets.demoMode">false</Property>
+    <Property Name="sonar.cs.ignoreHeaderComments">true</Property>
+    <Property Name="sonar.typescript.file.suffixes">.ts,.tsx,.cts,.mts</Property>
+    <Property Name="sonar.ai.codefix.hidden">false</Property>
+    <Property Name="sonar.secrets.excluded.file.suffixes">.adoc,.md,.mdx,.dist,.html,.example,.sample,.template</Property>
+    <Property Name="sonar.python.xunit.skipDetails">false</Property>
+    <Property Name="sonar.ipynb.file.suffixes">ipynb</Property>
+    <Property Name="sonar.javascript.html.file.suffixes">.html,.htm,.xhtml</Property>
+    <Property Name="sonar.auth.gitlab.allowAllGroups">false</Property>
+    <Property Name="sonar.auth.saml.signature.enabled">false</Property>
+    <Property Name="sonar.go.exclusions">**/vendor/**,**/*.pb.go,**/*.pb.gorm.go</Property>
+    <Property Name="sonar.issues.issueResolution.global.enabled">false</Property>
+    <Property Name="sonar.terraform.file.suffixes">.tf</Property>
+    <Property Name="sonar.forceAuthentication">true</Property>
+    <Property Name="sonar.notifications.delay">60</Property>
+    <Property Name="sonar.secrets.disableEntropyFilter">false</Property>
+    <Property Name="sonar.multi-quality-mode.enabled">true</Property>
+    <Property Name="sonaranalyzer-cs.ruleNamespace">SonarAnalyzer.CSharp</Property>
+    <Property Name="sonar.azureresourcemanager.file.identifier">https://schema.management.azure.com/schemas/,http://schema.management.azure.com/schemas/</Property>
+    <Property Name="sonar.cs.analyzeGeneratedCode">false</Property>
+    <Property Name="sonar.java.jvmframeworkconfig.file.patterns">**/src/main/resources/**/*app*.properties,**/src/main/resources/**/*app*.yaml,**/src/main/resources/**/*app*.yml</Property>
+    <Property Name="sonar.builtInQualityProfiles.disableNotificationOnUpdate">false</Property>
+    <Property Name="sonar.security.secretSourceRedaction.enabled">false</Property>
+    <Property Name="sonar.css.file.suffixes">.css,.less,.scss,.sass</Property>
+    <Property Name="sonar.docker.file.patterns">*.dockerfile,Dockerfile,dockerfile,*.containerfile,Containerfile,containerfile</Property>
+    <Property Name="sonar.html.file.suffixes">.html,.xhtml,.cshtml,.vbhtml,.aspx,.ascx,.rhtml,.erb,.shtm,.shtml,.cmp,.twig,.htm</Property>
+    <Property Name="sonar.auth.gitlab.enabled">false</Property>
+    <Property Name="sonar.cpd.cross_project">false</Property>
+    <Property Name="sonar.vbnet.ignoreHeaderComments">true</Property>
+    <Property Name="sonar.auth.github.groupsSync">false</Property>
+    <Property Name="sonar.vbnet.analyzer.dotnet.pluginKey">vbnet</Property>
+    <Property Name="sonar.cloudformation.activate">true</Property>
+    <Property Name="sonar.dbcleaner.daysBeforeDeletingScannerCache">7</Property>
+    <Property Name="sonaranalyzer-vbnet.ruleNamespace">SonarAnalyzer.VisualBasic</Property>
+    <Property Name="sonar.jreAutoProvisioning.disabled">false</Property>
+    <Property Name="sonar.cloudformation.file.identifier">AWSTemplateFormatVersion</Property>
+    <Property Name="sonar.dbcleaner.daysBeforeDeletingAnticipatedTransitions">30</Property>
+    <Property Name="sonar.javascript.ignoreHeaderComments">true</Property>
+    <Property Name="sonar.dbcleaner.daysBeforeDeletingClosedIssues">30</Property>
+    <Property Name="sonar.java.enablePreview">False</Property>
+    <Property Name="sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByMonth">52</Property>
+    <Property Name="sonar.lf.gravatarServerUrl">https://secure.gravatar.com/avatar/{EMAIL_MD5}.jpg?s={SIZE}&amp;d=identicon</Property>
+    <Property Name="sonar.go.activate">true</Property>
+    <Property Name="sonar.gessie.url">https://telemetry.sonarsource.com/server</Property>
+    <Property Name="sonar.secrets.disableTestFileDetection">false</Property>
+    <Property Name="sonar.notifications.runningDelayBeforeReportingStatus">600</Property>
+    <Property Name="sonar.jsp.file.suffixes">.jsp,.jspf,.jspx</Property>
+    <Property Name="sonar.javascript.maxFileSize">1000</Property>
+    <Property Name="sonar.javascript.environments">amd,applescript,atomtest,browser,commonjs,embertest,greasemonkey,jasmine,jest,jquery,meteor,mocha,mongo,nashorn,node,phantomjs,prototypejs,protractor,qunit,serviceworker,shared-node-browser,shelljs,webextensions,worker</Property>
+    <Property Name="sonar.scanner.autoconfig.enabled">false</Property>
+    <Property Name="sonar.javascript.createTSProgramForOrphanFiles">true</Property>
+    <Property Name="sonar.scm.disabled">false</Property>
+    <Property Name="sonar.auth.saml.enabled">false</Property>
+    <Property Name="sonar.vbnet.file.suffixes">.vb</Property>
+    <Property Name="sonar.vbnet.analyzer.dotnet.pluginVersion">10.35.0.4138</Property>
+    <Property Name="sonar.technicalDebt.developmentCost">30</Property>
+    <Property Name="sonar.validateWebhooks">true</Property>
+    <Property Name="sonar.python.file.suffixes">py</Property>
+    <Property Name="sonar.cs.file.suffixes">.cs,.razor</Property>
+    <Property Name="sonar.allowPermissionManagementForProjectAdmins">true</Property>
+    <Property Name="sonar.text.inclusions.activate">true</Property>
+    <Property Name="sonaranalyzer-vbnet.staticResourceName">SonarAnalyzer-vbnet-10.35.0.4138.zip</Property>
+    <Property Name="sonar.java.file.suffixes">.java,.jav</Property>
+    <Property Name="sonar.kotlin.file.suffixes">.kt,.kts</Property>
+    <Property Name="sonar.php.file.suffixes">php,php3,php4,php5,phtml,inc</Property>
+    <Property Name="sonar.xml.file.suffixes">.xml,.xsd,.xsl,.config</Property>
+    <Property Name="sonar.dbcleaner.weeksBeforeDeletingAllSnapshots">260</Property>
+    <Property Name="sonar.azureresourcemanager.activate">true</Property>
+    <Property Name="sonar.updatecenter.cache.ttl">3600000</Property>
+    <Property Name="sonar.report.partMaxSizeMBytes">450</Property>
+    <Property Name="sonar.auth.bitbucket.allowUsersToSignUp">true</Property>
+    <Property Name="sonar.secrets.disableKnownFakeSecretFilter">false</Property>
+    <Property Name="sonar.auth.github.enabled">false</Property>
+    <Property Name="sonar.python.coverage.reportPaths">coverage-reports/*coverage-*.xml</Property>
+    <Property Name="sonar.text.activate">true</Property>
+    <Property Name="provisioning.gitlab.enabled">false</Property>
+    <Property Name="sonar.go.file.suffixes">.go</Property>
+    <Property Name="sonar.cs.analyzeRazorCode">true</Property>
+    <Property Name="sonar.auth.saml.applicationId">sonarqube</Property>
+    <Property Name="sonar.dbcleaner.weeksBeforeKeepingOnlyAnalysesWithVersion">104</Property>
+    <Property Name="sonar.javascript.disableTypeChecking">false</Property>
+    <Property Name="sonar.qualitygate.ignoreSmallChanges">true</Property>
+    <Property Name="sonar.php.exclusions">**/vendor/**</Property>
+    <Property Name="sonar.vbnet.roslyn.ignoreIssues">false</Property>
+    <Property Name="sonar.flex.file.suffixes">as</Property>
+    <Property Name="sonar.filesize.limit">20</Property>
+    <Property Name="sonar.auth.gitlab.groupsSync">false</Property>
+    <Property Name="sonar.auth.github.apiUrl">https://api.github.com/</Property>
+    <Property Name="sonar.auth.github.allowUsersToSignUp">true</Property>
+    <Property Name="sonar.issues.issueResolution.enabled">false</Property>
+    <Property Name="sonar.kubernetes.helm.activate">true</Property>
+    <Property Name="sonar.python.xunit.reportPath">xunit-reports/xunit-result-*.xml</Property>
+    <Property Name="sonar.javascript.globals">angular,goog,google,OpenLayers,d3,dojo,dojox,dijit,Backbone,moment,casper,_,sap</Property>
+    <Property Name="sonar.dbcleaner.hoursBeforeKeepingOnlyOneSnapshotByDay">24</Property>
+    <Property Name="sonar.yaml.file.suffixes">.yaml,.yml</Property>
+    <Property Name="sonar.auth.bitbucket.enabled">false</Property>
+    <Property Name="sonar.terraform.activate">true</Property>
+    <Property Name="sonar.auth.github.webUrl">https://github.com/</Property>
+    <Property Name="sonar.php.frameworkDetection">true</Property>
+    <Property Name="sonar.cs.analyzer.dotnet.pluginVersion">10.35.0.4138</Property>
+    <Property Name="sonaranalyzer-vbnet.pluginVersion">10.35.0.4138</Property>
+    <Property Name="sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByWeek">4</Property>
+    <Property Name="sonaranalyzer-vbnet.analyzerId">SonarAnalyzer.VisualBasic</Property>
+    <Property Name="sonar.cs.roslyn.ignoreIssues">false</Property>
+    <Property Name="sonar.javascript.yaml.file.suffixes">.yml,.yaml</Property>
+    <Property Name="sonaranalyzer-cs.pluginKey">csharp</Property>
+    <Property Name="sonar.kubernetes.activate">true</Property>
+    <Property Name="sonar.java.ignoreUnnamedModuleForSplitPackage">False</Property>
+    <Property Name="sonar.vbnet.analyzer.dotnet.staticResourceName">SonarAnalyzer-vbnet-10.35.0.4138.zip</Property>
+    <Property Name="sonar.json.file.suffixes">.json</Property>
+    <Property Name="sonar.auth.saml.providerName">SAML</Property>
+    <Property Name="provisioning.github.project.visibility.enabled">true</Property>
+    <Property Name="sonar.text.inclusions">**/*.sh,**/*.bash,**/*.zsh,**/*.ksh,**/*.ps1,**/*.properties,**/*.conf,**/*.pem,**/*.config,**/*.env,.aws/config,**/*.key</Property>
+    <Property Name="sonar.dbcleaner.daysBeforeDeletingHistory">365</Property>
+    <Property Name="sonar.javascript.css.additional.file.suffixes">.vue,.html,.htm,.xhtml</Property>
+    <Property Name="sonar.qualityProfiles.allowDisableInheritedRules">true</Property>
+    <Property Name="sonaranalyzer-cs.staticResourceName">SonarAnalyzer-csharp-10.35.0.4138.zip</Property>
+    <Property Name="sonar.auth.gitlab.allowUsersToSignUp">true</Property>
+    <Property Name="sonar.projectCreation.mainBranchName">main</Property>
+    <Property Name="sonar.cs.analyzer.dotnet.staticResourceName">SonarAnalyzer-csharp-10.35.0.4138.zip</Property>
+    <Property Name="sonar.news.enabled">true</Property>
+    <Property Name="sonar.authenticator.downcase">false</Property>
+    <Property Name="sonaranalyzer-cs.analyzerId">SonarAnalyzer.CSharp</Property>
+    <Property Name="sonar.gessie.eventNamesAllowlistUrl">https://telemetry.sonarsource.com/allowed_events</Property>
+    <Property Name="sonar.cs.analyzer.dotnet.pluginKey">csharp</Property>
+    <Property Name="sonar.technicalDebt.ratingGrid">0.05,0.1,0.2,0.5</Property>
+    <Property Name="sonar.lf.enableGravatar">false</Property>
+    <Property Name="sonar.docker.activate">true</Property>
+    <Property Name="sonaranalyzer-cs.pluginVersion">10.35.0.4138</Property>
+    <Property Name="sonar.developerAggregatedInfo.disabled">false</Property>
+    <Property Name="sonar.plugins.downloadOnlyRequired">true</Property>
+    <Property Name="sonar.azureresourcemanager.file.suffixes">.bicep</Property>
+    <Property Name="sonar.javascript.file.suffixes">.js,.jsx,.cjs,.mjs,.vue</Property>
+    <Property Name="sonar.vbnet.analyzeGeneratedCode">false</Property>
+    <Property Name="sonar.plugins.risk.consent">NOT_ACCEPTED</Property>
+    <Property Name="sonar.auth.gitlab.url">https://gitlab.com</Property>
+    <Property Name="sonar.scanner.skipNodeProvisioning">false</Property>
+    <Property Name="sonaranalyzer-vbnet.pluginKey">vbnet</Property>
+    <Property Name="sonar.java.jvmframeworkconfig.activate">true</Property>
+    <Property Name="sonar.updatecenter.url">https://downloads.sonarsource.com/sonarqube/update/update-center.properties</Property>
+    <Property Name="sonar.core.startTime">19/11/2026 11:54:22 p.m.</Property>
+    <Property Name="sonar.core.id">147B411E-AaH3hS2GZnnxMrVisnhH</Property>
+  </ServerSettings>
+  <LocalSettings>
+    <Property Name="sonar.host.url">http://localhost:9000</Property>
+  </LocalSettings>
+  <ScannerOptsSettings />
+  <AnalyzersSettings>
+    <AnalyzerSettings>
+      <Language>cs</Language>
+      <RulesetPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/Sonar-cs.ruleset</RulesetPath>
+      <DeactivatedRulesetPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/Sonar-cs-none.ruleset</DeactivatedRulesetPath>
+      <AnalyzerPlugins>
+        <AnalyzerPlugin Key="csharp" Version="10.35.0.4138" StaticResourceName="SonarAnalyzer-csharp-10.35.0.4138.zip">
+          <AssemblyPaths>
+            <Path>/var/folders/g0/wz9rzm1s04b2s7_4t1t5r5jc0000gn/T/.sonarqube/resources/0/SonarAnalyzer.CSharp.dll</Path>
+            <Path>/var/folders/g0/wz9rzm1s04b2s7_4t1t5r5jc0000gn/T/.sonarqube/resources/0/licenses/LICENSE.txt</Path>
+            <Path>/var/folders/g0/wz9rzm1s04b2s7_4t1t5r5jc0000gn/T/.sonarqube/resources/0/licenses/THIRD_PARTY_LICENSES/Google.Protobuf-LICENSE.txt</Path>
+            <Path>/var/folders/g0/wz9rzm1s04b2s7_4t1t5r5jc0000gn/T/.sonarqube/resources/0/licenses/THIRD_PARTY_LICENSES/Roslyn-LICENSE.txt</Path>
+          </AssemblyPaths>
+        </AnalyzerPlugin>
+      </AnalyzerPlugins>
+      <AdditionalFilePaths>
+        <Path>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/cs/SonarLint.xml</Path>
+      </AdditionalFilePaths>
+    </AnalyzerSettings>
+    <AnalyzerSettings>
+      <Language>vbnet</Language>
+      <RulesetPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/Sonar-vbnet.ruleset</RulesetPath>
+      <DeactivatedRulesetPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/Sonar-vbnet-none.ruleset</DeactivatedRulesetPath>
+      <AnalyzerPlugins>
+        <AnalyzerPlugin Key="vbnet" Version="10.35.0.4138" StaticResourceName="SonarAnalyzer-vbnet-10.35.0.4138.zip">
+          <AssemblyPaths>
+            <Path>/var/folders/g0/wz9rzm1s04b2s7_4t1t5r5jc0000gn/T/.sonarqube/resources/1/SonarAnalyzer.VisualBasic.dll</Path>
+            <Path>/var/folders/g0/wz9rzm1s04b2s7_4t1t5r5jc0000gn/T/.sonarqube/resources/1/licenses/LICENSE.txt</Path>
+            <Path>/var/folders/g0/wz9rzm1s04b2s7_4t1t5r5jc0000gn/T/.sonarqube/resources/1/licenses/THIRD_PARTY_LICENSES/Google.Protobuf-LICENSE.txt</Path>
+            <Path>/var/folders/g0/wz9rzm1s04b2s7_4t1t5r5jc0000gn/T/.sonarqube/resources/1/licenses/THIRD_PARTY_LICENSES/Roslyn-LICENSE.txt</Path>
+          </AssemblyPaths>
+        </AnalyzerPlugin>
+      </AnalyzerPlugins>
+      <AdditionalFilePaths>
+        <Path>/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/vbnet/SonarLint.xml</Path>
+      </AdditionalFilePaths>
+    </AnalyzerSettings>
+  </AnalyzersSettings>
+</AnalysisConfig>
+````
+
+## File: .sonarqube/out/.sonar/.sonar_lock
+````
+
+````
+
+## File: .sonarqube/out/.sonar/report-task.txt
+````
+projectKey=vertigo-client
+serverUrl=http://localhost:9000
+serverVersion=26.11.0.134175
+dashboardUrl=http://localhost:9000/dashboard?id=vertigo-client
+ceTaskId=58611e69-13dd-4706-870b-a922e5ca9093
+ceTaskUrl=http://localhost:9000/api/ce/task?id=58611e69-13dd-4706-870b-a922e5ca9093
+````
+
+## File: .sonarqube/out/0/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/0/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "S2068",
+          "level": "warning",
+          "message": "\"password\" detected here, make sure this is not a hard-coded credential.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/RegistrationRules.cs",
+                "region": {
+                  "startLine": 132,
+                  "startColumn": 26,
+                  "endLine": 132,
+                  "endColumn": 65
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S2068": {
+          "id": "S2068",
+          "shortDescription": "Credentials should not be hard-coded",
+          "fullDescription": "Hard-coding credentials in source code or binaries makes it easy for attackers to extract sensitive information, especially in distributed or open-source applications. This practice exposes your application to significant security risks.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Vulnerability",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/0/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Registration</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>ecdf11d6-f3a9-fe16-33d3-d7ce9197825d</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/Vertigo.Registration.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/0/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/0/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/0</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/0/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/0/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/1/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/1/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+      ]
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/1/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.Core</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>37eef21a-3734-bae5-c0cd-dcb8894484b7</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Vertigo.Client.Core.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/1/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/1/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/1</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/1/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/1/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/10/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/10/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "S3903",
+          "level": "warning",
+          "message": "Move 'SmokeParticipant' into a named namespace.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs",
+                "region": {
+                  "startLine": 749,
+                  "startColumn": 24,
+                  "endLine": 749,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3903",
+          "level": "warning",
+          "message": "Move 'RoundClosureSmoke' into a named namespace.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/RoundClosureSmoke.cs",
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 23,
+                  "endLine": 6,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1764",
+          "level": "warning",
+          "message": "Correct one of the identical expressions on both sides of operator '&&'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs",
+                "region": {
+                  "startLine": 587,
+                  "startColumn": 52,
+                  "endLine": 587,
+                  "endColumn": 79
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs",
+                "region": {
+                  "startLine": 587,
+                  "startColumn": 21,
+                  "endLine": 587,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "0": null
+            }
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs",
+                "region": {
+                  "startLine": 28,
+                  "startColumn": 5,
+                  "endLine": 28,
+                  "endColumn": 111
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs",
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 5,
+                  "endLine": 33,
+                  "endColumn": 76
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs",
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 5,
+                  "endLine": 38,
+                  "endColumn": 75
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 5,
+                  "endLine": 43,
+                  "endColumn": 103
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S1764": {
+          "id": "S1764",
+          "shortDescription": "Identical expressions should not be used on both sides of operators",
+          "fullDescription": "Using the same value on both sides of certain operators is a code defect. In the case of logical operators, it is either a copy/paste error and, therefore, a bug, or it is simply duplicated code and should be simplified. For bitwise operators and most binary mathematical operators, having the same value on both sides of an operator yields predictable results and should be simplified as well to avoid further code defects.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Bug",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S3903": {
+          "id": "S3903",
+          "shortDescription": "Types should be defined in named namespaces",
+          "fullDescription": "Types are declared in namespaces in order to prevent name collisions and as a way to organize them into the object hierarchy. Types that are defined outside any named namespace are in a global namespace that cannot be referenced in code.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Bug",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S6966": {
+          "id": "S6966",
+          "shortDescription": "Awaitable method should be used",
+          "fullDescription": "In an async method, any blocking operations should be avoided.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/10/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.MatchBoard.Smoke</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>d3c33164-2e46-2915-36c8-8841bfea9bf0</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Vertigo.Client.MatchBoard.Smoke.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/10/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/10/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/10</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/10/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/10/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/11/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/11/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "CA1873",
+          "level": "note",
+          "message": "La evaluación de este argumento puede ser costosa e innecesaria si el registro está deshabilitado (creación de matrices)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthenticationService.cs",
+                "region": {
+                  "startLine": 81,
+                  "startColumn": 13,
+                  "endLine": 81,
+                  "endColumn": 111
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1873",
+          "level": "note",
+          "message": "La evaluación de este argumento puede ser costosa e innecesaria si el registro está deshabilitado (creación de matrices)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Registration/Services/AccountPasswordService.cs",
+                "region": {
+                  "startLine": 69,
+                  "startColumn": 13,
+                  "endLine": 69,
+                  "endColumn": 112
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1873": {
+          "id": "CA1873",
+          "shortDescription": "Evitar el registro potencialmente costoso",
+          "fullDescription": "En muchas situaciones, el registro se deshabilita o se establece en un nivel de registro que da como resultado una evaluación innecesaria para este argumento.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1873",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/11/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Server.PlayerManagement</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>00000000-0000-0000-0000-000000000000</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/Vertigo.Server.PlayerManagement.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/11/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/11/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/11</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/11/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/11/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/12/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/12/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "El miembro \"VersionText\" no tiene acceso a los datos de la instancia y se puede marcar como static.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/HomeViewModel.cs",
+                "region": {
+                  "startLine": 92,
+                  "startColumn": 19,
+                  "endLine": 92,
+                  "endColumn": 30
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "El miembro \"LanguageButtonText\" no tiene acceso a los datos de la instancia y se puede marcar como static.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/AccessViewModel.cs",
+                "region": {
+                  "startLine": 167,
+                  "startColumn": 19,
+                  "endLine": 167,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1826",
+          "level": "note",
+          "message": "No utilice métodos Enumerable en colecciones indexables. Use la colección directamente.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MatchResultsViewModel.cs",
+                "region": {
+                  "startLine": 256,
+                  "startColumn": 16,
+                  "endLine": 256,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "method": "FirstOrDefault"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1859",
+          "level": "note",
+          "message": "Cambiar el tipo de campo '_winnerNames' de 'System.Collections.Generic.IReadOnlyList<string>' a 'string[]' para mejorar el rendimiento",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MatchResultsViewModel.cs",
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 35,
+                  "endLine": 22,
+                  "endColumn": 47
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1822": {
+          "id": "CA1822",
+          "shortDescription": "Marcar miembros como static",
+          "fullDescription": "Los miembros que no tienen acceso a datos de instancia o que llaman a métodos de instancia se pueden marcar como static. Después de marcar los métodos como static, el compilador emitirá los sitios de llamada no virtuales para estos miembros. Esto puede proporcionar una mejora apreciable del rendimiento del código sensible al rendimiento.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1826": {
+          "id": "CA1826",
+          "shortDescription": "No usar métodos Enumerable en las colecciones indexables",
+          "fullDescription": "Esta colección es directamente indexable. Pasar por LINQ en este caso genera asignaciones y trabajo de CPU innecesarios.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1826",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA1859": {
+          "id": "CA1859",
+          "shortDescription": "Usar tipos concretos cuando sea posible para mejorar el rendimiento",
+          "fullDescription": "El uso de tipos concretos evita la sobrecarga de llamadas virtuales o de interfaz y habilita la inserción.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1859",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/12/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.UI</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>c81b126c-edb8-4bce-8a2f-e73d7a998ab6</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Vertigo.Client.UI.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/12/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/12/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/12</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/12/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/12/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/13/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/13/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/Program.cs",
+                "region": {
+                  "startLine": 29,
+                  "startColumn": 5,
+                  "endLine": 29,
+                  "endColumn": 99
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/Program.cs",
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 5,
+                  "endLine": 35,
+                  "endColumn": 81
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/Program.cs",
+                "region": {
+                  "startLine": 42,
+                  "startColumn": 5,
+                  "endLine": 42,
+                  "endColumn": 67
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/Program.cs",
+                "region": {
+                  "startLine": 73,
+                  "startColumn": 5,
+                  "endLine": 73,
+                  "endColumn": 114
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S6966": {
+          "id": "S6966",
+          "shortDescription": "Awaitable method should be used",
+          "fullDescription": "In an async method, any blocking operations should be avoided.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/13/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.Networking.Smoke</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>324d3f4f-b3dc-9cb7-60d1-f1e616c5092b</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/Vertigo.Client.Networking.Smoke.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/13/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/13/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/13</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/13/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/13/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/14/output-cs/metrics.pb
+````
+
+````
+
+## File: .sonarqube/out/14/output-cs/token-cpd.pb
+````
+
+````
+
+## File: .sonarqube/out/14/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "CS0067",
+          "level": "warning",
+          "message": "El evento 'LobbyInvitationsViewModelTests.FakeLobbyClient.PlayerLeft' nunca se usa",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Social/LobbyInvitationsViewModelTests.cs",
+                "region": {
+                  "startLine": 171,
+                  "startColumn": 42,
+                  "endLine": 171,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0067",
+          "level": "warning",
+          "message": "El evento 'LobbyInvitationsViewModelTests.FakeLobbyClient.PreparationChanged' nunca se usa",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Social/LobbyInvitationsViewModelTests.cs",
+                "region": {
+                  "startLine": 173,
+                  "startColumn": 54,
+                  "endLine": 173,
+                  "endColumn": 72
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0067",
+          "level": "warning",
+          "message": "El evento 'LobbyInvitationsViewModelTests.FakeLobbyClient.PlayerJoined' nunca se usa",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Social/LobbyInvitationsViewModelTests.cs",
+                "region": {
+                  "startLine": 170,
+                  "startColumn": 49,
+                  "endLine": 170,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CS0067",
+          "level": "warning",
+          "message": "El evento 'LobbyInvitationsViewModelTests.FakeLobbyClient.MessageReceived' nunca se usa",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Social/LobbyInvitationsViewModelTests.cs",
+                "region": {
+                  "startLine": 172,
+                  "startColumn": 54,
+                  "endLine": 172,
+                  "endColumn": 69
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "CA1861",
+          "level": "note",
+          "message": "Preferir campos \"static readonly\" frente a argumentos de matriz constantes si se llama repetidamente al método llamado y no muta la matriz pasada",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchMasterPlanDraftTests.cs",
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 22,
+                  "endLine": 18,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "paramName": "expected"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1861",
+          "level": "note",
+          "message": "Preferir campos \"static readonly\" frente a argumentos de matriz constantes si se llama repetidamente al método llamado y no muta la matriz pasada",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchMasterPlanDraftTests.cs",
+                "region": {
+                  "startLine": 32,
+                  "startColumn": 22,
+                  "endLine": 32,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "paramName": "expected"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1861",
+          "level": "note",
+          "message": "Preferir campos \"static readonly\" frente a argumentos de matriz constantes si se llama repetidamente al método llamado y no muta la matriz pasada",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchMasterPlanDraftTests.cs",
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 42,
+                  "endLine": 58,
+                  "endColumn": 58
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "paramName": "hand"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1861",
+          "level": "note",
+          "message": "Preferir campos \"static readonly\" frente a argumentos de matriz constantes si se llama repetidamente al método llamado y no muta la matriz pasada",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchMasterPlanDraftTests.cs",
+                "region": {
+                  "startLine": 59,
+                  "startColumn": 41,
+                  "endLine": 59,
+                  "endColumn": 57
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "paramName": "hand"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1861",
+          "level": "note",
+          "message": "Preferir campos \"static readonly\" frente a argumentos de matriz constantes si se llama repetidamente al método llamado y no muta la matriz pasada",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchMasterPlanDraftTests.cs",
+                "region": {
+                  "startLine": 48,
+                  "startColumn": 22,
+                  "endLine": 48,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "paramName": "expected"
+            }
+          }
+        }
+      ],
+      "rules": {
+        "CA1861": {
+          "id": "CA1861",
+          "shortDescription": "Evitar matrices constantes como argumentos",
+          "fullDescription": "Las matrices constantes pasadas como argumentos no se reutilizan cuando se llaman repetidamente, lo que implica que se cree una nueva matriz cada vez. Considere la posibilidad de extraerlas a campos \"static readonly\" para mejorar el rendimiento si la matriz pasada no se muta dentro del método llamado.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1861",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CS0067": {
+          "id": "CS0067",
+          "shortDescription": "Nunca se usa el evento",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0067)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/14/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.UnitTests</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Test</ProjectType>
+  <ProjectGuid>b8e7a421-9900-967a-f499-c6502401508c</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Vertigo.Client.UnitTests.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/14/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/14/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/14</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/14/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/14/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+{"dotnetenterprise.s4net.build.dependencies.microsoft_net_test_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.dependencies.xunit.cnt":"true"}
+{"dotnetenterprise.s4net.build.dependencies.coverlet_collector.cnt":"true"}
+````
+
+## File: .sonarqube/out/15/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/15/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "CA1822",
+          "level": "note",
+          "message": "El miembro \"CreateLobby\" no tiene acceso a los datos de la instancia y se puede marcar como static.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Lobbies/Services/LobbyLifecycle.cs",
+                "region": {
+                  "startLine": 23,
+                  "startColumn": 25,
+                  "endLine": 23,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1822": {
+          "id": "CA1822",
+          "shortDescription": "Marcar miembros como static",
+          "fullDescription": "Los miembros que no tienen acceso a datos de instancia o que llaman a métodos de instancia se pueden marcar como static. Después de marcar los métodos como static, el compilador emitirá los sitios de llamada no virtuales para estos miembros. Esto puede proporcionar una mejora apreciable del rendimiento del código sensible al rendimiento.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1822",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "PortedFromFxCop",
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/15/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Server.Matchmaking</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>00000000-0000-0000-0000-000000000000</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/Vertigo.Server.Matchmaking.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/15/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/15/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/15</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/15/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/15/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/16/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/16/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "S3903",
+          "level": "warning",
+          "message": "Move 'RegisteredClient' into a named namespace.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/Program.cs",
+                "region": {
+                  "startLine": 293,
+                  "startColumn": 24,
+                  "endLine": 293,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/Program.cs",
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 5,
+                  "endLine": 24,
+                  "endColumn": 129
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/Program.cs",
+                "region": {
+                  "startLine": 145,
+                  "startColumn": 5,
+                  "endLine": 145,
+                  "endColumn": 89
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S3903": {
+          "id": "S3903",
+          "shortDescription": "Types should be defined in named namespaces",
+          "fullDescription": "Types are declared in namespaces in order to prevent name collisions and as a way to organize them into the object hierarchy. Types that are defined outside any named namespace are in a global namespace that cannot be referenced in code.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Bug",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S6966": {
+          "id": "S6966",
+          "shortDescription": "Awaitable method should be used",
+          "fullDescription": "In an async method, any blocking operations should be avoided.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/16/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.PrivateInvitations.Smoke</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>f3a57563-6efd-5463-ae68-9f9e8d6ad3bc</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/Vertigo.Client.PrivateInvitations.Smoke.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/16/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/16/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/16</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/16/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/16/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/17/output-cs/metrics.pb
+````
+
+````
+
+## File: .sonarqube/out/17/output-cs/token-cpd.pb
+````
+
+````
+
+## File: .sonarqube/out/17/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+      ]
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/17/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Server.Matchmaking.Tests</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Test</ProjectType>
+  <ProjectGuid>2c9278f8-e533-dcd9-b8fa-9d5c5c12f6e0</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Vertigo.Server.Matchmaking.Tests.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/17/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/17/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/17</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/17/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/17/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+{"dotnetenterprise.s4net.build.dependencies.microsoft_net_test_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.dependencies.xunit.cnt":"true"}
+{"dotnetenterprise.s4net.build.dependencies.coverlet_collector.cnt":"true"}
+````
+
+## File: .sonarqube/out/2/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/2/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+      ]
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/2/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Contracts</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>67d64aa1-281c-bda8-aff2-4a24bc07faa1</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Vertigo.Contracts.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/2/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/2/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/2</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/2/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/2/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/3/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/3/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+      ]
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/3/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.Networking</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>5229af52-5a37-a43b-bf6a-9335f0fd0292</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Vertigo.Client.Networking.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/3/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/3/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/3</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/3/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/3/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+{"dotnetenterprise.s4net.build.dependencies.microsoft_extensions_dependencyinjection.cnt":"true"}
+````
+
+## File: .sonarqube/out/4/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/4/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+      ]
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/4/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Server.CrossCutting</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>00000000-0000-0000-0000-000000000000</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/Vertigo.Server.CrossCutting.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/4/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/4/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/4</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/4/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/4/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/5/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/5/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+      ]
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/5/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Server.DataAccess</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>00000000-0000-0000-0000-000000000000</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/Vertigo.Server.DataAccess.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/5/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/5/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/5</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/5/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/5/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+{"dotnetenterprise.s4net.build.dependencies.microsoft_entityframeworkcore_design.cnt":"true"}
+{"dotnetenterprise.s4net.build.dependencies.microsoft_entityframeworkcore_sqlserver.cnt":"true"}
+````
+
+## File: .sonarqube/out/6/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/6/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "S3903",
+          "level": "warning",
+          "message": "Move 'LobbyCredentials' into a named namespace.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/Program.cs",
+                "region": {
+                  "startLine": 230,
+                  "startColumn": 24,
+                  "endLine": 230,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3903",
+          "level": "warning",
+          "message": "Move 'SmokeTiming' into a named namespace.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/Program.cs",
+                "region": {
+                  "startLine": 232,
+                  "startColumn": 23,
+                  "endLine": 232,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/Program.cs",
+                "region": {
+                  "startLine": 140,
+                  "startColumn": 5,
+                  "endLine": 140,
+                  "endColumn": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S3903": {
+          "id": "S3903",
+          "shortDescription": "Types should be defined in named namespaces",
+          "fullDescription": "Types are declared in namespaces in order to prevent name collisions and as a way to organize them into the object hierarchy. Types that are defined outside any named namespace are in a global namespace that cannot be referenced in code.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Bug",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S6966": {
+          "id": "S6966",
+          "shortDescription": "Awaitable method should be used",
+          "fullDescription": "In an async method, any blocking operations should be avoided.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/6/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.Reconnection.Smoke</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>c5ef44a3-1b1b-1a59-59c3-1d5b3d1774c5</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/Vertigo.Client.Reconnection.Smoke.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/6/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/6/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/6</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/6/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/6/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/7/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/7/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/Program.cs",
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 5,
+                  "endLine": 21,
+                  "endColumn": 94
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/Program.cs",
+                "region": {
+                  "startLine": 27,
+                  "startColumn": 5,
+                  "endLine": 27,
+                  "endColumn": 82
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/Program.cs",
+                "region": {
+                  "startLine": 42,
+                  "startColumn": 5,
+                  "endLine": 42,
+                  "endColumn": 77
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S6966": {
+          "id": "S6966",
+          "shortDescription": "Awaitable method should be used",
+          "fullDescription": "In an async method, any blocking operations should be avoided.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/7/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.TestAccounts.Setup</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>85ef5aa7-fab3-608c-335a-ad10a30b1fc4</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/Vertigo.Client.TestAccounts.Setup.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/7/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/7/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/7</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/7/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/7/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/8/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/8/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/Program.cs",
+                "region": {
+                  "startLine": 88,
+                  "startColumn": 5,
+                  "endLine": 88,
+                  "endColumn": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S6966": {
+          "id": "S6966",
+          "shortDescription": "Awaitable method should be used",
+          "fullDescription": "In an async method, any blocking operations should be avoided.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/8/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.Multiplayer.Smoke</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>a773fc63-86cc-b0a6-3745-7d29b971bfc9</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/Vertigo.Client.Multiplayer.Smoke.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/8/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/8/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/8</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/8/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/8/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/9/output-cs/test-method-declarations.pb
+````
+
+````
+
+## File: .sonarqube/out/9/Issues.json
+````json
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "5.12.0.0",
+        "fileVersion": "5.12.0-1.26529.118 (297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)",
+        "semanticVersion": "5.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "CA1861",
+          "level": "note",
+          "message": "Preferir campos \"static readonly\" frente a argumentos de matriz constantes si se llama repetidamente al método llamado y no muta la matriz pasada",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/Program.cs",
+                "region": {
+                  "startLine": 112,
+                  "startColumn": 73,
+                  "endLine": 112,
+                  "endColumn": 93
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "paramName": "second"
+            }
+          }
+        },
+        {
+          "ruleId": "S6966",
+          "level": "warning",
+          "message": "Await WriteLineAsync instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/Program.cs",
+                "region": {
+                  "startLine": 174,
+                  "startColumn": 5,
+                  "endLine": 174,
+                  "endColumn": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1861": {
+          "id": "CA1861",
+          "shortDescription": "Evitar matrices constantes como argumentos",
+          "fullDescription": "Las matrices constantes pasadas como argumentos no se reutilizan cuando se llaman repetidamente, lo que implica que se cree una nueva matriz cada vez. Considere la posibilidad de extraerlas a campos \"static readonly\" para mejorar el rendimiento si la matriz pasada no se muta dentro del método llamado.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1861",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "S6966": {
+          "id": "S6966",
+          "shortDescription": "Awaitable method should be used",
+          "fullDescription": "In an async method, any blocking operations should be avoided.",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
+````
+
+## File: .sonarqube/out/9/ProjectInfo.xml
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Vertigo.Client.LobbyPreparation.Smoke</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>8cfc7c20-1242-6d27-f1cd-ae85d3089fa9</ProjectGuid>
+  <FullPath>/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/Vertigo.Client.LobbyPreparation.Smoke.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResultFiles>
+    <AnalysisResultFile Id="FilesToAnalyze" Location="/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/conf/9/FilesToAnalyze.txt" />
+  </AnalysisResultFiles>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/9/Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/9</Property>
+    <Property Name="sonar.cs.scanner.telemetry">/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/9/Telemetry.json</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net11.0</TargetFramework>
+</ProjectInfo>
+````
+
+## File: .sonarqube/out/9/Telemetry.json
+````json
+{"dotnetenterprise.s4net.build.override_warnings_as_errors.cnt":"true"}
+{"dotnetenterprise.s4net.build.target_framework_moniker":".NETCoreApp,Version=v11.0"}
+{"dotnetenterprise.s4net.build.using_microsoft_net_sdk.cnt":"true"}
+{"dotnetenterprise.s4net.build.deterministic.cnt":"true"}
+{"dotnetenterprise.s4net.build.nuget_project_style.cnt":"PackageReference"}
+{"dotnetenterprise.s4net.build.netcore_sdk_version.cnt":"11.0.100"}
+````
+
+## File: .sonarqube/out/Processed.Telemetry.S4NET.json
+````json
+{"dotnetenterprise.s4net.serverInfo.product":"SQ_Server"}
+{"dotnetenterprise.s4net.serverInfo.serverUrl":"localhost"}
+{"dotnetenterprise.s4net.serverInfo.version":"26.11.0.134175"}
+{"dotnetenterprise.s4net.jre.bootstrapping":"Enabled"}
+{"dotnetenterprise.s4net.jre.download":"CacheHit"}
+{"dotnetenterprise.s4net.scannerEngine.bootstrapping":"Enabled"}
+{"dotnetenterprise.s4net.scannerEngine.download":"CacheHit"}
+{"dotnetenterprise.s4net.params.sonar_scm_disabled.source":"SQ_SERVER_SETTINGS"}
+{"dotnetenterprise.s4net.begin.runtime":"netcore"}
+{"dotnetenterprise.s4net.endstep.Sarif.v1_0_0_0.Valid":"True"}
+{"dotnetenterprise.s4net.endstep.coverage_conversion":false}
+````
+
+## File: .sonarqube/out/Processed.Telemetry.Targets.S4NET.json
+````json
+{"dotnetenterprise.s4net.build.visual_studio_version":"18.0"}
+{"dotnetenterprise.s4net.build.msbuild_version":"18.12.2"}
+````
+
+## File: .sonarqube/out/ScannerEngineInput.json
+````json
+{
+  "scannerProperties": [
+    {
+      "key": "sonar.scanner.app",
+      "value": "ScannerMSBuild"
+    },
+    {
+      "key": "sonar.scanner.appVersion",
+      "value": "12.1"
+    },
+    {
+      "key": "sonar.scanner.bootstrapStartTime",
+      "value": "1795154925000"
+    },
+    {
+      "key": "sonar.projectKey",
+      "value": "vertigo-client"
+    },
+    {
+      "key": "sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar"
+    },
+    {
+      "key": "sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game"
+    },
+    {
+      "key": "sonar.pullrequest.cache.basepath",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game"
+    },
+    {
+      "key": "sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Game.Tests/obj/Vertigo.Server.Game.Tests.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Game.Tests/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Game.Tests/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/obj/Vertigo.Server.CrossCutting.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Game/obj/Vertigo.Server.Game.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Game/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Game/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Host/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Host/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Host/obj/Vertigo.Server.Host.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/obj/Vertigo.Server.PlayerManagement.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/obj/Vertigo.Server.DataAccess.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/obj/Vertigo.Server.Matchmaking.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Game.Tests/obj/Debug/net11.0/Vertigo.Server.Game.Tests.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Game.Tests/bin/Debug/net11.0/Vertigo.Server.Game.Tests.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Game.Tests/bin/Debug/net11.0/Vertigo.Server.Game.Tests.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Game.Tests/bin/Debug/net11.0/Vertigo.Server.Game.Tests.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/obj/Debug/net11.0/Vertigo.Server.CrossCutting.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.CrossCutting/bin/Debug/net11.0/Vertigo.Server.CrossCutting.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Game/obj/Debug/net11.0/Vertigo.Server.Game.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Game/bin/Debug/net11.0/Vertigo.Server.Game.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Host/obj/Debug/net11.0/Vertigo.Server.Host.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Host/bin/Debug/net11.0/Vertigo.Server.Host.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Host/bin/Debug/net11.0/Vertigo.Server.Host.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Host/bin/Debug/net11.0/Vertigo.Server.Host.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/obj/Debug/net11.0/Vertigo.Server.PlayerManagement.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.PlayerManagement/bin/Debug/net11.0/Vertigo.Server.PlayerManagement.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/obj/Debug/net11.0/Vertigo.Server.DataAccess.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/bin/Debug/net11.0/Vertigo.Server.DataAccess.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/bin/Debug/net11.0/Vertigo.Server.DataAccess.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.DataAccess/bin/Debug/net11.0/Vertigo.Server.DataAccess.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/obj/Debug/net11.0/Vertigo.Server.Matchmaking.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Server/Vertigo.Server.Matchmaking/bin/Debug/net11.0/Vertigo.Server.Matchmaking.deps.json"
+    },
+    {
+      "key": "sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "sonar.modules",
+      "value": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9,ECDF11D6-F3A9-FE16-33D3-D7CE9197825D,85EF5AA7-FAB3-608C-335A-AD10A30B1FC4,F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC,C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5,2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0,37EEF21A-3734-BAE5-C0CD-DCB8894484B7,D3C33164-2E46-2915-36C8-8841BFEA9BF0,A773FC63-86CC-B0A6-3745-7D29B971BFC9,5229AF52-5A37-A43B-BF6A-9335F0FD0292,C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6,67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1,324D3F4F-B3DC-9CB7-60D1-F1E616C5092B,B8E7A421-9900-967A-F499-C6502401508C"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.projectKey",
+      "value": "vertigo-client:8CFC7C20-1242-6D27-F1CD-AE85D3089FA9"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.projectName",
+      "value": "Vertigo.Client.LobbyPreparation.Smoke"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod0"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/Program.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/obj/Vertigo.Client.LobbyPreparation.Smoke.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/obj/Debug/net11.0/Vertigo.Client.LobbyPreparation.Smoke.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/bin/Debug/net11.0/Vertigo.Client.LobbyPreparation.Smoke.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/bin/Debug/net11.0/Vertigo.Client.LobbyPreparation.Smoke.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.LobbyPreparation.Smoke/bin/Debug/net11.0/Vertigo.Client.LobbyPreparation.Smoke.runtimeconfig.json"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/9"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/9/Issues.json"
+    },
+    {
+      "key": "8CFC7C20-1242-6D27-F1CD-AE85D3089FA9.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/9/Telemetry.json"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.projectKey",
+      "value": "vertigo-client:ECDF11D6-F3A9-FE16-33D3-D7CE9197825D"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.projectName",
+      "value": "Vertigo.Registration"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod1"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/obj/Vertigo.Registration.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/obj/Debug/net11.0/Vertigo.Registration.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/bin/Debug/net11.0/Vertigo.Registration.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/FieldValidationError.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Registration/RegistrationRules.cs"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/0"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/0/Issues.json"
+    },
+    {
+      "key": "ECDF11D6-F3A9-FE16-33D3-D7CE9197825D.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/0/Telemetry.json"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.projectKey",
+      "value": "vertigo-client:85EF5AA7-FAB3-608C-335A-AD10A30B1FC4"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.projectName",
+      "value": "Vertigo.Client.TestAccounts.Setup"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod2"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/obj/Vertigo.Client.TestAccounts.Setup.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/obj/Debug/net11.0/Vertigo.Client.TestAccounts.Setup.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/bin/Debug/net11.0/Vertigo.Client.TestAccounts.Setup.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/bin/Debug/net11.0/Vertigo.Client.TestAccounts.Setup.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/bin/Debug/net11.0/Vertigo.Client.TestAccounts.Setup.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.TestAccounts.Setup/Program.cs"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/7"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/7/Issues.json"
+    },
+    {
+      "key": "85EF5AA7-FAB3-608C-335A-AD10A30B1FC4.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/7/Telemetry.json"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.projectKey",
+      "value": "vertigo-client:F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.projectName",
+      "value": "Vertigo.Client.PrivateInvitations.Smoke"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod3"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/obj/Vertigo.Client.PrivateInvitations.Smoke.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/obj/Debug/net11.0/Vertigo.Client.PrivateInvitations.Smoke.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/bin/Debug/net11.0/Vertigo.Client.PrivateInvitations.Smoke.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/bin/Debug/net11.0/Vertigo.Client.PrivateInvitations.Smoke.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/bin/Debug/net11.0/Vertigo.Client.UI.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/bin/Debug/net11.0/Vertigo.Client.UI.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/bin/Debug/net11.0/Vertigo.Client.UI.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/bin/Debug/net11.0/Vertigo.Client.PrivateInvitations.Smoke.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.PrivateInvitations.Smoke/Program.cs"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/16"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/16/Issues.json"
+    },
+    {
+      "key": "F3A57563-6EFD-5463-AE68-9F9E8D6AD3BC.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/16/Telemetry.json"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.projectKey",
+      "value": "vertigo-client:C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.projectName",
+      "value": "Vertigo.Client.Reconnection.Smoke"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod4"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/obj/Vertigo.Client.Reconnection.Smoke.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/obj/Debug/net11.0/Vertigo.Client.Reconnection.Smoke.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/bin/Debug/net11.0/Vertigo.Client.Reconnection.Smoke.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/bin/Debug/net11.0/Vertigo.Client.Reconnection.Smoke.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/bin/Debug/net11.0/Vertigo.Client.Reconnection.Smoke.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Reconnection.Smoke/Program.cs"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/6"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/6/Issues.json"
+    },
+    {
+      "key": "C5EF44A3-1B1B-1A59-59C3-1D5B3D1774C5.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/6/Telemetry.json"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.projectKey",
+      "value": "vertigo-client:2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.projectName",
+      "value": "Vertigo.Server.Matchmaking.Tests"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod5"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.sources",
+      "value": ""
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.tests",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/obj/Vertigo.Server.Matchmaking.Tests.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/obj/Debug/net11.0/Vertigo.Server.Matchmaking.Tests.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/bin/Debug/net11.0/Vertigo.Server.Matchmaking.Tests.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/bin/Debug/net11.0/Vertigo.Server.Matchmaking.Tests.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/bin/Debug/net11.0/Vertigo.Server.Matchmaking.Tests.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Authentication/GuestSessionTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Chat/ChatLanguageFilterTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Chat/ChatServiceTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/CoreWcfServiceBehaviorTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyDisconnectionTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyMatchActivationTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyMembershipTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Lobbies/LobbyStateTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Server.Matchmaking.Tests/Registration/AccountServiceTests.cs"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/17"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/17/Issues.json"
+    },
+    {
+      "key": "2C9278F8-E533-DCD9-B8FA-9D5C5C12F6E0.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/17/Telemetry.json"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.projectKey",
+      "value": "vertigo-client:37EEF21A-3734-BAE5-C0CD-DCB8894484B7"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.projectName",
+      "value": "Vertigo.Client.Core"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod6"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/obj/Vertigo.Client.Core.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/obj/Debug/net11.0/Vertigo.Client.Core.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/obj/Debug/net10.0/Vertigo.Client.Core.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/bin/Debug/net11.0/Vertigo.Client.Core.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/bin/Debug/net10.0/Vertigo.Client.Core.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Navigation/INavigator.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Navigation/NavigationPage.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Navigation/Navigator.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Sessions/PlayerSession.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Core/Sessions/SessionSnapshot.cs"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/1"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/1/Issues.json"
+    },
+    {
+      "key": "37EEF21A-3734-BAE5-C0CD-DCB8894484B7.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/1/Telemetry.json"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.projectKey",
+      "value": "vertigo-client:D3C33164-2E46-2915-36C8-8841BFEA9BF0"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.projectName",
+      "value": "Vertigo.Client.MatchBoard.Smoke"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod7"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/obj/Vertigo.Client.MatchBoard.Smoke.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/obj/Debug/net11.0/Vertigo.Client.MatchBoard.Smoke.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/bin/Debug/net11.0/Vertigo.Client.MatchBoard.Smoke.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/bin/Debug/net11.0/Vertigo.Client.MatchBoard.Smoke.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/bin/Debug/net11.0/Vertigo.Client.MatchBoard.Smoke.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/Program.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.MatchBoard.Smoke/RoundClosureSmoke.cs"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/10"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/10/Issues.json"
+    },
+    {
+      "key": "D3C33164-2E46-2915-36C8-8841BFEA9BF0.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/10/Telemetry.json"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.projectKey",
+      "value": "vertigo-client:A773FC63-86CC-B0A6-3745-7D29B971BFC9"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.projectName",
+      "value": "Vertigo.Client.Multiplayer.Smoke"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod8"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/obj/Vertigo.Client.Multiplayer.Smoke.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/obj/Debug/net11.0/Vertigo.Client.Multiplayer.Smoke.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/bin/Debug/net11.0/Vertigo.Client.Multiplayer.Smoke.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/bin/Debug/net11.0/Vertigo.Client.Multiplayer.Smoke.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/bin/Debug/net11.0/Vertigo.Client.Multiplayer.Smoke.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Multiplayer.Smoke/Program.cs"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/8"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/8/Issues.json"
+    },
+    {
+      "key": "A773FC63-86CC-B0A6-3745-7D29B971BFC9.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/8/Telemetry.json"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.projectKey",
+      "value": "vertigo-client:5229AF52-5A37-A43B-BF6A-9335F0FD0292"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.projectName",
+      "value": "Vertigo.Client.Networking"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod9"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/obj/Vertigo.Client.Networking.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/obj/Debug/net11.0/Vertigo.Client.Networking.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/obj/Debug/net10.0/Vertigo.Client.Networking.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/bin/Debug/net11.0/Vertigo.Client.Networking.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/bin/Debug/net10.0/Vertigo.Client.Networking.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Callbacks/FriendshipCallbackHandler.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Callbacks/LobbyCallbackHandler.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Callbacks/PendingLobbyEvent.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/DependencyInjection.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IAccountClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IAuthClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IBlockedPlayerClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IChatClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IFriendshipClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IFriendshipNotificationClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/ILobbyClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/ILobbyInvitationClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Interfaces/IServiceCaller.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/AccountClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/AuthClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/BlockedPlayerClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/ChatClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/FriendshipClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/FriendshipNotificationClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/LobbyClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/LobbyInvitationClient.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Proxies/ServiceCaller.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Results/ClientResult.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Results/FailureKind.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Sessions/Interfaces/ISessionCoordinator.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Sessions/Interfaces/ISessionTransportCleaner.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Sessions/Services/SessionTransportCleaner.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.Networking/Sessions/SessionCoordinator.cs"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/3"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/3/Issues.json"
+    },
+    {
+      "key": "5229AF52-5A37-A43B-BF6A-9335F0FD0292.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/3/Telemetry.json"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.projectKey",
+      "value": "vertigo-client:C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.projectName",
+      "value": "Vertigo.Client.UI"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod10"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/obj/Vertigo.Client.UI.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/obj/Debug/net11.0/Vertigo.Client.UI.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/obj/Debug/net10.0/Vertigo.Client.UI.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/bin/Debug/net11.0/Vertigo.Client.UI.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/bin/Debug/net11.0/Vertigo.Client.UI.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/bin/Debug/net11.0/Vertigo.Client.UI.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/bin/Debug/net10.0/Vertigo.Client.UI.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/bin/Debug/net10.0/Vertigo.Client.UI.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/bin/Debug/net10.0/Vertigo.Client.UI.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/App.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Program.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Interfaces/IClientErrorText.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Interfaces/ITextLocalizer.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Markup/LocalizeExtension.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Services/ClientErrorText.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Localization/Services/TextLocalizer.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Sessions/Interfaces/ISessionGuard.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Sessions/Services/SessionGuard.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Settings/Interfaces/IUserSettingsStore.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Settings/Models/UserSettings.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Settings/Services/JsonUserSettingsStore.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Settings/Services/UiLanguage.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Validation/LobbyCodeRules.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Validation/MatchBoardIdentity.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Validation/MatchBoardNotificationRules.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Utilities/Validation/MatchTurnRules.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewLocator.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/AccessViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/AccessContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/HomeContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/LobbyContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/LobbyInvitationContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/MainContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/MainScreensContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/MainSocialContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/MatchBoardContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/SocialNavigationContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/SocialViewModelContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/UiNavigationContext.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Dependencies/UiServices.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/HomeViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Lifecycle/INavigationAware.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Lifecycle/LobbyPreparationRevision.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Lifecycle/MatchBoardRevision.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Lifecycle/MatchEntryRules.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/LobbyViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MainViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MatchResultsViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MatchViewModel.Chat.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/MatchViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/PlayViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/LobbyMemberRow.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchCardRow.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchChatRow.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchExpulsionVoting.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchFinalStandingRow.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMasterPlanDraft.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMasterPlanStep.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMoveRow.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchPileRow.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchPlayerRow.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchRoundResultRow.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchTowerResult.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchTurnClock.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/ProfileViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/SettingsViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Social/BlockedPlayersViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Social/FriendsViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Social/LobbyInvitationsViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Social/SocialViewModelBase.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/SocialViewModel.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/Utilities/SocialOperation.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/ViewModels/ViewModelBase.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/AccessView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/HomeView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/LobbyView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/MainWindow.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/MatchResultsView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/MatchView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/PlayView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/ProfileView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/SettingsView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Views/SocialView.axaml.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/obj/Debug/net11.0/Avalonia/resources,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Resources/Localization/Strings.resx,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Resources/Localization/Strings.en.resx,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/app.manifest,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Client/Vertigo.Client.UI/Assets/avalonia-logo.ico"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/12"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/12/Issues.json"
+    },
+    {
+      "key": "C81B126C-EDB8-4BCE-8A2F-E73D7A998AB6.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/12/Telemetry.json"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.projectKey",
+      "value": "vertigo-client:67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.projectName",
+      "value": "Vertigo.Contracts"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod11"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/obj/Vertigo.Contracts.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/obj/Debug/net11.0/Vertigo.Contracts.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/obj/Debug/net10.0/Vertigo.Contracts.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/bin/Debug/net11.0/Vertigo.Contracts.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/bin/Debug/net10.0/Vertigo.Contracts.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Callbacks/IFriendshipCallback.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Callbacks/ILobbyCallback.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Endpoints/ServiceEndpoints.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Faults/ServiceErrorCodes.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Faults/ServiceMessageKeys.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IAccountService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IAuthService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IBlockedPlayerService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IChatService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IFriendshipNotificationService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/IFriendshipService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/ILobbyInvitationService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Interfaces/ILobbyService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IFriendshipNotifier.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/ILobbyDirectory.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchBoardReader.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchCommandService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchDepartureService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchDismantleService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchExpulsionVoteService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchLifecycle.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchPlacementService.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchPresence.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchPresenceCommands.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchPrivateHandReader.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchSessionStarter.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchStateReader.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/IMatchTurnClock.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/LobbyOverview.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchDepartureResult.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchDismantle.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchDismantleResult.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchExpulsionVote.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchExpulsionVoteResult.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchLifecycleSnapshot.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchLifecycleStatus.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchMasterPlan.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchPlacement.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchPlacementResult.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchPresenceSnapshot.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchReconnectResult.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchSessionSnapshot.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Internal/MatchStartRequest.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/AccountRegistration.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/BlockedPlayerSummary.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendEntry.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipDecision.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipInvitation.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipInvitationEntry.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipNotification.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/FriendshipNotificationKind.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/InvitableFriendsQuery.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyAdmission.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyChatMessage.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyInvitationDecline.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyInvitationEntry.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyInvitations.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyMember.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyNotification.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyNotificationKind.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbyPreparation.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LobbySummary.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/LoginCredentials.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardActionKind.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardChanged.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardMove.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardPile.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardPlayer.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchBoardSnapshot.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchChatRequest.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchChatRules.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchDismantleRequest.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchEndReason.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchExpulsionVoteRequest.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchExpulsionVoteSummary.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchLeaveRequest.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchMasterPlanRequest.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchPlaceRequest.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchPresenceRequest.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchPrivateHand.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchRoundPlayerScore.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/MatchRoundSummary.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PasswordChange.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PlayerPair.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PlayerRelation.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PlayerSearch.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/PlayerSearchEntry.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/ServiceFault.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/SessionLogout.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/src/Shared/Vertigo.Contracts/Models/UserSession.cs"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/2"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/2/Issues.json"
+    },
+    {
+      "key": "67D64AA1-281C-BDA8-AFF2-4A24BC07FAA1.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/2/Telemetry.json"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.projectKey",
+      "value": "vertigo-client:324D3F4F-B3DC-9CB7-60D1-F1E616C5092B"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.projectName",
+      "value": "Vertigo.Client.Networking.Smoke"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod12"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.tests",
+      "value": ""
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.sources",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/obj/Vertigo.Client.Networking.Smoke.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/obj/Debug/net11.0/Vertigo.Client.Networking.Smoke.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/obj/Debug/net10.0/Vertigo.Client.Networking.Smoke.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/bin/Debug/net11.0/Vertigo.Client.Networking.Smoke.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/bin/Debug/net11.0/Vertigo.Client.Networking.Smoke.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/bin/Debug/net11.0/Vertigo.Client.Networking.Smoke.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/bin/Debug/net10.0/Vertigo.Client.Networking.Smoke.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/bin/Debug/net10.0/Vertigo.Client.Networking.Smoke.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/bin/Debug/net10.0/Vertigo.Client.Networking.Smoke.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.Networking.Smoke/Program.cs"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/13"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/13/Issues.json"
+    },
+    {
+      "key": "324D3F4F-B3DC-9CB7-60D1-F1E616C5092B.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/13/Telemetry.json"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.projectKey",
+      "value": "vertigo-client:B8E7A421-9900-967A-F499-C6502401508C"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.projectName",
+      "value": "Vertigo.Client.UnitTests"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.projectBaseDir",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.working.directory",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/.sonar/mod13"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.sourceEncoding",
+      "value": "utf-8"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.sources",
+      "value": ""
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.tests",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/obj/Vertigo.Client.UnitTests.csproj.nuget.dgspec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/obj/project.packagespec.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/obj/project.assets.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/obj/Debug/net11.0/Vertigo.Client.UnitTests.sourcelink.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/bin/Debug/net11.0/Vertigo.Client.UnitTests.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/bin/Debug/net11.0/Vertigo.Client.UI.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/bin/Debug/net11.0/Vertigo.Client.UI.deps.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/bin/Debug/net11.0/Vertigo.Client.UI.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/bin/Debug/net11.0/Vertigo.Client.UnitTests.runtimeconfig.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/bin/Debug/net11.0/Vertigo.Client.UnitTests.runtimeconfig.dev.json,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Errors/ClientErrorTextTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Lobbies/LobbyCallbackHandlerTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Lobbies/LobbyPreparationRevisionTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Localization/AccessLanguageSwitchTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Localization/AccessLocalizationTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Localization/HomeLocalizationTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchBoardErrorHandlingTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchBoardNotificationRulesTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchBoardRevisionTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchEntryRulesTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchExpulsionVotingTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchLobbyContractTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchMasterPlanDraftTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchResultsViewModelTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchTurnPresentationTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Matches/MatchViewModelTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Navigation/NavigatorTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Sessions/PlayerSessionTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Sessions/SessionCoordinatorTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Sessions/SessionGuardTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Settings/JsonUserSettingsStoreTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Social/FriendshipCallbackHandlerTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Social/LobbyInvitationsViewModelTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Validation/LobbyCodeRulesTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Validation/MatchChatRulesTests.cs,/Users/abdielmar/RiderProjects/Vertigo_The_Game/tests/Vertigo.Client.UnitTests/Validation/RegistrationRulesTests.cs"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.cs.analyzer.projectOutPaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/14"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.cs.roslyn.reportFilePaths",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/14/Issues.json"
+    },
+    {
+      "key": "B8E7A421-9900-967A-F499-C6502401508C.sonar.cs.scanner.telemetry",
+      "value": "/Users/abdielmar/RiderProjects/Vertigo_The_Game/.sonarqube/out/14/Telemetry.json"
+    },
+    {
+      "key": "sonar.token",
+      "value": "***"
+    },
+    {
+      "key": "sonar.host.url",
+      "value": "http://localhost:9000"
+    }
+  ]
+}
+````
 
 ## File: src/Client/Vertigo.Client.Core/Navigation/INavigator.cs
 ````csharp
@@ -694,18 +6783,6 @@ public interface IBlockedPlayerClient
     ClientResult<bool> BlockPlayer(Guid otherPlayerId, string sessionToken);
 
     ClientResult<bool> UnblockPlayer(Guid otherPlayerId, string sessionToken);
-}
-````
-
-## File: src/Client/Vertigo.Client.Networking/Interfaces/IChatClient.cs
-````csharp
-using Vertigo.Client.Networking.Results;
-
-namespace Vertigo.Client.Networking.Interfaces;
-
-public interface IChatClient
-{
-    ClientResult<bool> SendMessage(string lobbyCode, string text, string sessionToken);
 }
 ````
 
@@ -952,34 +7029,6 @@ public sealed class BlockedPlayerClient : IBlockedPlayerClient
             ServiceEndpoints.BlockedPlayerServiceAddress,
             (channel, args) => channel.UnblockPlayer(args.Item1, args.Item2),
             (otherPlayerId, sessionToken));
-    }
-}
-````
-
-## File: src/Client/Vertigo.Client.Networking/Proxies/ChatClient.cs
-````csharp
-using Vertigo.Client.Networking.Interfaces;
-using Vertigo.Client.Networking.Results;
-using Vertigo.Contracts.Endpoints;
-using Vertigo.Contracts.Interfaces;
-
-namespace Vertigo.Client.Networking.Proxies;
-
-public sealed class ChatClient : IChatClient
-{
-    private readonly IServiceCaller _serviceCaller;
-
-    public ChatClient(IServiceCaller serviceCaller)
-    {
-        _serviceCaller = serviceCaller;
-    }
-
-    public ClientResult<bool> SendMessage(string lobbyCode, string text, string sessionToken)
-    {
-        return _serviceCaller.Call<IChatService, (string, string, string), bool>(
-            ServiceEndpoints.ChatServiceAddress,
-            (channel, args) => channel.SendMessage(args.Item1, args.Item2, args.Item3),
-            (lobbyCode, text, sessionToken));
     }
 }
 ````
@@ -1785,53 +7834,6 @@ public static class DependencyInjection
 </Styles>
 ````
 
-## File: src/Client/Vertigo.Client.UI/Themes/Tokens/Colors.axaml
-````
-<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <SolidColorBrush x:Key="ColorShellGray" Color="#D3D3D8"/>
-    <SolidColorBrush x:Key="ColorCoal" Color="#1E1F22"/>
-    <SolidColorBrush x:Key="ColorWhite" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ColorSnesBlue" Color="#2B6CB0"/>
-    <SolidColorBrush x:Key="ColorSnesGreen" Color="#38A169"/>
-    <SolidColorBrush x:Key="ColorSnesYellow" Color="#D69E2E"/>
-    <SolidColorBrush x:Key="ColorSnesRed" Color="#E53E3E"/>
-    <SolidColorBrush x:Key="ColorPrimary" Color="#1E1F22"/>
-    <SolidColorBrush x:Key="ColorAccent" Color="#2B6CB0"/>
-    <SolidColorBrush x:Key="ColorSuccess" Color="#24784B"/>
-    <SolidColorBrush x:Key="ColorError" Color="#B82525"/>
-    <SolidColorBrush x:Key="ColorWarningText" Color="#6B4A12"/>
-    <SolidColorBrush x:Key="ColorWarningBackground" Color="#FFF5D9"/>
-    <SolidColorBrush x:Key="ColorInfoBackground" Color="#EAF2FC"/>
-    <SolidColorBrush x:Key="ColorErrorBackground" Color="#FFF0F0"/>
-    <SolidColorBrush x:Key="ColorSuccessBackground" Color="#E9F7EF"/>
-    <SolidColorBrush x:Key="ColorSurface" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ColorSurfaceMuted" Color="#F5F5F7"/>
-    <SolidColorBrush x:Key="ColorSurfaceRaised" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ColorCanvas" Color="#F3F4F6"/>
-    <SolidColorBrush x:Key="ColorBorder" Color="#B7BAC3"/>
-    <SolidColorBrush x:Key="ColorBorderStrong" Color="#646873"/>
-    <SolidColorBrush x:Key="ColorDivider" Color="#D5D7DC"/>
-    <SolidColorBrush x:Key="ColorTextPrimary" Color="#1E1F22"/>
-    <SolidColorBrush x:Key="ColorTextSecondary" Color="#4B4E56"/>
-    <SolidColorBrush x:Key="ColorTextMuted" Color="#62656E"/>
-    <SolidColorBrush x:Key="ColorTextOnDark" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ColorTextOnAccent" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ColorTextOnSuccess" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ColorTextOnDanger" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ColorPrimaryHover" Color="#303237"/>
-    <SolidColorBrush x:Key="ColorAccentHover" Color="#21578F"/>
-    <SolidColorBrush x:Key="ColorAccentPressed" Color="#194570"/>
-    <SolidColorBrush x:Key="ColorSuccessHover" Color="#276D49"/>
-    <SolidColorBrush x:Key="ColorSuccessPressed" Color="#205C3D"/>
-    <SolidColorBrush x:Key="ColorDangerHover" Color="#B52C2C"/>
-    <SolidColorBrush x:Key="ColorDangerPressed" Color="#922323"/>
-    <SolidColorBrush x:Key="ColorFocus" Color="#2B6CB0"/>
-    <SolidColorBrush x:Key="ColorInputBackground" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ColorDisabledBackground" Color="#E6E7EA"/>
-    <SolidColorBrush x:Key="ColorDisabledForeground" Color="#62656E"/>
-</ResourceDictionary>
-````
-
 ## File: src/Client/Vertigo.Client.UI/Themes/Tokens/Icons.axaml
 ````
 <ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -2330,28 +8332,6 @@ namespace Vertigo.Client.UI.Utilities.Validation;
 public readonly record struct MatchBoardIdentity(string LobbyCode, Guid MatchId);
 ````
 
-## File: src/Client/Vertigo.Client.UI/Utilities/Validation/MatchChatRules.cs
-````csharp
-namespace Vertigo.Client.UI.Utilities.Validation;
-
-public static class MatchChatRules
-{
-    public const int MaximumLength = 40;
-
-    public static bool CanSend(string? message)
-    {
-        bool isValid = !string.IsNullOrWhiteSpace(message);
-
-        if (isValid)
-        {
-            isValid = message!.Length <= MaximumLength;
-        }
-
-        return isValid;
-    }
-}
-````
-
 ## File: src/Client/Vertigo.Client.UI/Utilities/Validation/MatchTurnRules.cs
 ````csharp
 using System.Collections.Generic;
@@ -2581,17 +8561,6 @@ public sealed class LobbyMemberRow
 }
 ````
 
-## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchChatRow.cs
-````csharp
-namespace Vertigo.Client.UI.ViewModels.Presentation;
-
-public sealed class MatchChatRow
-{
-    public required string Sender { get; init; }
-    public required string Text { get; init; }
-}
-````
-
 ## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchExpulsionVoting.cs
 ````csharp
 using System;
@@ -2646,62 +8615,24 @@ internal sealed class MatchExpulsionVoting
 }
 ````
 
-## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMasterPlanDraft.cs
+## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchFinalStandingRow.cs
 ````csharp
-using System.Collections.Generic;
-using System.Linq;
-using Vertigo.Client.UI.Utilities.Validation;
-
 namespace Vertigo.Client.UI.ViewModels.Presentation;
 
-internal sealed class MatchMasterPlanDraft
+public sealed record MatchFinalStandingRow
 {
-    private readonly List<int> _modules = new();
-
-    public IReadOnlyList<int> Modules => _modules;
-
-    public bool CanPlay => _modules.Count >= 2;
-
-    public bool CanAppend(int? towerTop, int? module)
-    {
-        int? top = _modules.Count == 0 ? towerTop : _modules[^1];
-
-        return towerTop is not null && module is int card && !_modules.Contains(card)
-            && MatchTurnRules.CanPlace(top, card);
-    }
-
-    public bool TryAppend(int? towerTop, int module)
-    {
-        bool added = CanAppend(towerTop, module);
-        if (added)
-        {
-            _modules.Add(module);
-        }
-
-        return added;
-    }
-
-    public bool RemoveLast()
-    {
-        bool removed = _modules.Count > 0;
-        if (removed)
-        {
-            _modules.RemoveAt(_modules.Count - 1);
-        }
-
-        return removed;
-    }
-
-    public bool IsStillInHand(IReadOnlyList<int> hand)
-    {
-        return _modules.All(module => hand.Contains(module));
-    }
-
-    public void Clear()
-    {
-        _modules.Clear();
-    }
+    public int? Position { get; init; }
+    public required string Username { get; init; }
+    public int TotalFloors { get; init; }
+    public bool IsWinner { get; init; }
 }
+````
+
+## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMasterPlanStep.cs
+````csharp
+namespace Vertigo.Client.UI.ViewModels.Presentation;
+
+public sealed record MatchMasterPlanStep(int Number, bool IsTowerTop);
 ````
 
 ## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMoveRow.cs
@@ -2720,6 +8651,47 @@ namespace Vertigo.Client.UI.ViewModels.Presentation;
 
 public sealed record MatchRoundResultRow(
     int RoundNumber, string Title, IReadOnlyList<MatchRoundPlayerScore> Scores);
+````
+
+## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchTowerResult.cs
+````csharp
+using System;
+using System.Collections.Generic;
+
+namespace Vertigo.Client.UI.ViewModels.Presentation;
+
+public sealed class MatchTowerResult
+{
+    private const double DrawingHeight = 108;
+
+    internal MatchTowerResult((int Built, int Bonus, int Total) floors, int tallest, bool includeBonusInDrawing)
+    {
+        BuiltFloors = floors.Built;
+        BonusFloors = floors.Bonus;
+        TotalFloors = floors.Total;
+
+        double floorHeight = DrawingHeight / Math.Max(1, tallest);
+        List<MatchTowerSegment> segments = new();
+        if (includeBonusInDrawing && BonusFloors > 0)
+        {
+            segments.Add(new MatchTowerSegment(BonusFloors * floorHeight, IsBonus: true));
+        }
+
+        if (BuiltFloors > 0)
+        {
+            segments.Add(new MatchTowerSegment(BuiltFloors * floorHeight, IsBonus: false));
+        }
+
+        Segments = segments;
+    }
+
+    public int BuiltFloors { get; }
+    public int BonusFloors { get; }
+    public int TotalFloors { get; }
+    public IReadOnlyList<MatchTowerSegment> Segments { get; }
+}
+
+public sealed record MatchTowerSegment(double Height, bool IsBonus);
 ````
 
 ## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchTurnClock.cs
@@ -2860,149 +8832,152 @@ public sealed class SocialOperation
 }
 ````
 
-## File: src/Client/Vertigo.Client.UI/ViewModels/MatchResultsViewModel.cs
+## File: src/Client/Vertigo.Client.UI/ViewModels/MatchViewModel.Chat.cs
 ````csharp
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Vertigo.Client.UI.Utilities.Localization.Interfaces;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Input;
+using Vertigo.Client.Core.Sessions;
+using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Client.Networking.Results;
 using Vertigo.Client.UI.ViewModels.Presentation;
 using Vertigo.Contracts.Models;
 
 namespace Vertigo.Client.UI.ViewModels;
 
-public sealed class MatchResultsViewModel : ViewModelBase
+public sealed partial class MatchViewModel
 {
-    private readonly ITextLocalizer _text;
-    private IReadOnlyList<MatchRoundSummary> _roundSummaries = Array.Empty<MatchRoundSummary>();
-    private IReadOnlyList<MatchRoundResultRow> _rounds = Array.Empty<MatchRoundResultRow>();
-    private MatchRoundResultRow? _selectedRound;
-    private MatchEndReason _endReason;
-    private IReadOnlyList<string> _winnerNames = Array.Empty<string>();
-    private bool _isExpanded;
+    private const int MaximumVisibleChatMessages = 100;
+    private const string ChatSendFailed = "Lobby.MessageFailed";
 
-    internal MatchResultsViewModel(ITextLocalizer text)
+    private readonly IChatClient? _chatClient;
+    private string _draftMessage = string.Empty;
+    private string _chatErrorMessage = string.Empty;
+
+    public IAsyncRelayCommand SendChatCommand { get; }
+    public ObservableCollection<MatchChatRow> ChatMessages { get; } = new();
+
+    public string DraftMessage
     {
-        _text = text;
-    }
-
-    public IReadOnlyList<MatchRoundSummary> RoundSummaries => _roundSummaries;
-
-    public IReadOnlyList<MatchRoundResultRow> Rounds
-    {
-        get => _rounds;
-        private set => SetProperty(ref _rounds, value);
-    }
-
-    public MatchRoundResultRow? SelectedRound
-    {
-        get => _selectedRound;
+        get => _draftMessage;
         set
         {
-            if (SetProperty(ref _selectedRound, value))
+            if (SetProperty(ref _draftMessage, value ?? string.Empty))
             {
-                OnPropertyChanged(nameof(SelectedScores));
+                OnPropertyChanged(nameof(ChatLengthLabel));
+                SendChatCommand.NotifyCanExecuteChanged();
             }
         }
     }
 
-    public IReadOnlyList<MatchRoundPlayerScore> SelectedScores =>
-        SelectedRound?.Scores ?? Array.Empty<MatchRoundPlayerScore>();
+    public string ChatLengthLabel => $"{DraftMessage.Length}/{MatchChatRules.MaximumLength}";
 
-    public bool IsExpanded
+    public string ChatErrorMessage
     {
-        get => _isExpanded;
-        set => SetProperty(ref _isExpanded, value);
-    }
-
-    public bool HasRoundSummaries => _roundSummaries.Count > 0;
-    public bool HasResults => HasRoundSummaries || HasFinalResult;
-    public bool HasFinalResult => _endReason != MatchEndReason.None;
-    public bool IsAbandonment => _endReason == MatchEndReason.Abandonment;
-    public string HeaderText => HasFinalResult || !HasRoundSummaries ? _text.Get("Match.Results.Title")
-        : string.Format(_text.Get("Match.Results.RoundClosed"), _roundSummaries[^1].RoundNumber);
-    public string WinnerText => _winnerNames.Count switch
-    {
-        0 => string.Empty,
-        1 => string.Format(_text.Get("Match.Results.Winner"), _winnerNames[0]),
-        _ => string.Format(_text.Get("Match.Results.Winners"), string.Join(", ", _winnerNames))
-    };
-
-    public string AbandonmentText => _text.Get("Match.Results.Abandonment");
-    public string SelectRoundText => _text.Get("Match.Results.SelectRound");
-    public string PlayerText => _text.Get("Match.Results.Player");
-    public string FloorsText => _text.Get("Match.Results.Floors");
-    public string BonusText => _text.Get("Match.Results.Bonus");
-    public string TotalText => _text.Get("Match.Results.Total");
-
-    internal void ApplyBoard(MatchBoardSnapshot board)
-    {
-        if (_roundSummaries.Count != board.RoundSummaries.Count)
+        get => _chatErrorMessage;
+        private set
         {
-            int? selectedRound = SelectedRound?.RoundNumber;
-            bool reviewingEarlierRound = _roundSummaries.Count > 0 && selectedRound.HasValue
-                && selectedRound.Value != _roundSummaries[^1].RoundNumber;
-            _roundSummaries = board.RoundSummaries;
-            BuildRoundOptions(reviewingEarlierRound ? selectedRound : null);
-            OnPropertyChanged(nameof(HasRoundSummaries));
-        }
-
-        if (_endReason != board.EndReason)
-        {
-            bool endedNow = !HasFinalResult && board.EndReason != MatchEndReason.None;
-            _endReason = board.EndReason;
-            Dictionary<Guid, string> names = board.Players.ToDictionary(
-                player => player.PlayerId, player => player.Username);
-            _winnerNames = board.WinnerIds.Select(id => names.GetValueOrDefault(id))
-                .Where(name => !string.IsNullOrWhiteSpace(name)).Select(name => name!).ToArray();
-            OnPropertyChanged(nameof(HasFinalResult));
-            OnPropertyChanged(nameof(IsAbandonment));
-            OnPropertyChanged(nameof(WinnerText));
-            if (endedNow)
+            if (SetProperty(ref _chatErrorMessage, value))
             {
-                IsExpanded = true;
+                OnPropertyChanged(nameof(HasChatError));
             }
         }
-
-        OnPropertyChanged(nameof(HasResults));
-        OnPropertyChanged(nameof(HeaderText));
     }
 
-    internal void Reset()
+    public bool HasChatError => !string.IsNullOrEmpty(ChatErrorMessage);
+
+    private bool CanSendChat()
     {
-        _roundSummaries = Array.Empty<MatchRoundSummary>();
-        BuildRoundOptions(null);
-        _endReason = MatchEndReason.None;
-        _winnerNames = Array.Empty<string>();
-        IsExpanded = false;
-        OnPropertyChanged(nameof(HasRoundSummaries));
-        OnPropertyChanged(nameof(HasFinalResult));
-        OnPropertyChanged(nameof(IsAbandonment));
-        OnPropertyChanged(nameof(HasResults));
-        OnPropertyChanged(nameof(HeaderText));
-        OnPropertyChanged(nameof(WinnerText));
+        return _chatClient is not null && !NeedsReconnect && !MatchUnavailable && !_isLeavingMatch
+            && !IsExitConfirmationOpen && MatchChatRules.CanSend(DraftMessage)
+            && _session?.GetActiveSession() is { } session
+            && _voting.Board is { EndReason: MatchEndReason.None, TurnDeadlineUtc: not null } board
+            && board.Players.Exists(player => player.PlayerId == session.PlayerId);
     }
 
-    internal void RefreshLocalization()
+    private async Task SendChatAsync()
     {
-        BuildRoundOptions(SelectedRound?.RoundNumber);
-        OnPropertyChanged(nameof(HeaderText));
-        OnPropertyChanged(nameof(WinnerText));
-        OnPropertyChanged(nameof(AbandonmentText));
-        OnPropertyChanged(nameof(SelectRoundText));
-        OnPropertyChanged(nameof(PlayerText));
-        OnPropertyChanged(nameof(FloorsText));
-        OnPropertyChanged(nameof(BonusText));
-        OnPropertyChanged(nameof(TotalText));
+        SessionSnapshot? session = _session?.GetActiveSession();
+        if (session is null || _chatClient is null || !CanSendChat() || _guard?.HasActiveSession() != true)
+        {
+            return;
+        }
+
+        BoardRequestIdentity identity = new(session, _matchId, _generation);
+        MatchChatRequest request = new()
+        {
+            LobbyCode = _lobbyCode, MatchId = _matchId, SessionToken = session.Token, Text = DraftMessage
+        };
+        ChatErrorMessage = string.Empty;
+        ClientResult<bool> result;
+        try
+        {
+            result = await Task.Run(() => _chatClient.SendMatchMessage(request));
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine($"Match chat send failed: {exception.GetType().Name}.");
+            result = ClientResult<bool>.TechnicalFailure(FailureKind.Unexpected);
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(() => ApplyChatSendResult(identity, request.Text, result));
     }
 
-    private void BuildRoundOptions(int? selectedRoundNumber)
+    private void ApplyChatSendResult(BoardRequestIdentity identity, string sentText, ClientResult<bool> result)
     {
-        Rounds = _roundSummaries.Reverse().Select(round => new MatchRoundResultRow(
-            round.RoundNumber, string.Format(_text.Get("Match.Results.RoundOption"), round.RoundNumber),
-            round.Players)).ToArray();
-        SelectedRound = Rounds.FirstOrDefault(round => round.RoundNumber == selectedRoundNumber)
-            ?? Rounds.FirstOrDefault();
+        if (!IsCurrent(identity.Session, identity.MatchId, identity.Generation))
+        {
+            return;
+        }
+
+        if (_errors?.IsUnauthorized(result) == true)
+        {
+            _guard?.Invalidate(identity.Session);
+        }
+        else if (!result.IsSuccess || !result.Value)
+        {
+            ChatErrorMessage = _errors?.FromResult(result, ChatSendFailed) ?? _text.Get(ChatSendFailed);
+        }
+        else if (DraftMessage == sentText)
+        {
+            DraftMessage = string.Empty;
+        }
+    }
+
+    private void OnMatchChatReceived(object? sender, LobbyChatMessage message)
+    {
+        SessionSnapshot? session = _session?.GetActiveSession();
+        int generation = _generation;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (session is not null && message.MatchId is Guid matchId && IsCurrent(session, matchId, generation))
+            {
+                ApplyChatMessage(message);
+            }
+        });
+    }
+
+    internal void ApplyChatMessage(LobbyChatMessage message)
+    {
+        if (_matchId == Guid.Empty || message.MatchId != _matchId
+            || !string.Equals(message.LobbyCode, _lobbyCode, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        ChatMessages.Insert(0, new MatchChatRow
+        {
+            Sender = message.SenderUsername,
+            Text = message.Text,
+            SentAt = message.SentAt
+        });
+        if (ChatMessages.Count > MaximumVisibleChatMessages)
+        {
+            ChatMessages.RemoveAt(ChatMessages.Count - 1);
+        }
     }
 }
 ````
@@ -3386,6 +9361,175 @@ namespace Vertigo.Client.UI.Views;
 public partial class MainWindow : Window
 {
     public MainWindow()
+    {
+        InitializeComponent();
+    }
+}
+````
+
+## File: src/Client/Vertigo.Client.UI/Views/MatchResultsView.axaml
+````
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
+             xmlns:contracts="clr-namespace:Vertigo.Contracts.Models;assembly=Vertigo.Contracts"
+             x:Class="Vertigo.Client.UI.Views.MatchResultsView"
+             x:DataType="vm:MatchResultsViewModel"
+             x:CompileBindings="True"
+             IsVisible="{Binding HasResults}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="TowerDrawing" x:DataType="rows:MatchTowerResult">
+            <Border Width="60" Height="112" BorderThickness="0,0,0,4"
+                    BorderBrush="{DynamicResource ColorSnesBlue}">
+                <ItemsControl ItemsSource="{Binding Segments}" VerticalAlignment="Bottom" Width="44">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="rows:MatchTowerSegment">
+                            <Border Height="{Binding Height}" Classes="tower-segment"
+                                    Classes.bonus="{Binding IsBonus}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="Border.tower-segment">
+            <Setter Property="Background" Value="{DynamicResource ColorSnesBlue}"/>
+        </Style>
+        <Style Selector="Border.tower-segment.bonus">
+            <Setter Property="Background" Value="{DynamicResource ColorSnesYellow}"/>
+        </Style>
+        <Style Selector="Border.standing.winner">
+            <Setter Property="Background" Value="{DynamicResource ColorSuccessBackground}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Border Padding="14" Background="{DynamicResource ColorWhite}"
+            BorderBrush="{DynamicResource ColorBorderStrong}" BorderThickness="{DynamicResource BorderThin}"
+            CornerRadius="{DynamicResource RadiusSmall}">
+        <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                  HorizontalContentAlignment="Stretch">
+            <Expander.Header>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Viewbox Height="34" IsVisible="{Binding ShowLatestTower}">
+                        <ContentControl Content="{Binding LatestTower}"
+                                        ContentTemplate="{StaticResource TowerDrawing}"/>
+                    </Viewbox>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="{Binding HeaderText}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding LatestTowerCaption}" IsVisible="{Binding ShowLatestTower}"
+                                   Foreground="{DynamicResource ColorTextSecondary}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+            </Expander.Header>
+
+            <StackPanel Spacing="14">
+                <StackPanel Spacing="12" IsVisible="{Binding HasFinalResult}">
+                    <Border Padding="14" Background="{DynamicResource ColorInfoBackground}"
+                            CornerRadius="{DynamicResource RadiusSmall}">
+                        <StackPanel Spacing="3">
+                            <TextBlock Text="{Binding VictoryTitle}" FontSize="22" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding WinnerText}" FontSize="15" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                        <StackPanel Width="175" Spacing="6" IsVisible="{Binding HasFinalTower}">
+                            <TextBlock Text="{Binding FinalTowerText}" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <ContentControl Content="{Binding FinalTower}"
+                                            ContentTemplate="{StaticResource TowerDrawing}"
+                                            HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding FinalTowerCaption}" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="8,0">
+                                <TextBlock Text="{Binding StandingsText}" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="{Binding TotalText}"
+                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding FinalStandings}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="rows:MatchFinalStandingRow">
+                                        <Border Classes="standing" Classes.winner="{Binding IsWinner}" Padding="8,6"
+                                                BorderBrush="{DynamicResource ColorDivider}" BorderThickness="0,0,0,1">
+                                            <Grid ColumnDefinitions="30,*,Auto" ColumnSpacing="8">
+                                                <TextBlock Text="{Binding Position}"
+                                                           FontFamily="{DynamicResource FontMono}"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Username}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding TotalFloors}"
+                                                           FontWeight="Bold"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="10" IsVisible="{Binding HasRoundSummaries}">
+                    <ComboBox ItemsSource="{Binding Rounds}" SelectedItem="{Binding SelectedRound, Mode=TwoWay}"
+                              AutomationProperties.Name="{Binding SelectRoundText}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="rows:MatchRoundResultRow">
+                                <TextBlock Text="{Binding Title}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                        <StackPanel Width="150" Spacing="6" IsVisible="{Binding HasSelectedTower}">
+                            <TextBlock Text="{Binding PersonalTowerText}" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <ContentControl Content="{Binding SelectedTower}"
+                                            ContentTemplate="{StaticResource TowerDrawing}" HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding SelectedTowerCaption}" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="8" Margin="8,0">
+                                <TextBlock Text="{Binding PlayerText}" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="1" Text="{Binding FloorsText}" FontWeight="SemiBold"
+                                           TextWrapping="Wrap"/>
+                                <TextBlock Grid.Column="2" Text="{Binding BonusText}" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="3" Text="{Binding TotalText}" FontWeight="SemiBold"
+                                           TextWrapping="Wrap"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding SelectedScores}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="contracts:MatchRoundPlayerScore">
+                                        <Border Padding="8,6" BorderThickness="0,0,0,1"
+                                                BorderBrush="{DynamicResource ColorDivider}">
+                                            <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="8">
+                                                <TextBlock Text="{Binding PlayerUsername}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding FloorsBuilt}"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding BonusFloors}"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
+                                                           FontWeight="Bold"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </Expander>
+    </Border>
+</UserControl>
+````
+
+## File: src/Client/Vertigo.Client.UI/Views/MatchResultsView.axaml.cs
+````csharp
+using Avalonia.Controls;
+
+namespace Vertigo.Client.UI.Views;
+
+public partial class MatchResultsView : UserControl
+{
+    public MatchResultsView()
     {
         InitializeComponent();
     }
@@ -4598,6 +10742,108 @@ internal sealed class MatchTurnClockWorker : BackgroundService
 }
 ````
 
+## File: src/Server/Vertigo.Server.Matchmaking/Chat/Services/ChatLanguageFilter.cs
+````csharp
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace Vertigo.Server.Matchmaking.Chat.Services;
+
+public sealed class ChatLanguageFilter
+{
+    private static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(250);
+
+    private static readonly string[] DefaultTerms =
+    [
+        "cabrón", "cabrona", "cabrones", "cabronas", "chinga", "chingada", "chingado", "chíngate", "coño",
+        "estúpido", "estúpida", "gilipollas", "hijo de perra", "hija de perra", "idiota", "idiotas", "imbécil",
+        "imbéciles", "mierda",
+        "pendejo", "pendeja", "pendejos", "pendejas", "puta", "puto", "putas", "putos", "verga",
+        "asshole", "assholes", "bitch", "bitches", "bullshit", "fuck", "fucker", "fucking", "motherfucker", "shit"
+    ];
+
+    private static readonly Regex SeparatorPattern = new(
+        @"[^\p{L}\p{Nd}]+", RegexOptions.CultureInvariant, RegexTimeout);
+    private static readonly Regex SpelledWordPattern = new(
+        @"(?<![\p{L}\p{Nd}])[\p{L}\p{Nd}](?:[\p{P}\p{S}]+[\p{L}\p{Nd}](?![\p{L}\p{Nd}]))+",
+        RegexOptions.CultureInvariant, RegexTimeout);
+
+    private readonly string[] _blockedTerms;
+
+    public ChatLanguageFilter(IEnumerable<string>? terms = null)
+    {
+        string[] configuredTerms = (terms ?? []).Select(NormalizeTerm)
+            .Where(term => term.Length > 0).Distinct(StringComparer.Ordinal).ToArray();
+        _blockedTerms = (configuredTerms.Length > 0 ? configuredTerms : DefaultTerms.Select(NormalizeTerm))
+            .Select(WithWordBoundaries).ToArray();
+    }
+
+    public bool ContainsBlockedLanguage(string message)
+    {
+        string spelling = NormalizeSpelling(message);
+        if (MatchesBlockedTerm(spelling))
+        {
+            return true;
+        }
+
+        string obfuscatedSpelling = string.Concat(spelling.Select(ReplaceDigit));
+        if (spelling != obfuscatedSpelling && MatchesBlockedTerm(obfuscatedSpelling))
+        {
+            return true;
+        }
+
+        string joined = SpelledWordPattern.Replace(obfuscatedSpelling,
+            match => SeparatorPattern.Replace(match.Value, string.Empty));
+        return joined != obfuscatedSpelling && MatchesBlockedTerm(joined);
+    }
+
+    private bool MatchesBlockedTerm(string spelling)
+    {
+        string normalizedMessage = WithWordBoundaries(SeparatorPattern.Replace(spelling, " ").Trim());
+        return _blockedTerms.Any(term => normalizedMessage.Contains(term, StringComparison.Ordinal));
+    }
+
+    private static string NormalizeTerm(string text)
+    {
+        return SeparatorPattern.Replace(NormalizeSpelling(text), " ").Trim();
+    }
+
+    private static string NormalizeSpelling(string text)
+    {
+        string decomposed = text.Normalize(NormalizationForm.FormKD).ToLowerInvariant()
+            .Replace("n\u0303", "ñ", StringComparison.Ordinal);
+        return string.Concat(decomposed.Where(character => char.GetUnicodeCategory(character)
+            is not (UnicodeCategory.NonSpacingMark or UnicodeCategory.Format)));
+    }
+
+    private static char ReplaceDigit(char character) => character switch
+    {
+        '0' => 'o',
+        '1' => 'i',
+        '3' => 'e',
+        '4' => 'a',
+        '5' => 's',
+        '7' => 't',
+        _ => character
+    };
+
+    private static string WithWordBoundaries(string text) => $" {text} ";
+}
+````
+
+## File: src/Server/Vertigo.Server.Matchmaking/Chat/Services/ChatServiceDependencies.cs
+````csharp
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
+
+namespace Vertigo.Server.Matchmaking.Chat.Services;
+
+public sealed record ChatServiceDependencies(
+    ISessionIdentityResolver Sessions,
+    TimeProvider TimeProvider,
+    ChatLanguageFilter LanguageFilter);
+````
+
 ## File: src/Server/Vertigo.Server.Matchmaking/Invitations/Services/LobbyInvitationFriendLookup.cs
 ````csharp
 using Vertigo.Contracts.Models;
@@ -5211,6 +11457,77 @@ public sealed class RegisteredPlayerSessions
     internal bool Revoke(string tokenHash)
     {
         return _sessionTokens.RevokeSessionToken(tokenHash);
+    }
+}
+````
+
+## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/SessionService.cs
+````csharp
+using Vertigo.Server.DataAccess.Entities.Identity;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Models;
+
+namespace Vertigo.Server.PlayerManagement.Authentication.Services;
+
+public class SessionService
+{
+    private readonly PlayerCredentialsVerifier _credentials;
+    private readonly RegisteredPlayerSessions _registeredSessions;
+    private readonly IGuestSessionRegistry _guests;
+
+    public SessionService(
+        PlayerCredentialsVerifier credentials,
+        RegisteredPlayerSessions registeredSessions,
+        IGuestSessionRegistry guests)
+    {
+        _credentials = credentials;
+        _registeredSessions = registeredSessions;
+        _guests = guests;
+    }
+
+    public AuthenticatedSession? Login(string username, string password)
+    {
+        AuthenticatedSession? session = null;
+        Player? player = _credentials.FindVerifiedPlayer(username, password);
+        if (player is not null)
+        {
+            session = _registeredSessions.Create(player);
+        }
+
+        return session;
+    }
+
+    public AuthenticatedSession? ResumeSession(string sessionToken)
+    {
+        AuthenticatedSession? session = null;
+        if (!string.IsNullOrWhiteSpace(sessionToken))
+        {
+            string tokenHash = _registeredSessions.HashToken(sessionToken);
+            session = _guests.GetSession(tokenHash);
+            if (session is null)
+            {
+                session = _registeredSessions.Resume(sessionToken, tokenHash);
+            }
+        }
+
+        return session;
+    }
+
+    public bool Logout(string sessionToken)
+    {
+        bool isRevoked = false;
+        if (!string.IsNullOrWhiteSpace(sessionToken))
+        {
+            string tokenHash = _registeredSessions.HashToken(sessionToken);
+            isRevoked = _guests.Revoke(tokenHash) || _registeredSessions.Revoke(tokenHash);
+        }
+
+        return isRevoked;
+    }
+
+    public AuthenticatedSession CreateGuestSession()
+    {
+        return _guests.Create();
     }
 }
 ````
@@ -5925,22 +12242,6 @@ public interface IBlockedPlayerService
 }
 ````
 
-## File: src/Shared/Vertigo.Contracts/Interfaces/IChatService.cs
-````csharp
-using System.ServiceModel;
-using Vertigo.Contracts.Models;
-
-namespace Vertigo.Contracts.Interfaces;
-
-[ServiceContract]
-public interface IChatService
-{
-    [OperationContract]
-    [FaultContract(typeof(ServiceFault))]
-    bool SendMessage(string lobbyCode, string text, string sessionToken);
-}
-````
-
 ## File: src/Shared/Vertigo.Contracts/Interfaces/IFriendshipNotificationService.cs
 ````csharp
 using System.ServiceModel;
@@ -6148,18 +12449,6 @@ public interface IMatchLifecycle
 }
 ````
 
-## File: src/Shared/Vertigo.Contracts/Internal/IMatchPresenceCommands.cs
-````csharp
-namespace Vertigo.Contracts.Internal;
-
-public interface IMatchPresenceCommands
-{
-    bool TryDisconnect(Guid matchId, Guid playerId);
-
-    MatchReconnectResult TryReconnect(Guid matchId, Guid playerId);
-}
-````
-
 ## File: src/Shared/Vertigo.Contracts/Internal/IMatchPrivateHandReader.cs
 ````csharp
 using Vertigo.Contracts.Models;
@@ -6189,16 +12478,6 @@ namespace Vertigo.Contracts.Internal;
 
 public interface IMatchStateReader : IMatchBoardReader, IMatchPrivateHandReader
 {
-}
-````
-
-## File: src/Shared/Vertigo.Contracts/Internal/IMatchTurnClock.cs
-````csharp
-namespace Vertigo.Contracts.Internal;
-
-public interface IMatchTurnClock
-{
-    Guid? TryExpireTurn(Guid matchId);
 }
 ````
 
@@ -6542,32 +12821,6 @@ public class LobbyAdmission
 }
 ````
 
-## File: src/Shared/Vertigo.Contracts/Models/LobbyChatMessage.cs
-````csharp
-using System.Runtime.Serialization;
-
-namespace Vertigo.Contracts.Models;
-
-[DataContract]
-public sealed class LobbyChatMessage
-{
-    [DataMember]
-    public string LobbyCode { get; set; } = string.Empty;
-
-    [DataMember]
-    public Guid SenderId { get; set; }
-
-    [DataMember]
-    public string SenderUsername { get; set; } = string.Empty;
-
-    [DataMember]
-    public string Text { get; set; } = string.Empty;
-
-    [DataMember]
-    public DateTime SentAt { get; set; }
-}
-````
-
 ## File: src/Shared/Vertigo.Contracts/Models/LobbyInvitationDecline.cs
 ````csharp
 using System.Runtime.Serialization;
@@ -6806,6 +13059,45 @@ public sealed class MatchBoardPile
 }
 ````
 
+## File: src/Shared/Vertigo.Contracts/Models/MatchChatRequest.cs
+````csharp
+using System.Runtime.Serialization;
+
+namespace Vertigo.Contracts.Models;
+
+[DataContract]
+public sealed class MatchChatRequest
+{
+    [DataMember]
+    public Guid MatchId { get; set; }
+
+    [DataMember]
+    public string LobbyCode { get; set; } = string.Empty;
+
+    [DataMember]
+    public string Text { get; set; } = string.Empty;
+
+    [DataMember]
+    public string SessionToken { get; set; } = string.Empty;
+}
+````
+
+## File: src/Shared/Vertigo.Contracts/Models/MatchChatRules.cs
+````csharp
+namespace Vertigo.Contracts.Models;
+
+public static class MatchChatRules
+{
+    public const int MaximumLength = 30;
+
+    public static bool CanSend(string? message)
+    {
+        return !string.IsNullOrWhiteSpace(message) && message.Length <= MaximumLength
+            && !message.Contains('\r') && !message.Contains('\n');
+    }
+}
+````
+
 ## File: src/Shared/Vertigo.Contracts/Models/MatchDismantleRequest.cs
 ````csharp
 using System.Runtime.Serialization;
@@ -6961,6 +13253,26 @@ public sealed class MatchPlaceRequest
 
     [DataMember]
     public long ExpectedRevision { get; set; }
+}
+````
+
+## File: src/Shared/Vertigo.Contracts/Models/MatchPresenceRequest.cs
+````csharp
+using System.Runtime.Serialization;
+
+namespace Vertigo.Contracts.Models;
+
+[DataContract]
+public sealed class MatchPresenceRequest
+{
+    [DataMember]
+    public Guid MatchId { get; set; }
+
+    [DataMember]
+    public string LobbyCode { get; set; } = string.Empty;
+
+    [DataMember]
+    public string SessionToken { get; set; } = string.Empty;
 }
 ````
 
@@ -7352,238 +13664,6 @@ return exitCode;
 </Project>
 ````
 
-## File: tests/Vertigo.Client.Reconnection.Smoke/Program.cs
-````csharp
-using System.Diagnostics;
-using System.ServiceModel;
-using Microsoft.Extensions.DependencyInjection;
-using Vertigo.Client.Core.Sessions;
-using Vertigo.Client.Networking;
-using Vertigo.Client.Networking.Interfaces;
-using Vertigo.Client.Networking.Sessions.Interfaces;
-using Vertigo.Contracts.Faults;
-using Vertigo.Contracts.Models;
-
-// Integration smoke: requires a running Vertigo.Server.Host with Fase 7B + Codex fixes.
-// Each ServiceProvider has its own WCF duplex client and its own guest identity.
-using ServiceProvider host = CreateClient();
-using ServiceProvider guest = CreateClient();
-using ServiceProvider outsider = CreateClient();
-using ServiceProvider hostReconnect = CreateClient();
-using ServiceProvider guestReconnect = CreateClient();
-using ServiceProvider suspensionObserver = CreateClient();
-
-ILobbyClient hostLobby = host.GetRequiredService<ILobbyClient>();
-ILobbyClient guestLobby = guest.GetRequiredService<ILobbyClient>();
-ILobbyClient outsiderLobby = outsider.GetRequiredService<ILobbyClient>();
-ILobbyClient resumedHostLobby = hostReconnect.GetRequiredService<ILobbyClient>();
-ILobbyClient resumedGuestLobby = guestReconnect.GetRequiredService<ILobbyClient>();
-ILobbyClient observerLobby = suspensionObserver.GetRequiredService<ILobbyClient>();
-string? code = null;
-
-try
-{
-    string hostToken = CreateGuest(host);
-    string guestToken = CreateGuest(guest);
-    string outsiderToken = CreateGuest(outsider);
-    Guid hostId = host.GetRequiredService<PlayerSession>().GetActiveSession()!.PlayerId;
-    Guid guestId = guest.GetRequiredService<PlayerSession>().GetActiveSession()!.PlayerId;
-
-    code = hostLobby.CreateLobby(true, 2, hostToken);
-    LobbyCredentials hostCredentials = new(code, hostToken);
-    guestLobby.JoinLobby(code, guestToken);
-    hostLobby.SetReady(code, true, hostToken);
-    guestLobby.SetReady(code, true, guestToken);
-    LobbyPreparation started = hostLobby.StartMatch(code, hostToken);
-    Require(started.IsInGame && started.MatchId != Guid.Empty, "Match was not initialized");
-    Guid matchId = started.MatchId;
-    long revision = started.Revision;
-    Console.WriteLine("PASS: MATCH STARTED WITH STABLE ID");
-
-    // An unrelated account cannot enter an in-progress match.
-    RequireFault(() => outsiderLobby.JoinLobby(code, outsiderToken), ServiceErrorCodes.LobbyAlreadyStarted);
-    Console.WriteLine("PASS: THIRD PLAYER REJECTED");
-
-    // Voluntary exit is not yet supported in active games; neither participant should be removed.
-    Require(!guestLobby.LeaveLobby(code, guestToken), "LeaveLobby was accepted during a match");
-    Require(guestLobby.GetPreparation(code, guestToken).MatchId == matchId,
-        "Voluntary exit changed the match identifier");
-    Console.WriteLine("PASS: IN-GAME LEAVE REJECTED");
-
-    // Drop one duplex channel; keep the other online to observe the server-side change.
-    guestLobby.Disconnect();
-    LobbyPreparation afterGuestLoss = AwaitPreparation(hostLobby, hostCredentials,
-        state => state.DisconnectedPlayerIds.Contains(guestId));
-    Require(!afterGuestLoss.IsSuspended, "Game suspended with host still connected");
-    Require(afterGuestLoss.MatchId == matchId && afterGuestLoss.Revision > revision,
-        "Guest disconnect changed MatchId or failed to advance revision");
-    revision = afterGuestLoss.Revision;
-    Console.WriteLine("PASS: SINGLE DISCONNECT KEEPS MATCH RUNNING");
-
-    // The same identity reclaims its seat through a NEW duplex channel, without a new login.
-    resumedGuestLobby.JoinLobby(code, guestToken);
-    LobbyPreparation afterGuestReturn = resumedGuestLobby.GetPreparation(code, guestToken);
-    Require(!afterGuestReturn.DisconnectedPlayerIds.Contains(guestId), "Guest still marked disconnected");
-    Require(afterGuestReturn.MatchId == matchId && afterGuestReturn.Revision > revision,
-        "Guest reconnect changed MatchId or failed to advance revision");
-    revision = afterGuestReturn.Revision;
-    Console.WriteLine("PASS: NEW GUEST CHANNEL RECONNECTS");
-
-    // Replace a channel while the old one remains alive. Its late Closed callback must be ignored.
-    resumedHostLobby.JoinLobby(code, hostToken);
-    LobbyPreparation replaced = resumedHostLobby.GetPreparation(code, hostToken);
-    Require(replaced.Revision > revision, "Host replacement did not advance revision");
-    revision = replaced.Revision;
-    hostLobby.Disconnect();
-    // Allow the server to process Closed from the superseded channel, then force an RPC barrier.
-    Thread.Sleep(SmokeTiming.StaleChannelCloseGrace);
-    LobbyPreparation afterOldClose = resumedHostLobby.GetPreparation(code, hostToken);
-    Require(!afterOldClose.DisconnectedPlayerIds.Contains(hostId),
-        "Closing the old channel disconnected the replacement");
-    Require(afterOldClose.MatchId == matchId, "Old channel close changed MatchId");
-    Console.WriteLine("PASS: STALE CHANNEL CLOSE IGNORED");
-
-    // Close all live match channels. After both closures, rejoin with another new channel.
-    resumedGuestLobby.Disconnect();
-    LobbyPreparation afterSecondGuestLoss = AwaitPreparation(resumedHostLobby, hostCredentials,
-        state => state.DisconnectedPlayerIds.Contains(guestId));
-    Require(!afterSecondGuestLoss.IsSuspended, "Game suspended with host connected");
-    revision = afterSecondGuestLoss.Revision;
-    resumedHostLobby.Disconnect();
-
-    // A fresh, independent channel observes Game's suspended state without rejoining.
-    // Poll rather than sleeping: the server may process Closed callbacks asynchronously.
-    LobbyPreparation suspended = AwaitPreparation(observerLobby, hostCredentials,
-        state => state.IsSuspended
-            && state.DisconnectedPlayerIds.Contains(hostId)
-            && state.DisconnectedPlayerIds.Contains(guestId));
-    Require(suspended.IsInGame && suspended.MatchId == matchId,
-        "Suspension must preserve the active match identifier");
-    Require(suspended.Revision > revision,
-        "Suspension did not advance the lobby revision");
-    revision = suspended.Revision;
-    Console.WriteLine("PASS: BOTH DISCONNECTED AND MATCH SUSPENDED");
-
-    hostLobby.JoinLobby(code, hostToken); // Disconnected LobbyClient creates a fresh duplex channel.
-    LobbyPreparation afterAllReturn = hostLobby.GetPreparation(code, hostToken);
-    Require(afterAllReturn.MatchId == matchId, "Reconnection created a different match");
-    Require(afterAllReturn.IsInGame && !afterAllReturn.IsSuspended,
-        "Game did not resume Running after a participant returned");
-    Require(afterAllReturn.DisconnectedPlayerIds.Contains(guestId),
-        "Guest was unexpectedly reconnected when only host returned");
-    Require(afterAllReturn.Revision > revision, "All-disconnected reconnect did not advance revision");
-    Console.WriteLine("PASS: MATCH RECOVERED AFTER BOTH CHANNELS CLOSED");
-
-    resumedGuestLobby.JoinLobby(code, guestToken);
-    LobbyPreparation restored = resumedGuestLobby.GetPreparation(code, guestToken);
-    Require(restored.DisconnectedPlayerIds.Count == 0, "Participants were not fully restored");
-    Require(restored.MatchId == matchId && !restored.IsSuspended, "Final restoration changed match state");
-    Console.WriteLine("PASS: BOTH PARTICIPANTS RESTORED");
-    Console.WriteLine("PASS: Reconnection smoke");
-    return 0;
-}
-catch (Exception exception)
-{
-    Console.Error.WriteLine($"FAIL: {exception.GetType().Name}: {exception.Message}");
-    return 1;
-}
-finally
-{
-    // Match leave is intentionally rejected during InGame: close transports, not membership.
-    hostLobby.Disconnect();
-    guestLobby.Disconnect();
-    outsiderLobby.Disconnect();
-    resumedHostLobby.Disconnect();
-    resumedGuestLobby.Disconnect();
-    observerLobby.Disconnect();
-    LogoutQuietly(host);
-    LogoutQuietly(guest);
-    LogoutQuietly(outsider);
-}
-
-static ServiceProvider CreateClient()
-{
-    ServiceCollection services = new();
-    services.AddVertigoClientNetworking();
-    return services.BuildServiceProvider();
-}
-
-static string CreateGuest(ServiceProvider services)
-{
-    var result = services.GetRequiredService<ISessionCoordinator>().CreateGuestSession();
-    if (!result.IsSuccess || result.Value is null)
-    {
-        throw new InvalidOperationException("Guest authentication failed");
-    }
-
-    return result.Value.Token;
-}
-
-static LobbyPreparation AwaitPreparation(
-    ILobbyClient lobby, LobbyCredentials credentials, Func<LobbyPreparation, bool> predicate)
-{
-    Stopwatch stopwatch = Stopwatch.StartNew();
-    LobbyPreparation state = lobby.GetPreparation(credentials.Code, credentials.Token);
-    while (!predicate(state) && stopwatch.Elapsed < SmokeTiming.ObservationTimeout)
-    {
-        Thread.Sleep(SmokeTiming.PollInterval);
-        state = lobby.GetPreparation(credentials.Code, credentials.Token);
-    }
-
-    Require(predicate(state),
-        $"Timed out after {SmokeTiming.ObservationTimeout.TotalSeconds}s waiting for expected NetTCP state");
-    return state;
-}
-
-static void RequireFault(Action operation, string code)
-{
-    bool rejected = false;
-    try
-    {
-        operation();
-    }
-    catch (FaultException<ServiceFault> fault)
-    {
-        rejected = fault.Detail.ErrorCode == code;
-    }
-
-    Require(rejected, $"Expected business fault {code}");
-}
-
-static void LogoutQuietly(ServiceProvider services)
-{
-    try
-    {
-        services.GetRequiredService<ISessionCoordinator>().Logout();
-    }
-    catch (CommunicationException)
-    {
-        // Best-effort cleanup after an intentional duplex disconnect.
-    }
-    catch (TimeoutException)
-    {
-        // Best-effort cleanup after an intentional duplex disconnect.
-    }
-}
-
-static void Require(bool condition, string message)
-{
-    if (!condition)
-    {
-        throw new InvalidOperationException(message);
-    }
-}
-
-internal sealed record LobbyCredentials(string Code, string Token);
-
-internal static class SmokeTiming
-{
-    internal static readonly TimeSpan ObservationTimeout = TimeSpan.FromSeconds(10);
-    internal static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(100);
-    internal static readonly TimeSpan StaleChannelCloseGrace = TimeSpan.FromMilliseconds(500);
-}
-````
-
 ## File: tests/Vertigo.Client.Reconnection.Smoke/Vertigo.Client.Reconnection.Smoke.csproj
 ````
 <Project Sdk="Microsoft.NET.Sdk">
@@ -7613,69 +13693,6 @@ internal static class SmokeTiming
     <ProjectReference Include="../../src/Client/Vertigo.Client.Networking/Vertigo.Client.Networking.csproj" />
   </ItemGroup>
 </Project>
-````
-
-## File: tests/Vertigo.Client.UnitTests/Errors/ClientErrorTextTests.cs
-````csharp
-using System.ServiceModel;
-using Vertigo.Client.Networking.Results;
-using Vertigo.Client.UI.Utilities.Localization.Services;
-using Vertigo.Contracts.Faults;
-using Vertigo.Contracts.Models;
-
-namespace Vertigo.Client.UnitTests.Errors;
-
-public sealed class ClientErrorTextTests
-{
-    [Fact]
-    public void FromResult_Timeout_ReturnsLocalizedMessage()
-    {
-        ClientErrorText errors = new(new TextLocalizer());
-        ClientResult<bool> failed = ClientResult<bool>.TechnicalFailure(FailureKind.Timeout);
-
-        string message = errors.FromResult(failed, "Error.Unknown");
-
-        Assert.False(string.IsNullOrWhiteSpace(message));
-        Assert.NotEqual("Error.Timeout", message);
-    }
-
-    [Fact]
-    public void IsUnauthorized_BusinessFailure_ReturnsTrue()
-    {
-        ClientErrorText errors = new(new TextLocalizer());
-        ClientResult<bool> failed = ClientResult<bool>.BusinessFailure(
-            ServiceErrorCodes.Unauthorized, ServiceMessageKeys.Unauthorized);
-
-        Assert.True(errors.IsUnauthorized(failed));
-    }
-
-    [Fact]
-    public void IsUnauthorized_OtherFailure_ReturnsFalse()
-    {
-        ClientErrorText errors = new(new TextLocalizer());
-        ClientResult<bool> failed = ClientResult<bool>.BusinessFailure(
-            ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
-
-        Assert.False(errors.IsUnauthorized(failed));
-    }
-
-    [Fact]
-    public void FromException_ServerFault_ReturnsLocalizedMessage()
-    {
-        ClientErrorText errors = new(new TextLocalizer());
-        ServiceFault fault = new()
-        {
-            ErrorCode = ServiceErrorCodes.LobbyNotFound,
-            MessageKey = ServiceMessageKeys.LobbyNotFound
-        };
-        FaultException<ServiceFault> exception = new(fault);
-
-        string message = errors.FromException(exception, "Error.Unknown");
-
-        Assert.False(string.IsNullOrWhiteSpace(message));
-        Assert.NotEqual(fault.MessageKey, message);
-    }
-}
 ````
 
 ## File: tests/Vertigo.Client.UnitTests/Lobbies/LobbyCallbackHandlerTests.cs
@@ -8924,41 +14941,6 @@ public sealed class LobbyCodeRulesTests
 }
 ````
 
-## File: tests/Vertigo.Client.UnitTests/Validation/MatchChatRulesTests.cs
-````csharp
-using Vertigo.Client.UI.Utilities.Validation;
-using Xunit;
-
-namespace Vertigo.Client.UnitTests.Validation;
-
-public sealed class MatchChatRulesTests
-{
-    [Fact]
-    public void CanSend_ExactlyFortyCharacters_ReturnsTrue()
-    {
-        Assert.True(MatchChatRules.CanSend(new string('a', 40)));
-    }
-
-    [Fact]
-    public void CanSend_FortyOneCharacters_ReturnsFalse()
-    {
-        Assert.False(MatchChatRules.CanSend(new string('a', 41)));
-    }
-
-    [Fact]
-    public void CanSend_WhitespaceOnly_ReturnsFalse()
-    {
-        Assert.False(MatchChatRules.CanSend("   "));
-    }
-
-    [Fact]
-    public void CanSend_ValidShortMessage_ReturnsTrue()
-    {
-        Assert.True(MatchChatRules.CanSend("¡Vamos!"));
-    }
-}
-````
-
 ## File: tests/Vertigo.Client.UnitTests/Vertigo.Client.UnitTests.csproj
 ````
 <Project Sdk="Microsoft.NET.Sdk">
@@ -9491,6 +15473,61 @@ public sealed class MatchPresenceTests
             PlayerIds = new[] { first, second }
         };
         return (registry.Start(request), first, second);
+    }
+}
+````
+
+## File: tests/Vertigo.Server.Matchmaking.Tests/Chat/ChatLanguageFilterTests.cs
+````csharp
+using Vertigo.Server.Matchmaking.Chat.Services;
+
+namespace Vertigo.Server.Matchmaking.Tests.Chat;
+
+public sealed class ChatLanguageFilterTests
+{
+    private readonly ChatLanguageFilter _filter = new();
+
+    [Theory]
+    [InlineData("MÍERDA")]
+    [InlineData("mier\u200Bda")]
+    [InlineData("p.u.t.0")]
+    [InlineData("¡Chíngate!")]
+    [InlineData("hijo, de  perra")]
+    [InlineData("SH1T.")]
+    [InlineData("co\u006E\u0303o")]
+    public void ContainsBlockedLanguage_NormalizesCommonVariations(string text)
+    {
+        Assert.True(_filter.ContainsBlockedLanguage(text));
+    }
+
+    [Theory]
+    [InlineData("El diputado colocó su carta.")]
+    [InlineData("Pasa por el cono.")]
+    [InlineData("We are building a classic tower.")]
+    [InlineData("Mi jugada usa 15, 21 y 43.")]
+    public void ContainsBlockedLanguage_AllowsSubstringMatchesAndOrdinaryMessages(string text)
+    {
+        Assert.False(_filter.ContainsBlockedLanguage(text));
+    }
+
+    [Fact]
+    public void ContainsBlockedLanguage_PreservesNumericTermsAndPhraseBoundaries()
+    {
+        ChatLanguageFilter custom = new(["torre 51", "a b"]);
+
+        Assert.True(custom.ContainsBlockedLanguage("torre 51"));
+        Assert.False(custom.ContainsBlockedLanguage("torre si"));
+        Assert.True(custom.ContainsBlockedLanguage("a.b"));
+    }
+
+    [Fact]
+    public void ContainsBlockedLanguage_AConfiguredDictionaryReplacesDefaults()
+    {
+        ChatLanguageFilter custom = new(["frase prohibida", " ", "FRASE PROHIBIDA"]);
+
+        Assert.True(custom.ContainsBlockedLanguage("Usó la frase, prohibida."));
+        Assert.False(custom.ContainsBlockedLanguage("mierda"));
+        Assert.True(new ChatLanguageFilter([" "]).ContainsBlockedLanguage("mierda"));
     }
 }
 ````
@@ -10094,6 +16131,58 @@ public sealed class FriendshipCallbackHandler : IFriendshipCallback
 }
 ````
 
+## File: src/Client/Vertigo.Client.Networking/Interfaces/IChatClient.cs
+````csharp
+using Vertigo.Client.Networking.Results;
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Client.Networking.Interfaces;
+
+public interface IChatClient
+{
+    ClientResult<bool> SendMessage(string lobbyCode, string text, string sessionToken);
+
+    ClientResult<bool> SendMatchMessage(MatchChatRequest request);
+}
+````
+
+## File: src/Client/Vertigo.Client.Networking/Proxies/ChatClient.cs
+````csharp
+using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Client.Networking.Results;
+using Vertigo.Contracts.Endpoints;
+using Vertigo.Contracts.Interfaces;
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Client.Networking.Proxies;
+
+public sealed class ChatClient : IChatClient
+{
+    private readonly IServiceCaller _serviceCaller;
+
+    public ChatClient(IServiceCaller serviceCaller)
+    {
+        _serviceCaller = serviceCaller;
+    }
+
+    public ClientResult<bool> SendMatchMessage(MatchChatRequest request)
+    {
+        return _serviceCaller.Call<IChatService, MatchChatRequest, bool>(
+            ServiceEndpoints.ChatServiceAddress,
+            (channel, message) => channel.SendMatchMessage(message),
+            request);
+    }
+
+    public ClientResult<bool> SendMessage(string lobbyCode, string text, string sessionToken)
+    {
+        return _serviceCaller.Call<IChatService, (string, string, string), bool>(
+            ServiceEndpoints.ChatServiceAddress,
+            (channel, args) => channel.SendMessage(args.Item1, args.Item2, args.Item3),
+            (lobbyCode, text, sessionToken));
+    }
+}
+````
+
 ## File: src/Client/Vertigo.Client.Networking/Sessions/SessionCoordinator.cs
 ````csharp
 using Vertigo.Client.Core.Sessions;
@@ -10196,6 +16285,100 @@ public sealed class SessionCoordinator : ISessionCoordinator
 </Project>
 ````
 
+## File: src/Client/Vertigo.Client.UI/Themes/Tokens/Colors.axaml
+````
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="ColorShellGray" Color="#D3D3D8"/>
+    <SolidColorBrush x:Key="ColorCoal" Color="#1E1F22"/>
+    <SolidColorBrush x:Key="ColorWhite" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ColorSnesBlue" Color="#2B6CB0"/>
+    <SolidColorBrush x:Key="ColorSnesGreen" Color="#38A169"/>
+    <SolidColorBrush x:Key="ColorSnesYellow" Color="#D69E2E"/>
+    <SolidColorBrush x:Key="ColorSnesRed" Color="#E53E3E"/>
+    <SolidColorBrush x:Key="ColorPrimary" Color="#1E1F22"/>
+    <SolidColorBrush x:Key="ColorAccent" Color="#2B6CB0"/>
+    <SolidColorBrush x:Key="ColorSuccess" Color="#24784B"/>
+    <SolidColorBrush x:Key="ColorError" Color="#B82525"/>
+    <SolidColorBrush x:Key="ColorWarningText" Color="#6B4A12"/>
+    <SolidColorBrush x:Key="ColorWarningBackground" Color="#FFF5D9"/>
+    <SolidColorBrush x:Key="ColorInfoBackground" Color="#EAF2FC"/>
+    <SolidColorBrush x:Key="ColorErrorBackground" Color="#FFF0F0"/>
+    <SolidColorBrush x:Key="ColorSuccessBackground" Color="#E9F7EF"/>
+    <SolidColorBrush x:Key="ColorSurface" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ColorSurfaceMuted" Color="#F5F5F7"/>
+    <SolidColorBrush x:Key="ColorSurfaceRaised" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ColorCanvas" Color="#F3F4F6"/>
+    <SolidColorBrush x:Key="ColorBorder" Color="#B7BAC3"/>
+    <SolidColorBrush x:Key="ColorBorderStrong" Color="#646873"/>
+    <SolidColorBrush x:Key="ColorDivider" Color="#D5D7DC"/>
+    <SolidColorBrush x:Key="ColorTextPrimary" Color="#1E1F22"/>
+    <SolidColorBrush x:Key="ColorTextSecondary" Color="#4B4E56"/>
+    <SolidColorBrush x:Key="ColorTextMuted" Color="#62656E"/>
+    <SolidColorBrush x:Key="ColorTextOnDark" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ColorTextOnAccent" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ColorTextOnSuccess" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ColorTextOnDanger" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ColorPrimaryHover" Color="#303237"/>
+    <SolidColorBrush x:Key="ColorAccentHover" Color="#21578F"/>
+    <SolidColorBrush x:Key="ColorAccentPressed" Color="#194570"/>
+    <SolidColorBrush x:Key="ColorSuccessHover" Color="#276D49"/>
+    <SolidColorBrush x:Key="ColorSuccessPressed" Color="#205C3D"/>
+    <SolidColorBrush x:Key="ColorDangerHover" Color="#B52C2C"/>
+    <SolidColorBrush x:Key="ColorDangerPressed" Color="#922323"/>
+    <SolidColorBrush x:Key="ColorFocus" Color="#2B6CB0"/>
+    <SolidColorBrush x:Key="ColorInputBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ColorDisabledBackground" Color="#E6E7EA"/>
+    <SolidColorBrush x:Key="ColorDisabledForeground" Color="#62656E"/>
+    <SolidColorBrush x:Key="ColorModuleHover" Color="#325998AF"/>
+    <SolidColorBrush x:Key="ColorModuleSelected" Color="#405998AF"/>
+    <SolidColorBrush x:Key="ColorModuleSelectedBorder" Color="#48AAC6"/>
+    <SolidColorBrush x:Key="ColorModuleFocus" Color="#B47B21"/>
+    <SolidColorBrush x:Key="ColorModuleFace" Color="#F7FAFD"/>
+    <SolidColorBrush x:Key="ColorModuleBorder" Color="#9AAEBD"/>
+    <SolidColorBrush x:Key="ColorModuleQueuedFace" Color="#E8F5F8"/>
+    <SolidColorBrush x:Key="ColorModuleQueuedBorder" Color="#397E97"/>
+    <SolidColorBrush x:Key="ColorModuleEmptyFace" Color="#25385468"/>
+    <SolidColorBrush x:Key="ColorModuleEmptyBorder" Color="#7192A6"/>
+    <SolidColorBrush x:Key="ColorModuleEmptyText" Color="#DBE8F1"/>
+    <SolidColorBrush x:Key="ColorModuleNumber" Color="#15354D"/>
+    <Color x:Key="ColorBoardSkyTop">#F3F8FC</Color>
+    <Color x:Key="ColorBoardSkyMiddle">#DDEAF4</Color>
+    <Color x:Key="ColorBoardSkyBottom">#CBDDEA</Color>
+    <SolidColorBrush x:Key="ColorBoardSkyline" Color="#9CB8CF"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineDetail" Color="#7096B2"/>
+    <SolidColorBrush x:Key="ColorBoardBorder" Color="#34536B"/>
+    <Color x:Key="ColorBoardPanelTop">#102E46</Color>
+    <Color x:Key="ColorBoardPanelBottom">#1B495F</Color>
+    <SolidColorBrush x:Key="ColorBoardGrid" Color="#6FA6BC"/>
+    <SolidColorBrush x:Key="ColorBoardHeading" Color="#F0F7FB"/>
+    <SolidColorBrush x:Key="ColorTowerLabel" Color="#E4F1F8"/>
+    <SolidColorBrush x:Key="ColorTowerCardIllustration" Color="#9BB9C9"/>
+    <SolidColorBrush x:Key="ColorTowerCountIcon" Color="#C6E5F1"/>
+    <SolidColorBrush x:Key="ColorBoardHint" Color="#DCECF5"/>
+    <SolidColorBrush x:Key="ColorModuleStripe" Color="#7096AD"/>
+    <SolidColorBrush x:Key="ColorModuleIllustration" Color="#91B4C7"/>
+    <SolidColorBrush x:Key="ColorModuleBadge" Color="#194D66"/>
+    <SolidColorBrush x:Key="ColorMasterPlanPanel" Color="#E3EFF6"/>
+    <SolidColorBrush x:Key="ColorMasterPlanBorder" Color="#A5BDCC"/>
+    <SolidColorBrush x:Key="ColorMasterPlanIcon" Color="#1C5E7A"/>
+    <SolidColorBrush x:Key="ColorMasterPlanPreview" Color="#153B55"/>
+    <SolidColorBrush x:Key="ColorMasterPlanPreviewText" Color="#F1F7FA"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineFar" Color="#BDDBED"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineNear" Color="#87ACCB"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineOutline" Color="#5B8FB3"/>
+    <SolidColorBrush x:Key="ColorBoardSkylineWindows" Color="#74A1C1"/>
+    <SolidColorBrush x:Key="ColorBoardMasterPlanStrip" Color="#CCDFEEF6"/>
+    <SolidColorBrush x:Key="ColorBoardHandPanel" Color="#EAF6FAFC"/>
+    <SolidColorBrush x:Key="ColorPlanStepSurface" Color="#D4EDF5"/>
+    <SolidColorBrush x:Key="ColorPlanStepBorder" Color="#80A9BE"/>
+    <SolidColorBrush x:Key="ColorPlanTowerSurface" Color="#F3E4B9"/>
+    <SolidColorBrush x:Key="ColorPlanTowerBorder" Color="#B89447"/>
+    <SolidColorBrush x:Key="ColorPlanCountSurface" Color="#183D58"/>
+    <SolidColorBrush x:Key="ColorPlanCountIcon" Color="#F4DB96"/>
+    <SolidColorBrush x:Key="ColorPlanStepArrow" Color="#315971"/>
+</ResourceDictionary>
+````
+
 ## File: src/Client/Vertigo.Client.UI/Themes/VertigoTheme.axaml
 ````
 <Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -10286,29 +16469,67 @@ public sealed record MatchBoardContext(
 }
 ````
 
-## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchCardRow.cs
+## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchMasterPlanDraft.cs
 ````csharp
+using System.Collections.Generic;
+using System.Linq;
+using Vertigo.Client.UI.Utilities.Validation;
+
 namespace Vertigo.Client.UI.ViewModels.Presentation;
 
-public sealed class MatchCardRow
+internal sealed class MatchMasterPlanDraft
 {
-    public int? CardNumber { get; init; }
-    public required string DisplayValue { get; init; }
-    public bool IsWildcard { get; init; }
-}
-````
+    private readonly List<int> _modules = new();
 
-## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchPileRow.cs
-````csharp
-namespace Vertigo.Client.UI.ViewModels.Presentation;
+    public IReadOnlyList<int> Modules => _modules;
 
-public sealed class MatchPileRow
-{
-    public int Position { get; init; }
-    public int? TopCardNumber { get; init; }
-    public required string Label { get; init; }
-    public string TopCardText { get; init; } = string.Empty;
-    public int Count { get; init; }
+    public bool CanPlay => _modules.Count >= 2;
+
+    public int? GetOrder(int? module)
+    {
+        int index = module is int number ? _modules.IndexOf(number) : -1;
+        return index >= 0 ? index + 1 : null;
+    }
+
+    public bool CanAppend(int? towerTop, int? module)
+    {
+        int? top = _modules.Count == 0 ? towerTop : _modules[^1];
+
+        return towerTop is not null && module is int card && !_modules.Contains(card)
+            && MatchTurnRules.CanPlace(top, card);
+    }
+
+    public bool TryAppend(int? towerTop, int module)
+    {
+        bool added = CanAppend(towerTop, module);
+        if (added)
+        {
+            _modules.Add(module);
+        }
+
+        return added;
+    }
+
+    public bool RemoveLast()
+    {
+        bool removed = _modules.Count > 0;
+        if (removed)
+        {
+            _modules.RemoveAt(_modules.Count - 1);
+        }
+
+        return removed;
+    }
+
+    public bool IsStillInHand(IReadOnlyList<int> hand)
+    {
+        return _modules.All(module => hand.Contains(module));
+    }
+
+    public void Clear()
+    {
+        _modules.Clear();
+    }
 }
 ````
 
@@ -10332,371 +16553,264 @@ public sealed class MatchPlayerRow
 }
 ````
 
-## File: src/Client/Vertigo.Client.UI/ViewModels/Social/BlockedPlayersViewModel.cs
+## File: src/Client/Vertigo.Client.UI/ViewModels/MatchResultsViewModel.cs
 ````csharp
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Vertigo.Client.Core.Sessions;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.Input;
-using Vertigo.Client.Networking.Interfaces;
-using Vertigo.Client.Networking.Results;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
-using Vertigo.Client.UI.ViewModels.Utilities;
+using Vertigo.Client.UI.ViewModels.Presentation;
 using Vertigo.Contracts.Models;
 
-namespace Vertigo.Client.UI.ViewModels.Social;
+namespace Vertigo.Client.UI.ViewModels;
 
-public sealed class BlockedPlayersViewModel : SocialViewModelBase
+public sealed class MatchResultsViewModel : ViewModelBase
 {
-    private readonly IBlockedPlayerClient _client;
-    private Guid _selectedPlayerId;
+    private readonly ITextLocalizer _text;
+    private IReadOnlyList<MatchRoundSummary> _roundSummaries = Array.Empty<MatchRoundSummary>();
+    private IReadOnlyList<MatchRoundResultRow> _rounds = Array.Empty<MatchRoundResultRow>();
+    private MatchRoundResultRow? _selectedRound;
+    private Guid? _localPlayerId;
+    private MatchTowerResult? _selectedTower;
+    private MatchTowerResult? _latestTower;
+    private MatchTowerResult? _finalTower;
+    private IReadOnlyList<MatchFinalStandingRow> _finalStandings = Array.Empty<MatchFinalStandingRow>();
+    private MatchEndReason _endReason;
+    private IReadOnlyList<string> _winnerNames = Array.Empty<string>();
+    private bool _isExpanded;
 
-    public BlockedPlayersViewModel(IBlockedPlayerClient client, SocialOperation operation, ITextLocalizer text)
-        : base(operation, text)
+    internal MatchResultsViewModel(ITextLocalizer text)
     {
-        _client = client;
-        RefreshCommand = new AsyncRelayCommand(RefreshAsync);
-        BlockCommand = new AsyncRelayCommand(BlockAsync);
-        UnblockCommand = new AsyncRelayCommand(UnblockAsync);
+        _text = text;
     }
 
-    public ObservableCollection<BlockedPlayerSummary> BlockedPlayers { get; } = new();
-    public Guid SelectedPlayerId { get => _selectedPlayerId; set => SetProperty(ref _selectedPlayerId, value); }
-    public IAsyncRelayCommand RefreshCommand { get; }
-    public IAsyncRelayCommand BlockCommand { get; }
-    public IAsyncRelayCommand UnblockCommand { get; }
+    public IReadOnlyList<MatchRoundSummary> RoundSummaries => _roundSummaries;
 
-    public async Task RefreshAsync()
+    public IReadOnlyList<MatchRoundResultRow> Rounds
     {
-        if (IsBusy) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        get => _rounds;
+        private set => SetProperty(ref _rounds, value);
+    }
+
+    public MatchRoundResultRow? SelectedRound
+    {
+        get => _selectedRound;
+        set
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<List<BlockedPlayerSummary>> result = await Task.Run(() => _client.GetBlockedPlayers(token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.BlockFailed"); return; }
-            BlockedPlayers.Clear();
-            foreach (BlockedPlayerSummary player in result.Value) BlockedPlayers.Add(player);
-            ClearError();
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+            if (SetProperty(ref _selectedRound, value))
             {
-                ErrorMessage = Text.Get("Social.BlockFailed");
+                _selectedTower = BuildRoundTower(SelectedScores);
+                OnPropertyChanged(nameof(SelectedScores));
+                OnPropertyChanged(nameof(SelectedTower));
+                OnPropertyChanged(nameof(HasSelectedTower));
+                OnPropertyChanged(nameof(SelectedTowerCaption));
             }
         }
-        finally { IsBusy = false; }
     }
 
-    private Task BlockAsync() => ChangeAsync(true);
-    private Task UnblockAsync() => ChangeAsync(false);
+    public IReadOnlyList<MatchRoundPlayerScore> SelectedScores =>
+        SelectedRound?.Scores ?? Array.Empty<MatchRoundPlayerScore>();
 
-    private async Task ChangeAsync(bool block)
+    public MatchTowerResult? SelectedTower => _selectedTower;
+    public bool HasSelectedTower => SelectedTower is not null;
+    public string SelectedTowerCaption => FormatTower(SelectedTower);
+
+    public MatchTowerResult? LatestTower => _latestTower;
+    public bool ShowLatestTower => !HasFinalResult && LatestTower is not null;
+    public string LatestTowerCaption => FormatTower(LatestTower);
+
+    public MatchTowerResult? FinalTower => _finalTower;
+    public bool HasFinalTower => _finalTower is not null;
+    public string FinalTowerCaption => FormatTower(_finalTower);
+    public IReadOnlyList<MatchFinalStandingRow> FinalStandings => _finalStandings;
+
+    public bool IsExpanded
     {
-        if (IsBusy || SelectedPlayerId == Guid.Empty)
+        get => _isExpanded;
+        set => SetProperty(ref _isExpanded, value);
+    }
+
+    public bool HasRoundSummaries => _roundSummaries.Count > 0;
+    public bool HasResults => HasRoundSummaries || HasFinalResult;
+    public bool HasFinalResult => _endReason != MatchEndReason.None;
+    public bool IsAbandonment => _endReason == MatchEndReason.Abandonment;
+    public string HeaderText => HasFinalResult || !HasRoundSummaries ? _text.Get("Match.Results.Title")
+        : string.Format(_text.Get("Match.Results.RoundClosed"), _roundSummaries[^1].RoundNumber);
+    public string WinnerText => _winnerNames.Count switch
+    {
+        0 => string.Empty,
+        1 => string.Format(_text.Get("Match.Results.Winner"), _winnerNames[0]),
+        _ => string.Format(_text.Get("Match.Results.Winners"), string.Join(", ", _winnerNames))
+    };
+
+    public string VictoryTitle => _text.Get(IsAbandonment ? "Match.Results.Abandonment"
+        : _winnerNames.Count > 1 ? "Match.Results.SharedVictory" : "Match.Results.Victory");
+    public string PersonalTowerText => _text.Get("Match.Results.PersonalTower");
+    public string FinalTowerText => _text.Get("Match.Results.FinalTower");
+    public string StandingsText => _text.Get("Match.Results.Standings");
+    public string SelectRoundText => _text.Get("Match.Results.SelectRound");
+    public string PlayerText => _text.Get("Match.Results.Player");
+    public string FloorsText => _text.Get("Match.Results.Floors");
+    public string BonusText => _text.Get("Match.Results.Bonus");
+    public string TotalText => _text.Get("Match.Results.Total");
+
+    internal void ApplyBoard(MatchBoardSnapshot board, Guid? localPlayerId = null)
+    {
+        bool identityChanged = _localPlayerId != localPlayerId;
+        _localPlayerId = localPlayerId;
+        if (identityChanged || _roundSummaries.Count != board.RoundSummaries.Count)
         {
-            return;
+            UpdateRoundSummaries(board.RoundSummaries);
         }
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+
+        if (_endReason != board.EndReason || (identityChanged && HasFinalResult))
         {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<bool> result = await Task.Run(() => block
-                ? _client.BlockPlayer(SelectedPlayerId, token)
-                : _client.UnblockPlayer(SelectedPlayerId, token));
-            if (!CanApplyBlockChange(result, session))
+            bool endedNow = !HasFinalResult && board.EndReason != MatchEndReason.None;
+            _endReason = board.EndReason;
+            ApplyFinalResult(board);
+            if (endedNow)
             {
-                return;
-            }
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
-            {
-                ErrorMessage = Text.Get("Social.BlockFailed");
-            }
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-        if (Operation.IsCurrent(session))
-        {
-            await RefreshAsync();
-        }
-    }
-
-    private bool CanApplyBlockChange(ClientResult<bool> result, SessionSnapshot session)
-    {
-        bool canApply = Operation.Check(result, session);
-        if (canApply && (!result.IsSuccess || !result.Value))
-        {
-            ErrorMessage = Operation.Error(result, "Social.BlockFailed");
-            canApply = false;
-        }
-
-        return canApply;
-    }
-
-    public void Reset()
-    {
-        SelectedPlayerId = Guid.Empty;
-        BlockedPlayers.Clear();
-        ClearError();
-    }
-}
-````
-
-## File: src/Client/Vertigo.Client.UI/ViewModels/Social/LobbyInvitationsViewModel.cs
-````csharp
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Vertigo.Client.Core.Sessions;
-using Vertigo.Client.UI.ViewModels.Dependencies;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.Input;
-using Vertigo.Client.Networking.Interfaces;
-using Vertigo.Client.Networking.Results;
-using Vertigo.Client.UI.Utilities.Localization.Interfaces;
-using Vertigo.Client.UI.ViewModels.Utilities;
-using Vertigo.Contracts.Models;
-
-namespace Vertigo.Client.UI.ViewModels.Social;
-
-public sealed class LobbyInvitationsViewModel : SocialViewModelBase
-{
-    private readonly ILobbyInvitationClient _client;
-    private readonly Vertigo.Client.UI.ViewModels.LobbyViewModel _lobby;
-    private string _lobbyCode = string.Empty;
-    private string _declinedCode = string.Empty;
-    private string _acceptedCode = string.Empty;
-    private Guid _targetPlayerId;
-
-    public LobbyInvitationsViewModel(ILobbyInvitationClient client, SocialOperation operation,
-        LobbyInvitationContext context) : base(operation, context.Text)
-    {
-        _client = client;
-        _lobby = context.Lobby;
-        RefreshCommand = new AsyncRelayCommand(RefreshAsync);
-        GetInvitableCommand = new AsyncRelayCommand(GetInvitableAsync);
-        InviteCommand = new AsyncRelayCommand(InviteAsync);
-        DeclineCommand = new AsyncRelayCommand(DeclineAsync);
-        AcceptCommand = new AsyncRelayCommand(AcceptAsync);
-    }
-
-    public ObservableCollection<LobbyInvitationEntry> PendingInvitations { get; } = new();
-    public ObservableCollection<FriendEntry> InvitableFriends { get; } = new();
-    public string LobbyCode { get => _lobbyCode; set => SetProperty(ref _lobbyCode, value); }
-    public string DeclinedCode { get => _declinedCode; set => SetProperty(ref _declinedCode, value); }
-    public string AcceptedCode { get => _acceptedCode; set => SetProperty(ref _acceptedCode, value); }
-    public Guid TargetPlayerId { get => _targetPlayerId; set => SetProperty(ref _targetPlayerId, value); }
-    public IAsyncRelayCommand RefreshCommand { get; }
-    public IAsyncRelayCommand GetInvitableCommand { get; }
-    public IAsyncRelayCommand InviteCommand { get; }
-    public IAsyncRelayCommand DeclineCommand { get; }
-    public IAsyncRelayCommand AcceptCommand { get; }
-
-    public async Task RefreshAsync()
-    {
-        if (IsBusy) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
-        {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<List<LobbyInvitationEntry>> result = await Task.Run(() => _client.GetPendingLobbyInvitations(token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
-            PendingInvitations.Clear();
-            foreach (LobbyInvitationEntry invitation in result.Value) PendingInvitations.Add(invitation);
-            ClearError();
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
-            {
-                ErrorMessage = Text.Get("Social.InvitationFailed");
-            }
-        }
-        finally { IsBusy = false; }
-    }
-
-    private async Task GetInvitableAsync()
-    {
-        if (IsBusy || string.IsNullOrWhiteSpace(LobbyCode)) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
-        {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<List<FriendEntry>> result = await Task.Run(() => _client.GetInvitableFriends(LobbyCode.Trim(), token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
-            InvitableFriends.Clear();
-            foreach (FriendEntry friend in result.Value) InvitableFriends.Add(friend);
-            ClearError();
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
-            {
-                ErrorMessage = Text.Get("Social.InvitationFailed");
-            }
-        }
-        finally { IsBusy = false; }
-    }
-
-    private async Task InviteAsync()
-    {
-        if (IsBusy || TargetPlayerId == Guid.Empty || string.IsNullOrWhiteSpace(LobbyCode)) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
-        {
-            return;
-        }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            List<Guid> targets = new() { TargetPlayerId };
-            ClientResult<List<Guid>> result = await Task.Run(() => _client.SendLobbyInvitations(LobbyCode.Trim(), targets, token));
-            if (!Operation.Check(result, session)) return;
-            ErrorMessage = result.IsSuccess ? string.Empty : Operation.Error(result, "Social.InvitationFailed");
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
-            {
-                ErrorMessage = Text.Get("Social.InvitationFailed");
-            }
-        }
-        finally { IsBusy = false; }
-    }
-
-    // Joining the lobby is the server-side acceptance of an invitation.
-    // The server checks the invitation, room capacity and session before admitting the player.
-    public async Task<bool> AcceptInvitationAsync(string code)
-    {
-        bool accepted = false;
-        SessionSnapshot? session = null;
-        string normalizedCode = code?.Trim() ?? string.Empty;
-
-        if (!IsBusy && !string.IsNullOrWhiteSpace(normalizedCode))
-        {
-            session = Operation.GetRegisteredSession();
-            if (session is not null)
-            {
-                bool isPending = PendingInvitations.Any(invitation =>
-                    string.Equals(invitation.LobbyCode, normalizedCode, StringComparison.OrdinalIgnoreCase));
-
-                if (!isPending)
-                {
-                    ErrorMessage = Text.Get("Social.InvitationUnavailable");
-                }
-                else
-                {
-                    IsBusy = true;
-                    ClearError();
-                    try
-                    {
-                        if (Operation.IsCurrent(session))
-                        {
-                            bool joined = await _lobby.JoinAsync(normalizedCode);
-                            if (Operation.IsCurrent(session))
-                            {
-                                if (joined)
-                                {
-                                    LobbyInvitationEntry? acceptedInvitation = PendingInvitations.FirstOrDefault(invitation =>
-                                        string.Equals(invitation.LobbyCode, normalizedCode, StringComparison.OrdinalIgnoreCase));
-                                    if (acceptedInvitation is not null)
-                                    {
-                                        PendingInvitations.Remove(acceptedInvitation);
-                                    }
-                                    accepted = true;
-                                }
-                                else
-                                {
-                                    ErrorMessage = _lobby.ErrorMessage;
-                                }
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        IsBusy = false;
-                    }
-                }
+                IsExpanded = true;
             }
         }
 
-        return accepted;
+        OnPropertyChanged(nameof(HasResults));
+        OnPropertyChanged(nameof(HeaderText));
     }
 
-    private async Task AcceptAsync()
+    internal void Reset()
     {
-        await AcceptInvitationAsync(AcceptedCode);
+        _localPlayerId = null;
+        _roundSummaries = Array.Empty<MatchRoundSummary>();
+        BuildRoundOptions(null);
+        _endReason = MatchEndReason.None;
+        _winnerNames = Array.Empty<string>();
+        _latestTower = null;
+        _finalTower = null;
+        _finalStandings = Array.Empty<MatchFinalStandingRow>();
+        IsExpanded = false;
+        OnPropertyChanged(nameof(HasRoundSummaries));
+        RefreshFinalResult();
+        OnPropertyChanged(nameof(HasResults));
+        OnPropertyChanged(nameof(HeaderText));
     }
 
-    private async Task DeclineAsync()
+    internal void RefreshLocalization()
     {
-        if (IsBusy || string.IsNullOrWhiteSpace(DeclinedCode)) return;
-        SessionSnapshot? session = Operation.GetRegisteredSession();
-        if (session is null)
+        BuildRoundOptions(SelectedRound?.RoundNumber);
+        OnPropertyChanged(nameof(HeaderText));
+        OnPropertyChanged(nameof(WinnerText));
+        OnPropertyChanged(nameof(VictoryTitle));
+        OnPropertyChanged(nameof(PersonalTowerText));
+        OnPropertyChanged(nameof(FinalTowerText));
+        OnPropertyChanged(nameof(StandingsText));
+        OnPropertyChanged(nameof(FinalTowerCaption));
+        RefreshLatestTower();
+        OnPropertyChanged(nameof(SelectRoundText));
+        OnPropertyChanged(nameof(PlayerText));
+        OnPropertyChanged(nameof(FloorsText));
+        OnPropertyChanged(nameof(BonusText));
+        OnPropertyChanged(nameof(TotalText));
+    }
+
+    private void UpdateRoundSummaries(IReadOnlyList<MatchRoundSummary> summaries)
+    {
+        int? selectedRound = SelectedRound?.RoundNumber;
+        bool reviewingEarlierRound = _roundSummaries.Count > 0 && selectedRound.HasValue
+            && selectedRound.Value != _roundSummaries[^1].RoundNumber;
+        _roundSummaries = summaries;
+        _latestTower = _roundSummaries.Count == 0 ? null : BuildRoundTower(_roundSummaries[^1].Players);
+        BuildRoundOptions(reviewingEarlierRound ? selectedRound : null);
+        OnPropertyChanged(nameof(HasRoundSummaries));
+        RefreshLatestTower();
+    }
+
+    private MatchTowerResult? BuildRoundTower(IReadOnlyList<MatchRoundPlayerScore> scores)
+    {
+        MatchRoundPlayerScore? personal = scores.FirstOrDefault(score => score.PlayerId == _localPlayerId);
+        if (personal is null)
         {
-            return;
+            return null;
         }
-        string token = session.Token;
-        IsBusy = true;
-        try
-        {
-            ClientResult<bool> result = await Task.Run(() => _client.DeclineLobbyInvitation(DeclinedCode.Trim(), token));
-            if (!Operation.Check(result, session)) return;
-            if (!result.IsSuccess || !result.Value) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
-        }
-        catch (Exception)
-        {
-            if (Operation.IsCurrent(session))
+
+        int tallest = scores.Max(score => score.FloorsBuilt);
+        return new MatchTowerResult((personal.FloorsBuilt, personal.BonusFloors, personal.TotalFloors),
+            tallest, includeBonusInDrawing: false);
+    }
+
+    private string FormatTower(MatchTowerResult? tower)
+    {
+        return tower is null ? string.Empty : string.Format(_text.Get("Match.Results.TowerCaption"),
+            tower.BuiltFloors, tower.BonusFloors, tower.TotalFloors);
+    }
+
+    private void ApplyFinalResult(MatchBoardSnapshot board)
+    {
+        Dictionary<Guid, string> names = board.Players.ToDictionary(
+            player => player.PlayerId, player => player.Username);
+        _winnerNames = board.WinnerIds.Select(id => names.GetValueOrDefault(id))
+            .Where(name => !string.IsNullOrWhiteSpace(name)).Select(name => name!).ToArray();
+        _finalStandings = board.Players
+            .Select(player => new MatchFinalStandingRow
             {
-                ErrorMessage = Text.Get("Social.InvitationFailed");
-            }
-        }
-        finally { IsBusy = false; }
-        if (Operation.IsCurrent(session))
-        {
-            await RefreshAsync();
-        }
+                Position = player.FinalPosition,
+                Username = player.Username,
+                TotalFloors = player.GlobalFloors,
+                IsWinner = board.WinnerIds.Contains(player.PlayerId)
+            })
+            .OrderBy(row => row.Position ?? int.MaxValue)
+            .ThenByDescending(row => row.IsWinner)
+            .ThenByDescending(row => row.TotalFloors)
+            .ToArray();
+        _finalTower = BuildFinalTower(board);
+        RefreshFinalResult();
     }
 
-    public void Reset()
+    private MatchTowerResult? BuildFinalTower(MatchBoardSnapshot board)
     {
-        PendingInvitations.Clear(); InvitableFriends.Clear();
-        LobbyCode = string.Empty; DeclinedCode = string.Empty; AcceptedCode = string.Empty;
-        TargetPlayerId = Guid.Empty; ClearError();
+        MatchBoardPlayer? personal = board.Players.Find(player => player.PlayerId == _localPlayerId);
+        if (personal is null)
+        {
+            return null;
+        }
+
+        MatchRoundPlayerScore[] scores = _roundSummaries.SelectMany(round => round.Players)
+            .Where(score => score.PlayerId == personal.PlayerId).ToArray();
+        int built = scores.Sum(score => score.FloorsBuilt);
+        int bonus = scores.Sum(score => score.BonusFloors);
+        return built + bonus == personal.GlobalFloors
+            ? new MatchTowerResult((built, bonus, personal.GlobalFloors),
+                board.Players.Max(player => player.GlobalFloors), includeBonusInDrawing: true)
+            : null;
+    }
+
+    private void RefreshLatestTower()
+    {
+        OnPropertyChanged(nameof(LatestTower));
+        OnPropertyChanged(nameof(LatestTowerCaption));
+        OnPropertyChanged(nameof(ShowLatestTower));
+    }
+
+    private void RefreshFinalResult()
+    {
+        OnPropertyChanged(nameof(HasFinalResult));
+        OnPropertyChanged(nameof(IsAbandonment));
+        OnPropertyChanged(nameof(WinnerText));
+        OnPropertyChanged(nameof(VictoryTitle));
+        OnPropertyChanged(nameof(FinalTower));
+        OnPropertyChanged(nameof(HasFinalTower));
+        OnPropertyChanged(nameof(FinalTowerCaption));
+        OnPropertyChanged(nameof(FinalStandings));
+        RefreshLatestTower();
+    }
+
+    private void BuildRoundOptions(int? selectedRoundNumber)
+    {
+        Rounds = _roundSummaries.Reverse().Select(round => new MatchRoundResultRow(
+            round.RoundNumber, string.Format(_text.Get("Match.Results.RoundOption"), round.RoundNumber),
+            round.Players)).ToArray();
+        SelectedRound = Rounds.FirstOrDefault(round => round.RoundNumber == selectedRoundNumber)
+            ?? Rounds.FirstOrDefault();
     }
 }
 ````
@@ -12047,149 +18161,6 @@ public interface IFriendshipRepository
 </Project>
 ````
 
-## File: src/Server/Vertigo.Server.Game/Matches/Models/MatchScoring.cs
-````csharp
-using Vertigo.Contracts.Models;
-
-namespace Vertigo.Server.Game.Matches.Models;
-
-internal sealed class MatchScoring
-{
-    private const int HighestTowerBonus = 10;
-    private readonly List<RoundScore> _rounds = new();
-
-    public void AddRound(IReadOnlyDictionary<Guid, int> floors, Guid? closedBy)
-    {
-        int highest = floors.Values.Max();
-        _rounds.Add(new RoundScore(new Dictionary<Guid, int>(floors), closedBy, highest));
-    }
-
-    public int GetGlobalFloors(Guid playerId)
-    {
-        return _rounds.Sum(round => round.Floors[playerId] + GetBonus(round, playerId));
-    }
-
-    public List<MatchRoundSummary> ToRoundSummaries()
-    {
-        List<MatchRoundSummary> summaries = new();
-        Dictionary<Guid, int> totals = new();
-
-        foreach (RoundScore round in _rounds)
-        {
-            MatchRoundSummary summary = new()
-            {
-                RoundNumber = summaries.Count + 1,
-                ClosedByPlayerId = round.ClosedBy
-            };
-            foreach ((Guid playerId, int floors) in round.Floors)
-            {
-                int bonus = GetBonus(round, playerId);
-                int total = totals.GetValueOrDefault(playerId) + floors + bonus;
-                totals[playerId] = total;
-                summary.Players.Add(new MatchRoundPlayerScore
-                {
-                    PlayerId = playerId,
-                    FloorsBuilt = floors,
-                    BonusFloors = bonus,
-                    TotalFloors = total
-                });
-            }
-
-            summaries.Add(summary);
-        }
-
-        return summaries;
-    }
-
-    public Guid[] GetWinners(IReadOnlyList<Guid> players)
-    {
-        (Guid PlayerId, (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) Rank)[] ranks =
-            players.Select(playerId => (playerId, GetRank(playerId))).ToArray();
-        (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) highest = ranks.Max(entry => entry.Rank);
-
-        return ranks.Where(entry => entry.Rank == highest).Select(entry => entry.PlayerId).ToArray();
-    }
-
-    private (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) GetRank(Guid playerId)
-    {
-        return (GetGlobalFloors(playerId), _rounds.Count(round => round.ClosedBy == playerId),
-            _rounds.Max(round => round.Floors[playerId]));
-    }
-
-    private static int GetBonus(RoundScore round, Guid playerId)
-    {
-        int floors = round.Floors[playerId];
-        int bonus = floors > 0 && floors == round.Highest ? HighestTowerBonus : 0;
-
-        return bonus;
-    }
-
-    private sealed record RoundScore(IReadOnlyDictionary<Guid, int> Floors, Guid? ClosedBy, int Highest);
-}
-````
-
-## File: src/Server/Vertigo.Server.Matchmaking/Chat/Services/ChatService.cs
-````csharp
-using CoreWCF;
-using Vertigo.Contracts.Faults;
-using Vertigo.Contracts.Interfaces;
-using Vertigo.Contracts.Internal;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Models;
-
-namespace Vertigo.Server.Matchmaking.Chat.Services;
-
-[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
-public sealed class ChatService : IChatService
-{
-    private const int MaximumMessageLength = 500;
-
-    private readonly ILobbyDirectory _lobbies;
-    private readonly ISessionIdentityResolver _sessions;
-    private readonly TimeProvider _timeProvider;
-
-    public ChatService(ILobbyDirectory lobbies, ISessionIdentityResolver sessions, TimeProvider timeProvider)
-    {
-        _lobbies = lobbies;
-        _sessions = sessions;
-        _timeProvider = timeProvider;
-    }
-
-    public bool SendMessage(string lobbyCode, string text, string sessionToken)
-    {
-        SessionIdentity sender = _sessions.Require(sessionToken);
-        if (string.IsNullOrWhiteSpace(lobbyCode) || string.IsNullOrWhiteSpace(text)
-            || text.Length > MaximumMessageLength)
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
-        }
-
-        LobbyChatMessage message = new LobbyChatMessage
-        {
-            LobbyCode = lobbyCode.Trim(),
-            SenderId = sender.PlayerId,
-            SenderUsername = sender.Username,
-            Text = text.Trim(),
-            SentAt = _timeProvider.GetUtcNow().UtcDateTime
-        };
-
-        if (!_lobbies.PublishChatMessage(message))
-        {
-            throw CreateFault(ServiceErrorCodes.LobbyChatNotAllowed, ServiceMessageKeys.LobbyChatNotAllowed);
-        }
-
-        return true;
-    }
-
-    private static FaultException<ServiceFault> CreateFault(string code, string key)
-    {
-        ServiceFault fault = new ServiceFault { ErrorCode = code, MessageKey = key };
-        return new FaultException<ServiceFault>(fault, new FaultReason(code));
-    }
-}
-````
-
 ## File: src/Server/Vertigo.Server.Matchmaking/Lobbies/Services/LobbyLifecycle.cs
 ````csharp
 using Vertigo.Contracts.Internal;
@@ -12700,6 +18671,26 @@ public interface IFriendshipCallback
 }
 ````
 
+## File: src/Shared/Vertigo.Contracts/Interfaces/IChatService.cs
+````csharp
+using System.ServiceModel;
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Contracts.Interfaces;
+
+[ServiceContract]
+public interface IChatService
+{
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    bool SendMessage(string lobbyCode, string text, string sessionToken);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    bool SendMatchMessage(MatchChatRequest request);
+}
+````
+
 ## File: src/Shared/Vertigo.Contracts/Internal/IMatchPlacementService.cs
 ````csharp
 namespace Vertigo.Contracts.Internal;
@@ -12720,6 +18711,31 @@ namespace Vertigo.Contracts.Internal;
 public interface IMatchPresence : IMatchPresenceCommands
 {
     MatchPresenceSnapshot? GetPresence(Guid matchId);
+}
+````
+
+## File: src/Shared/Vertigo.Contracts/Internal/IMatchPresenceCommands.cs
+````csharp
+namespace Vertigo.Contracts.Internal;
+
+public interface IMatchPresenceCommands
+{
+    bool TryConfirmPresence(Guid matchId, Guid playerId);
+
+    bool TryDisconnect(Guid matchId, Guid playerId);
+
+    MatchReconnectResult TryReconnect(Guid matchId, Guid playerId);
+}
+````
+
+## File: src/Shared/Vertigo.Contracts/Internal/IMatchTurnClock.cs
+````csharp
+namespace Vertigo.Contracts.Internal;
+
+public interface IMatchTurnClock
+{
+    // Advances one elapsed deadline and returns the affected player.
+    Guid? TryExpireTurn(Guid matchId);
 }
 ````
 
@@ -12782,6 +18798,35 @@ public sealed record MatchSessionSnapshot
 }
 ````
 
+## File: src/Shared/Vertigo.Contracts/Models/LobbyChatMessage.cs
+````csharp
+using System.Runtime.Serialization;
+
+namespace Vertigo.Contracts.Models;
+
+[DataContract]
+public sealed class LobbyChatMessage
+{
+    [DataMember]
+    public string LobbyCode { get; set; } = string.Empty;
+
+    [DataMember(EmitDefaultValue = false)]
+    public Guid? MatchId { get; set; }
+
+    [DataMember]
+    public Guid SenderId { get; set; }
+
+    [DataMember]
+    public string SenderUsername { get; set; } = string.Empty;
+
+    [DataMember]
+    public string Text { get; set; } = string.Empty;
+
+    [DataMember]
+    public DateTime SentAt { get; set; }
+}
+````
+
 ## File: src/Shared/Vertigo.Contracts/Models/LobbyPreparation.cs
 ````csharp
 using System.Runtime.Serialization;
@@ -12830,29 +18875,6 @@ public sealed class MatchBoardChanged
     public MatchBoardActionKind ActionKind { get; init; }
     public int CardNumber { get; init; }
     public int PilePosition { get; init; }
-}
-````
-
-## File: src/Shared/Vertigo.Contracts/Models/MatchBoardPlayer.cs
-````csharp
-using System.Runtime.Serialization;
-
-namespace Vertigo.Contracts.Models;
-
-[DataContract]
-public sealed class MatchBoardPlayer
-{
-    [DataMember]
-    public Guid PlayerId { get; set; }
-
-    [DataMember]
-    public string Username { get; set; } = string.Empty;
-
-    [DataMember]
-    public int FloorsBuilt { get; set; }
-
-    [DataMember]
-    public int GlobalFloors { get; set; }
 }
 ````
 
@@ -13082,7 +19104,6 @@ using Vertigo.Client.Networking.Results;
 using Vertigo.Client.Networking.Sessions.Interfaces;
 using Vertigo.Contracts.Models;
 
-// Two independent service providers represent two client applications.
 using ServiceProvider first = CreateClient();
 using ServiceProvider second = CreateClient();
 using ILobbyClient hostLobby = first.GetRequiredService<ILobbyClient>();
@@ -13211,6 +19232,247 @@ static void Require(bool condition, string message)
 }
 ````
 
+## File: tests/Vertigo.Client.Reconnection.Smoke/Program.cs
+````csharp
+using System.Diagnostics;
+using System.ServiceModel;
+using Microsoft.Extensions.DependencyInjection;
+using Vertigo.Client.Core.Sessions;
+using Vertigo.Client.Networking;
+using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Client.Networking.Sessions.Interfaces;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Models;
+
+// Integration smoke: requires a running Vertigo.Server.Host with Fase 7B + Codex fixes.
+// Each ServiceProvider has its own WCF duplex client and its own guest identity.
+using ServiceProvider host = CreateClient();
+using ServiceProvider guest = CreateClient();
+using ServiceProvider outsider = CreateClient();
+using ServiceProvider hostReconnect = CreateClient();
+using ServiceProvider guestReconnect = CreateClient();
+using ServiceProvider suspensionObserver = CreateClient();
+
+ILobbyClient hostLobby = host.GetRequiredService<ILobbyClient>();
+ILobbyClient guestLobby = guest.GetRequiredService<ILobbyClient>();
+ILobbyClient outsiderLobby = outsider.GetRequiredService<ILobbyClient>();
+ILobbyClient resumedHostLobby = hostReconnect.GetRequiredService<ILobbyClient>();
+ILobbyClient resumedGuestLobby = guestReconnect.GetRequiredService<ILobbyClient>();
+ILobbyClient observerLobby = suspensionObserver.GetRequiredService<ILobbyClient>();
+string? code = null;
+
+try
+{
+    string hostToken = CreateGuest(host);
+    string guestToken = CreateGuest(guest);
+    string outsiderToken = CreateGuest(outsider);
+    Guid hostId = host.GetRequiredService<PlayerSession>().GetActiveSession()!.PlayerId;
+    Guid guestId = guest.GetRequiredService<PlayerSession>().GetActiveSession()!.PlayerId;
+
+    code = hostLobby.CreateLobby(true, 2, hostToken);
+    LobbyCredentials hostCredentials = new(code, hostToken);
+    guestLobby.JoinLobby(code, guestToken);
+    hostLobby.SetReady(code, true, hostToken);
+    guestLobby.SetReady(code, true, guestToken);
+    LobbyPreparation started = hostLobby.StartMatch(code, hostToken);
+    Require(started.IsInGame && started.MatchId != Guid.Empty, "Match was not initialized");
+    Guid matchId = started.MatchId;
+    long revision = started.Revision;
+    Console.WriteLine("PASS: MATCH STARTED WITH STABLE ID");
+
+    // An unrelated account cannot enter an in-progress match.
+    RequireFault(() => outsiderLobby.JoinLobby(code, outsiderToken), ServiceErrorCodes.LobbyAlreadyStarted);
+    Console.WriteLine("PASS: THIRD PLAYER REJECTED");
+
+    // Voluntary exit is not yet supported in active games; neither participant should be removed.
+    Require(!guestLobby.LeaveLobby(code, guestToken), "LeaveLobby was accepted during a match");
+    Require(guestLobby.GetPreparation(code, guestToken).MatchId == matchId,
+        "Voluntary exit changed the match identifier");
+    Console.WriteLine("PASS: IN-GAME LEAVE REJECTED");
+
+    // Drop one duplex channel; keep the other online to observe the server-side change.
+    guestLobby.Disconnect();
+    LobbyPreparation afterGuestLoss = AwaitPreparation(hostLobby, hostCredentials,
+        state => state.DisconnectedPlayerIds.Contains(guestId));
+    Require(!afterGuestLoss.IsSuspended, "Game suspended with host still connected");
+    Require(afterGuestLoss.MatchId == matchId && afterGuestLoss.Revision > revision,
+        "Guest disconnect changed MatchId or failed to advance revision");
+    revision = afterGuestLoss.Revision;
+    Console.WriteLine("PASS: SINGLE DISCONNECT KEEPS MATCH RUNNING");
+
+    // Reconnection is scoped to the same match and identity.
+    MatchPresenceRequest reconnect = new() { MatchId = Guid.NewGuid(), LobbyCode = code, SessionToken = guestToken };
+    RequireFault(() => resumedGuestLobby.ReconnectMatch(reconnect), ServiceErrorCodes.LobbyNotFound);
+    Require(hostLobby.GetPreparation(code, hostToken).DisconnectedPlayerIds.Contains(guestId),
+        "A mismatched match identifier restored the guest seat");
+    reconnect.MatchId = matchId;
+    resumedGuestLobby.ReconnectMatch(reconnect);
+    MatchBoardSnapshot beforeConfirmation = resumedGuestLobby.GetMatchBoard(code, guestToken);
+    MatchBoardSnapshot afterConfirmation = resumedGuestLobby.ConfirmMatchPresence(reconnect);
+    Require(afterConfirmation.MatchId == matchId && afterConfirmation.Revision == beforeConfirmation.Revision,
+        "Confirming presence without an active grace period changed the board");
+    LobbyPreparation afterGuestReturn = resumedGuestLobby.GetPreparation(code, guestToken);
+    Require(!afterGuestReturn.DisconnectedPlayerIds.Contains(guestId), "Guest still marked disconnected");
+    Require(afterGuestReturn.MatchId == matchId && afterGuestReturn.Revision > revision,
+        "Guest reconnect changed MatchId or failed to advance revision");
+    revision = afterGuestReturn.Revision;
+    Console.WriteLine("PASS: NEW GUEST CHANNEL RECONNECTS");
+
+    // Replace a channel while the old one remains alive. Its late Closed callback must be ignored.
+    resumedHostLobby.JoinLobby(code, hostToken);
+    LobbyPreparation replaced = resumedHostLobby.GetPreparation(code, hostToken);
+    Require(replaced.Revision > revision, "Host replacement did not advance revision");
+    revision = replaced.Revision;
+    hostLobby.Disconnect();
+    // Allow the server to process Closed from the superseded channel, then force an RPC barrier.
+    Thread.Sleep(SmokeTiming.StaleChannelCloseGrace);
+    LobbyPreparation afterOldClose = resumedHostLobby.GetPreparation(code, hostToken);
+    Require(!afterOldClose.DisconnectedPlayerIds.Contains(hostId),
+        "Closing the old channel disconnected the replacement");
+    Require(afterOldClose.MatchId == matchId, "Old channel close changed MatchId");
+    Console.WriteLine("PASS: STALE CHANNEL CLOSE IGNORED");
+
+    // Close all live match channels. After both closures, rejoin with another new channel.
+    resumedGuestLobby.Disconnect();
+    LobbyPreparation afterSecondGuestLoss = AwaitPreparation(resumedHostLobby, hostCredentials,
+        state => state.DisconnectedPlayerIds.Contains(guestId));
+    Require(!afterSecondGuestLoss.IsSuspended, "Game suspended with host connected");
+    revision = afterSecondGuestLoss.Revision;
+    resumedHostLobby.Disconnect();
+
+    // A fresh, independent channel observes Game's suspended state without rejoining.
+    // Poll rather than sleeping: the server may process Closed callbacks asynchronously.
+    LobbyPreparation suspended = AwaitPreparation(observerLobby, hostCredentials,
+        state => state.IsSuspended
+            && state.DisconnectedPlayerIds.Contains(hostId)
+            && state.DisconnectedPlayerIds.Contains(guestId));
+    Require(suspended.IsInGame && suspended.MatchId == matchId,
+        "Suspension must preserve the active match identifier");
+    Require(suspended.Revision > revision,
+        "Suspension did not advance the lobby revision");
+    revision = suspended.Revision;
+    Console.WriteLine("PASS: BOTH DISCONNECTED AND MATCH SUSPENDED");
+
+    hostLobby.JoinLobby(code, hostToken); // Disconnected LobbyClient creates a fresh duplex channel.
+    LobbyPreparation afterAllReturn = hostLobby.GetPreparation(code, hostToken);
+    Require(afterAllReturn.MatchId == matchId, "Reconnection created a different match");
+    Require(afterAllReturn.IsInGame && !afterAllReturn.IsSuspended,
+        "Game did not resume Running after a participant returned");
+    Require(afterAllReturn.DisconnectedPlayerIds.Contains(guestId),
+        "Guest was unexpectedly reconnected when only host returned");
+    Require(afterAllReturn.Revision > revision, "All-disconnected reconnect did not advance revision");
+    Console.WriteLine("PASS: MATCH RECOVERED AFTER BOTH CHANNELS CLOSED");
+
+    resumedGuestLobby.JoinLobby(code, guestToken);
+    LobbyPreparation restored = resumedGuestLobby.GetPreparation(code, guestToken);
+    Require(restored.DisconnectedPlayerIds.Count == 0, "Participants were not fully restored");
+    Require(restored.MatchId == matchId && !restored.IsSuspended, "Final restoration changed match state");
+    Console.WriteLine("PASS: BOTH PARTICIPANTS RESTORED");
+    Console.WriteLine("PASS: Reconnection smoke");
+    return 0;
+}
+catch (Exception exception)
+{
+    Console.Error.WriteLine($"FAIL: {exception.GetType().Name}: {exception.Message}");
+    return 1;
+}
+finally
+{
+    // Match leave is intentionally rejected during InGame: close transports, not membership.
+    hostLobby.Disconnect();
+    guestLobby.Disconnect();
+    outsiderLobby.Disconnect();
+    resumedHostLobby.Disconnect();
+    resumedGuestLobby.Disconnect();
+    observerLobby.Disconnect();
+    LogoutQuietly(host);
+    LogoutQuietly(guest);
+    LogoutQuietly(outsider);
+}
+
+static ServiceProvider CreateClient()
+{
+    ServiceCollection services = new();
+    services.AddVertigoClientNetworking();
+    return services.BuildServiceProvider();
+}
+
+static string CreateGuest(ServiceProvider services)
+{
+    var result = services.GetRequiredService<ISessionCoordinator>().CreateGuestSession();
+    if (!result.IsSuccess || result.Value is null)
+    {
+        throw new InvalidOperationException("Guest authentication failed");
+    }
+
+    return result.Value.Token;
+}
+
+static LobbyPreparation AwaitPreparation(
+    ILobbyClient lobby, LobbyCredentials credentials, Func<LobbyPreparation, bool> predicate)
+{
+    Stopwatch stopwatch = Stopwatch.StartNew();
+    LobbyPreparation state = lobby.GetPreparation(credentials.Code, credentials.Token);
+    while (!predicate(state) && stopwatch.Elapsed < SmokeTiming.ObservationTimeout)
+    {
+        Thread.Sleep(SmokeTiming.PollInterval);
+        state = lobby.GetPreparation(credentials.Code, credentials.Token);
+    }
+
+    Require(predicate(state),
+        $"Timed out after {SmokeTiming.ObservationTimeout.TotalSeconds}s waiting for expected NetTCP state");
+    return state;
+}
+
+static void RequireFault(Action operation, string code)
+{
+    bool rejected = false;
+    try
+    {
+        operation();
+    }
+    catch (FaultException<ServiceFault> fault)
+    {
+        rejected = fault.Detail.ErrorCode == code;
+    }
+
+    Require(rejected, $"Expected business fault {code}");
+}
+
+static void LogoutQuietly(ServiceProvider services)
+{
+    try
+    {
+        services.GetRequiredService<ISessionCoordinator>().Logout();
+    }
+    catch (CommunicationException)
+    {
+        // Best-effort cleanup after an intentional duplex disconnect.
+    }
+    catch (TimeoutException)
+    {
+        // Best-effort cleanup after an intentional duplex disconnect.
+    }
+}
+
+static void Require(bool condition, string message)
+{
+    if (!condition)
+    {
+        throw new InvalidOperationException(message);
+    }
+}
+
+internal sealed record LobbyCredentials(string Code, string Token);
+
+internal static class SmokeTiming
+{
+    internal static readonly TimeSpan ObservationTimeout = TimeSpan.FromSeconds(10);
+    internal static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(100);
+    internal static readonly TimeSpan StaleChannelCloseGrace = TimeSpan.FromMilliseconds(500);
+}
+````
+
 ## File: tests/Vertigo.Client.TestAccounts.Setup/Program.cs
 ````csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -13296,6 +19558,91 @@ bool PrepareAccount(LoginCredentials credentials, string label)
 
     Console.WriteLine($"PASS: {label} registered account verified.");
     return true;
+}
+````
+
+## File: tests/Vertigo.Client.UnitTests/Errors/ClientErrorTextTests.cs
+````csharp
+using System.Globalization;
+using System.ServiceModel;
+using Vertigo.Client.Networking.Results;
+using Vertigo.Client.UI.Utilities.Localization.Services;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Client.UnitTests.Errors;
+
+public sealed class ClientErrorTextTests
+{
+    [Theory]
+    [InlineData("es-MX", "El mensaje contiene lenguaje no permitido.")]
+    [InlineData("en-US", "The message contains language that is not allowed.")]
+    public void FromResult_BlockedChatLanguage_ReturnsLocalizedExplanation(string cultureName, string expected)
+    {
+        CultureInfo previousCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
+            ClientErrorText errors = new(new TextLocalizer());
+            ClientResult<bool> failed = ClientResult<bool>.BusinessFailure(
+                ServiceErrorCodes.ChatLanguageBlocked, ServiceMessageKeys.ChatLanguageBlocked);
+
+            Assert.StartsWith(expected, errors.FromResult(failed, "Error.Unknown"));
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = previousCulture;
+        }
+    }
+
+    [Fact]
+    public void FromResult_Timeout_ReturnsLocalizedMessage()
+    {
+        ClientErrorText errors = new(new TextLocalizer());
+        ClientResult<bool> failed = ClientResult<bool>.TechnicalFailure(FailureKind.Timeout);
+
+        string message = errors.FromResult(failed, "Error.Unknown");
+
+        Assert.False(string.IsNullOrWhiteSpace(message));
+        Assert.NotEqual("Error.Timeout", message);
+    }
+
+    [Fact]
+    public void IsUnauthorized_BusinessFailure_ReturnsTrue()
+    {
+        ClientErrorText errors = new(new TextLocalizer());
+        ClientResult<bool> failed = ClientResult<bool>.BusinessFailure(
+            ServiceErrorCodes.Unauthorized, ServiceMessageKeys.Unauthorized);
+
+        Assert.True(errors.IsUnauthorized(failed));
+    }
+
+    [Fact]
+    public void IsUnauthorized_OtherFailure_ReturnsFalse()
+    {
+        ClientErrorText errors = new(new TextLocalizer());
+        ClientResult<bool> failed = ClientResult<bool>.BusinessFailure(
+            ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+
+        Assert.False(errors.IsUnauthorized(failed));
+    }
+
+    [Fact]
+    public void FromException_ServerFault_ReturnsLocalizedMessage()
+    {
+        ClientErrorText errors = new(new TextLocalizer());
+        ServiceFault fault = new()
+        {
+            ErrorCode = ServiceErrorCodes.LobbyNotFound,
+            MessageKey = ServiceMessageKeys.LobbyNotFound
+        };
+        FaultException<ServiceFault> exception = new(fault);
+
+        string message = errors.FromException(exception, "Error.Unknown");
+
+        Assert.False(string.IsNullOrWhiteSpace(message));
+        Assert.NotEqual(fault.MessageKey, message);
+    }
 }
 ````
 
@@ -13402,155 +19749,6 @@ public sealed class MatchBoardNotificationRulesTests
 }
 ````
 
-## File: tests/Vertigo.Client.UnitTests/Matches/MatchResultsViewModelTests.cs
-````csharp
-using Vertigo.Client.UI.Utilities.Localization.Interfaces;
-using Vertigo.Client.UI.ViewModels;
-using Vertigo.Contracts.Models;
-
-namespace Vertigo.Client.UnitTests.Matches;
-
-public sealed class MatchResultsViewModelTests
-{
-    [Fact]
-    public void ApplyBoard_RoundCloses_OffersScoresWithoutOpeningPanel()
-    {
-        MatchResultsViewModel results = new(new ResultsText());
-        MatchRoundSummary round = CreateRound(1, (5, 10), 15);
-
-        results.ApplyBoard(new MatchBoardSnapshot { RoundNumber = 2, RoundSummaries = { round } });
-
-        Assert.True(results.HasResults);
-        Assert.False(results.HasFinalResult);
-        Assert.False(results.IsExpanded);
-        Assert.Equal("Ronda 1 finalizada", results.HeaderText);
-        MatchRoundPlayerScore score = Assert.Single(results.SelectedScores);
-        Assert.Equal("Ana", score.PlayerUsername);
-        Assert.Equal((5, 10, 15), (score.FloorsBuilt, score.BonusFloors, score.TotalFloors));
-    }
-
-    [Fact]
-    public void ApplyBoard_UnchangedRounds_KeepsTheSelectedEarlierRound()
-    {
-        MatchResultsViewModel results = new(new ResultsText());
-        MatchRoundSummary first = CreateRound(1, (5, 10), 15);
-        MatchRoundSummary second = CreateRound(2, (4, 0), 19);
-        MatchBoardSnapshot board = new() { RoundNumber = 3, RoundSummaries = { first, second } };
-        results.ApplyBoard(board);
-        Assert.Equal(2, results.SelectedRound?.RoundNumber);
-        results.SelectedRound = results.Rounds.Single(row => row.RoundNumber == 1);
-
-        results.ApplyBoard(board);
-        results.RefreshLocalization();
-
-        Assert.Equal(1, results.SelectedRound?.RoundNumber);
-        Assert.Equal(15, Assert.Single(results.SelectedScores).TotalFloors);
-    }
-
-    [Fact]
-    public void ApplyBoard_NewRoundWhileReviewingEarlierRound_PreservesSelection()
-    {
-        MatchResultsViewModel results = new(new ResultsText());
-        MatchRoundSummary first = CreateRound(1, (5, 10), 15);
-        MatchRoundSummary second = CreateRound(2, (4, 0), 19);
-        MatchRoundSummary third = CreateRound(3, (2, 0), 21);
-        results.ApplyBoard(new MatchBoardSnapshot { RoundSummaries = { first, second } });
-        results.SelectedRound = results.Rounds.Single(row => row.RoundNumber == 1);
-
-        results.ApplyBoard(new MatchBoardSnapshot { RoundSummaries = { first, second, third } });
-
-        Assert.Equal(1, results.SelectedRound?.RoundNumber);
-        Assert.Equal(15, Assert.Single(results.SelectedScores).TotalFloors);
-        Assert.Equal(3, results.Rounds.Count);
-    }
-
-    [Fact]
-    public void ApplyBoard_CompletedWithJointWinners_OpensTheFinalResultOnce()
-    {
-        MatchResultsViewModel results = new(new ResultsText());
-        Guid ana = Guid.NewGuid();
-        Guid beto = Guid.NewGuid();
-        MatchBoardSnapshot board = new()
-        {
-            EndReason = MatchEndReason.Completed,
-            WinnerIds = { ana, beto },
-            Players =
-            {
-                new MatchBoardPlayer { PlayerId = ana, Username = "Ana" },
-                new MatchBoardPlayer { PlayerId = beto, Username = "Beto" }
-            }
-        };
-
-        results.ApplyBoard(board);
-
-        Assert.True(results.HasFinalResult);
-        Assert.True(results.IsExpanded);
-        Assert.False(results.IsAbandonment);
-        Assert.Equal("Ganaron Ana, Beto", results.WinnerText);
-        results.IsExpanded = false;
-        results.ApplyBoard(board);
-        Assert.False(results.IsExpanded);
-    }
-
-    [Fact]
-    public void ApplyBoard_AbandonmentBeforeFirstRound_ShowsWinnerAndReasonWithoutScores()
-    {
-        MatchResultsViewModel results = new(new ResultsText());
-        Guid winner = Guid.NewGuid();
-
-        results.ApplyBoard(new MatchBoardSnapshot
-        {
-            EndReason = MatchEndReason.Abandonment,
-            WinnerIds = { winner },
-            Players = { new MatchBoardPlayer { PlayerId = winner, Username = "Ana" } }
-        });
-
-        Assert.True(results.HasResults);
-        Assert.True(results.IsExpanded);
-        Assert.True(results.IsAbandonment);
-        Assert.Equal("Ganó Ana", results.WinnerText);
-        Assert.Empty(results.SelectedScores);
-        results.Reset();
-        Assert.False(results.HasResults);
-        Assert.False(results.IsExpanded);
-        Assert.Empty(results.WinnerText);
-    }
-
-    private static MatchRoundSummary CreateRound(int number, (int Built, int Bonus) floors, int total)
-    {
-        return new MatchRoundSummary
-        {
-            RoundNumber = number,
-            Players =
-            {
-                new MatchRoundPlayerScore
-                {
-                    PlayerUsername = "Ana",
-                    FloorsBuilt = floors.Built,
-                    BonusFloors = floors.Bonus,
-                    TotalFloors = total
-                }
-            }
-        };
-    }
-
-    private sealed class ResultsText : ITextLocalizer
-    {
-        public string Get(string key)
-        {
-            return key switch
-            {
-                "Match.Results.RoundClosed" => "Ronda {0} finalizada",
-                "Match.Results.RoundOption" => "Ronda {0}",
-                "Match.Results.Winner" => "Ganó {0}",
-                "Match.Results.Winners" => "Ganaron {0}",
-                _ => key
-            };
-        }
-    }
-}
-````
-
 ## File: tests/Vertigo.Client.UnitTests/Sessions/PlayerSessionTests.cs
 ````csharp
 using Vertigo.Client.Core.Sessions;
@@ -13617,6 +19815,49 @@ public sealed class PlayerSessionTests
             ExpiresAt = expiresAt ?? DateTime.UtcNow.AddMinutes(30),
             IsGuest = false
         };
+    }
+}
+````
+
+## File: tests/Vertigo.Client.UnitTests/Validation/MatchChatRulesTests.cs
+````csharp
+using Vertigo.Contracts.Models;
+using Xunit;
+
+namespace Vertigo.Client.UnitTests.Validation;
+
+public sealed class MatchChatRulesTests
+{
+    [Fact]
+    public void CanSend_ExactlyThirtyCharacters_ReturnsTrue()
+    {
+        Assert.True(MatchChatRules.CanSend(new string('a', 30)));
+    }
+
+    [Fact]
+    public void CanSend_ThirtyOneCharacters_ReturnsFalse()
+    {
+        Assert.False(MatchChatRules.CanSend(new string('a', 31)));
+    }
+
+    [Fact]
+    public void CanSend_WhitespaceOnly_ReturnsFalse()
+    {
+        Assert.False(MatchChatRules.CanSend("   "));
+    }
+
+    [Theory]
+    [InlineData("Hola\rAdiós")]
+    [InlineData("Hola\nAdiós")]
+    public void CanSend_MultipleLines_ReturnsFalse(string message)
+    {
+        Assert.False(MatchChatRules.CanSend(message));
+    }
+
+    [Fact]
+    public void CanSend_ValidShortMessage_ReturnsTrue()
+    {
+        Assert.True(MatchChatRules.CanSend("¡Vamos!"));
     }
 }
 ````
@@ -13721,756 +19962,6 @@ public sealed class InMemoryMatchSessionStarterTests
             HostPlayerId = host,
             PlayerIds = new[] { host, Guid.NewGuid() }
         };
-    }
-}
-````
-
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchBoardReaderTests.cs
-````csharp
-using Vertigo.Contracts.Internal;
-using Vertigo.Server.Game.Matches.Implementations;
-using Xunit;
-
-namespace Vertigo.Server.Game.Tests.Matches;
-
-public sealed class MatchBoardReaderTests
-{
-    [Fact]
-    public void GetBoard_AfterStart_ContainsParticipantsAndFoundations()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        Guid host = Guid.NewGuid();
-        Guid guest = Guid.NewGuid();
-        MatchStartRequest request = new()
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            HostPlayerId = host,
-            PlayerIds = new[] { host, guest }
-        };
-
-        MatchSessionSnapshot match = game.Start(request);
-        var board = game.GetBoard(match.MatchId);
-
-        Assert.NotNull(board);
-        Assert.Equal(match.MatchId, board.MatchId);
-        Assert.Equal(1, board.Revision);
-        Assert.Equal(new[] { host, guest }, board.Players.Select(p => p.PlayerId));
-        Assert.All(board.Players, p => Assert.Equal(0, p.FloorsBuilt));
-        Assert.Equal(4, board.Piles.Count);
-        Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
-        Assert.All(board.Piles, pile => Assert.InRange(pile.TopCardNumber!.Value, 1, 100));
-        Assert.Equal(1, board.RoundNumber);
-        Assert.Contains(board.CurrentTurnPlayerId, request.PlayerIds);
-    }
-
-    [Fact]
-    public void GetBoard_UnknownMatch_ReturnsNull()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-
-        var board = game.GetBoard(Guid.NewGuid());
-
-        Assert.Null(board);
-    }
-
-    [Fact]
-    public void GetBoard_ChangedCopy_DoesNotMutateStoredBoard()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        Guid host = Guid.NewGuid();
-        MatchStartRequest request = new()
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            HostPlayerId = host,
-            PlayerIds = new[] { host, Guid.NewGuid() }
-        };
-        Guid matchId = game.Start(request).MatchId;
-        var first = game.GetBoard(matchId);
-        Assert.NotNull(first);
-        first.Players[0].FloorsBuilt = 999;
-        first.Players.Clear();
-
-        var second = game.GetBoard(matchId);
-
-        Assert.NotNull(second);
-        Assert.Equal(2, second.Players.Count);
-        Assert.Equal(0, second.Players[0].FloorsBuilt);
-    }
-}
-````
-
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchDepartureTests.cs
-````csharp
-using Vertigo.Contracts.Internal;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.Game.Matches.Implementations;
-
-namespace Vertigo.Server.Game.Tests.Matches;
-
-public sealed class MatchDepartureTests
-{
-    [Fact]
-    public void TryLeaveMatch_TwoPlayers_FinishesByAbandonmentAndAcceptsRetriesWithoutChangingBoard()
-    {
-        InMemoryMatchSessionStarter game = new(new ManualClock());
-        MatchBoardSnapshot before = StartMatch(game, 2);
-        Guid leaving = before.Players[0].PlayerId;
-        Guid remaining = before.Players[1].PlayerId;
-
-        MatchDepartureResult departure = game.TryLeaveMatch(before.MatchId, leaving);
-
-        Assert.Equal(new MatchDepartureResult(true, true), departure);
-        MatchBoardSnapshot finished = game.GetBoard(before.MatchId)!;
-        Assert.Equal(MatchEndReason.Abandonment, finished.EndReason);
-        Assert.Equal(remaining, Assert.Single(finished.WinnerIds));
-        Assert.Equal(leaving, Assert.Single(finished.ExpelledPlayerIds));
-        Assert.Equal(MatchBoardActionKind.LeftMatch, Assert.Single(finished.RecentMoves).ActionKind);
-        Assert.Empty(finished.RoundSummaries);
-        Assert.Null(finished.TurnDeadlineUtc);
-        Assert.Null(game.GetPrivateHand(before.MatchId, leaving));
-
-        Assert.Equal(new MatchDepartureResult(true, false), game.TryLeaveMatch(before.MatchId, leaving));
-        Assert.Equal(new MatchDepartureResult(true, false), game.TryLeaveMatch(before.MatchId, remaining));
-        Assert.Equal(finished.Revision, game.GetBoard(before.MatchId)!.Revision);
-        Assert.Equal(remaining, Assert.Single(game.GetBoard(before.MatchId)!.WinnerIds));
-    }
-
-    [Fact]
-    public void TryLeaveMatch_WaitingPlayerLeaves_ContinuesCurrentTurnWithSameDeadline()
-    {
-        ManualClock clock = new();
-        InMemoryMatchSessionStarter game = new(clock);
-        MatchBoardSnapshot before = StartMatch(game, 3);
-        Guid leaving = before.Players.First(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
-        clock.Now = clock.Now.AddSeconds(6);
-
-        MatchDepartureResult departure = game.TryLeaveMatch(before.MatchId, leaving);
-
-        Assert.Equal(new MatchDepartureResult(true, true), departure);
-        MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
-        Assert.Equal(MatchEndReason.None, after.EndReason);
-        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
-        Assert.Equal(before.TurnDeadlineUtc, after.TurnDeadlineUtc);
-        Assert.Equal(before.Revision + 1, after.Revision);
-        Assert.Equal(2, after.Players.Count);
-    }
-
-    [Fact]
-    public void TryLeaveMatch_CurrentPlayerWithPendingVote_AdvancesTurnAndClearsVotes()
-    {
-        ManualClock clock = new();
-        InMemoryMatchSessionStarter game = new(clock);
-        MatchBoardSnapshot before = StartMatch(game, 3);
-        Guid leaving = before.CurrentTurnPlayerId;
-        Guid[] order = before.Players.Select(player => player.PlayerId).ToArray();
-        Guid nextPlayer = order[(Array.IndexOf(order, leaving) + 1) % order.Length];
-        MatchExpulsionVote vote = new(leaving, before.VotingRevision);
-        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(before.MatchId, nextPlayer, vote));
-        clock.Now = clock.Now.AddSeconds(6);
-
-        MatchDepartureResult departure = game.TryLeaveMatch(before.MatchId, leaving);
-
-        Assert.Equal(new MatchDepartureResult(true, true), departure);
-        MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
-        Assert.Equal(nextPlayer, after.CurrentTurnPlayerId);
-        Assert.Equal(clock.Now + (before.TurnDeadlineUtc!.Value - DateTimeOffset.UnixEpoch), after.TurnDeadlineUtc);
-        Assert.Equal(MatchEndReason.None, after.EndReason);
-        Assert.Equal(before.Revision + 2, after.Revision);
-        Assert.Equal(before.VotingRevision + 1, after.VotingRevision);
-        Assert.Empty(after.ExpulsionVotes);
-        Assert.Empty(game.GetPrivateHand(before.MatchId, nextPlayer)!.VotedExpulsionTargetIds);
-        Assert.Equal(leaving, Assert.Single(after.ExpelledPlayerIds));
-    }
-
-    [Fact]
-    public void TryLeaveMatch_WhenTurnAlreadyExpired_UsesTimeoutResultFirst()
-    {
-        ManualClock clock = new();
-        InMemoryMatchSessionStarter game = new(clock);
-        MatchBoardSnapshot before = StartMatch(game, 2);
-        Guid leaving = before.Players.Single(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
-        clock.Now = before.TurnDeadlineUtc!.Value;
-
-        Assert.Equal(new MatchDepartureResult(true, true), game.TryLeaveMatch(before.MatchId, leaving));
-
-        MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
-        Assert.Equal(leaving, Assert.Single(after.WinnerIds));
-        Assert.Equal(MatchBoardActionKind.TurnExpired, Assert.Single(after.RecentMoves).ActionKind);
-        Assert.Null(game.TryExpireTurn(before.MatchId));
-    }
-
-    [Fact]
-    public void TryLeaveMatch_UnknownParticipant_DoesNotChangeGame()
-    {
-        InMemoryMatchSessionStarter game = new(new ManualClock());
-        MatchBoardSnapshot before = StartMatch(game, 2);
-
-        Assert.Equal(new MatchDepartureResult(false, false), game.TryLeaveMatch(before.MatchId, Guid.NewGuid()));
-        Assert.Equal(before.Revision, game.GetBoard(before.MatchId)!.Revision);
-    }
-
-    private static MatchBoardSnapshot StartMatch(InMemoryMatchSessionStarter game, int count)
-    {
-        Guid[] players = Enumerable.Range(0, count).Select(_ => Guid.NewGuid()).ToArray();
-        MatchSessionSnapshot session = game.Start(new MatchStartRequest
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            HostPlayerId = players[0],
-            PlayerIds = players
-        });
-
-        return game.GetBoard(session.MatchId)!;
-    }
-
-    private sealed class ManualClock : TimeProvider
-    {
-        public DateTimeOffset Now { get; set; } = DateTimeOffset.UnixEpoch;
-
-        public override DateTimeOffset GetUtcNow()
-        {
-            return Now;
-        }
-    }
-}
-````
-
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchInitialBoardTests.cs
-````csharp
-using Vertigo.Contracts.Internal;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.Game.Matches.Implementations;
-using Xunit;
-
-namespace Vertigo.Server.Game.Tests.Matches;
-
-public sealed class MatchInitialBoardTests
-{
-    [Fact]
-    public void GetBoard_AfterStart_InitializesRoundAndSelectsParticipant()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        MatchStartRequest request = CreateRequest();
-
-        Guid matchId = game.Start(request).MatchId;
-        MatchBoardSnapshot? board = game.GetBoard(matchId);
-
-        Assert.NotNull(board);
-        Assert.Equal(1, board.Revision);
-        Assert.Equal(1, board.RoundNumber);
-        Assert.Contains(board.CurrentTurnPlayerId, request.PlayerIds);
-        Assert.Equal(request.PlayerIds, board.Players.Select(player => player.PlayerId));
-        Assert.All(board.Players, player => Assert.Equal(0, player.FloorsBuilt));
-    }
-
-    [Fact]
-    public void GetBoard_AfterStart_HasFourOrderedFoundations()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        Guid matchId = game.Start(CreateRequest()).MatchId;
-
-        MatchBoardSnapshot? board = game.GetBoard(matchId);
-
-        Assert.NotNull(board);
-        Assert.Equal(new[] { 1, 2, 3, 4 }, board.Piles.Select(pile => pile.Position));
-        Assert.All(board.Piles, pile =>
-        {
-            Assert.Equal(1, pile.CardCount);
-            Assert.InRange(pile.TopCardNumber!.Value, 1, 100);
-        });
-    }
-
-    [Fact]
-    public void Start_SixParticipants_DealsTenUniqueModulesPerPlayerAndFourFoundations()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        Guid[] players = Enumerable.Range(0, 6).Select(index => Guid.NewGuid()).ToArray();
-        MatchStartRequest request = new()
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            HostPlayerId = players[0],
-            PlayerIds = players
-        };
-
-        Guid matchId = game.Start(request).MatchId;
-
-        MatchBoardSnapshot? board = game.GetBoard(matchId);
-        Assert.NotNull(board);
-        List<int> dealt = board.Piles.Select(pile => pile.TopCardNumber!.Value).ToList();
-        Assert.Equal(4, dealt.Count);
-        foreach (Guid player in players)
-        {
-            MatchPrivateHand? hand = game.GetPrivateHand(matchId, player);
-            Assert.NotNull(hand);
-            Assert.Equal(10, hand.Cards.Count);
-            dealt.AddRange(hand.Cards);
-        }
-
-        Assert.Equal(64, dealt.Distinct().Count());
-        Assert.All(dealt, module => Assert.InRange(module, 1, 100));
-    }
-
-    [Fact]
-    public void Start_SameLobbyRequest_ReusesMatchAndInitialBoard()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        MatchStartRequest request = CreateRequest();
-
-        Guid firstId = game.Start(request).MatchId;
-        MatchBoardSnapshot? initial = game.GetBoard(firstId);
-        Guid secondId = game.Start(request).MatchId;
-        MatchBoardSnapshot? board = game.GetBoard(secondId);
-
-        Assert.Equal(firstId, secondId);
-        Assert.NotNull(initial);
-        Assert.NotNull(board);
-        Assert.Equal(initial.CurrentTurnPlayerId, board.CurrentTurnPlayerId);
-        Assert.Equal(1, board.Revision);
-        Assert.Equal(1, board.RoundNumber);
-    }
-
-    [Fact]
-    public void GetBoard_AfterMutatingSnapshot_KeepsOriginalState()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        Guid matchId = game.Start(CreateRequest()).MatchId;
-        MatchBoardSnapshot? first = game.GetBoard(matchId);
-        Assert.NotNull(first);
-        int? foundation = first.Piles[0].TopCardNumber;
-        first.Piles[0].Position = 99;
-        first.Piles[0].TopCardNumber = 50;
-        first.Piles[0].CardCount = 10;
-        first.Piles.Clear();
-        first.RoundNumber = 3;
-        first.CurrentTurnPlayerId = Guid.NewGuid();
-
-        MatchBoardSnapshot? second = game.GetBoard(matchId);
-
-        Assert.NotNull(second);
-        Assert.Equal(1, second.RoundNumber);
-        Assert.Equal(4, second.Piles.Count);
-        Assert.Equal(1, second.Piles[0].Position);
-        Assert.Equal(foundation, second.Piles[0].TopCardNumber);
-        Assert.Equal(1, second.Piles[0].CardCount);
-    }
-
-    [Fact]
-    public void GetBoard_DifferentMatches_KeepsIndependentInitialState()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        MatchStartRequest firstRequest = CreateRequest();
-        MatchStartRequest secondRequest = CreateRequest();
-
-        Guid firstId = game.Start(firstRequest).MatchId;
-        Guid secondId = game.Start(secondRequest).MatchId;
-        MatchBoardSnapshot? first = game.GetBoard(firstId);
-        MatchBoardSnapshot? second = game.GetBoard(secondId);
-
-        Assert.NotEqual(firstId, secondId);
-        Assert.NotNull(first);
-        Assert.NotNull(second);
-        Assert.Contains(first.CurrentTurnPlayerId, firstRequest.PlayerIds);
-        Assert.Contains(second.CurrentTurnPlayerId, secondRequest.PlayerIds);
-        Assert.Equal(4, first.Piles.Count);
-        Assert.Equal(4, second.Piles.Count);
-    }
-
-    [Fact]
-    public void GetBoard_AfterDisconnectAndReconnect_PreservesTurnAndRound()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        MatchStartRequest request = CreateRequest();
-        Guid matchId = game.Start(request).MatchId;
-
-        MatchBoardSnapshot? initial = game.GetBoard(matchId);
-        Assert.NotNull(initial);
-        Guid openingPlayer = initial.CurrentTurnPlayerId;
-        Assert.True(game.TryDisconnect(matchId, openingPlayer));
-        Assert.Equal(MatchReconnectResult.Reconnected, game.TryReconnect(matchId, openingPlayer));
-        MatchBoardSnapshot? board = game.GetBoard(matchId);
-
-        Assert.NotNull(board);
-        Assert.Equal(1, board.RoundNumber);
-        Assert.Equal(openingPlayer, board.CurrentTurnPlayerId);
-        Assert.Equal(1, board.Revision);
-    }
-
-    private static MatchStartRequest CreateRequest()
-    {
-        Guid host = Guid.NewGuid();
-        return new MatchStartRequest
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            HostPlayerId = host,
-            PlayerIds = new[] { host, Guid.NewGuid() }
-        };
-    }
-}
-````
-
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchMasterPlanTests.cs
-````csharp
-using Vertigo.Contracts.Internal;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.Game.Matches.Models;
-using Xunit;
-
-namespace Vertigo.Server.Game.Tests.Matches;
-
-public sealed class MatchMasterPlanTests
-{
-    private static readonly DateTimeOffset Now = DateTimeOffset.UnixEpoch;
-
-    [Fact]
-    public void TryUseMasterPlan_ValidChain_ConsumesOnePlanAndPublishesOneMove()
-    {
-        MatchRecord match = CreateMatchWithEarnedPlan();
-        MatchBoardSnapshot before = match.ToBoard();
-        Guid playerId = before.CurrentTurnPlayerId;
-        MatchMasterPlan plan = new(new[] { 42, 48 }, 1, before.Revision);
-
-        MatchPlacementResult applied = match.TryUseMasterPlan(playerId, plan, Now);
-        MatchPlacementResult repeated = match.TryUseMasterPlan(playerId, plan, Now);
-
-        Assert.Equal(MatchPlacementResult.Applied, applied);
-        Assert.Equal(MatchPlacementResult.StaleRevision, repeated);
-        MatchBoardSnapshot after = match.ToBoard();
-        Assert.Equal(before.Revision + 1, after.Revision);
-        Assert.Equal(match.Session.PlayerIds[0], after.CurrentTurnPlayerId);
-        Assert.Equal(48, after.Piles[0].TopCardNumber);
-        Assert.Equal(3, after.Piles[0].CardCount);
-        Assert.Equal(3, after.Players.Single(player => player.PlayerId == playerId).FloorsBuilt);
-        MatchPrivateHand hand = match.ToPrivateHand(playerId)!;
-        Assert.Equal(0, hand.MasterPlans);
-        Assert.Equal(new[] { 43, 44, 45, 46, 47, 49, 50 }, hand.Cards);
-        Assert.Equal(4, after.RecentMoves.Count);
-        Assert.Equal(new[] { MatchBoardActionKind.Placement, MatchBoardActionKind.Dismantle,
-            MatchBoardActionKind.Placement, MatchBoardActionKind.MasterPlan },
-            after.RecentMoves.Select(entry => entry.ActionKind));
-        MatchBoardMove move = after.RecentMoves[^1];
-        Assert.Equal(after.Revision, move.Revision);
-        Assert.Equal(playerId, move.PlayerId);
-        Assert.Equal(36, move.PreviousTop);
-        Assert.Equal(new[] { 42, 48 }, move.CardNumbers);
-
-        move.CardNumbers.Clear();
-        after.RecentMoves.Clear();
-        Assert.Equal(new[] { 42, 48 }, match.ToBoard().RecentMoves[^1].CardNumbers);
-    }
-
-    [Theory]
-    [InlineData(new[] { 42, 45, 44 }, 1, MatchPlacementResult.InvalidMasterPlanChain)]
-    [InlineData(new[] { 42, 45, 42 }, 1, MatchPlacementResult.InvalidMasterPlanChain)]
-    [InlineData(new[] { 42 }, 1, MatchPlacementResult.InvalidMasterPlanChain)]
-    [InlineData(new[] { 42, 51 }, 1, MatchPlacementResult.CardNotOwned)]
-    [InlineData(new[] { 42, 48 }, 5, MatchPlacementResult.InvalidPile)]
-    public void TryUseMasterPlan_InvalidRequest_PreservesTurnPlanHandTowerAndHistory(
-        int[] modules, int pile, MatchPlacementResult expected)
-    {
-        MatchRecord match = CreateMatchWithEarnedPlan();
-        MatchBoardSnapshot before = match.ToBoard();
-        Guid playerId = before.CurrentTurnPlayerId;
-        MatchPrivateHand hand = match.ToPrivateHand(playerId)!;
-        MatchMasterPlan plan = new(modules, pile, before.Revision);
-
-        MatchPlacementResult result = match.TryUseMasterPlan(playerId, plan, Now);
-
-        Assert.Equal(expected, result);
-        MatchBoardSnapshot after = match.ToBoard();
-        Assert.Equal(before.Revision, after.Revision);
-        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
-        Assert.Equal(before.Piles[0].CardCount, after.Piles[0].CardCount);
-        Assert.Equal(before.Piles[0].TopCardNumber, after.Piles[0].TopCardNumber);
-        Assert.Equal(before.RecentMoves.Select(move => move.Revision), after.RecentMoves.Select(move => move.Revision));
-        MatchPrivateHand afterHand = match.ToPrivateHand(playerId)!;
-        Assert.Equal(hand.Cards, afterHand.Cards);
-        Assert.Equal(1, afterHand.MasterPlans);
-    }
-
-    [Fact]
-    public void TryUseMasterPlan_EmptyHand_ClosesRoundAndKeepsMoveInHistory()
-    {
-        MatchRecord match = CreateMatchWithEarnedPlan();
-        MatchBoardSnapshot before = match.ToBoard();
-        Guid playerId = before.CurrentTurnPlayerId;
-        int[] modules = Enumerable.Range(42, 9).ToArray();
-
-        MatchPlacementResult result = match.TryUseMasterPlan(
-            playerId, new MatchMasterPlan(modules, 1, before.Revision), Now);
-
-        Assert.Equal(MatchPlacementResult.Applied, result);
-        MatchBoardSnapshot after = match.ToBoard();
-        Assert.Equal(2, after.RoundNumber);
-        Assert.Equal(before.Revision + 1, after.Revision);
-        Assert.Equal(match.Session.PlayerIds[0], after.CurrentTurnPlayerId);
-        MatchRoundSummary summary = Assert.Single(after.RoundSummaries);
-        Assert.Equal(playerId, summary.ClosedByPlayerId);
-        MatchRoundPlayerScore score = summary.Players.Single(entry => entry.PlayerId == playerId);
-        Assert.Equal((3, 10, 13), (score.FloorsBuilt, score.BonusFloors, score.TotalFloors));
-        Assert.Equal(modules, after.RecentMoves[^1].CardNumbers);
-        Assert.Equal(0, match.ToPrivateHand(playerId)!.MasterPlans);
-        Assert.Equal(10, match.ToPrivateHand(playerId)!.Cards.Count);
-    }
-
-    private static MatchRecord CreateMatchWithEarnedPlan()
-    {
-        Guid[] players = { Guid.NewGuid(), Guid.NewGuid() };
-        MatchSessionSnapshot session = new()
-        {
-            MatchId = Guid.NewGuid(),
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            InitialHostPlayerId = players[0],
-            PlayerIds = players,
-            CreatedAtUtc = Now.UtcDateTime
-        };
-        int[] modules = { 4, 81, 91, 20, 21, 22, 23, 24, 25, 26,
-            3, 42, 43, 44, 45, 46, 47, 48, 49, 50, 1, 80, 90, 100, 36, 99 };
-        MatchRecord match = new(session, Now, () => new MatchDeck(modules));
-        if (match.ToBoard().CurrentTurnPlayerId == players[0])
-        {
-            Place(match, 81, 2);
-        }
-
-        MatchBoardSnapshot before = match.ToBoard();
-        Assert.Equal(MatchPlacementResult.MasterPlanRequired, match.TryUseMasterPlan(
-            players[1], new MatchMasterPlan(new[] { 42, 48 }, 1, before.Revision), Now));
-        Place(match, 3, 1);
-        Place(match, 4, 1);
-        MatchBoardSnapshot towerReady = match.ToBoard();
-        Assert.Equal(MatchDismantleResult.Applied, match.TryDismantle(
-            players[1], new MatchDismantle(1, towerReady.Revision), Now));
-        Place(match, 91, 3);
-
-        return match;
-    }
-
-    private static void Place(MatchRecord match, int module, int position)
-    {
-        MatchBoardSnapshot board = match.ToBoard();
-        MatchPlacement placement = new(module, position, board.Revision);
-
-        Assert.Equal(MatchPlacementResult.Applied, match.TryPlace(board.CurrentTurnPlayerId, placement, Now));
-    }
-}
-````
-
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchPrivateHandTests.cs
-````csharp
-using Vertigo.Contracts.Internal;
-using Vertigo.Server.Game.Matches.Implementations;
-using Xunit;
-
-namespace Vertigo.Server.Game.Tests.Matches;
-
-public sealed class MatchPrivateHandTests
-{
-    private static (InMemoryMatchSessionStarter Game, Guid MatchId, Guid Host, Guid Guest) StartMatch()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        Guid host = Guid.NewGuid();
-        Guid guest = Guid.NewGuid();
-        MatchStartRequest request = new()
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            HostPlayerId = host,
-            PlayerIds = new[] { host, guest }
-        };
-        return (game, game.Start(request).MatchId, host, guest);
-    }
-
-    [Fact]
-    public void GetPrivateHand_OwnPlayer_ReturnsSixDistinctModules()
-    {
-        var state = StartMatch();
-
-        var hand = state.Game.GetPrivateHand(state.MatchId, state.Host);
-
-        Assert.NotNull(hand);
-        Assert.Equal(10, hand.Cards.Count);
-        Assert.Equal(10, hand.Cards.Distinct().Count());
-        Assert.All(hand.Cards, card => Assert.InRange(card, 1, 100));
-    }
-
-    [Fact]
-    public void GetPrivateHand_AnotherMatchNonmember_ReturnsNull()
-    {
-        var state = StartMatch();
-
-        var hand = state.Game.GetPrivateHand(state.MatchId, Guid.NewGuid());
-
-        Assert.Null(hand);
-    }
-
-    [Fact]
-    public void GetPrivateHand_TwoPlayers_DoNotShareModules()
-    {
-        var state = StartMatch();
-
-        var first = state.Game.GetPrivateHand(state.MatchId, state.Host);
-        var second = state.Game.GetPrivateHand(state.MatchId, state.Guest);
-
-        Assert.NotNull(first);
-        Assert.NotNull(second);
-        Assert.Empty(first.Cards.Intersect(second.Cards));
-    }
-
-    [Fact]
-    public void GetPrivateHand_MutatedResponse_DoesNotChangeServerHand()
-    {
-        var state = StartMatch();
-        var first = state.Game.GetPrivateHand(state.MatchId, state.Host);
-        Assert.NotNull(first);
-        int original = first.Cards[0];
-        first.Cards[0] = -1;
-        first.Cards.Clear();
-
-        var again = state.Game.GetPrivateHand(state.MatchId, state.Host);
-
-        Assert.NotNull(again);
-        Assert.Equal(10, again.Cards.Count);
-        Assert.Equal(original, again.Cards[0]);
-    }
-
-    [Fact]
-    public void Start_SameLobby_IsIdempotentAndKeepsHand()
-    {
-        InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        Guid host = Guid.NewGuid();
-        MatchStartRequest request = new()
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            HostPlayerId = host,
-            PlayerIds = new[] { host, Guid.NewGuid() }
-        };
-        Guid matchId = game.Start(request).MatchId;
-        var before = game.GetPrivateHand(matchId, host);
-        Guid repeated = game.Start(request).MatchId;
-
-        var after = game.GetPrivateHand(repeated, host);
-
-        Assert.Equal(matchId, repeated);
-        Assert.NotNull(before);
-        Assert.NotNull(after);
-        Assert.Equal(before.Cards, after.Cards);
-    }
-
-    [Fact]
-    public void GetBoard_AfterDeal_DoesNotExposePrivateCards()
-    {
-        var state = StartMatch();
-
-        var board = state.Game.GetBoard(state.MatchId);
-
-        Assert.NotNull(board);
-        Assert.Equal(4, board.Piles.Count);
-        Assert.All(board.Piles, pile => Assert.InRange(pile.TopCardNumber!.Value, 1, 100));
-    }
-
-    [Fact]
-    public void GetPrivateHand_AfterReconnect_KeepsSameHand()
-    {
-        var state = StartMatch();
-        var before = state.Game.GetPrivateHand(state.MatchId, state.Guest);
-        state.Game.TryDisconnect(state.MatchId, state.Guest);
-        state.Game.TryReconnect(state.MatchId, state.Guest);
-
-        var after = state.Game.GetPrivateHand(state.MatchId, state.Guest);
-
-        Assert.NotNull(before);
-        Assert.NotNull(after);
-        Assert.Equal(before.Cards, after.Cards);
-    }
-}
-````
-
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchScoringTests.cs
-````csharp
-using Vertigo.Contracts.Models;
-using Vertigo.Server.Game.Matches.Models;
-using Xunit;
-
-namespace Vertigo.Server.Game.Tests.Matches;
-
-public sealed class MatchScoringTests
-{
-    [Fact]
-    public void ToRoundSummaries_MultipleRounds_ReportsBonusAndRunningTotalsWithoutSharingState()
-    {
-        MatchScoring scoring = new();
-        Guid first = Guid.NewGuid();
-        Guid second = Guid.NewGuid();
-        scoring.AddRound(new Dictionary<Guid, int> { [first] = 5, [second] = 5 }, first);
-        scoring.AddRound(new Dictionary<Guid, int> { [first] = 2, [second] = 0 }, null);
-
-        List<MatchRoundSummary> summaries = scoring.ToRoundSummaries();
-
-        Assert.Equal(new[] { 1, 2 }, summaries.Select(round => round.RoundNumber));
-        Assert.Equal(first, summaries[0].ClosedByPlayerId);
-        Assert.Null(summaries[1].ClosedByPlayerId);
-        MatchRoundPlayerScore firstRound = summaries[0].Players.Single(score => score.PlayerId == first);
-        MatchRoundPlayerScore secondRound = summaries[1].Players.Single(score => score.PlayerId == first);
-        MatchRoundPlayerScore otherScore = summaries[1].Players.Single(score => score.PlayerId == second);
-        Assert.Equal((5, 10, 15), (firstRound.FloorsBuilt, firstRound.BonusFloors, firstRound.TotalFloors));
-        Assert.Equal((2, 10, 27), (secondRound.FloorsBuilt, secondRound.BonusFloors, secondRound.TotalFloors));
-        Assert.Equal((0, 0, 15), (otherScore.FloorsBuilt, otherScore.BonusFloors, otherScore.TotalFloors));
-
-        firstRound.TotalFloors = 999;
-        summaries[1].Players.Clear();
-        List<MatchRoundSummary> refreshed = scoring.ToRoundSummaries();
-        Assert.Equal(15, refreshed[0].Players.Single(score => score.PlayerId == first).TotalFloors);
-        Assert.Equal(2, refreshed[1].Players.Count);
-        Assert.Equal(27, scoring.GetGlobalFloors(first));
-    }
-
-    [Fact]
-    public void AddRound_TiedTallestPlayers_AwardsBothBonusesAndAllowsSharedWin()
-    {
-        MatchScoring scoring = new();
-        Guid first = Guid.NewGuid();
-        Guid second = Guid.NewGuid();
-        Guid third = Guid.NewGuid();
-
-        scoring.AddRound(new Dictionary<Guid, int> { [first] = 5, [second] = 5, [third] = 3 }, null);
-
-        Assert.Equal(15, scoring.GetGlobalFloors(first));
-        Assert.Equal(15, scoring.GetGlobalFloors(second));
-        Assert.Equal(3, scoring.GetGlobalFloors(third));
-        Assert.Equal(new[] { first, second }, scoring.GetWinners(new[] { first, second, third }));
-    }
-
-    [Fact]
-    public void GetWinners_TiedGlobalScores_PrefersRoundClosuresBeforeConstructionHeight()
-    {
-        MatchScoring scoring = new();
-        Guid first = Guid.NewGuid();
-        Guid second = Guid.NewGuid();
-        scoring.AddRound(new Dictionary<Guid, int> { [first] = 8, [second] = 1 }, null);
-        scoring.AddRound(new Dictionary<Guid, int> { [first] = 0, [second] = 7 }, second);
-
-        Assert.Equal(scoring.GetGlobalFloors(first), scoring.GetGlobalFloors(second));
-        Assert.Equal(second, Assert.Single(scoring.GetWinners(new[] { first, second })));
-    }
-
-    [Fact]
-    public void GetWinners_TiedGlobalScoresAndClosures_PrefersHighestPersonalTower()
-    {
-        MatchScoring scoring = new();
-        Guid first = Guid.NewGuid();
-        Guid second = Guid.NewGuid();
-        scoring.AddRound(new Dictionary<Guid, int> { [first] = 8, [second] = 1 }, first);
-        scoring.AddRound(new Dictionary<Guid, int> { [first] = 0, [second] = 7 }, second);
-        scoring.AddRound(new Dictionary<Guid, int> { [first] = 0, [second] = 0 }, null);
-
-        Assert.Equal(18, scoring.GetGlobalFloors(first));
-        Assert.Equal(18, scoring.GetGlobalFloors(second));
-        Assert.Equal(first, Assert.Single(scoring.GetWinners(new[] { first, second })));
     }
 }
 ````
@@ -14639,6 +20130,135 @@ public sealed class GuestSessionTests
         {
             return 0;
         }
+    }
+}
+````
+
+## File: tests/Vertigo.Server.Matchmaking.Tests/Chat/ChatServiceTests.cs
+````csharp
+using CoreWCF;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Internal;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.Matchmaking.Chat.Services;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Models;
+
+namespace Vertigo.Server.Matchmaking.Tests.Chat;
+
+public sealed class ChatServiceTests
+{
+    [Theory]
+    [InlineData(30, true)]
+    [InlineData(31, false)]
+    public void SendMatchMessage_ValidatesLengthBeforePublishing(int length, bool accepted)
+    {
+        RecordingLobbyDirectory directory = new();
+        StubSessionResolver sessions = new();
+        ChatService service = CreateService(directory, sessions);
+        MatchChatRequest request = new()
+        {
+            LobbyCode = "ABC234", MatchId = Guid.NewGuid(), SessionToken = "session", Text = new string('a', length)
+        };
+
+        if (accepted)
+        {
+            Assert.True(service.SendMatchMessage(request));
+            LobbyChatMessage message = Assert.IsType<LobbyChatMessage>(directory.Message);
+            Assert.Equal(request.MatchId, message.MatchId);
+            Assert.Equal(request.Text, message.Text);
+            Assert.Equal(sessions.Identity.PlayerId, message.SenderId);
+        }
+        else
+        {
+            var fault = Assert.Throws<FaultException<ServiceFault>>(() => service.SendMatchMessage(request));
+            Assert.Equal(ServiceErrorCodes.InvalidData, fault.Detail.ErrorCode);
+            Assert.Null(directory.Message);
+        }
+    }
+
+    [Fact]
+    public void SendMessage_WaitingRoomEnforcesThirtyCharacterLimitAndDoesNotSetMatchId()
+    {
+        RecordingLobbyDirectory directory = new();
+        ChatService service = CreateService(directory, new StubSessionResolver());
+        string text = new('a', 30);
+
+        Assert.True(service.SendMessage("ABC234", text, "session"));
+        LobbyChatMessage message = Assert.IsType<LobbyChatMessage>(directory.Message);
+        Assert.Equal(text, message.Text);
+        Assert.Null(message.MatchId);
+
+        FaultException<ServiceFault> fault =
+            Assert.Throws<FaultException<ServiceFault>>(() => service.SendMessage("ABC234", text + "a", "session"));
+        Assert.Equal(ServiceErrorCodes.InvalidData, fault.Detail.ErrorCode);
+        Assert.Same(message, directory.Message);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void BlockedLanguage_IsRejectedWithoutPublishing(bool inMatch)
+    {
+        RecordingLobbyDirectory directory = new();
+        ChatService service = CreateService(directory, new StubSessionResolver());
+
+        FaultException<ServiceFault> fault =
+            Assert.Throws<FaultException<ServiceFault>>(() => Send(inMatch, service, "¡PÉNDEJ0!"));
+
+        Assert.Equal(ServiceErrorCodes.ChatLanguageBlocked, fault.Detail.ErrorCode);
+        Assert.Equal(ServiceMessageKeys.ChatLanguageBlocked, fault.Detail.MessageKey);
+        Assert.Null(directory.Message);
+
+        Assert.True(Send(inMatch, service, "Bien jugado, diputado."));
+        Assert.Equal("Bien jugado, diputado.", directory.Message!.Text);
+    }
+
+    private static bool Send(bool inMatch, ChatService service, string text)
+    {
+        return inMatch ? service.SendMatchMessage(new MatchChatRequest
+        {
+            LobbyCode = "ABC234", MatchId = Guid.NewGuid(), SessionToken = "session", Text = text
+        }) : service.SendMessage("ABC234", text, "session");
+    }
+
+    private static ChatService CreateService(RecordingLobbyDirectory directory, StubSessionResolver sessions)
+    {
+        ChatServiceDependencies dependencies = new(sessions, TimeProvider.System, new ChatLanguageFilter());
+        return new ChatService(directory, dependencies);
+    }
+
+    private sealed class StubSessionResolver : ISessionIdentityResolver
+    {
+        public SessionIdentity Identity { get; } = new(Guid.NewGuid(), "Ana", true);
+
+        public SessionIdentity? Resolve(string token) => throw new NotSupportedException();
+
+        public SessionIdentity Require(string token) => Identity;
+
+        public SessionIdentity RequireRegistered(string token) => throw new NotSupportedException();
+    }
+
+    private sealed class RecordingLobbyDirectory : ILobbyDirectory
+    {
+        public LobbyChatMessage? Message { get; private set; }
+
+        public bool PublishChatMessage(LobbyChatMessage message)
+        {
+            Message = message;
+            return true;
+        }
+
+        public LobbyOverview? FindLobby(string lobbyCode) => throw new NotSupportedException();
+
+        public bool IsInAnyLobby(Guid playerId) => throw new NotSupportedException();
+
+        public bool RegisterInvitation(string lobbyCode, Guid targetPlayerId, Guid senderPlayerId) =>
+            throw new NotSupportedException();
+
+        public bool CancelInvitation(string lobbyCode, Guid targetPlayerId) => throw new NotSupportedException();
+
+        public List<LobbyOverview> FindLobbiesInviting(Guid playerId) => throw new NotSupportedException();
     }
 }
 ````
@@ -14966,6 +20586,210 @@ public sealed record PendingLobbyEvent
 }
 ````
 
+## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchCardRow.cs
+````csharp
+using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace Vertigo.Client.UI.ViewModels.Presentation;
+
+public sealed class MatchCardRow : ObservableObject
+{
+    private int? _planOrder;
+
+    public int? CardNumber { get; init; }
+    public required string DisplayValue { get; init; }
+    public bool IsWildcard { get; init; }
+
+    public int? PlanOrder
+    {
+        get => _planOrder;
+        internal set
+        {
+            if (SetProperty(ref _planOrder, value))
+            {
+                OnPropertyChanged(nameof(IsInMasterPlan));
+            }
+        }
+    }
+
+    public bool IsInMasterPlan => PlanOrder.HasValue;
+}
+````
+
+## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchChatRow.cs
+````csharp
+using System;
+using System.Globalization;
+
+namespace Vertigo.Client.UI.ViewModels.Presentation;
+
+public sealed class MatchChatRow
+{
+    public required string Sender { get; init; }
+    public required string Text { get; init; }
+    public DateTime SentAt { get; init; }
+
+    public string LocalTimeText => FormatTime(SentAt, TimeZoneInfo.Local);
+
+    internal static string FormatTime(DateTime sentAt, TimeZoneInfo timeZone)
+    {
+        if (sentAt == default)
+        {
+            return string.Empty;
+        }
+        
+        DateTime utc = sentAt.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(sentAt, DateTimeKind.Utc)
+            : sentAt.ToUniversalTime();
+        return TimeZoneInfo.ConvertTimeFromUtc(utc, timeZone).ToString("HH:mm", CultureInfo.InvariantCulture);
+    }
+}
+````
+
+## File: src/Client/Vertigo.Client.UI/ViewModels/Presentation/MatchPileRow.cs
+````csharp
+namespace Vertigo.Client.UI.ViewModels.Presentation;
+
+public sealed class MatchPileRow
+{
+    public int Position { get; init; }
+    public int? TopCardNumber { get; init; }
+    public required string Label { get; init; }
+    public string TopCardText { get; init; } = string.Empty;
+    public int Count { get; init; }
+    public bool IsEmpty => !TopCardNumber.HasValue;
+}
+````
+
+## File: src/Client/Vertigo.Client.UI/ViewModels/Social/BlockedPlayersViewModel.cs
+````csharp
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Vertigo.Client.Core.Sessions;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.Input;
+using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Client.Networking.Results;
+using Vertigo.Client.UI.Utilities.Localization.Interfaces;
+using Vertigo.Client.UI.ViewModels.Utilities;
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Client.UI.ViewModels.Social;
+
+public sealed class BlockedPlayersViewModel : SocialViewModelBase
+{
+    private readonly IBlockedPlayerClient _client;
+    private Guid _selectedPlayerId;
+
+    public BlockedPlayersViewModel(IBlockedPlayerClient client, SocialOperation operation, ITextLocalizer text)
+        : base(operation, text)
+    {
+        _client = client;
+        RefreshCommand = new AsyncRelayCommand(RefreshAsync);
+        BlockCommand = new AsyncRelayCommand(BlockAsync);
+        UnblockCommand = new AsyncRelayCommand(UnblockAsync);
+    }
+
+    public ObservableCollection<BlockedPlayerSummary> BlockedPlayers { get; } = new();
+    public Guid SelectedPlayerId { get => _selectedPlayerId; set => SetProperty(ref _selectedPlayerId, value); }
+    public IAsyncRelayCommand RefreshCommand { get; }
+    public IAsyncRelayCommand BlockCommand { get; }
+    public IAsyncRelayCommand UnblockCommand { get; }
+
+    public async Task RefreshAsync()
+    {
+        if (IsBusy) return;
+        SessionSnapshot? session = Operation.GetRegisteredSession();
+        if (session is null)
+        {
+            return;
+        }
+        string token = session.Token;
+        IsBusy = true;
+        try
+        {
+            ClientResult<List<BlockedPlayerSummary>> result = await Task.Run(() => _client.GetBlockedPlayers(token));
+            if (!Operation.Check(result, session)) return;
+            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.BlockFailed"); return; }
+            BlockedPlayers.Clear();
+            foreach (BlockedPlayerSummary player in result.Value) BlockedPlayers.Add(player);
+            ClearError();
+        }
+        catch (Exception)
+        {
+            if (Operation.IsCurrent(session))
+            {
+                ErrorMessage = Text.Get("Social.BlockFailed");
+            }
+        }
+        finally { IsBusy = false; }
+    }
+
+    private Task BlockAsync() => ChangeAsync(true);
+    private Task UnblockAsync() => ChangeAsync(false);
+
+    private async Task ChangeAsync(bool block)
+    {
+        if (IsBusy || SelectedPlayerId == Guid.Empty)
+        {
+            return;
+        }
+        SessionSnapshot? session = Operation.GetRegisteredSession();
+        if (session is null)
+        {
+            return;
+        }
+        string token = session.Token;
+        IsBusy = true;
+        try
+        {
+            ClientResult<bool> result = await Task.Run(() => block
+                ? _client.BlockPlayer(SelectedPlayerId, token)
+                : _client.UnblockPlayer(SelectedPlayerId, token));
+            if (!CanApplyBlockChange(result, session))
+            {
+                return;
+            }
+        }
+        catch (Exception)
+        {
+            if (Operation.IsCurrent(session))
+            {
+                ErrorMessage = Text.Get("Social.BlockFailed");
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+        if (Operation.IsCurrent(session))
+        {
+            await RefreshAsync();
+        }
+    }
+
+    private bool CanApplyBlockChange(ClientResult<bool> result, SessionSnapshot session)
+    {
+        bool canApply = Operation.Check(result, session);
+        if (canApply && (!result.IsSuccess || !result.Value))
+        {
+            ErrorMessage = Operation.Error(result, "Social.BlockFailed");
+            canApply = false;
+        }
+
+        return canApply;
+    }
+
+    public void Reset()
+    {
+        SelectedPlayerId = Guid.Empty;
+        BlockedPlayers.Clear();
+        ClearError();
+    }
+}
+````
+
 ## File: src/Client/Vertigo.Client.UI/ViewModels/Social/FriendsViewModel.cs
 ````csharp
 using System;
@@ -15223,6 +21047,245 @@ public sealed class FriendsViewModel : SocialViewModelBase
 }
 ````
 
+## File: src/Client/Vertigo.Client.UI/ViewModels/Social/LobbyInvitationsViewModel.cs
+````csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Vertigo.Client.Core.Sessions;
+using Vertigo.Client.UI.ViewModels.Dependencies;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.Input;
+using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Client.Networking.Results;
+using Vertigo.Client.UI.Utilities.Localization.Interfaces;
+using Vertigo.Client.UI.ViewModels.Utilities;
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Client.UI.ViewModels.Social;
+
+public sealed class LobbyInvitationsViewModel : SocialViewModelBase
+{
+    private readonly ILobbyInvitationClient _client;
+    private readonly LobbyViewModel _lobby;
+    private string _lobbyCode = string.Empty;
+    private string _declinedCode = string.Empty;
+    private string _acceptedCode = string.Empty;
+    private Guid _targetPlayerId;
+
+    public LobbyInvitationsViewModel(ILobbyInvitationClient client, SocialOperation operation,
+        LobbyInvitationContext context) : base(operation, context.Text)
+    {
+        _client = client;
+        _lobby = context.Lobby;
+        RefreshCommand = new AsyncRelayCommand(RefreshAsync);
+        GetInvitableCommand = new AsyncRelayCommand(GetInvitableAsync);
+        InviteCommand = new AsyncRelayCommand(InviteAsync);
+        DeclineCommand = new AsyncRelayCommand(DeclineAsync);
+        AcceptCommand = new AsyncRelayCommand(AcceptAsync);
+    }
+
+    public ObservableCollection<LobbyInvitationEntry> PendingInvitations { get; } = new();
+    public ObservableCollection<FriendEntry> InvitableFriends { get; } = new();
+    public string LobbyCode { get => _lobbyCode; set => SetProperty(ref _lobbyCode, value); }
+    public string DeclinedCode { get => _declinedCode; set => SetProperty(ref _declinedCode, value); }
+    public string AcceptedCode { get => _acceptedCode; set => SetProperty(ref _acceptedCode, value); }
+    public Guid TargetPlayerId { get => _targetPlayerId; set => SetProperty(ref _targetPlayerId, value); }
+    public IAsyncRelayCommand RefreshCommand { get; }
+    public IAsyncRelayCommand GetInvitableCommand { get; }
+    public IAsyncRelayCommand InviteCommand { get; }
+    public IAsyncRelayCommand DeclineCommand { get; }
+    public IAsyncRelayCommand AcceptCommand { get; }
+
+    public async Task RefreshAsync()
+    {
+        if (IsBusy) return;
+        SessionSnapshot? session = Operation.GetRegisteredSession();
+        if (session is null)
+        {
+            return;
+        }
+        string token = session.Token;
+        IsBusy = true;
+        try
+        {
+            ClientResult<List<LobbyInvitationEntry>> result = await Task.Run(() => _client.GetPendingLobbyInvitations(token));
+            if (!Operation.Check(result, session)) return;
+            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
+            PendingInvitations.Clear();
+            foreach (LobbyInvitationEntry invitation in result.Value) PendingInvitations.Add(invitation);
+            ClearError();
+        }
+        catch (Exception)
+        {
+            if (Operation.IsCurrent(session))
+            {
+                ErrorMessage = Text.Get("Social.InvitationFailed");
+            }
+        }
+        finally { IsBusy = false; }
+    }
+
+    private async Task GetInvitableAsync()
+    {
+        if (IsBusy || string.IsNullOrWhiteSpace(LobbyCode)) return;
+        SessionSnapshot? session = Operation.GetRegisteredSession();
+        if (session is null)
+        {
+            return;
+        }
+        string token = session.Token;
+        IsBusy = true;
+        try
+        {
+            ClientResult<List<FriendEntry>> result = await Task.Run(() => _client.GetInvitableFriends(LobbyCode.Trim(), token));
+            if (!Operation.Check(result, session)) return;
+            if (!result.IsSuccess || result.Value is null) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
+            InvitableFriends.Clear();
+            foreach (FriendEntry friend in result.Value) InvitableFriends.Add(friend);
+            ClearError();
+        }
+        catch (Exception)
+        {
+            if (Operation.IsCurrent(session))
+            {
+                ErrorMessage = Text.Get("Social.InvitationFailed");
+            }
+        }
+        finally { IsBusy = false; }
+    }
+
+    private async Task InviteAsync()
+    {
+        if (IsBusy || TargetPlayerId == Guid.Empty || string.IsNullOrWhiteSpace(LobbyCode)) return;
+        SessionSnapshot? session = Operation.GetRegisteredSession();
+        if (session is null)
+        {
+            return;
+        }
+        string token = session.Token;
+        IsBusy = true;
+        try
+        {
+            List<Guid> targets = new() { TargetPlayerId };
+            ClientResult<List<Guid>> result = await Task.Run(() => _client.SendLobbyInvitations(LobbyCode.Trim(), targets, token));
+            if (!Operation.Check(result, session)) return;
+            ErrorMessage = result.IsSuccess ? string.Empty : Operation.Error(result, "Social.InvitationFailed");
+        }
+        catch (Exception)
+        {
+            if (Operation.IsCurrent(session))
+            {
+                ErrorMessage = Text.Get("Social.InvitationFailed");
+            }
+        }
+        finally { IsBusy = false; }
+    }
+
+    // Joining the lobby is the server-side acceptance of an invitation.
+    // The server checks the invitation, room capacity and session before admitting the player.
+    public async Task<bool> AcceptInvitationAsync(string code)
+    {
+        bool accepted = false;
+        SessionSnapshot? session = null;
+        string normalizedCode = code?.Trim() ?? string.Empty;
+
+        if (!IsBusy && !string.IsNullOrWhiteSpace(normalizedCode))
+        {
+            session = Operation.GetRegisteredSession();
+            if (session is not null)
+            {
+                bool isPending = PendingInvitations.Any(invitation =>
+                    string.Equals(invitation.LobbyCode, normalizedCode, StringComparison.OrdinalIgnoreCase));
+
+                if (!isPending)
+                {
+                    ErrorMessage = Text.Get("Social.InvitationUnavailable");
+                }
+                else
+                {
+                    IsBusy = true;
+                    ClearError();
+                    try
+                    {
+                        if (Operation.IsCurrent(session))
+                        {
+                            bool joined = await _lobby.JoinAsync(normalizedCode);
+                            if (Operation.IsCurrent(session))
+                            {
+                                if (joined)
+                                {
+                                    LobbyInvitationEntry? acceptedInvitation = PendingInvitations.FirstOrDefault(invitation =>
+                                        string.Equals(invitation.LobbyCode, normalizedCode, StringComparison.OrdinalIgnoreCase));
+                                    if (acceptedInvitation is not null)
+                                    {
+                                        PendingInvitations.Remove(acceptedInvitation);
+                                    }
+                                    accepted = true;
+                                }
+                                else
+                                {
+                                    ErrorMessage = _lobby.ErrorMessage;
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        IsBusy = false;
+                    }
+                }
+            }
+        }
+
+        return accepted;
+    }
+
+    private async Task AcceptAsync()
+    {
+        await AcceptInvitationAsync(AcceptedCode);
+    }
+
+    private async Task DeclineAsync()
+    {
+        if (IsBusy || string.IsNullOrWhiteSpace(DeclinedCode)) return;
+        SessionSnapshot? session = Operation.GetRegisteredSession();
+        if (session is null)
+        {
+            return;
+        }
+        string token = session.Token;
+        IsBusy = true;
+        try
+        {
+            ClientResult<bool> result = await Task.Run(() => _client.DeclineLobbyInvitation(DeclinedCode.Trim(), token));
+            if (!Operation.Check(result, session)) return;
+            if (!result.IsSuccess || !result.Value) { ErrorMessage = Operation.Error(result, "Social.InvitationFailed"); return; }
+        }
+        catch (Exception)
+        {
+            if (Operation.IsCurrent(session))
+            {
+                ErrorMessage = Text.Get("Social.InvitationFailed");
+            }
+        }
+        finally { IsBusy = false; }
+        if (Operation.IsCurrent(session))
+        {
+            await RefreshAsync();
+        }
+    }
+
+    public void Reset()
+    {
+        PendingInvitations.Clear(); InvitableFriends.Clear();
+        LobbyCode = string.Empty; DeclinedCode = string.Empty; AcceptedCode = string.Empty;
+        TargetPlayerId = Guid.Empty; ClearError();
+    }
+}
+````
+
 ## File: src/Client/Vertigo.Client.UI/ViewModels/HomeViewModel.cs
 ````csharp
 using System;
@@ -15423,564 +21486,6 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
         }
         catch (Exception exception) { ErrorMessage = _errors.FromException(exception, "Home.LogoutFailed"); }
         finally { IsBusy = false; }
-    }
-}
-````
-
-## File: src/Client/Vertigo.Client.UI/ViewModels/LobbyViewModel.cs
-````csharp
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using Vertigo.Client.UI.ViewModels.Presentation;
-using System.ServiceModel;
-using Avalonia.Threading;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Vertigo.Client.Core.Navigation;
-using Vertigo.Client.Core.Sessions;
-using Vertigo.Client.Networking.Interfaces;
-using Vertigo.Contracts.Models;
-using Vertigo.Client.UI.ViewModels.Dependencies;
-using Vertigo.Client.UI.ViewModels.Lifecycle;
-using Vertigo.Client.UI.Utilities.Localization.Interfaces;
-using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
-
-namespace Vertigo.Client.UI.ViewModels;
-
-public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationAware
-{
-    private readonly ILobbyClient _lobbyClient;
-    private readonly IChatClient _chatClient;
-    private readonly PlayerSession _playerSession;
-    private readonly INavigator _navigation;
-    private readonly IClientErrorText _errors;
-    private readonly ISessionGuard _coordinator;
-    private readonly ITextLocalizer _text;
-    private string _lobbyCode = string.Empty;
-    private string _messageText = string.Empty;
-    private string _errorMessage = string.Empty;
-    private bool _isBusy;
-    private Guid _hostPlayerId;
-    private bool _isMatchStarted;
-    private bool _disposed;
-    private long _lobbyGeneration;
-    private readonly LobbyPreparationRevision _preparationRevision = new();
-
-    public LobbyViewModel(ILobbyClient lobbyClient, IChatClient chatClient, LobbyContext context)
-    {
-        _lobbyClient = lobbyClient;
-        _chatClient = chatClient;
-        _playerSession = context.PlayerSession;
-        _navigation = context.Ui.Navigation;
-        _errors = context.Ui.Services.Errors;
-        _coordinator = context.Ui.Services.SessionGuard;
-        _text = context.Ui.Services.Text;
-        Match = context.Match;
-        Members.CollectionChanged += (_, _) => RefreshMemberRows();
-        _lobbyClient.PlayerJoined += OnPlayerJoined;
-        _lobbyClient.PlayerLeft += OnPlayerLeft;
-        _lobbyClient.MessageReceived += OnMessageReceived;
-        _lobbyClient.PreparationChanged += OnPreparationChanged;
-        SendMessageCommand = new AsyncRelayCommand(SendMessageAsync);
-        LeaveCommand = new AsyncRelayCommand(LeaveAsync);
-        ToggleReadyCommand = new AsyncRelayCommand(ToggleReadyAsync);
-        StartMatchCommand = new AsyncRelayCommand(StartMatchAsync);
-    }
-
-    public MatchViewModel Match { get; }
-
-    public ObservableCollection<LobbyMember> Members { get; } = new();
-    public ObservableCollection<LobbyMemberRow> MemberRows { get; } = new();
-    public ObservableCollection<LobbyChatMessage> Messages { get; } = new();
-    public ObservableCollection<Guid> ReadyPlayerIds { get; } = new();
-
-    public Guid HostPlayerId
-    {
-        get => _hostPlayerId;
-        private set => SetProperty(ref _hostPlayerId, value);
-    }
-
-    public bool IsMatchStarted
-    {
-        get => _isMatchStarted;
-        private set
-        {
-            if (SetProperty(ref _isMatchStarted, value))
-            {
-                OnPropertyChanged(nameof(MatchStatusText));
-                OnPropertyChanged(nameof(CanPrepare));
-            }
-        }
-    }
-
-    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
-    public string HostUsername => Members.FirstOrDefault(m => m.PlayerId == HostPlayerId)?.Username ?? string.Empty;
-    public bool IsHost => _playerSession.GetActiveSession()?.PlayerId == HostPlayerId;
-    public bool IsReady => _playerSession.GetActiveSession() is { } active && ReadyPlayerIds.Contains(active.PlayerId);
-
-    public string LobbyCode
-    {
-        get => _lobbyCode;
-        private set => SetProperty(ref _lobbyCode, value);
-    }
-
-    public string MessageText
-    {
-        get => _messageText;
-        set => SetProperty(ref _messageText, value);
-    }
-
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        private set
-        {
-            if (SetProperty(ref _errorMessage, value))
-            {
-                OnPropertyChanged(nameof(HasError));
-            }
-        }
-    }
-
-    public bool IsBusy
-    {
-        get => _isBusy;
-        private set
-        {
-            if (SetProperty(ref _isBusy, value))
-            {
-                OnPropertyChanged(nameof(CanPrepare));
-            }
-        }
-    }
-
-    public bool CanPrepare => !IsBusy && !IsMatchStarted;
-
-    public string RoomTitleText => _text.Get("Room.Title");
-    public string CodeTitleText => _text.Get("Room.Code");
-    public string LeaveText => _text.Get("Room.Leave");
-    public string MembersTitleText => _text.Get("Room.Members");
-    public string MembersDescriptionText => _text.Get("Room.MembersDescription");
-    public string PreparationTitleText => _text.Get("Room.Preparation");
-    public string PreparationHintText => _text.Get("Room.PreparationHint");
-    public string HostLabelText => _text.Get("Room.Host");
-    public string MatchStatusText => _text.Get(IsMatchStarted ? "Room.InGame" : "Room.Waiting");
-    public string ReadyActionText => _text.Get(IsReady ? "Room.NotReadyAction" : "Room.ReadyAction");
-    public string StartText => _text.Get("Room.Start");
-    public string ChatTitleText => _text.Get("Room.Chat");
-    public string MessagePlaceholderText => _text.Get("Room.MessagePlaceholder");
-    public string SendText => _text.Get("Room.Send");
-    public string ErrorHeadingText => _text.Get("Room.ErrorHeading");
-
-    public IAsyncRelayCommand SendMessageCommand { get; }
-    public IAsyncRelayCommand LeaveCommand { get; }
-    public IAsyncRelayCommand ToggleReadyCommand { get; }
-    public IAsyncRelayCommand StartMatchCommand { get; }
-
-    public async Task<bool> CreateAsync(bool isPublic, int maxPlayers)
-    {
-        if (IsBusy || !string.IsNullOrEmpty(LobbyCode)) return false;
-        SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null) { _coordinator.Invalidate(); return false; }
-
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
-        {
-            string code = await Task.Run(() => _lobbyClient.CreateLobby(isPublic, maxPlayers, session.Token));
-            if (!IsCurrentSession(session))
-            {
-                return false;
-            }
-            Members.Clear();
-            Messages.Clear();
-            Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
-                IsGuest = session.IsGuest });
-            LobbyCode = code;
-            HostPlayerId = session.PlayerId;
-            ReadyPlayerIds.Clear();
-            _preparationRevision.Reset();
-            IsMatchStarted = false;
-            _navigation.NavigateTo(NavigationPage.Lobby);
-            _lobbyClient.ReplayPendingEvents();
-            await RefreshPreparationAsync(session);
-            return true;
-        }
-        catch (Exception exception)
-        {
-            return HandleServiceFailure(exception, session, "Lobby.CreateFailed");
-        }
-        finally { IsBusy = false; }
-    }
-
-    public async Task<bool> JoinAsync(string code)
-    {
-        if (IsBusy || !string.IsNullOrEmpty(LobbyCode)) return false;
-        SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null) { _coordinator.Invalidate(); return false; }
-        if (string.IsNullOrWhiteSpace(code)) return Fail("Lobby.CodeRequired");
-
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
-        {
-            LobbyAdmission admission = await Task.Run(() => _lobbyClient.JoinLobby(code.Trim(), session.Token));
-            if (!IsCurrentSession(session))
-            {
-                return false;
-            }
-            Members.Clear();
-            Messages.Clear();
-            foreach (LobbyMember member in admission.ExistingMembers) Members.Add(member);
-            Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
-                IsGuest = session.IsGuest });
-            LobbyCode = admission.LobbyCode;
-            HostPlayerId = admission.HostPlayerId;
-            ReadyPlayerIds.Clear();
-            _preparationRevision.Reset();
-            IsMatchStarted = false;
-            _navigation.NavigateTo(NavigationPage.Lobby);
-            _lobbyClient.ReplayPendingEvents();
-            await RefreshPreparationAsync(session);
-            return true;
-        }
-        catch (Exception exception)
-        {
-            return HandleServiceFailure(exception, session, "Lobby.JoinFailed");
-        }
-        finally { IsBusy = false; }
-    }
-
-    private async Task RefreshPreparationAsync(SessionSnapshot session)
-    {
-        string code = LobbyCode;
-        try
-        {
-            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.GetPreparation(code, session.Token));
-            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
-            {
-                ApplyPreparation(preparation);
-            }
-        }
-        catch (Exception exception)
-        {
-            // Creation/join already succeeded; do not report a failed admission.
-            if (_errors.IsUnauthorized(exception))
-            {
-                _coordinator.Invalidate(session);
-            }
-        }
-    }
-
-    private async Task ToggleReadyAsync()
-    {
-        if (IsBusy || string.IsNullOrEmpty(LobbyCode) || IsMatchStarted)
-        {
-            return;
-        }
-        SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null)
-        {
-            _coordinator.Invalidate();
-            return;
-        }
-        IsBusy = true;
-        string code = LobbyCode;
-        bool ready = !IsReady;
-        try
-        {
-            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.SetReady(code, ready, session.Token));
-            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
-            {
-                ApplyPreparation(preparation);
-            }
-        }
-        catch (Exception exception)
-        {
-            HandleServiceFailure(exception, session, "Lobby.ReadyFailed");
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    private async Task StartMatchAsync()
-    {
-        if (IsBusy || !IsHost || IsMatchStarted || string.IsNullOrEmpty(LobbyCode))
-        {
-            return;
-        }
-        SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null)
-        {
-            _coordinator.Invalidate();
-            return;
-        }
-        IsBusy = true;
-        string code = LobbyCode;
-        try
-        {
-            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.StartMatch(code, session.Token));
-            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
-            {
-                ApplyPreparation(preparation);
-            }
-        }
-        catch (Exception exception)
-        {
-            HandleServiceFailure(exception, session, "Lobby.StartFailed");
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    private void OnPreparationChanged(object? sender, LobbyPreparation preparation)
-    {
-        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
-        string eventLobby = LobbyCode;
-        long eventGeneration = _lobbyGeneration;
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (!_disposed && eventSession is not null && IsCurrentSession(eventSession)
-                && eventGeneration == _lobbyGeneration
-                && string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
-            {
-                ApplyPreparation(preparation);
-            }
-        });
-    }
-
-    private void ApplyPreparation(LobbyPreparation preparation)
-    {
-        if (!_preparationRevision.TryAdvance(preparation, LobbyCode))
-        {
-            return;
-        }
-        HostPlayerId = preparation.HostPlayerId;
-        IsMatchStarted = preparation.IsInGame;
-        ReadyPlayerIds.Clear();
-        foreach (Guid playerId in preparation.ReadyPlayerIds)
-        {
-            ReadyPlayerIds.Add(playerId);
-        }
-        RefreshMemberRows();
-        OnPropertyChanged(nameof(IsHost));
-        OnPropertyChanged(nameof(IsReady));
-        OnPropertyChanged(nameof(ReadyActionText));
-        if (MatchEntryRules.CanEnter(preparation, LobbyCode))
-        {
-            bool activated = Match.Activate(preparation.MatchId, LobbyCode);
-            if (activated)
-            {
-                _navigation.NavigateTo(NavigationPage.Match);
-            }
-        }
-    }
-
-    private async Task SendMessageAsync()
-    {
-        if (IsBusy || string.IsNullOrWhiteSpace(MessageText) || string.IsNullOrEmpty(LobbyCode)) return;
-        SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null) { _coordinator.Invalidate(); return; }
-        string text = MessageText.Trim();
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
-        {
-            var result = await Task.Run(() => _chatClient.SendMessage(LobbyCode, text, session.Token));
-            if (_errors.IsUnauthorized(result)) { _coordinator.Invalidate(session); return; }
-            if (!IsCurrentSession(session))
-            {
-                return;
-            }
-            if (result.IsSuccess && result.Value) MessageText = string.Empty;
-            else ErrorMessage = _errors.FromResult(result, "Lobby.MessageFailed");
-        }
-        catch (Exception exception) { HandleServiceFailure(exception, session, "Lobby.MessageFailed"); }
-        finally { IsBusy = false; }
-    }
-
-    private async Task LeaveAsync()
-    {
-        if (IsBusy || string.IsNullOrEmpty(LobbyCode)) return;
-        SessionSnapshot? session = _playerSession.GetActiveSession();
-        if (session is null) { _coordinator.Invalidate(); return; }
-        IsBusy = true;
-        ErrorMessage = string.Empty;
-        try
-        {
-            bool left = await Task.Run(() => _lobbyClient.LeaveLobby(LobbyCode, session.Token));
-            if (!IsCurrentSession(session))
-            {
-                return;
-            }
-            if (!left) { Fail("Lobby.LeaveFailed"); return; }
-            _lobbyClient.Disconnect();
-            ResetState();
-            _navigation.NavigateTo(NavigationPage.Home);
-        }
-        catch (Exception exception)
-        {
-            HandleServiceFailure(exception, session, "Lobby.LeaveFailed");
-        }
-        finally { IsBusy = false; }
-    }
-
-    private void OnPlayerJoined(object? sender, LobbyMember member)
-    {
-        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
-        string eventLobby = LobbyCode;
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (eventSession is null || !ReferenceEquals(_playerSession.GetActiveSession(), eventSession)
-                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-            if (_disposed || string.IsNullOrEmpty(LobbyCode)) return;
-            if (Members.All(existing => existing.PlayerId != member.PlayerId)) Members.Add(member);
-        });
-    }
-
-    private void OnPlayerLeft(object? sender, Guid playerId)
-    {
-        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
-        string eventLobby = LobbyCode;
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (eventSession is null || !ReferenceEquals(_playerSession.GetActiveSession(), eventSession)
-                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-            if (_disposed || string.IsNullOrEmpty(LobbyCode)) return;
-            LobbyMember? member = Members.FirstOrDefault(existing => existing.PlayerId == playerId);
-            if (member is not null) Members.Remove(member);
-        });
-    }
-
-    private void OnMessageReceived(object? sender, LobbyChatMessage message)
-    {
-        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
-        string eventLobby = LobbyCode;
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (eventSession is null || !ReferenceEquals(_playerSession.GetActiveSession(), eventSession)
-                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-            if (!_disposed && string.Equals(LobbyCode, message.LobbyCode, StringComparison.OrdinalIgnoreCase))
-                Messages.Add(message);
-        });
-    }
-
-    public void OnNavigatedTo()
-    {
-        RefreshRoomTexts();
-        if (!_coordinator.HasActiveSession()) return;
-        ErrorMessage = string.Empty;
-    }
-
-    public void OnNavigatedFrom()
-    {
-        // Keep the lobby connection only when moving back from a transient view.
-        if (_navigation.CurrentPage == NavigationPage.Access) ResetState();
-    }
-
-    public void ResetState()
-    {
-        _lobbyGeneration++;
-        _preparationRevision.Reset();
-        Match.Reset();
-        LobbyCode = string.Empty;
-        MessageText = string.Empty;
-        ErrorMessage = string.Empty;
-        Members.Clear();
-        Messages.Clear();
-        ReadyPlayerIds.Clear();
-        HostPlayerId = Guid.Empty;
-        IsMatchStarted = false;
-        RefreshMemberRows();
-        OnPropertyChanged(nameof(IsHost));
-        OnPropertyChanged(nameof(IsReady));
-    }
-
-    private bool IsCurrentSession(SessionSnapshot previous)
-    {
-        SessionSnapshot? current = _playerSession.GetActiveSession();
-        return ReferenceEquals(current, previous);
-    }
-
-    private bool HandleServiceFailure(Exception exception, SessionSnapshot session, string fallbackKey)
-    {
-        if (_errors.IsUnauthorized(exception) || !_coordinator.HasActiveSession())
-        {
-            _coordinator.Invalidate(session);
-            return false;
-        }
-
-        ErrorMessage = _errors.FromException(exception, fallbackKey);
-        return false;
-    }
-
-    private bool Fail(string key)
-    {
-        ErrorMessage = _text.Get(key);
-        return false;
-    }
-
-    private void RefreshMemberRows()
-    {
-        MemberRows.Clear();
-        foreach (LobbyMember member in Members)
-        {
-            bool host = member.PlayerId == HostPlayerId;
-            bool ready = ReadyPlayerIds.Contains(member.PlayerId);
-            MemberRows.Add(new LobbyMemberRow
-            {
-                Username = member.Username,
-                RoleText = _text.Get(host ? "Room.Host" : member.IsGuest ? "Room.Guest" : "Room.Player"),
-                ReadyText = _text.Get(ready ? "Room.Ready" : "Room.NotReady"),
-                IsReady = ready
-            });
-        }
-        OnPropertyChanged(nameof(HostUsername));
-    }
-
-    private void RefreshRoomTexts()
-    {
-        OnPropertyChanged(nameof(RoomTitleText));
-        OnPropertyChanged(nameof(CodeTitleText));
-        OnPropertyChanged(nameof(LeaveText));
-        OnPropertyChanged(nameof(MembersTitleText));
-        OnPropertyChanged(nameof(MembersDescriptionText));
-        OnPropertyChanged(nameof(PreparationTitleText));
-        OnPropertyChanged(nameof(PreparationHintText));
-        OnPropertyChanged(nameof(HostLabelText));
-        OnPropertyChanged(nameof(MatchStatusText));
-        OnPropertyChanged(nameof(ReadyActionText));
-        OnPropertyChanged(nameof(StartText));
-        OnPropertyChanged(nameof(ChatTitleText));
-        OnPropertyChanged(nameof(MessagePlaceholderText));
-        OnPropertyChanged(nameof(SendText));
-        OnPropertyChanged(nameof(ErrorHeadingText));
-        RefreshMemberRows();
-    }
-
-    public void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-        _lobbyClient.PlayerJoined -= OnPlayerJoined;
-        _lobbyClient.PlayerLeft -= OnPlayerLeft;
-        _lobbyClient.MessageReceived -= OnMessageReceived;
-        _lobbyClient.PreparationChanged -= OnPreparationChanged;
     }
 }
 ````
@@ -16488,6 +21993,105 @@ public interface IPlayerRepository
 }
 ````
 
+## File: src/Server/Vertigo.Server.Game/Matches/Models/MatchScoring.cs
+````csharp
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Server.Game.Matches.Models;
+
+internal sealed class MatchScoring
+{
+    private const int HighestTowerBonus = 10;
+    private readonly List<RoundScore> _rounds = new();
+
+    public void AddRound(IReadOnlyDictionary<Guid, int> floors, Guid? closedBy)
+    {
+        int highest = floors.Values.Max();
+        _rounds.Add(new RoundScore(new Dictionary<Guid, int>(floors), closedBy, highest));
+    }
+
+    public int GetGlobalFloors(Guid playerId)
+    {
+        return _rounds.Sum(round => round.Floors[playerId] + GetBonus(round, playerId));
+    }
+
+    public List<MatchRoundSummary> ToRoundSummaries()
+    {
+        List<MatchRoundSummary> summaries = new();
+        Dictionary<Guid, int> totals = new();
+
+        foreach (RoundScore round in _rounds)
+        {
+            MatchRoundSummary summary = new()
+            {
+                RoundNumber = summaries.Count + 1,
+                ClosedByPlayerId = round.ClosedBy
+            };
+            foreach ((Guid playerId, int floors) in round.Floors)
+            {
+                int bonus = GetBonus(round, playerId);
+                int total = totals.GetValueOrDefault(playerId) + floors + bonus;
+                totals[playerId] = total;
+                summary.Players.Add(new MatchRoundPlayerScore
+                {
+                    PlayerId = playerId,
+                    FloorsBuilt = floors,
+                    BonusFloors = bonus,
+                    TotalFloors = total
+                });
+            }
+
+            summaries.Add(summary);
+        }
+
+        return summaries;
+    }
+
+    public Guid[] GetWinners(IReadOnlyList<Guid> players)
+    {
+        return GetFinalPositions(players).Where(entry => entry.Value == 1).Select(entry => entry.Key).ToArray();
+    }
+
+    public Dictionary<Guid, int> GetFinalPositions(IReadOnlyList<Guid> players)
+    {
+        IEnumerable<(Guid PlayerId, (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) Rank)> standings =
+            players.Select(playerId => (PlayerId: playerId, Rank: GetRank(playerId)))
+                .OrderByDescending(entry => entry.Rank);
+        Dictionary<Guid, int> positions = new();
+        (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors)? previousRank = null;
+        int position = 0;
+        foreach ((Guid playerId, (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) rank) in standings)
+        {
+            if (rank != previousRank)
+            {
+                position = positions.Count + 1;
+                previousRank = rank;
+            }
+
+            positions.Add(playerId, position);
+        }
+
+        return positions;
+    }
+
+    private (int GlobalFloors, int RoundsClosed, int HighestPersonalFloors) GetRank(Guid playerId)
+    {
+        return (GetGlobalFloors(playerId), _rounds.Count(round => round.ClosedBy == playerId),
+            _rounds.Max(round => round.Floors[playerId]));
+    }
+
+    private static int GetBonus(RoundScore round, Guid playerId)
+    {
+        int floors = round.Floors[playerId];
+        int bonus = floors > 0 && floors == round.Highest ? HighestTowerBonus : 0;
+
+        return bonus;
+    }
+
+    private sealed record RoundScore(IReadOnlyDictionary<Guid, int> Floors, Guid? ClosedBy, int Highest);
+}
+````
+
 ## File: src/Server/Vertigo.Server.Game/Vertigo.Server.Game.csproj
 ````
 <Project Sdk="Microsoft.NET.Sdk">
@@ -16613,183 +22217,6 @@ public class LobbyInvitationService : ILobbyInvitationService
 }
 ````
 
-## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthenticationService.cs
-````csharp
-using CoreWCF;
-using Microsoft.Extensions.Logging;
-using Vertigo.Contracts.Faults;
-using Vertigo.Contracts.Interfaces;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.PlayerManagement.Authentication.Models;
-
-namespace Vertigo.Server.PlayerManagement.Authentication.Services;
-
-[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
-public class AuthenticationService : IAuthService
-{
-    private const string EventCategoryProperty = "EventCategory";
-    private const string SecurityCategory = "Security";
-    private const string AuthenticationSucceededResult = "Succeeded";
-    private const string AuthenticationFailedResult = "Failed";
-
-    private static readonly EventId AuthenticationFailedEvent = new(2001, "AuthenticationFailed");
-    private static readonly EventId AuthenticationSucceededEvent = new(2002, "AuthenticationSucceeded");
-
-    private readonly AuthService _authentication;
-    private readonly ILogger<AuthenticationService> _logger;
-
-    public AuthenticationService(AuthService authentication, ILogger<AuthenticationService> logger)
-    {
-        _authentication = authentication;
-        _logger = logger;
-    }
-
-    public UserSession Login(LoginCredentials credentials)
-    {
-        if (credentials is null || string.IsNullOrWhiteSpace(credentials.Username)
-            || string.IsNullOrWhiteSpace(credentials.Password))
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
-        }
-
-        AuthenticatedSession? session = _authentication.Login(credentials.Username, credentials.Password);
-        if (session is null)
-        {
-            LogAuthenticationResult(false, null);
-            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
-        }
-
-        LogAuthenticationResult(true, session.PlayerId);
-        return ConvertSession(session);
-    }
-
-    public UserSession ResumeSession(string token)
-    {
-        AuthenticatedSession? session = _authentication.ResumeSession(token);
-        if (session is null)
-        {
-            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
-        }
-
-        return ConvertSession(session);
-    }
-
-    public UserSession CreateGuestSession()
-    {
-        return ConvertSession(_authentication.CreateGuestSession());
-    }
-
-    public bool Logout(SessionLogout logout)
-    {
-        return logout is not null && _authentication.Logout(logout.SessionToken);
-    }
-
-    private void LogAuthenticationResult(bool isSucceeded, Guid? playerId)
-    {
-        EventId eventId = isSucceeded ? AuthenticationSucceededEvent : AuthenticationFailedEvent;
-        string result = isSucceeded ? AuthenticationSucceededResult : AuthenticationFailedResult;
-        Dictionary<string, object> properties = new()
-        {
-            [EventCategoryProperty] = SecurityCategory
-        };
-
-        using (IDisposable? scope = _logger.BeginScope(properties))
-        {
-            _logger.LogInformation(eventId, "Authentication {Result}. PlayerId: {PlayerId}", result, playerId);
-        }
-    }
-
-    private static UserSession ConvertSession(AuthenticatedSession session)
-    {
-        return new UserSession
-        {
-            PlayerId = session.PlayerId,
-            Username = session.Username,
-            Token = session.Token,
-            ExpiresAt = session.ExpiresAt,
-            IsGuest = session.IsGuest
-        };
-    }
-
-    private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)
-    {
-        ServiceFault fault = new ServiceFault { ErrorCode = errorCode, MessageKey = messageKey };
-        return new FaultException<ServiceFault>(fault, new FaultReason(errorCode));
-    }
-}
-````
-
-## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthService.cs
-````csharp
-using Vertigo.Server.DataAccess.Entities.Identity;
-using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
-using Vertigo.Server.PlayerManagement.Authentication.Models;
-
-namespace Vertigo.Server.PlayerManagement.Authentication.Services;
-
-public class AuthService
-{
-    private readonly PlayerCredentialsVerifier _credentials;
-    private readonly RegisteredPlayerSessions _registeredSessions;
-    private readonly IGuestSessionRegistry _guests;
-
-    public AuthService(
-        PlayerCredentialsVerifier credentials,
-        RegisteredPlayerSessions registeredSessions,
-        IGuestSessionRegistry guests)
-    {
-        _credentials = credentials;
-        _registeredSessions = registeredSessions;
-        _guests = guests;
-    }
-
-    public AuthenticatedSession? Login(string username, string password)
-    {
-        AuthenticatedSession? session = null;
-        Player? player = _credentials.FindVerifiedPlayer(username, password);
-        if (player is not null)
-        {
-            session = _registeredSessions.Create(player);
-        }
-
-        return session;
-    }
-
-    public AuthenticatedSession? ResumeSession(string sessionToken)
-    {
-        AuthenticatedSession? session = null;
-        if (!string.IsNullOrWhiteSpace(sessionToken))
-        {
-            string tokenHash = _registeredSessions.HashToken(sessionToken);
-            session = _guests.GetSession(tokenHash);
-            if (session is null)
-            {
-                session = _registeredSessions.Resume(sessionToken, tokenHash);
-            }
-        }
-
-        return session;
-    }
-
-    public bool Logout(string sessionToken)
-    {
-        bool isRevoked = false;
-        if (!string.IsNullOrWhiteSpace(sessionToken))
-        {
-            string tokenHash = _registeredSessions.HashToken(sessionToken);
-            isRevoked = _guests.Revoke(tokenHash) || _registeredSessions.Revoke(tokenHash);
-        }
-
-        return isRevoked;
-    }
-
-    public AuthenticatedSession CreateGuestSession()
-    {
-        return _guests.Create();
-    }
-}
-````
-
 ## File: src/Server/Vertigo.Server.PlayerManagement/Vertigo.Server.PlayerManagement.csproj
 ````
 <Project Sdk="Microsoft.NET.Sdk">
@@ -16814,76 +22241,6 @@ public class AuthService
 </Project>
 ````
 
-## File: src/Shared/Vertigo.Contracts/Faults/ServiceErrorCodes.cs
-````csharp
-namespace Vertigo.Contracts.Faults;
-
-public static class ServiceErrorCodes
-{
-    public const string UsernameAlreadyRegistered = "USERNAME_ALREADY_REGISTERED";
-    public const string EmailAlreadyRegistered = "EMAIL_ALREADY_REGISTERED";
-    public const string InvalidRegistrationData = "INVALID_REGISTRATION_DATA";
-    public const string LobbyNotFound = "ROOM_NOT_FOUND";
-    public const string LobbyFull = "ROOM_FULL";
-    public const string LobbyAlreadyStarted = "MSG-ROOM-009";
-    public const string InvalidLobbyCapacity = "INVALID_ROOM_CAPACITY";
-    public const string InvalidData = "INVALID_DATA";
-    public const string UserNotFound = "USER_NOT_FOUND";
-    public const string InvalidCode = "INVALID_CODE";
-    public const string InvalidCredentials = "INVALID_CREDENTIALS";
-    public const string SessionAlreadyActive = "SESSION_ALREADY_ACTIVE";
-    public const string FriendRequestAlreadySent = "FRIEND_REQUEST_ALREADY_SENT";
-    public const string AlreadyFriends = "ALREADY_FRIENDS";
-    public const string FriendshipBlocked = "FRIENDSHIP_BLOCKED";
-    public const string FriendRequestNotFound = "FRIEND_REQUEST_NOT_FOUND";
-    public const string LobbyInviteNotAllowed = "LOBBY_INVITE_NOT_ALLOWED";
-    public const string PlayerAlreadyInLobby = "PLAYER_ALREADY_IN_LOBBY";
-    
-    public const string LobbyNotMember = "LOBBY_NOT_MEMBER";
-    public const string LobbyNotHost = "LOBBY_NOT_HOST";
-    public const string LobbyNotReady = "LOBBY_NOT_READY";
-    public const string LobbyAlreadyInGame = "LOBBY_ALREADY_IN_GAME";
-
-    public const string Unauthorized = "UNAUTHORIZED";
-    public const string LobbyChatNotAllowed = "LOBBY_CHAT_NOT_ALLOWED";
-}
-````
-
-## File: src/Shared/Vertigo.Contracts/Faults/ServiceMessageKeys.cs
-````csharp
-namespace Vertigo.Contracts.Faults;
-
-public static class ServiceMessageKeys
-{
-    public const string UsernameAlreadyRegistered = "RegisterAccount.UsernameAlreadyRegistered";
-    public const string EmailAlreadyRegistered = "RegisterAccount.EmailAlreadyRegistered";
-    public const string InvalidRegistrationData = "RegisterAccount.ValidationSummary";
-    public const string LobbyNotFound = "ROOM_NOT_FOUND";
-    public const string LobbyFull = "ROOM_FULL";    
-    public const string LobbyAlreadyStarted = "MSG-ROOM-009";
-    public const string InvalidLobbyCapacity = "MSG-ROOM-011";
-    public const string InvalidData = "ErrorInvalidData";
-    public const string UserNotFound = "ErrorUserNotFound";
-    public const string InvalidCode = "ErrorInvalidCode";
-    public const string InvalidCredentials = "ErrorInvalidCredentials";
-    public const string SessionAlreadyActive = "AccessMenu.SessionAlreadyActive";
-    public const string FriendRequestAlreadySent = "Friends.RequestSent";
-    public const string AlreadyFriends = "Friends.AlreadyFriends";
-    public const string FriendshipBlocked = "Friends.RequestBlocked";
-    public const string FriendRequestNotFound = "Notifications.FriendRequestNotFound";
-    public const string LobbyInviteNotAllowed = "InviteFriends.NotAllowed";
-    public const string PlayerAlreadyInLobby = "Lobby.PlayerAlreadyInLobby";
-    
-    public const string LobbyNotMember = "Lobby.NotMember";
-    public const string LobbyNotHost = "Lobby.NotHost";
-    public const string LobbyNotReady = "Lobby.NotReady";
-    public const string LobbyAlreadyInGame = "Lobby.AlreadyInGame";
-
-    public const string Unauthorized = "Authentication.Unauthorized";
-    public const string LobbyChatNotAllowed = "Lobby.ChatNotAllowed";
-}
-````
-
 ## File: src/Shared/Vertigo.Contracts/Internal/MatchPlacementResult.cs
 ````csharp
 namespace Vertigo.Contracts.Internal;
@@ -16900,6 +22257,32 @@ public enum MatchPlacementResult
     MasterPlanRequired,
     InvalidMasterPlanChain,
     TurnExpired
+}
+````
+
+## File: src/Shared/Vertigo.Contracts/Models/MatchBoardPlayer.cs
+````csharp
+using System.Runtime.Serialization;
+
+namespace Vertigo.Contracts.Models;
+
+[DataContract]
+public sealed class MatchBoardPlayer
+{
+    [DataMember]
+    public Guid PlayerId { get; set; }
+
+    [DataMember]
+    public string Username { get; set; } = string.Empty;
+
+    [DataMember]
+    public int FloorsBuilt { get; set; }
+
+    [DataMember]
+    public int GlobalFloors { get; set; }
+
+    [DataMember(EmitDefaultValue = false)]
+    public int? FinalPosition { get; set; }
 }
 ````
 
@@ -17424,6 +22807,226 @@ static void Require(bool condition, string reason)
 internal sealed record RegisteredClient(ServiceProvider Provider, UserSession Session);
 ````
 
+## File: tests/Vertigo.Client.UnitTests/Matches/MatchResultsViewModelTests.cs
+````csharp
+using Vertigo.Client.UI.Utilities.Localization.Interfaces;
+using Vertigo.Client.UI.ViewModels;
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Client.UnitTests.Matches;
+
+public sealed class MatchResultsViewModelTests
+{
+    [Fact]
+    public void ApplyBoard_RoundCloses_OffersScoresWithoutOpeningPanel()
+    {
+        MatchResultsViewModel results = new(new ResultsText());
+        MatchRoundSummary round = CreateRound(1, (5, 10), 15);
+
+        results.ApplyBoard(new MatchBoardSnapshot { RoundNumber = 2, RoundSummaries = { round } });
+
+        Assert.True(results.HasResults);
+        Assert.False(results.HasFinalResult);
+        Assert.False(results.IsExpanded);
+        Assert.Equal("Ronda 1 finalizada", results.HeaderText);
+        MatchRoundPlayerScore score = Assert.Single(results.SelectedScores);
+        Assert.Equal("Ana", score.PlayerUsername);
+        Assert.Equal((5, 10, 15), (score.FloorsBuilt, score.BonusFloors, score.TotalFloors));
+    }
+
+    [Fact]
+    public void ApplyBoard_UnchangedRounds_KeepsTheSelectedEarlierRound()
+    {
+        MatchResultsViewModel results = new(new ResultsText());
+        MatchRoundSummary first = CreateRound(1, (5, 10), 15);
+        MatchRoundSummary second = CreateRound(2, (4, 0), 19);
+        MatchBoardSnapshot board = new() { RoundNumber = 3, RoundSummaries = { first, second } };
+        results.ApplyBoard(board);
+        Assert.Equal(2, results.SelectedRound?.RoundNumber);
+        results.SelectedRound = results.Rounds.Single(row => row.RoundNumber == 1);
+
+        results.ApplyBoard(board);
+        results.RefreshLocalization();
+
+        Assert.Equal(1, results.SelectedRound?.RoundNumber);
+        Assert.Equal(15, Assert.Single(results.SelectedScores).TotalFloors);
+    }
+
+    [Fact]
+    public void ApplyBoard_NewRoundWhileReviewingEarlierRound_PreservesSelection()
+    {
+        MatchResultsViewModel results = new(new ResultsText());
+        MatchRoundSummary first = CreateRound(1, (5, 10), 15);
+        MatchRoundSummary second = CreateRound(2, (4, 0), 19);
+        MatchRoundSummary third = CreateRound(3, (2, 0), 21);
+        results.ApplyBoard(new MatchBoardSnapshot { RoundSummaries = { first, second } });
+        results.SelectedRound = results.Rounds.Single(row => row.RoundNumber == 1);
+
+        results.ApplyBoard(new MatchBoardSnapshot { RoundSummaries = { first, second, third } });
+
+        Assert.Equal(1, results.SelectedRound?.RoundNumber);
+        Assert.Equal(15, Assert.Single(results.SelectedScores).TotalFloors);
+        Assert.Equal(3, results.Rounds.Count);
+    }
+
+    [Fact]
+    public void ApplyBoard_CompletedWithJointWinners_OpensTheFinalResultOnce()
+    {
+        MatchResultsViewModel results = new(new ResultsText());
+        Guid ana = Guid.NewGuid();
+        Guid beto = Guid.NewGuid();
+        MatchBoardSnapshot board = new()
+        {
+            EndReason = MatchEndReason.Completed,
+            WinnerIds = { ana, beto },
+            Players =
+            {
+                new MatchBoardPlayer { PlayerId = ana, Username = "Ana" },
+                new MatchBoardPlayer { PlayerId = beto, Username = "Beto" }
+            }
+        };
+
+        results.ApplyBoard(board);
+
+        Assert.True(results.HasFinalResult);
+        Assert.True(results.IsExpanded);
+        Assert.False(results.IsAbandonment);
+        Assert.Equal("Ganaron Ana, Beto", results.WinnerText);
+        Assert.Equal("Match.Results.SharedVictory", results.VictoryTitle);
+        results.IsExpanded = false;
+        results.ApplyBoard(board);
+        Assert.False(results.IsExpanded);
+    }
+
+    [Fact]
+    public void ApplyBoard_AbandonmentBeforeFirstRound_ShowsWinnerAndReasonWithoutScores()
+    {
+        MatchResultsViewModel results = new(new ResultsText());
+        Guid winner = Guid.NewGuid();
+
+        results.ApplyBoard(new MatchBoardSnapshot
+        {
+            EndReason = MatchEndReason.Abandonment,
+            WinnerIds = { winner },
+            Players = { new MatchBoardPlayer { PlayerId = winner, Username = "Ana" } }
+        });
+
+        Assert.True(results.HasResults);
+        Assert.True(results.IsExpanded);
+        Assert.True(results.IsAbandonment);
+        Assert.Equal("Ganó Ana", results.WinnerText);
+        Assert.Empty(results.SelectedScores);
+        results.Reset();
+        Assert.False(results.HasResults);
+        Assert.False(results.IsExpanded);
+        Assert.Empty(results.WinnerText);
+    }
+
+    [Fact]
+    public void ApplyBoard_LatestTowerStaysVisibleWhileAnEarlierRoundIsSelected()
+    {
+        Guid local = Guid.NewGuid();
+        MatchResultsViewModel results = new(new ResultsText());
+        MatchRoundSummary first = CreateRound(1, (5, 10), 15);
+        MatchRoundSummary second = CreateRound(2, (4, 0), 19);
+        first.Players[0].PlayerId = local;
+        second.Players[0].PlayerId = local;
+        results.ApplyBoard(new MatchBoardSnapshot { RoundSummaries = { first, second } }, local);
+        results.SelectedRound = results.Rounds.Single(round => round.RoundNumber == 1);
+
+        Assert.True(results.ShowLatestTower);
+        Assert.False(results.IsExpanded);
+        Assert.Equal(4, results.LatestTower!.BuiltFloors);
+        Assert.Equal(10, results.SelectedTower!.BonusFloors);
+        Assert.False(Assert.Single(results.SelectedTower.Segments).IsBonus);
+        Assert.Equal(15, results.SelectedTower.TotalFloors);
+    }
+
+    [Fact]
+    public void ApplyBoard_FinalStandingUsesOfficialPositionsAndOnlyCreditedFloors()
+    {
+        Guid ana = Guid.NewGuid();
+        Guid beto = Guid.NewGuid();
+        MatchRoundSummary round = CreateRound(1, (5, 10), 15);
+        round.Players[0].PlayerId = ana;
+        MatchBoardSnapshot board = new()
+        {
+            EndReason = MatchEndReason.Completed,
+            WinnerIds = { beto },
+            RoundSummaries = { round },
+            Players =
+            {
+                new MatchBoardPlayer { PlayerId = ana, GlobalFloors = 15, FloorsBuilt = 99, FinalPosition = 2 },
+                new MatchBoardPlayer { PlayerId = beto, GlobalFloors = 15, FinalPosition = 1 }
+            }
+        };
+
+        MatchResultsViewModel results = new(new ResultsText());
+        results.ApplyBoard(board, ana);
+
+        Assert.True(results.IsExpanded);
+        Assert.False(results.ShowLatestTower);
+        Assert.Equal(new int?[] { 1, 2 }, results.FinalStandings.Select(row => row.Position));
+        Assert.True(results.FinalStandings[0].IsWinner);
+        Assert.Equal(5, results.FinalTower!.BuiltFloors);
+        Assert.Equal(10, results.FinalTower.BonusFloors);
+        Assert.Equal(15, results.FinalTower.TotalFloors);
+        Assert.Contains(results.FinalTower.Segments, segment => segment.IsBonus);
+    }
+
+    [Fact]
+    public void ApplyBoard_AbandonmentWithoutClosedRounds_DoesNotCreditOpenRound()
+    {
+        Guid winner = Guid.NewGuid();
+        MatchResultsViewModel results = new(new ResultsText());
+        results.ApplyBoard(new MatchBoardSnapshot
+        {
+            EndReason = MatchEndReason.Abandonment,
+            WinnerIds = { winner },
+            Players = { new MatchBoardPlayer { PlayerId = winner, FloorsBuilt = 12, FinalPosition = 1 } }
+        }, winner);
+
+        Assert.Equal("Match.Results.Abandonment", results.VictoryTitle);
+        Assert.Equal(0, results.FinalTower!.TotalFloors);
+        Assert.Empty(results.FinalTower.Segments);
+        Assert.True(Assert.Single(results.FinalStandings).IsWinner);
+    }
+
+    private static MatchRoundSummary CreateRound(int number, (int Built, int Bonus) floors, int total)
+    {
+        return new MatchRoundSummary
+        {
+            RoundNumber = number,
+            Players =
+            {
+                new MatchRoundPlayerScore
+                {
+                    PlayerUsername = "Ana",
+                    FloorsBuilt = floors.Built,
+                    BonusFloors = floors.Bonus,
+                    TotalFloors = total
+                }
+            }
+        };
+    }
+
+    private sealed class ResultsText : ITextLocalizer
+    {
+        public string Get(string key)
+        {
+            return key switch
+            {
+                "Match.Results.RoundClosed" => "Ronda {0} finalizada",
+                "Match.Results.RoundOption" => "Ronda {0}",
+                "Match.Results.Winner" => "Ganó {0}",
+                "Match.Results.Winners" => "Ganaron {0}",
+                _ => key
+            };
+        }
+    }
+}
+````
+
 ## File: tests/Vertigo.Client.UnitTests/Validation/RegistrationRulesTests.cs
 ````csharp
 using Vertigo.Registration;
@@ -17525,482 +23128,197 @@ public sealed class RegistrationRulesTests
 }
 ````
 
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchDismantleTests.cs
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchBoardReaderTests.cs
 ````csharp
 using Vertigo.Contracts.Internal;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.Game.Matches.Models;
+using Vertigo.Server.Game.Matches.Implementations;
 using Xunit;
 
 namespace Vertigo.Server.Game.Tests.Matches;
 
-public sealed class MatchDismantleTests
+public sealed class MatchBoardReaderTests
 {
-    private static readonly DateTimeOffset Now = DateTimeOffset.UnixEpoch;
-
     [Fact]
-    public void TryDismantle_PlacementOnAnotherTower_RejectsWithoutChangingState()
+    public void GetBoard_AfterStart_ContainsParticipantsAndFoundations()
     {
-        MatchRecord match = Create(
-            Enumerable.Range(1, 10).Select(module => module * 2),
-            Enumerable.Range(1, 10).Select(module => module * 2 + 1),
-            [80, 1, 90, 99, 70]);
-        MatchBoardSnapshot board = match.ToBoard();
-        Guid active = board.CurrentTurnPlayerId;
-        MatchPrivateHand hand = match.ToPrivateHand(active)!;
-
-        MatchDismantleResult result = match.TryDismantle(active, new MatchDismantle(1, board.Revision), Now);
-
-        Assert.Equal(MatchDismantleResult.PlacementAvailable, result);
-        Assert.Equal(board.Revision, match.ToBoard().Revision);
-        Assert.Equal(active, match.ToBoard().CurrentTurnPlayerId);
-        Assert.Equal(80, match.ToBoard().Piles[0].TopCardNumber);
-        Assert.All(match.ToBoard().Players, player => Assert.Equal(0, player.FloorsBuilt));
-        Assert.Equal(hand.Cards, match.ToPrivateHand(active)!.Cards);
-        Assert.Equal(0, match.ToPrivateHand(active)!.MasterPlans);
-    }
-
-    [Fact]
-    public void TryDismantle_ThirteenBlocks_CreditsTenFloorsAndOnePlanExactlyOnce()
-    {
-        MatchRecord match = Create(
-            new[] { 2, 4, 6, 8, 10, 12, 14, 40, 42, 81 },
-            new[] { 3, 5, 7, 9, 11, 13, 41, 43, 45, 47 },
-            [1, 80, 95, 99, 70, 71]);
-        if (match.ToBoard().CurrentTurnPlayerId == match.Session.PlayerIds[0])
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid host = Guid.NewGuid();
+        Guid guest = Guid.NewGuid();
+        MatchStartRequest request = new()
         {
-            Place(match, 81, 2);
-        }
-
-        Guid opener = match.ToBoard().CurrentTurnPlayerId;
-        for (int module = 3; module <= 14; module++)
-        {
-            Place(match, module);
-        }
-
-        MatchBoardSnapshot before = match.ToBoard();
-        MatchPrivateHand hand = match.ToPrivateHand(opener)!;
-        Assert.Equal(opener, before.CurrentTurnPlayerId);
-        Assert.Equal(13, before.Piles[0].CardCount);
-        Assert.Equal(0, before.Players.Single(player => player.PlayerId == opener).FloorsBuilt);
-        MatchDismantle move = new(1, before.Revision);
-
-        MatchDismantleResult result = match.TryDismantle(opener, move, Now);
-        MatchDismantleResult repeated = match.TryDismantle(opener, move, Now);
-
-        Assert.Equal(MatchDismantleResult.Applied, result);
-        Assert.Equal(MatchDismantleResult.StaleRevision, repeated);
-        MatchBoardSnapshot after = match.ToBoard();
-        Assert.Equal(before.Revision + 1, after.Revision);
-        Assert.Equal(1, after.RoundNumber);
-        Assert.Equal(before.Players.Single(player => player.PlayerId != opener).PlayerId, after.CurrentTurnPlayerId);
-        Assert.Equal(70, after.Piles[0].TopCardNumber);
-        Assert.Equal(1, after.Piles[0].CardCount);
-        Assert.Equal(10, after.Players.Single(player => player.PlayerId == opener).FloorsBuilt);
-        Assert.Equal(0, after.Players.Single(player => player.PlayerId == opener).GlobalFloors);
-        Assert.Equal(1, match.ToPrivateHand(opener)!.MasterPlans);
-        Assert.Equal(hand.Cards, match.ToPrivateHand(opener)!.Cards);
-    }
-
-    [Fact]
-    public void TryDismantle_EmptyDeckAndAnotherPlayerCanPlace_LeavesSpaceEmptyAndContinues()
-    {
-        MatchRecord match = Create(
-            new[] { 2, 4, 40, 41, 42, 43, 44, 45, 46, 47 }, Enumerable.Range(50, 10),
-            [1, 80, 90, 99]);
-        if (match.ToBoard().CurrentTurnPlayerId == match.Session.PlayerIds[0])
-        {
-            Place(match, 2);
-        }
-
-        MatchBoardSnapshot before = match.ToBoard();
-        Guid blocked = before.CurrentTurnPlayerId;
-        MatchDismantleResult result = match.TryDismantle(blocked, new MatchDismantle(2, before.Revision), Now);
-
-        Assert.Equal(MatchDismantleResult.Applied, result);
-        MatchBoardSnapshot after = match.ToBoard();
-        Assert.Equal(1, after.RoundNumber);
-        Assert.Equal(match.Session.PlayerIds[0], after.CurrentTurnPlayerId);
-        Assert.Null(after.Piles[1].TopCardNumber);
-        Assert.Equal(0, after.Piles[1].CardCount);
-        Assert.Equal(1, after.Players.Single(player => player.PlayerId == blocked).FloorsBuilt);
-        Assert.Equal(0, match.ToPrivateHand(blocked)!.MasterPlans);
-    }
-
-    [Theory]
-    [InlineData(-1L, MatchDismantleResult.StaleRevision)]
-    [InlineData(0L, MatchDismantleResult.NotYourTurn)]
-    public void TryDismantle_WaitingPlayerRequest_PreservesBoardAndHands(long revisionOffset, MatchDismantleResult expected)
-    {
-        AssertRejectedDismantle(true, (2, revisionOffset), expected);
-    }
-
-    [Theory]
-    [InlineData(2, MatchDismantleResult.EmptyPile)]
-    [InlineData(5, MatchDismantleResult.InvalidPile)]
-    public void TryDismantle_InvalidActivePlayerPile_PreservesBoardAndHands(int pilePosition, MatchDismantleResult expected)
-    {
-        AssertRejectedDismantle(false, (pilePosition, 0L), expected);
-    }
-
-    private static void AssertRejectedDismantle(
-        bool useWaitingPlayer, (int PilePosition, long RevisionOffset) request, MatchDismantleResult expected)
-    {
-        MatchRecord match = Create(
-            new[] { 2, 4, 40, 41, 42, 43, 44, 45, 46, 47 }, Enumerable.Range(50, 10),
-            [1, 80, 90, 99]);
-        Guid active = match.Session.PlayerIds[0];
-        Guid waiting = match.Session.PlayerIds[1];
-        if (match.ToBoard().CurrentTurnPlayerId == active)
-        {
-            Place(match, 2);
-        }
-
-        MatchBoardSnapshot beforeDismantle = match.ToBoard();
-        Assert.Equal(MatchDismantleResult.Applied,
-            match.TryDismantle(waiting, new MatchDismantle(2, beforeDismantle.Revision), Now));
-        MatchBoardSnapshot before = match.ToBoard();
-        MatchPrivateHand activeHand = match.ToPrivateHand(active)!;
-        MatchPrivateHand waitingHand = match.ToPrivateHand(waiting)!;
-
-        Guid playerId = useWaitingPlayer ? waiting : active;
-        MatchDismantle move = new(request.PilePosition, before.Revision + request.RevisionOffset);
-
-        MatchDismantleResult result = match.TryDismantle(playerId, move, Now);
-
-        Assert.Equal(expected, result);
-        MatchBoardSnapshot after = match.ToBoard();
-        Assert.Equal(before.Revision, after.Revision);
-        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
-        Assert.Equal(before.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)),
-            after.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)));
-        Assert.Equal(before.Players.Select(player => (player.FloorsBuilt, player.GlobalFloors)),
-            after.Players.Select(player => (player.FloorsBuilt, player.GlobalFloors)));
-        Assert.Equal(activeHand.Cards, match.ToPrivateHand(active)!.Cards);
-        Assert.Equal(waitingHand.Cards, match.ToPrivateHand(waiting)!.Cards);
-        Assert.Equal(activeHand.MasterPlans, match.ToPrivateHand(active)!.MasterPlans);
-        Assert.Equal(waitingHand.MasterPlans, match.ToPrivateHand(waiting)!.MasterPlans);
-    }
-
-    [Fact]
-    public void TryDismantle_ThreeBlocksAndExhaustedDeck_CreditsFloorsAndResetsRoundState()
-    {
-        MatchRecord match = Create(
-            new[] { 31, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
-            new[] { 32, 81, 10, 11, 12, 13, 14, 15, 16, 17 },
-            [30, 80, 90, 99, 95]);
-        Guid scorer = match.Session.PlayerIds[0];
-        Guid other = match.Session.PlayerIds[1];
-        if (match.ToBoard().CurrentTurnPlayerId == other)
-        {
-            Place(match, 81, 2);
-        }
-
-        Place(match, 31);
-        Place(match, 32);
-        MatchBoardSnapshot before = match.ToBoard();
-
-        MatchDismantleResult result = match.TryDismantle(scorer, new MatchDismantle(1, before.Revision), Now);
-        if (match.ToBoard().RoundNumber == 1)
-        {
-            Assert.Equal(1, match.ToPrivateHand(scorer)!.MasterPlans);
-            Place(match, 81, 2);
-        }
-
-        Assert.Equal(MatchDismantleResult.Applied, result);
-        MatchBoardSnapshot after = match.ToBoard();
-        Assert.Equal(2, after.RoundNumber);
-        Assert.Equal(other, after.CurrentTurnPlayerId);
-        Assert.Equal(13, after.Players.Single(player => player.PlayerId == scorer).GlobalFloors);
-        Assert.All(after.Players, player => Assert.Equal(0, player.FloorsBuilt));
-        Assert.All(match.Session.PlayerIds, playerId =>
-        {
-            MatchPrivateHand hand = match.ToPrivateHand(playerId)!;
-            Assert.Equal(0, hand.MasterPlans);
-            Assert.Equal(10, hand.Cards.Count);
-        });
-    }
-
-    [Fact]
-    public void TryDismantle_ExhaustionAcrossThreeRounds_ScoresAndFinishesWithWinner()
-    {
-        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(11, 10), [90, 91, 92, 93, 94]);
-        Guid initialOpener = match.ToBoard().CurrentTurnPlayerId;
-        Guid other = match.Session.PlayerIds.Single(playerId => playerId != initialOpener);
-
-        for (int round = 1; round <= 3; round++)
-        {
-            MatchBoardSnapshot board = match.ToBoard();
-            Assert.Equal(round, board.RoundNumber);
-            Guid opener = round == 2 ? other : initialOpener;
-            Assert.Equal(opener, board.CurrentTurnPlayerId);
-            Assert.Equal(MatchDismantleResult.Applied,
-                match.TryDismantle(opener, new MatchDismantle(1, board.Revision), Now));
-            Assert.Equal(board.Revision + 1, match.ToBoard().Revision);
-            if (round < 3)
-            {
-                Assert.All(match.ToBoard().Players, player => Assert.Equal(0, player.FloorsBuilt));
-                Assert.All(match.ToBoard().Piles, pile => Assert.Equal(1, pile.CardCount));
-            }
-        }
-
-        MatchBoardSnapshot final = match.ToBoard();
-        Assert.Equal(MatchLifecycleStatus.Finished, match.Lifecycle.Status);
-        Assert.Equal(Guid.Empty, final.CurrentTurnPlayerId);
-        Assert.Equal(initialOpener, Assert.Single(final.WinnerIds));
-        Assert.Equal(22, final.Players.Single(player => player.PlayerId == initialOpener).GlobalFloors);
-        Assert.Equal(11, final.Players.Single(player => player.PlayerId == other).GlobalFloors);
-        Assert.Equal(MatchDismantleResult.MatchUnavailable,
-            match.TryDismantle(initialOpener, new MatchDismantle(1, final.Revision), Now));
-    }
-
-    [Fact]
-    public void TryPlace_EmptyHand_ClosesRoundWithoutAwardingFloors()
-    {
-        MatchRecord match = Create(
-            Enumerable.Range(1, 10).Select(module => module * 2),
-            Enumerable.Range(1, 10).Select(module => module * 2 + 1),
-            [1, 90, 95, 100, 70]);
-        Guid opener = match.ToBoard().CurrentTurnPlayerId;
-        int firstModule = match.ToPrivateHand(opener)!.Cards.Min();
-        for (int module = firstModule; module < firstModule + 19; module++)
-        {
-            Place(match, module);
-        }
-
-        MatchBoardSnapshot next = match.ToBoard();
-        Assert.Equal(2, next.RoundNumber);
-        Assert.Equal(20, next.Revision);
-        Assert.Equal(match.Session.PlayerIds.Single(playerId => playerId != opener), next.CurrentTurnPlayerId);
-        Assert.All(next.Players, player => Assert.Equal(0, player.GlobalFloors));
-        MatchRoundSummary closure = Assert.Single(next.RoundSummaries);
-        Assert.Equal(1, closure.RoundNumber);
-        Assert.Equal(opener, closure.ClosedByPlayerId);
-        Assert.All(closure.Players, player => Assert.Equal(0, player.BonusFloors));
-        Assert.All(match.Session.PlayerIds, playerId => Assert.Equal(10, match.ToPrivateHand(playerId)!.Cards.Count));
-    }
-
-    private static void Place(MatchRecord match, int module, int pilePosition = 1)
-    {
-        MatchBoardSnapshot board = match.ToBoard();
-        MatchPlacement action = new(module, pilePosition, board.Revision);
-
-        Assert.Equal(MatchPlacementResult.Applied, match.TryPlace(board.CurrentTurnPlayerId, action, Now));
-    }
-
-    private static MatchRecord Create(
-        IEnumerable<int> firstHand, IEnumerable<int> secondHand, int[] towerAndDeckCards)
-    {
-        Guid[] players = { Guid.NewGuid(), Guid.NewGuid() };
-        MatchSessionSnapshot session = new()
-        {
-            MatchId = Guid.NewGuid(),
             LobbyInstanceId = Guid.NewGuid(),
             LobbyCode = "ABC234",
-            InitialHostPlayerId = players[0],
-            PlayerIds = players,
-            CreatedAtUtc = Now.UtcDateTime
+            HostPlayerId = host,
+            PlayerIds = new[] { host, guest }
         };
-        int[] modules = firstHand.Concat(secondHand).Concat(towerAndDeckCards).ToArray();
-        Assert.Equal(modules.Length, modules.Distinct().Count());
 
-        return new MatchRecord(session, Now, () => new MatchDeck(modules));
+        MatchSessionSnapshot match = game.Start(request);
+        var board = game.GetBoard(match.MatchId);
+
+        Assert.NotNull(board);
+        Assert.Equal(match.MatchId, board.MatchId);
+        Assert.Equal(1, board.Revision);
+        Assert.Equal(new[] { host, guest }, board.Players.Select(p => p.PlayerId));
+        Assert.All(board.Players, p => Assert.Equal(0, p.FloorsBuilt));
+        Assert.Single(board.Piles);
+        Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
+        Assert.All(board.Piles, pile => Assert.InRange(pile.TopCardNumber!.Value, 1, 100));
+        Assert.Equal(1, board.RoundNumber);
+        Assert.Contains(board.CurrentTurnPlayerId, request.PlayerIds);
+    }
+
+    [Fact]
+    public void GetBoard_UnknownMatch_ReturnsNull()
+    {
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+
+        var board = game.GetBoard(Guid.NewGuid());
+
+        Assert.Null(board);
+    }
+
+    [Fact]
+    public void GetBoard_ChangedCopy_DoesNotMutateStoredBoard()
+    {
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid host = Guid.NewGuid();
+        MatchStartRequest request = new()
+        {
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            HostPlayerId = host,
+            PlayerIds = new[] { host, Guid.NewGuid() }
+        };
+        Guid matchId = game.Start(request).MatchId;
+        var first = game.GetBoard(matchId);
+        Assert.NotNull(first);
+        first.Players[0].FloorsBuilt = 999;
+        first.Players.Clear();
+
+        var second = game.GetBoard(matchId);
+
+        Assert.NotNull(second);
+        Assert.Equal(2, second.Players.Count);
+        Assert.Equal(0, second.Players[0].FloorsBuilt);
     }
 }
 ````
 
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchExpulsionVoteTests.cs
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchDepartureTests.cs
 ````csharp
 using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
 using Vertigo.Server.Game.Matches.Implementations;
-using Vertigo.Server.Game.Matches.Models;
-using Xunit;
 
 namespace Vertigo.Server.Game.Tests.Matches;
 
-public sealed class MatchExpulsionVoteTests
+public sealed class MatchDepartureTests
 {
-    private static readonly DateTimeOffset Start = DateTimeOffset.UnixEpoch;
+    [Fact]
+    public void TryLeaveMatch_TwoPlayers_FinishesByAbandonmentAndAcceptsRetriesWithoutChangingBoard()
+    {
+        InMemoryMatchSessionStarter game = new(new ManualClock());
+        MatchBoardSnapshot before = StartMatch(game, 2);
+        Guid leaving = before.Players[0].PlayerId;
+        Guid remaining = before.Players[1].PlayerId;
+
+        MatchDepartureResult departure = game.TryLeaveMatch(before.MatchId, leaving);
+
+        Assert.Equal(new MatchDepartureResult(true, true), departure);
+        MatchBoardSnapshot finished = game.GetBoard(before.MatchId)!;
+        Assert.Equal(MatchEndReason.Abandonment, finished.EndReason);
+        Assert.Equal(remaining, Assert.Single(finished.WinnerIds));
+        Assert.Equal(1, Assert.Single(finished.Players).FinalPosition);
+        Assert.Equal(leaving, Assert.Single(finished.ExpelledPlayerIds));
+        Assert.Equal(MatchBoardActionKind.LeftMatch, Assert.Single(finished.RecentMoves).ActionKind);
+        Assert.Empty(finished.RoundSummaries);
+        Assert.Null(finished.TurnDeadlineUtc);
+        Assert.Null(game.GetPrivateHand(before.MatchId, leaving));
+
+        Assert.Equal(new MatchDepartureResult(true, false), game.TryLeaveMatch(before.MatchId, leaving));
+        Assert.Equal(new MatchDepartureResult(true, false), game.TryLeaveMatch(before.MatchId, remaining));
+        Assert.Equal(finished.Revision, game.GetBoard(before.MatchId)!.Revision);
+        Assert.Equal(remaining, Assert.Single(game.GetBoard(before.MatchId)!.WinnerIds));
+    }
 
     [Fact]
-    public void TryVoteToExpel_ThreePlayers_RequiresTwoDistinctVotersAndStartsNextTurn()
+    public void TryLeaveMatch_WaitingPlayerLeaves_ContinuesCurrentTurnWithSameDeadline()
     {
         ManualClock clock = new();
         InMemoryMatchSessionStarter game = new(clock);
-        MatchBoardSnapshot initial = StartMatch(game, 3);
-        Guid target = initial.CurrentTurnPlayerId;
-        Guid[] playerOrder = initial.Players.Select(player => player.PlayerId).ToArray();
-        Guid next = playerOrder[(Array.IndexOf(playerOrder, target) + 1) % playerOrder.Length];
-        Guid other = playerOrder.Single(playerId => playerId != target && playerId != next);
-        MatchExpulsionVote vote = new(target, initial.VotingRevision);
-        clock.Now = Start.AddSeconds(7);
+        MatchBoardSnapshot before = StartMatch(game, 3);
+        Guid leaving = before.Players.First(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
+        clock.Now = clock.Now.AddSeconds(6);
 
-        Assert.Equal(2, initial.ExpulsionVotesRequired);
-        Assert.Equal(MatchExpulsionVoteResult.InvalidTarget, game.TryVoteToExpel(initial.MatchId, target, vote));
-        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(initial.MatchId, next, vote));
-        Assert.Equal(MatchExpulsionVoteResult.AlreadyVoted, game.TryVoteToExpel(initial.MatchId, next, vote));
+        MatchDepartureResult departure = game.TryLeaveMatch(before.MatchId, leaving);
 
-        MatchBoardSnapshot pending = game.GetBoard(initial.MatchId)!;
-        MatchExpulsionVoteSummary count = Assert.Single(pending.ExpulsionVotes);
-        Assert.Equal(target, count.TargetPlayerId);
-        Assert.Equal(1, count.VoteCount);
-        Assert.Equal(initial.Revision + 1, pending.Revision);
-        Assert.Equal(initial.TurnDeadlineUtc, pending.TurnDeadlineUtc);
-        Assert.Empty(pending.RecentMoves);
-        MatchPrivateHand votedHand = game.GetPrivateHand(initial.MatchId, next)!;
-        Assert.Equal(pending.VotingRevision, votedHand.VotingRevision);
-        Assert.Equal(target, Assert.Single(votedHand.VotedExpulsionTargetIds));
-        Assert.Empty(game.GetPrivateHand(initial.MatchId, other)!.VotedExpulsionTargetIds);
-        Assert.Equal(MatchExpulsionVoteResult.Expelled, game.TryVoteToExpel(initial.MatchId, other, vote));
-
-        MatchBoardSnapshot after = game.GetBoard(initial.MatchId)!;
-        Assert.Equal(next, after.CurrentTurnPlayerId);
-        Assert.Equal(clock.Now + (initial.TurnDeadlineUtc!.Value - Start), after.TurnDeadlineUtc);
-        Assert.Equal(initial.Revision + 2, after.Revision);
-        Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
-        Assert.Equal(MatchBoardActionKind.ExpelledByVote, Assert.Single(after.RecentMoves).ActionKind);
-        Assert.Empty(after.ExpulsionVotes);
-        Assert.Null(game.GetPrivateHand(initial.MatchId, target));
-        MatchPrivateHand afterHand = game.GetPrivateHand(initial.MatchId, next)!;
-        Assert.Equal(after.VotingRevision, afterHand.VotingRevision);
-        Assert.Empty(afterHand.VotedExpulsionTargetIds);
+        Assert.Equal(new MatchDepartureResult(true, true), departure);
+        MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
+        Assert.Equal(MatchEndReason.None, after.EndReason);
+        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(before.TurnDeadlineUtc, after.TurnDeadlineUtc);
+        Assert.Equal(before.Revision + 1, after.Revision);
+        Assert.Equal(2, after.Players.Count);
     }
 
     [Fact]
-    public void TryVoteToExpel_FourPlayers_RequiresThreeAndPreservesAnotherPlayersTurn()
+    public void TryLeaveMatch_CurrentPlayerWithPendingVote_AdvancesTurnAndClearsVotes()
     {
         ManualClock clock = new();
         InMemoryMatchSessionStarter game = new(clock);
-        MatchBoardSnapshot initial = StartMatch(game, 4);
-        Guid target = initial.Players.First(player => player.PlayerId != initial.CurrentTurnPlayerId).PlayerId;
-        Guid[] voters = initial.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
-        MatchExpulsionVote vote = new(target, initial.VotingRevision);
-        clock.Now = Start.AddSeconds(12);
+        MatchBoardSnapshot before = StartMatch(game, 3);
+        Guid leaving = before.CurrentTurnPlayerId;
+        Guid[] order = before.Players.Select(player => player.PlayerId).ToArray();
+        Guid nextPlayer = order[(Array.IndexOf(order, leaving) + 1) % order.Length];
+        MatchExpulsionVote vote = new(leaving, before.VotingRevision);
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(before.MatchId, nextPlayer, vote));
+        clock.Now = clock.Now.AddSeconds(6);
 
-        Assert.Equal(3, initial.ExpulsionVotesRequired);
-        MatchExpulsionVote oldVoteForAnotherPlayer = new(voters[1], initial.VotingRevision);
-        Assert.Equal(MatchExpulsionVoteResult.Recorded,
-            game.TryVoteToExpel(initial.MatchId, voters[0], oldVoteForAnotherPlayer));
-        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(initial.MatchId, voters[0], vote));
-        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(initial.MatchId, voters[1], vote));
-        Assert.Empty(game.GetBoard(initial.MatchId)!.ExpelledPlayerIds);
-        Assert.Equal(MatchExpulsionVoteResult.Expelled, game.TryVoteToExpel(initial.MatchId, voters[2], vote));
+        MatchDepartureResult departure = game.TryLeaveMatch(before.MatchId, leaving);
 
-        MatchBoardSnapshot after = game.GetBoard(initial.MatchId)!;
-        Assert.Equal(initial.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
-        Assert.Equal(initial.TurnDeadlineUtc, after.TurnDeadlineUtc);
-        Assert.Equal(initial.VotingRevision + 1, after.VotingRevision);
+        Assert.Equal(new MatchDepartureResult(true, true), departure);
+        MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
+        Assert.Equal(nextPlayer, after.CurrentTurnPlayerId);
+        Assert.Equal(clock.Now + (before.TurnDeadlineUtc!.Value - DateTimeOffset.UnixEpoch), after.TurnDeadlineUtc);
+        Assert.Equal(MatchEndReason.None, after.EndReason);
+        Assert.Equal(before.Revision + 2, after.Revision);
+        Assert.Equal(before.VotingRevision + 1, after.VotingRevision);
         Assert.Empty(after.ExpulsionVotes);
-
-        Assert.Equal(MatchExpulsionVoteResult.StaleVotingRevision,
-            game.TryVoteToExpel(initial.MatchId, voters[0], oldVoteForAnotherPlayer));
-        Assert.Equal(MatchExpulsionVoteResult.InvalidVoter,
-            game.TryVoteToExpel(initial.MatchId, target, new MatchExpulsionVote(voters[1], after.VotingRevision)));
+        Assert.Empty(game.GetPrivateHand(before.MatchId, nextPlayer)!.VotedExpulsionTargetIds);
+        Assert.Equal(leaving, Assert.Single(after.ExpelledPlayerIds));
     }
 
     [Fact]
-    public void TryVoteToExpel_ConcurrentVotesWithSameRevision_ExpelsExactlyOnce()
-    {
-        InMemoryMatchSessionStarter game = new(new ManualClock());
-        MatchBoardSnapshot board = StartMatch(game, 3);
-        Guid target = board.CurrentTurnPlayerId;
-        Guid[] voters = board.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
-        MatchExpulsionVote vote = new(target, board.VotingRevision);
-        MatchExpulsionVoteResult[] results = new MatchExpulsionVoteResult[voters.Length];
-
-        Parallel.For(0, voters.Length, index =>
-        {
-            results[index] = game.TryVoteToExpel(board.MatchId, voters[index], vote);
-        });
-
-        Assert.Single(results, result => result == MatchExpulsionVoteResult.Recorded);
-        Assert.Single(results, result => result == MatchExpulsionVoteResult.Expelled);
-        MatchBoardSnapshot after = game.GetBoard(board.MatchId)!;
-        Assert.Equal(board.Revision + 2, after.Revision);
-        Assert.Equal(board.VotingRevision + 1, after.VotingRevision);
-        Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
-        Assert.Equal(MatchBoardActionKind.ExpelledByVote, Assert.Single(after.RecentMoves).ActionKind);
-        Assert.Empty(after.ExpulsionVotes);
-    }
-
-    [Fact]
-    public void TryVoteToExpel_TwoPlayers_CannotReachMajority()
-    {
-        InMemoryMatchSessionStarter game = new(new ManualClock());
-        MatchBoardSnapshot board = StartMatch(game, 2);
-        Guid voter = board.Players[0].PlayerId;
-        Guid target = board.Players[1].PlayerId;
-
-        MatchExpulsionVoteResult result = game.TryVoteToExpel(
-            board.MatchId, voter, new MatchExpulsionVote(target, board.VotingRevision));
-
-        Assert.Equal(MatchExpulsionVoteResult.TooFewPlayers, result);
-        Assert.Equal(board.Revision, game.GetBoard(board.MatchId)!.Revision);
-        Assert.Empty(game.GetBoard(board.MatchId)!.ExpulsionVotes);
-    }
-
-    [Fact]
-    public void TryVoteToExpel_AtExpiry_RecordsOneExpulsionAndClearsPreviousVotes()
+    public void TryLeaveMatch_WhenTurnJustExpired_SkipsBeforeApplyingVoluntaryDeparture()
     {
         ManualClock clock = new();
         InMemoryMatchSessionStarter game = new(clock);
-        MatchBoardSnapshot board = StartMatch(game, 3);
-        Guid target = board.CurrentTurnPlayerId;
-        Guid[] voters = board.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
-        MatchExpulsionVote vote = new(target, board.VotingRevision);
-        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[0], vote));
-        clock.Now = board.TurnDeadlineUtc!.Value;
-        MatchExpulsionVoteResult result = default;
-        Guid? expired = null;
+        MatchBoardSnapshot before = StartMatch(game, 2);
+        Guid leaving = before.Players.Single(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
+        clock.Now = before.TurnDeadlineUtc!.Value;
 
-        Parallel.Invoke(
-            () => result = game.TryVoteToExpel(board.MatchId, voters[1], vote),
-            () => expired = game.TryExpireTurn(board.MatchId));
+        Assert.Equal(new MatchDepartureResult(true, true), game.TryLeaveMatch(before.MatchId, leaving));
 
-        Assert.True(result is MatchExpulsionVoteResult.TurnExpired or MatchExpulsionVoteResult.StaleVotingRevision);
-        Assert.Equal(target, expired);
-        MatchBoardSnapshot after = game.GetBoard(board.MatchId)!;
-        Assert.Equal(board.Revision + 2, after.Revision);
-        Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
-        Assert.Equal(MatchBoardActionKind.TurnExpired, Assert.Single(after.RecentMoves).ActionKind);
-        Assert.Empty(after.ExpulsionVotes);
+        MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
+        Assert.Equal(before.CurrentTurnPlayerId, Assert.Single(after.WinnerIds));
+        Assert.Equal(new[] { MatchBoardActionKind.TurnSkipped, MatchBoardActionKind.LeftMatch },
+            after.RecentMoves.Select(move => move.ActionKind));
+        Assert.Null(game.TryExpireTurn(before.MatchId));
     }
 
     [Fact]
-    public void TryPlay_WhenOnlyAVoteChangedRevision_AcceptsTheCurrentTurnAction()
+    public void TryLeaveMatch_UnknownParticipant_DoesNotChangeGame()
     {
         InMemoryMatchSessionStarter game = new(new ManualClock());
-        MatchBoardSnapshot board = StartMatch(game, 3);
-        Guid active = board.CurrentTurnPlayerId;
-        Guid voter = board.Players.First(player => player.PlayerId != active).PlayerId;
-        MatchPrivateHand hand = game.GetPrivateHand(board.MatchId, active)!;
-        (int Card, int Pile) position = (from card in hand.Cards
-                                        from pile in board.Piles
-                                        where pile.TopCardNumber is int top && MatchPlacementRules.IsValid(top, card)
-                                        select (card, pile.Position)).FirstOrDefault();
-        Assert.Equal(MatchExpulsionVoteResult.Recorded,
-            game.TryVoteToExpel(board.MatchId, voter, new MatchExpulsionVote(active, board.VotingRevision)));
+        MatchBoardSnapshot before = StartMatch(game, 2);
 
-        if (position.Pile == 0)
-        {
-            MatchDismantle move = new(1, board.Revision);
-            Assert.Equal(MatchDismantleResult.Applied, game.TryDismantle(board.MatchId, active, move));
-            Assert.Equal(MatchDismantleResult.StaleRevision, game.TryDismantle(board.MatchId, active, move));
-        }
-        else
-        {
-            MatchPlacement move = new(position.Card, position.Pile, board.Revision);
-            Assert.Equal(MatchPlacementResult.Applied, game.TryPlace(board.MatchId, active, move));
-            Assert.Equal(MatchPlacementResult.StaleRevision, game.TryPlace(board.MatchId, active, move));
-        }
-
-        Assert.Equal(board.Revision + 2, game.GetBoard(board.MatchId)!.Revision);
+        Assert.Equal(new MatchDepartureResult(false, false), game.TryLeaveMatch(before.MatchId, Guid.NewGuid()));
+        Assert.Equal(before.Revision, game.GetBoard(before.MatchId)!.Revision);
     }
 
-    private static MatchBoardSnapshot StartMatch(InMemoryMatchSessionStarter game, int playerCount)
+    private static MatchBoardSnapshot StartMatch(InMemoryMatchSessionStarter game, int count)
     {
-        Guid[] players = Enumerable.Range(0, playerCount).Select(_ => Guid.NewGuid()).ToArray();
+        Guid[] players = Enumerable.Range(0, count).Select(_ => Guid.NewGuid()).ToArray();
         MatchSessionSnapshot session = game.Start(new MatchStartRequest
         {
             LobbyInstanceId = Guid.NewGuid(),
@@ -18014,7 +23332,7 @@ public sealed class MatchExpulsionVoteTests
 
     private sealed class ManualClock : TimeProvider
     {
-        public DateTimeOffset Now { get; set; } = Start;
+        public DateTimeOffset Now { get; set; } = DateTimeOffset.UnixEpoch;
 
         public override DateTimeOffset GetUtcNow()
         {
@@ -18024,443 +23342,54 @@ public sealed class MatchExpulsionVoteTests
 }
 ````
 
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchPlacementTests.cs
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchInitialBoardTests.cs
 ````csharp
 using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
 using Vertigo.Server.Game.Matches.Implementations;
-using Vertigo.Server.Game.Matches.Models;
 using Xunit;
 
 namespace Vertigo.Server.Game.Tests.Matches;
 
-public sealed class MatchPlacementTests
+public sealed class MatchInitialBoardTests
 {
-    private static (InMemoryMatchSessionStarter Game, Guid MatchId, Guid Host, Guid Other) Create()
+    [Fact]
+    public void GetBoard_AfterStart_InitializesRoundAndSelectsParticipant()
     {
         InMemoryMatchSessionStarter game = new(TimeProvider.System);
-        Guid host = Guid.NewGuid();
-        Guid other = Guid.NewGuid();
-        MatchStartRequest request = new()
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            HostPlayerId = host,
-            PlayerIds = new[] { host, other }
-        };
-        return (game, game.Start(request).MatchId, host, other);
+        MatchStartRequest request = CreateRequest();
+
+        Guid matchId = game.Start(request).MatchId;
+        MatchBoardSnapshot? board = game.GetBoard(matchId);
+
+        Assert.NotNull(board);
+        Assert.Equal(1, board.Revision);
+        Assert.Equal(1, board.RoundNumber);
+        Assert.Contains(board.CurrentTurnPlayerId, request.PlayerIds);
+        Assert.Equal(request.PlayerIds, board.Players.Select(player => player.PlayerId));
+        Assert.All(board.Players, player => Assert.Equal(0, player.FloorsBuilt));
     }
 
     [Fact]
-    public void Start_FoundationsAndHands_UseDistinctModules()
+    public void GetBoard_AfterStart_HasOneFoundation()
     {
-        var state = Create();
-        var board = state.Game.GetBoard(state.MatchId)!;
-        var host = state.Game.GetPrivateHand(state.MatchId, state.Host)!;
-        var other = state.Game.GetPrivateHand(state.MatchId, state.Other)!;
-        int[] foundations = board.Piles.Select(pile => pile.TopCardNumber!.Value).ToArray();
-        Assert.Equal(4, foundations.Length);
-        Assert.Equal(10, host.Cards.Count);
-        Assert.Equal(10, other.Cards.Count);
-        Assert.Equal(24, foundations.Concat(host.Cards).Concat(other.Cards).Distinct().Count());
-        Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid matchId = game.Start(CreateRequest()).MatchId;
+
+        MatchBoardSnapshot? board = game.GetBoard(matchId);
+
+        Assert.NotNull(board);
+        MatchBoardPile pile = Assert.Single(board.Piles);
+        Assert.Equal(1, pile.Position);
+        Assert.Equal(1, pile.CardCount);
+        Assert.InRange(pile.TopCardNumber!.Value, 1, 100);
     }
 
     [Fact]
-    public void TryPlace_OtherPlayerTurn_DoesNotMutateBoard()
+    public void Start_SixParticipants_DealsTenUniqueModulesPerPlayerAndOneFoundation()
     {
-        var state = Create();
-        var board = state.Game.GetBoard(state.MatchId)!;
-        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
-        MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, waitingPlayer)!;
-        var move = new MatchPlacement(hand.Cards[0], 1, board.Revision);
-        Assert.Equal(MatchPlacementResult.NotYourTurn,
-            state.Game.TryPlace(state.MatchId, waitingPlayer, move));
-        AssertPlacementStateUnchanged(state.Game, board, hand);
-    }
-
-    [Fact]
-    public void TryPlace_ForgedCard_DoesNotMutateBoard()
-    {
-        var state = Create();
-        var board = state.Game.GetBoard(state.MatchId)!;
-        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
-        MatchPrivateHand other = state.Game.GetPrivateHand(state.MatchId, waitingPlayer)!;
-        MatchPrivateHand activeHand = state.Game.GetPrivateHand(state.MatchId, board.CurrentTurnPlayerId)!;
-        var move = new MatchPlacement(other.Cards[0], 1, board.Revision);
-        Assert.Equal(MatchPlacementResult.CardNotOwned,
-            state.Game.TryPlace(state.MatchId, board.CurrentTurnPlayerId, move));
-        AssertPlacementStateUnchanged(state.Game, board, activeHand);
-    }
-
-    [Theory]
-    [InlineData(MatchLifecycleStatus.Suspended)]
-    [InlineData(MatchLifecycleStatus.Finished)]
-    [InlineData(MatchLifecycleStatus.Cancelled)]
-    public void TryPlace_InactiveMatchWithStaleRevision_ReturnsUnavailableWithoutMutatingState(
-        MatchLifecycleStatus status)
-    {
-        var (game, matchId, host, other) = Create();
-        bool changed = status switch
-        {
-            MatchLifecycleStatus.Suspended => game.TryDisconnect(matchId, host) && game.TryDisconnect(matchId, other),
-            MatchLifecycleStatus.Finished => game.TryFinish(matchId),
-            MatchLifecycleStatus.Cancelled => game.TryCancel(matchId),
-            _ => throw new ArgumentOutOfRangeException(nameof(status))
-        };
-        Assert.True(changed);
-        Assert.Equal(status, game.Get(matchId)!.Status);
-
-        MatchBoardSnapshot board = game.GetBoard(matchId)!;
-        Guid playerId = board.CurrentTurnPlayerId;
-        MatchPrivateHand hand = game.GetPrivateHand(matchId, playerId)!;
-        MatchPlacement move = new(hand.Cards[0], 1, board.Revision - 1);
-
-        MatchPlacementResult result = game.TryPlace(matchId, playerId, move);
-
-        Assert.Equal(MatchPlacementResult.MatchUnavailable, result);
-        AssertPlacementStateUnchanged(game, board, hand);
-        Assert.Equal(status, game.Get(matchId)!.Status);
-    }
-
-    [Fact]
-    public void TryPlace_StaleRevisionOutsideTurn_ReturnsStaleRevisionWithoutMutatingState()
-    {
-        var (game, matchId, _, _) = Create();
-        MatchBoardSnapshot board = game.GetBoard(matchId)!;
-        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
-        MatchPrivateHand hand = game.GetPrivateHand(matchId, waitingPlayer)!;
-        MatchPlacement move = new(hand.Cards[0], 1, board.Revision - 1);
-
-        MatchPlacementResult result = game.TryPlace(matchId, waitingPlayer, move);
-
-        Assert.Equal(MatchPlacementResult.StaleRevision, result);
-        AssertPlacementStateUnchanged(game, board, hand);
-    }
-
-    [Fact]
-    public void TryPlace_UnstablePlacement_RejectsWithoutMutatingState()
-    {
-        var (game, matchId, _, _) = Create();
-        MatchBoardSnapshot board = game.GetBoard(matchId)!;
-        Guid playerId = board.CurrentTurnPlayerId;
-        MatchPrivateHand hand = game.GetPrivateHand(matchId, playerId)!;
-        MatchPlacement invalidPlacement = (from pile in board.Piles
-                                from card in hand.Cards
-                                where card - pile.TopCardNumber!.Value is < 1 or > 10
-                                select new MatchPlacement(card, pile.Position, board.Revision)).First();
-
-        MatchPlacementResult result = game.TryPlace(matchId, playerId, invalidPlacement);
-
-        Assert.Equal(MatchPlacementResult.InvalidPlacement, result);
-        AssertPlacementStateUnchanged(game, board, hand);
-    }
-
-    [Fact]
-    public void TryPlace_ValidCard_ConsumesItAndAdvancesTurn()
-    {
-        // Repeatedly create a randomized initial board until a valid move is available.
-        // Avoid probabilistic test failure: check only within a bounded number of attempts.
-        for (int attempt = 0; attempt < 100; attempt++)
-        {
-            var state = Create();
-            var board = state.Game.GetBoard(state.MatchId)!;
-            Guid openingPlayer = board.CurrentTurnPlayerId;
-            Guid waitingPlayer = board.Players.Single(player => player.PlayerId != openingPlayer).PlayerId;
-            MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
-            var match = (from card in hand.Cards
-                         from pile in board.Piles
-                         where MatchPlacementRules.IsValid(pile.TopCardNumber!.Value, card)
-                         select (card, pile.Position)).FirstOrDefault();
-            if (match.card == 0)
-            {
-                continue;
-            }
-            var move = new MatchPlacement(match.card, match.Position, board.Revision);
-            Assert.Equal(MatchPlacementResult.Applied,
-                state.Game.TryPlace(state.MatchId, openingPlayer, move));
-            var next = state.Game.GetBoard(state.MatchId)!;
-            Assert.Equal(board.Revision + 1, next.Revision);
-            Assert.Equal(waitingPlayer, next.CurrentTurnPlayerId);
-            Assert.Equal(match.card, next.Piles[match.Position - 1].TopCardNumber);
-            Assert.Equal(board.Piles[match.Position - 1].CardCount + 1, next.Piles[match.Position - 1].CardCount);
-            MatchPrivateHand afterMove = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
-            Assert.Equal(hand.Cards.Where(card => card != match.card), afterMove.Cards);
-            Assert.Equal(MatchPlacementResult.StaleRevision,
-                state.Game.TryPlace(state.MatchId, openingPlayer, move));
-            AssertPlacementStateUnchanged(state.Game, next, afterMove);
-            return;
-        }
-        throw new InvalidOperationException("No playable test board generated in 100 attempts.");
-    }
-
-    [Fact]
-    public void TryPlace_UnknownPile_IsRejected()
-    {
-        var state = Create();
-        var board = state.Game.GetBoard(state.MatchId)!;
-        Guid openingPlayer = board.CurrentTurnPlayerId;
-        MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
-        Assert.Equal(MatchPlacementResult.InvalidPile,
-            state.Game.TryPlace(state.MatchId, openingPlayer, new MatchPlacement(hand.Cards[0], 5, board.Revision)));
-        AssertPlacementStateUnchanged(state.Game, board, hand);
-    }
-
-    private static void AssertPlacementStateUnchanged(
-        InMemoryMatchSessionStarter game, MatchBoardSnapshot expectedBoard, MatchPrivateHand expectedHand)
-    {
-        MatchBoardSnapshot board = game.GetBoard(expectedBoard.MatchId)!;
-        MatchPrivateHand hand = game.GetPrivateHand(expectedBoard.MatchId, expectedHand.PlayerId)!;
-
-        Assert.Equal(expectedBoard.Revision, board.Revision);
-        Assert.Equal(expectedBoard.CurrentTurnPlayerId, board.CurrentTurnPlayerId);
-        Assert.Equal(expectedBoard.RoundNumber, board.RoundNumber);
-        Assert.Equal(
-            expectedBoard.Piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.CardCount)),
-            board.Piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.CardCount)));
-        Assert.Equal(expectedHand.Cards, hand.Cards);
-    }
-}
-````
-
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchTurnClockTests.cs
-````csharp
-using Vertigo.Contracts.Internal;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.Game.Matches.Implementations;
-using Vertigo.Server.Game.Matches.Models;
-using Xunit;
-
-namespace Vertigo.Server.Game.Tests.Matches;
-
-public sealed class MatchTurnClockTests
-{
-    private static readonly DateTimeOffset StartTime = DateTimeOffset.UnixEpoch;
-
-    [Fact]
-    public void TryExpireTurn_AtDeadline_ExpelsOnlyOnceAndStartsNextTurn()
-    {
-        ManualClock clock = new();
-        var (game, matchId) = StartMatch(clock, 3);
-        MatchBoardSnapshot before = game.GetBoard(matchId)!;
-        Guid active = before.CurrentTurnPlayerId;
-        Guid[] order = before.Players.Select(player => player.PlayerId).ToArray();
-        Guid nextPlayer = order[(Array.IndexOf(order, active) + 1) % order.Length];
-
-        Assert.Equal(StartTime.AddSeconds(30), before.TurnDeadlineUtc);
-        Assert.Equal(StartTime, before.ServerTimeUtc);
-        clock.Set(before.TurnDeadlineUtc!.Value.AddTicks(-1));
-        Assert.Null(game.TryExpireTurn(matchId));
-        Assert.Equal(before.Revision, game.GetBoard(matchId)!.Revision);
-
-        clock.Set(before.TurnDeadlineUtc!.Value);
-        Assert.Equal(active, game.TryExpireTurn(matchId));
-        Assert.Null(game.TryExpireTurn(matchId));
-
-        MatchBoardSnapshot after = game.GetBoard(matchId)!;
-        Assert.Equal(before.Revision + 1, after.Revision);
-        Assert.Equal(nextPlayer, after.CurrentTurnPlayerId);
-        Assert.Equal(clock.GetUtcNow() + (before.TurnDeadlineUtc!.Value - StartTime), after.TurnDeadlineUtc);
-        Assert.Equal(clock.GetUtcNow(), after.ServerTimeUtc);
-        Assert.Equal(MatchEndReason.None, after.EndReason);
-        Assert.Equal(active, Assert.Single(after.ExpelledPlayerIds));
-        Assert.DoesNotContain(after.Players, player => player.PlayerId == active);
-        Assert.Null(game.GetPrivateHand(matchId, active));
-        Assert.Equal(MatchReconnectResult.Rejected, game.TryReconnect(matchId, active));
-        MatchBoardMove move = Assert.Single(after.RecentMoves);
-        Assert.Equal(active, move.PlayerId);
-        Assert.Equal(MatchBoardActionKind.TurnExpired, move.ActionKind);
-        Assert.Equal(after.Revision, move.Revision);
-    }
-
-    [Fact]
-    public void TryReconnect_BeforeDeadline_KeepsOriginalTurnAndDeadline()
-    {
-        ManualClock clock = new();
-        var (game, matchId) = StartMatch(clock, 2);
-        MatchBoardSnapshot before = game.GetBoard(matchId)!;
-        Guid active = before.CurrentTurnPlayerId;
-
-        clock.Set(StartTime.AddSeconds(8));
-        Assert.True(game.TryDisconnect(matchId, active));
-        clock.Set(StartTime.AddSeconds(12));
-        Assert.Equal(MatchReconnectResult.Reconnected, game.TryReconnect(matchId, active));
-        Assert.Equal(MatchPlacementResult.StaleRevision,
-            game.TryPlace(matchId, active, new MatchPlacement(1, 1, before.Revision - 1)));
-
-        MatchBoardSnapshot after = game.GetBoard(matchId)!;
-        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
-        Assert.Equal(before.TurnDeadlineUtc, after.TurnDeadlineUtc);
-        Assert.Equal(before.Revision, after.Revision);
-    }
-
-    [Fact]
-    public void TryExpireTurn_OnlyOnePlayerRemains_FinishesByAbandonment()
-    {
-        ManualClock clock = new();
-        var (game, matchId) = StartMatch(clock, 2);
-        MatchBoardSnapshot before = game.GetBoard(matchId)!;
-        Guid winner = before.Players.Single(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
-
-        clock.Set(before.TurnDeadlineUtc!.Value);
-        Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
-
-        MatchBoardSnapshot after = game.GetBoard(matchId)!;
-        Assert.Equal(MatchLifecycleStatus.Finished, game.Get(matchId)!.Status);
-        Assert.Equal(MatchEndReason.Abandonment, after.EndReason);
-        Assert.Equal(winner, Assert.Single(after.WinnerIds));
-        Assert.Equal(Guid.Empty, after.CurrentTurnPlayerId);
-        Assert.Null(after.TurnDeadlineUtc);
-        Assert.Empty(after.RoundSummaries);
-        Assert.Equal(0, Assert.Single(after.Players).GlobalFloors);
-    }
-
-    [Fact]
-    public void TryExpireTurn_AllPlayersDisconnected_UsesOriginalDeadline()
-    {
-        ManualClock clock = new();
-        var (game, matchId) = StartMatch(clock, 2);
-        MatchBoardSnapshot board = game.GetBoard(matchId)!;
-        clock.Set(StartTime.AddSeconds(12));
-        Assert.All(board.Players, player => Assert.True(game.TryDisconnect(matchId, player.PlayerId)));
-        Assert.Equal(MatchLifecycleStatus.Suspended, game.Get(matchId)!.Status);
-        clock.Set(board.TurnDeadlineUtc!.Value.AddSeconds(-1));
-        Assert.Null(game.TryExpireTurn(matchId));
-        clock.Set(board.TurnDeadlineUtc!.Value);
-
-        Guid? expelled = game.TryExpireTurn(matchId);
-
-        Assert.Equal(board.CurrentTurnPlayerId, expelled);
-        Assert.Equal(MatchEndReason.Abandonment, game.GetBoard(matchId)!.EndReason);
-    }
-
-    [Fact]
-    public void TryExpireTurn_ConcurrentLegalActionAtDeadline_OnlyExpulsionTakesEffect()
-    {
-        ManualClock clock = new();
-        var (game, matchId) = StartMatch(clock, 3);
-        MatchBoardSnapshot before = game.GetBoard(matchId)!;
-        Func<bool> playTurn = GetLegalTurn(game, before);
-        bool played = false;
-        Guid? expelled = null;
-        clock.Set(before.TurnDeadlineUtc!.Value);
-
-        Parallel.Invoke(() => played = playTurn(), () => expelled = game.TryExpireTurn(matchId));
-
-        Assert.False(played);
-        Assert.Equal(before.CurrentTurnPlayerId, expelled);
-        MatchBoardSnapshot after = game.GetBoard(matchId)!;
-        Assert.Equal(before.Revision + 1, after.Revision);
-        Assert.Equal(MatchBoardActionKind.TurnExpired, Assert.Single(after.RecentMoves).ActionKind);
-        Assert.Equal(before.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)),
-            after.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)));
-    }
-
-    [Fact]
-    public void TurnActions_AtDeadlineBeforeClockSweep_RejectWithoutChangingState()
-    {
-        ManualClock clock = new();
-        (InMemoryMatchSessionStarter game, Guid matchId) = StartMatch(clock, 3);
-        MatchBoardSnapshot before = game.GetBoard(matchId)!;
-        Guid active = before.CurrentTurnPlayerId;
-        MatchPrivateHand hand = game.GetPrivateHand(matchId, active)!;
-        clock.Set(before.TurnDeadlineUtc!.Value);
-
-        MatchPlacementResult placement = game.TryPlace(
-            matchId, active, new MatchPlacement(hand.Cards[0], 1, before.Revision));
-        MatchPlacementResult plan = game.TryUseMasterPlan(
-            matchId, active, new MatchMasterPlan(hand.Cards.Take(2).ToArray(), 1, before.Revision));
-        MatchDismantleResult dismantle = game.TryDismantle(matchId, active, new MatchDismantle(1, before.Revision));
-
-        Assert.Equal(MatchPlacementResult.TurnExpired, placement);
-        Assert.Equal(MatchPlacementResult.TurnExpired, plan);
-        Assert.Equal(MatchDismantleResult.TurnExpired, dismantle);
-        MatchBoardSnapshot after = game.GetBoard(matchId)!;
-        Assert.Equal(before.Revision, after.Revision);
-        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
-        Assert.Equal(before.TurnDeadlineUtc, after.TurnDeadlineUtc);
-        Assert.Empty(after.RecentMoves);
-        Assert.Equal(hand.Cards, game.GetPrivateHand(matchId, active)!.Cards);
-    }
-
-    [Fact]
-    public void TryExpireTurn_LegalActionAcceptedBeforeDeadline_DoesNotExpireNewTurnEarly()
-    {
-        ManualClock clock = new();
-        var (game, matchId) = StartMatch(clock, 3);
-        MatchBoardSnapshot before = game.GetBoard(matchId)!;
-        Func<bool> playTurn = GetLegalTurn(game, before);
-        clock.Set(before.TurnDeadlineUtc!.Value.AddSeconds(-1));
-
-        Assert.True(playTurn());
-        clock.Set(before.TurnDeadlineUtc!.Value);
-        Assert.Null(game.TryExpireTurn(matchId));
-
-        MatchBoardSnapshot after = game.GetBoard(matchId)!;
-        Assert.Equal(before.TurnDeadlineUtc!.Value.AddSeconds(-1) + (before.TurnDeadlineUtc.Value - StartTime),
-            after.TurnDeadlineUtc);
-        Assert.Equal(before.Revision + 1, after.Revision);
-        Assert.Empty(after.ExpelledPlayerIds);
-    }
-
-    [Fact]
-    public void TryExpireTurn_ExpelledHand_ReturnsAfterExistingModules()
-    {
-        Guid[] players = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-        MatchSessionSnapshot session = new()
-        {
-            MatchId = Guid.NewGuid(),
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABC234",
-            InitialHostPlayerId = players[0],
-            PlayerIds = players,
-            CreatedAtUtc = StartTime.UtcDateTime
-        };
-        int[] modules = Enumerable.Range(1, 10).Concat(Enumerable.Range(21, 10))
-            .Concat(Enumerable.Range(41, 10)).Concat(new[] { 90, 91, 92, 93, 95 }).ToArray();
-        MatchRecord record = new(session, StartTime, () => new MatchDeck(modules));
-        MatchBoardSnapshot board = record.ToBoard();
-        int expectedReturnedModule = record.ToPrivateHand(board.CurrentTurnPlayerId)!.Cards[0];
-        DateTimeOffset now = board.TurnDeadlineUtc!.Value;
-
-        Assert.Equal(board.CurrentTurnPlayerId, record.TryExpireTurn(now));
-        Assert.Equal(MatchEndReason.None, record.ToBoard().EndReason);
-        Assert.Equal(1, record.ToBoard().RoundNumber);
-        Guid nextPlayer = record.ToBoard().CurrentTurnPlayerId;
-        Dismantle(record, now);
-        Assert.Equal(95, record.ToBoard().Piles[0].TopCardNumber);
-        Dismantle(record, now);
-        Assert.Equal(expectedReturnedModule, record.ToBoard().Piles[0].TopCardNumber);
-        Assert.Equal(nextPlayer, record.ToBoard().CurrentTurnPlayerId);
-    }
-
-    private static void Dismantle(MatchRecord record, DateTimeOffset now)
-    {
-        MatchBoardSnapshot board = record.ToBoard();
-        Assert.Equal(MatchDismantleResult.Applied,
-            record.TryDismantle(board.CurrentTurnPlayerId, new MatchDismantle(1, board.Revision), now));
-    }
-
-    private static Func<bool> GetLegalTurn(InMemoryMatchSessionStarter game, MatchBoardSnapshot board)
-    {
-        Guid active = board.CurrentTurnPlayerId;
-        MatchPrivateHand hand = game.GetPrivateHand(board.MatchId, active)!;
-        (int Card, int Pile) placement = (from card in hand.Cards
-                                         from pile in board.Piles
-                                         where pile.TopCardNumber is int top && MatchPlacementRules.IsValid(top, card)
-                                         select (card, pile.Position)).FirstOrDefault();
-
-        return placement.Pile == 0
-            ? () => game.TryDismantle(board.MatchId, active, new MatchDismantle(1, board.Revision))
-                == MatchDismantleResult.Applied
-            : () => game.TryPlace(board.MatchId, active, new MatchPlacement(placement.Card, placement.Pile,
-                board.Revision)) == MatchPlacementResult.Applied;
-    }
-
-    private static (InMemoryMatchSessionStarter Game, Guid MatchId) StartMatch(ManualClock clock, int playerCount)
-    {
-        InMemoryMatchSessionStarter game = new(clock);
-        Guid[] players = Enumerable.Range(0, playerCount).Select(_ => Guid.NewGuid()).ToArray();
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid[] players = Enumerable.Range(0, 6).Select(index => Guid.NewGuid()).ToArray();
         MatchStartRequest request = new()
         {
             LobbyInstanceId = Guid.NewGuid(),
@@ -18469,80 +23398,356 @@ public sealed class MatchTurnClockTests
             PlayerIds = players
         };
 
-        return (game, game.Start(request).MatchId);
+        Guid matchId = game.Start(request).MatchId;
+
+        MatchBoardSnapshot? board = game.GetBoard(matchId);
+        Assert.NotNull(board);
+        List<int> dealt = board.Piles.Select(pile => pile.TopCardNumber!.Value).ToList();
+        Assert.Single(dealt);
+        foreach (Guid player in players)
+        {
+            MatchPrivateHand? hand = game.GetPrivateHand(matchId, player);
+            Assert.NotNull(hand);
+            Assert.Equal(10, hand.Cards.Count);
+            dealt.AddRange(hand.Cards);
+        }
+
+        Assert.Equal(61, dealt.Distinct().Count());
+        Assert.All(dealt, module => Assert.InRange(module, 1, 100));
     }
 
-    private sealed class ManualClock : TimeProvider
+    [Fact]
+    public void Start_SameLobbyRequest_ReusesMatchAndInitialBoard()
     {
-        private DateTimeOffset _now = StartTime;
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        MatchStartRequest request = CreateRequest();
 
-        public override DateTimeOffset GetUtcNow()
-        {
-            return _now;
-        }
+        Guid firstId = game.Start(request).MatchId;
+        MatchBoardSnapshot? initial = game.GetBoard(firstId);
+        Guid secondId = game.Start(request).MatchId;
+        MatchBoardSnapshot? board = game.GetBoard(secondId);
 
-        public void Set(DateTimeOffset value)
+        Assert.Equal(firstId, secondId);
+        Assert.NotNull(initial);
+        Assert.NotNull(board);
+        Assert.Equal(initial.CurrentTurnPlayerId, board.CurrentTurnPlayerId);
+        Assert.Equal(1, board.Revision);
+        Assert.Equal(1, board.RoundNumber);
+    }
+
+    [Fact]
+    public void GetBoard_AfterMutatingSnapshot_KeepsOriginalState()
+    {
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid matchId = game.Start(CreateRequest()).MatchId;
+        MatchBoardSnapshot? first = game.GetBoard(matchId);
+        Assert.NotNull(first);
+        int? foundation = first.Piles[0].TopCardNumber;
+        first.Piles[0].Position = 99;
+        first.Piles[0].TopCardNumber = 50;
+        first.Piles[0].CardCount = 10;
+        first.Piles.Clear();
+        first.RoundNumber = 3;
+        first.CurrentTurnPlayerId = Guid.NewGuid();
+
+        MatchBoardSnapshot? second = game.GetBoard(matchId);
+
+        Assert.NotNull(second);
+        Assert.Equal(1, second.RoundNumber);
+        Assert.Single(second.Piles);
+        Assert.Equal(1, second.Piles[0].Position);
+        Assert.Equal(foundation, second.Piles[0].TopCardNumber);
+        Assert.Equal(1, second.Piles[0].CardCount);
+    }
+
+    [Fact]
+    public void GetBoard_DifferentMatches_KeepsIndependentInitialState()
+    {
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        MatchStartRequest firstRequest = CreateRequest();
+        MatchStartRequest secondRequest = CreateRequest();
+
+        Guid firstId = game.Start(firstRequest).MatchId;
+        Guid secondId = game.Start(secondRequest).MatchId;
+        MatchBoardSnapshot? first = game.GetBoard(firstId);
+        MatchBoardSnapshot? second = game.GetBoard(secondId);
+
+        Assert.NotEqual(firstId, secondId);
+        Assert.NotNull(first);
+        Assert.NotNull(second);
+        Assert.Contains(first.CurrentTurnPlayerId, firstRequest.PlayerIds);
+        Assert.Contains(second.CurrentTurnPlayerId, secondRequest.PlayerIds);
+        Assert.Single(first.Piles);
+        Assert.Single(second.Piles);
+    }
+
+    [Fact]
+    public void GetBoard_AfterDisconnectAndReconnect_PreservesTurnAndRound()
+    {
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        MatchStartRequest request = CreateRequest();
+        Guid matchId = game.Start(request).MatchId;
+
+        MatchBoardSnapshot? initial = game.GetBoard(matchId);
+        Assert.NotNull(initial);
+        Guid openingPlayer = initial.CurrentTurnPlayerId;
+        Assert.True(game.TryDisconnect(matchId, openingPlayer));
+        Assert.Equal(MatchReconnectResult.Reconnected, game.TryReconnect(matchId, openingPlayer));
+        MatchBoardSnapshot? board = game.GetBoard(matchId);
+
+        Assert.NotNull(board);
+        Assert.Equal(1, board.RoundNumber);
+        Assert.Equal(openingPlayer, board.CurrentTurnPlayerId);
+        Assert.Equal(1, board.Revision);
+    }
+
+    private static MatchStartRequest CreateRequest()
+    {
+        Guid host = Guid.NewGuid();
+        return new MatchStartRequest
         {
-            _now = value;
-        }
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            HostPlayerId = host,
+            PlayerIds = new[] { host, Guid.NewGuid() }
+        };
     }
 }
 ````
 
-## File: src/Client/Vertigo.Client.Networking/Callbacks/LobbyCallbackHandler.cs
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchPrivateHandTests.cs
 ````csharp
-#nullable enable
+using Vertigo.Contracts.Internal;
+using Vertigo.Server.Game.Matches.Implementations;
+using Xunit;
 
-using System;
-using System.ServiceModel;
-using Vertigo.Contracts.Callbacks;
-using Vertigo.Contracts.Models;
+namespace Vertigo.Server.Game.Tests.Matches;
 
-namespace Vertigo.Client.Networking.Callbacks;
-
-[CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Single, UseSynchronizationContext = false)]
-public sealed class LobbyCallbackHandler : ILobbyCallback
+public sealed class MatchPrivateHandTests
 {
-    public event EventHandler<LobbyMember>? PlayerJoined;
-
-    public event EventHandler<Guid>? PlayerLeft;
-
-    public event EventHandler<LobbyChatMessage>? MessageReceived;
-
-    public event EventHandler<LobbyPreparation>? PreparationChanged;
-
-    public event EventHandler<MatchBoardChanged>? MatchBoardUpdated;
-
-    void ILobbyCallback.Notify(LobbyNotification notification)
+    private static (InMemoryMatchSessionStarter Game, Guid MatchId, Guid Host, Guid Guest) StartMatch()
     {
-        switch (notification)
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid host = Guid.NewGuid();
+        Guid guest = Guid.NewGuid();
+        MatchStartRequest request = new()
         {
-            case { Kind: LobbyNotificationKind.PlayerJoined, JoinedPlayer: { } player,
-                LeftPlayerId: null, ChatMessage: null, Preparation: null, BoardChange: null }:
-                PlayerJoined?.Invoke(this, player);
-                break;
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            HostPlayerId = host,
+            PlayerIds = new[] { host, guest }
+        };
+        return (game, game.Start(request).MatchId, host, guest);
+    }
 
-            case { Kind: LobbyNotificationKind.PlayerLeft, LeftPlayerId: Guid playerId,
-                JoinedPlayer: null, ChatMessage: null, Preparation: null, BoardChange: null }
-                when playerId != Guid.Empty:
-                PlayerLeft?.Invoke(this, playerId);
-                break;
+    [Fact]
+    public void GetPrivateHand_OwnPlayer_ReturnsSixDistinctModules()
+    {
+        var state = StartMatch();
 
-            case { Kind: LobbyNotificationKind.MessageReceived, ChatMessage: { } message,
-                JoinedPlayer: null, LeftPlayerId: null, Preparation: null, BoardChange: null }:
-                MessageReceived?.Invoke(this, message);
-                break;
+        var hand = state.Game.GetPrivateHand(state.MatchId, state.Host);
 
-            case { Kind: LobbyNotificationKind.PreparationChanged, Preparation: { } preparation,
-                JoinedPlayer: null, LeftPlayerId: null, ChatMessage: null, BoardChange: null }:
-                PreparationChanged?.Invoke(this, preparation);
-                break;
+        Assert.NotNull(hand);
+        Assert.Equal(10, hand.Cards.Count);
+        Assert.Equal(10, hand.Cards.Distinct().Count());
+        Assert.All(hand.Cards, card => Assert.InRange(card, 1, 100));
+    }
 
-            case { Kind: LobbyNotificationKind.MatchBoardUpdated, BoardChange: { } change,
-                JoinedPlayer: null, LeftPlayerId: null, ChatMessage: null, Preparation: null }:
-                MatchBoardUpdated?.Invoke(this, change);
-                break;
-        }
+    [Fact]
+    public void GetPrivateHand_AnotherMatchNonmember_ReturnsNull()
+    {
+        var state = StartMatch();
+
+        var hand = state.Game.GetPrivateHand(state.MatchId, Guid.NewGuid());
+
+        Assert.Null(hand);
+    }
+
+    [Fact]
+    public void GetPrivateHand_TwoPlayers_DoNotShareModules()
+    {
+        var state = StartMatch();
+
+        var first = state.Game.GetPrivateHand(state.MatchId, state.Host);
+        var second = state.Game.GetPrivateHand(state.MatchId, state.Guest);
+
+        Assert.NotNull(first);
+        Assert.NotNull(second);
+        Assert.Empty(first.Cards.Intersect(second.Cards));
+    }
+
+    [Fact]
+    public void GetPrivateHand_MutatedResponse_DoesNotChangeServerHand()
+    {
+        var state = StartMatch();
+        var first = state.Game.GetPrivateHand(state.MatchId, state.Host);
+        Assert.NotNull(first);
+        int original = first.Cards[0];
+        first.Cards[0] = -1;
+        first.Cards.Clear();
+
+        var again = state.Game.GetPrivateHand(state.MatchId, state.Host);
+
+        Assert.NotNull(again);
+        Assert.Equal(10, again.Cards.Count);
+        Assert.Equal(original, again.Cards[0]);
+    }
+
+    [Fact]
+    public void Start_SameLobby_IsIdempotentAndKeepsHand()
+    {
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid host = Guid.NewGuid();
+        MatchStartRequest request = new()
+        {
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            HostPlayerId = host,
+            PlayerIds = new[] { host, Guid.NewGuid() }
+        };
+        Guid matchId = game.Start(request).MatchId;
+        var before = game.GetPrivateHand(matchId, host);
+        Guid repeated = game.Start(request).MatchId;
+
+        var after = game.GetPrivateHand(repeated, host);
+
+        Assert.Equal(matchId, repeated);
+        Assert.NotNull(before);
+        Assert.NotNull(after);
+        Assert.Equal(before.Cards, after.Cards);
+    }
+
+    [Fact]
+    public void GetBoard_AfterDeal_DoesNotExposePrivateCards()
+    {
+        var state = StartMatch();
+
+        var board = state.Game.GetBoard(state.MatchId);
+
+        Assert.NotNull(board);
+        Assert.Single(board.Piles);
+        Assert.All(board.Piles, pile => Assert.InRange(pile.TopCardNumber!.Value, 1, 100));
+    }
+
+    [Fact]
+    public void GetPrivateHand_AfterReconnect_KeepsSameHand()
+    {
+        var state = StartMatch();
+        var before = state.Game.GetPrivateHand(state.MatchId, state.Guest);
+        state.Game.TryDisconnect(state.MatchId, state.Guest);
+        state.Game.TryReconnect(state.MatchId, state.Guest);
+
+        var after = state.Game.GetPrivateHand(state.MatchId, state.Guest);
+
+        Assert.NotNull(before);
+        Assert.NotNull(after);
+        Assert.Equal(before.Cards, after.Cards);
+    }
+}
+````
+
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchScoringTests.cs
+````csharp
+using Vertigo.Contracts.Models;
+using Vertigo.Server.Game.Matches.Models;
+using Xunit;
+
+namespace Vertigo.Server.Game.Tests.Matches;
+
+public sealed class MatchScoringTests
+{
+    [Fact]
+    public void ToRoundSummaries_MultipleRounds_ReportsBonusAndRunningTotalsWithoutSharingState()
+    {
+        MatchScoring scoring = new();
+        Guid first = Guid.NewGuid();
+        Guid second = Guid.NewGuid();
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 5, [second] = 5 }, first);
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 2, [second] = 0 }, null);
+
+        List<MatchRoundSummary> summaries = scoring.ToRoundSummaries();
+
+        Assert.Equal(new[] { 1, 2 }, summaries.Select(round => round.RoundNumber));
+        Assert.Equal(first, summaries[0].ClosedByPlayerId);
+        Assert.Null(summaries[1].ClosedByPlayerId);
+        MatchRoundPlayerScore firstRound = summaries[0].Players.Single(score => score.PlayerId == first);
+        MatchRoundPlayerScore secondRound = summaries[1].Players.Single(score => score.PlayerId == first);
+        MatchRoundPlayerScore otherScore = summaries[1].Players.Single(score => score.PlayerId == second);
+        Assert.Equal((5, 10, 15), (firstRound.FloorsBuilt, firstRound.BonusFloors, firstRound.TotalFloors));
+        Assert.Equal((2, 10, 27), (secondRound.FloorsBuilt, secondRound.BonusFloors, secondRound.TotalFloors));
+        Assert.Equal((0, 0, 15), (otherScore.FloorsBuilt, otherScore.BonusFloors, otherScore.TotalFloors));
+
+        firstRound.TotalFloors = 999;
+        summaries[1].Players.Clear();
+        List<MatchRoundSummary> refreshed = scoring.ToRoundSummaries();
+        Assert.Equal(15, refreshed[0].Players.Single(score => score.PlayerId == first).TotalFloors);
+        Assert.Equal(2, refreshed[1].Players.Count);
+        Assert.Equal(27, scoring.GetGlobalFloors(first));
+    }
+
+    [Fact]
+    public void AddRound_TiedTallestPlayers_AwardsBothBonusesAndAllowsSharedWin()
+    {
+        MatchScoring scoring = new();
+        Guid first = Guid.NewGuid();
+        Guid second = Guid.NewGuid();
+        Guid third = Guid.NewGuid();
+
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 5, [second] = 5, [third] = 3 }, null);
+
+        Assert.Equal(15, scoring.GetGlobalFloors(first));
+        Assert.Equal(15, scoring.GetGlobalFloors(second));
+        Assert.Equal(3, scoring.GetGlobalFloors(third));
+        Assert.Equal(new[] { first, second }, scoring.GetWinners(new[] { first, second, third }));
+        Dictionary<Guid, int> positions = scoring.GetFinalPositions(new[] { third, first, second });
+        Assert.Equal((1, 1, 3), (positions[first], positions[second], positions[third]));
+    }
+
+    [Fact]
+    public void GetFinalPositions_FormerParticipantWithHighestScore_RanksOnlyRemainingPlayers()
+    {
+        MatchScoring scoring = new();
+        Guid departed = Guid.NewGuid();
+        Guid first = Guid.NewGuid();
+        Guid second = Guid.NewGuid();
+        scoring.AddRound(new Dictionary<Guid, int> { [departed] = 10, [first] = 5, [second] = 2 }, null);
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 2, [second] = 1 }, null);
+
+        Dictionary<Guid, int> positions = scoring.GetFinalPositions(new[] { second, first });
+
+        Assert.Equal(2, positions.Count);
+        Assert.False(positions.ContainsKey(departed));
+        Assert.Equal((1, 2), (positions[first], positions[second]));
+    }
+
+    [Fact]
+    public void GetWinners_TiedGlobalScores_PrefersRoundClosuresBeforeConstructionHeight()
+    {
+        MatchScoring scoring = new();
+        Guid first = Guid.NewGuid();
+        Guid second = Guid.NewGuid();
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 8, [second] = 1 }, null);
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 0, [second] = 7 }, second);
+
+        Assert.Equal(scoring.GetGlobalFloors(first), scoring.GetGlobalFloors(second));
+        Assert.Equal(second, Assert.Single(scoring.GetWinners(new[] { first, second })));
+        Dictionary<Guid, int> positions = scoring.GetFinalPositions(new[] { first, second });
+        Assert.Equal((2, 1), (positions[first], positions[second]));
+    }
+
+    [Fact]
+    public void GetWinners_TiedGlobalScoresAndClosures_PrefersHighestPersonalTower()
+    {
+        MatchScoring scoring = new();
+        Guid first = Guid.NewGuid();
+        Guid second = Guid.NewGuid();
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 8, [second] = 1 }, first);
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 0, [second] = 7 }, second);
+        scoring.AddRound(new Dictionary<Guid, int> { [first] = 0, [second] = 0 }, null);
+
+        Assert.Equal(18, scoring.GetGlobalFloors(first));
+        Assert.Equal(18, scoring.GetGlobalFloors(second));
+        Assert.Equal(first, Assert.Single(scoring.GetWinners(new[] { first, second })));
     }
 }
 ````
@@ -18983,6 +24188,569 @@ public sealed class AccessViewModel : ObservableObject, INavigationAware
 }
 ````
 
+## File: src/Client/Vertigo.Client.UI/ViewModels/LobbyViewModel.cs
+````csharp
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using Vertigo.Client.UI.ViewModels.Presentation;
+using System.ServiceModel;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Vertigo.Client.Core.Navigation;
+using Vertigo.Client.Core.Sessions;
+using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Contracts.Models;
+using Vertigo.Client.UI.ViewModels.Dependencies;
+using Vertigo.Client.UI.ViewModels.Lifecycle;
+using Vertigo.Client.UI.Utilities.Localization.Interfaces;
+using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
+
+namespace Vertigo.Client.UI.ViewModels;
+
+public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationAware
+{
+    private readonly ILobbyClient _lobbyClient;
+    private readonly IChatClient _chatClient;
+    private readonly PlayerSession _playerSession;
+    private readonly INavigator _navigation;
+    private readonly IClientErrorText _errors;
+    private readonly ISessionGuard _coordinator;
+    private readonly ITextLocalizer _text;
+    private string _lobbyCode = string.Empty;
+    private string _messageText = string.Empty;
+    private string _errorMessage = string.Empty;
+    private bool _isBusy;
+    private Guid _hostPlayerId;
+    private bool _isMatchStarted;
+    private bool _disposed;
+    private long _lobbyGeneration;
+    private readonly LobbyPreparationRevision _preparationRevision = new();
+
+    public LobbyViewModel(ILobbyClient lobbyClient, IChatClient chatClient, LobbyContext context)
+    {
+        _lobbyClient = lobbyClient;
+        _chatClient = chatClient;
+        _playerSession = context.PlayerSession;
+        _navigation = context.Ui.Navigation;
+        _errors = context.Ui.Services.Errors;
+        _coordinator = context.Ui.Services.SessionGuard;
+        _text = context.Ui.Services.Text;
+        Match = context.Match;
+        Members.CollectionChanged += (_, _) => RefreshMemberRows();
+        _lobbyClient.PlayerJoined += OnPlayerJoined;
+        _lobbyClient.PlayerLeft += OnPlayerLeft;
+        _lobbyClient.MessageReceived += OnMessageReceived;
+        _lobbyClient.PreparationChanged += OnPreparationChanged;
+        SendMessageCommand = new AsyncRelayCommand(SendMessageAsync);
+        LeaveCommand = new AsyncRelayCommand(LeaveAsync);
+        ToggleReadyCommand = new AsyncRelayCommand(ToggleReadyAsync);
+        StartMatchCommand = new AsyncRelayCommand(StartMatchAsync);
+    }
+
+    public MatchViewModel Match { get; }
+
+    public ObservableCollection<LobbyMember> Members { get; } = new();
+    public ObservableCollection<LobbyMemberRow> MemberRows { get; } = new();
+    public ObservableCollection<LobbyChatMessage> Messages { get; } = new();
+    public ObservableCollection<Guid> ReadyPlayerIds { get; } = new();
+
+    public Guid HostPlayerId
+    {
+        get => _hostPlayerId;
+        private set => SetProperty(ref _hostPlayerId, value);
+    }
+
+    public bool IsMatchStarted
+    {
+        get => _isMatchStarted;
+        private set
+        {
+            if (SetProperty(ref _isMatchStarted, value))
+            {
+                OnPropertyChanged(nameof(MatchStatusText));
+                OnPropertyChanged(nameof(CanPrepare));
+            }
+        }
+    }
+
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
+    public string HostUsername => Members.FirstOrDefault(m => m.PlayerId == HostPlayerId)?.Username ?? string.Empty;
+    public bool IsHost => _playerSession.GetActiveSession()?.PlayerId == HostPlayerId;
+    public bool IsReady => _playerSession.GetActiveSession() is { } active && ReadyPlayerIds.Contains(active.PlayerId);
+
+    public string LobbyCode
+    {
+        get => _lobbyCode;
+        private set => SetProperty(ref _lobbyCode, value);
+    }
+
+    public string MessageText
+    {
+        get => _messageText;
+        set => SetProperty(ref _messageText, value);
+    }
+
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        private set
+        {
+            if (SetProperty(ref _errorMessage, value))
+            {
+                OnPropertyChanged(nameof(HasError));
+            }
+        }
+    }
+
+    public bool IsBusy
+    {
+        get => _isBusy;
+        private set
+        {
+            if (SetProperty(ref _isBusy, value))
+            {
+                OnPropertyChanged(nameof(CanPrepare));
+            }
+        }
+    }
+
+    public bool CanPrepare => !IsBusy && !IsMatchStarted;
+
+    public string RoomTitleText => _text.Get("Room.Title");
+    public string CodeTitleText => _text.Get("Room.Code");
+    public string LeaveText => _text.Get("Room.Leave");
+    public string MembersTitleText => _text.Get("Room.Members");
+    public string MembersDescriptionText => _text.Get("Room.MembersDescription");
+    public string PreparationTitleText => _text.Get("Room.Preparation");
+    public string PreparationHintText => _text.Get("Room.PreparationHint");
+    public string HostLabelText => _text.Get("Room.Host");
+    public string MatchStatusText => _text.Get(IsMatchStarted ? "Room.InGame" : "Room.Waiting");
+    public string ReadyActionText => _text.Get(IsReady ? "Room.NotReadyAction" : "Room.ReadyAction");
+    public string StartText => _text.Get("Room.Start");
+    public string ChatTitleText => _text.Get("Room.Chat");
+    public string MessagePlaceholderText => _text.Get("Room.MessagePlaceholder");
+    public string SendText => _text.Get("Room.Send");
+    public string ErrorHeadingText => _text.Get("Room.ErrorHeading");
+
+    public IAsyncRelayCommand SendMessageCommand { get; }
+    public IAsyncRelayCommand LeaveCommand { get; }
+    public IAsyncRelayCommand ToggleReadyCommand { get; }
+    public IAsyncRelayCommand StartMatchCommand { get; }
+
+    public async Task<bool> CreateAsync(bool isPublic, int maxPlayers)
+    {
+        if (IsBusy || !string.IsNullOrEmpty(LobbyCode)) return false;
+        SessionSnapshot? session = _playerSession.GetActiveSession();
+        if (session is null) { _coordinator.Invalidate(); return false; }
+
+        IsBusy = true;
+        ErrorMessage = string.Empty;
+        try
+        {
+            string code = await Task.Run(() => _lobbyClient.CreateLobby(isPublic, maxPlayers, session.Token));
+            if (!IsCurrentSession(session))
+            {
+                return false;
+            }
+            Members.Clear();
+            Messages.Clear();
+            Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
+                IsGuest = session.IsGuest });
+            LobbyCode = code;
+            HostPlayerId = session.PlayerId;
+            ReadyPlayerIds.Clear();
+            _preparationRevision.Reset();
+            IsMatchStarted = false;
+            _navigation.NavigateTo(NavigationPage.Lobby);
+            _lobbyClient.ReplayPendingEvents();
+            await RefreshPreparationAsync(session);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            return HandleServiceFailure(exception, session, "Lobby.CreateFailed");
+        }
+        finally { IsBusy = false; }
+    }
+
+    public async Task<bool> JoinAsync(string code)
+    {
+        if (IsBusy || !string.IsNullOrEmpty(LobbyCode)) return false;
+        SessionSnapshot? session = _playerSession.GetActiveSession();
+        if (session is null) { _coordinator.Invalidate(); return false; }
+        if (string.IsNullOrWhiteSpace(code)) return Fail("Lobby.CodeRequired");
+
+        IsBusy = true;
+        ErrorMessage = string.Empty;
+        try
+        {
+            LobbyAdmission admission = await Task.Run(() => _lobbyClient.JoinLobby(code.Trim(), session.Token));
+            if (!IsCurrentSession(session))
+            {
+                return false;
+            }
+            Members.Clear();
+            Messages.Clear();
+            foreach (LobbyMember member in admission.ExistingMembers) Members.Add(member);
+            Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
+                IsGuest = session.IsGuest });
+            LobbyCode = admission.LobbyCode;
+            HostPlayerId = admission.HostPlayerId;
+            ReadyPlayerIds.Clear();
+            _preparationRevision.Reset();
+            IsMatchStarted = false;
+            _navigation.NavigateTo(NavigationPage.Lobby);
+            _lobbyClient.ReplayPendingEvents();
+            await RefreshPreparationAsync(session);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            return HandleServiceFailure(exception, session, "Lobby.JoinFailed");
+        }
+        finally { IsBusy = false; }
+    }
+
+    private async Task RefreshPreparationAsync(SessionSnapshot session)
+    {
+        string code = LobbyCode;
+        try
+        {
+            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.GetPreparation(code, session.Token));
+            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyPreparation(preparation);
+            }
+        }
+        catch (Exception exception)
+        {
+            // Creation/join already succeeded; do not report a failed admission.
+            if (_errors.IsUnauthorized(exception))
+            {
+                _coordinator.Invalidate(session);
+            }
+        }
+    }
+
+    private async Task ToggleReadyAsync()
+    {
+        if (IsBusy || string.IsNullOrEmpty(LobbyCode) || IsMatchStarted)
+        {
+            return;
+        }
+        SessionSnapshot? session = _playerSession.GetActiveSession();
+        if (session is null)
+        {
+            _coordinator.Invalidate();
+            return;
+        }
+        IsBusy = true;
+        string code = LobbyCode;
+        bool ready = !IsReady;
+        try
+        {
+            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.SetReady(code, ready, session.Token));
+            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyPreparation(preparation);
+            }
+        }
+        catch (Exception exception)
+        {
+            HandleServiceFailure(exception, session, "Lobby.ReadyFailed");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task StartMatchAsync()
+    {
+        if (IsBusy || !IsHost || IsMatchStarted || string.IsNullOrEmpty(LobbyCode))
+        {
+            return;
+        }
+        SessionSnapshot? session = _playerSession.GetActiveSession();
+        if (session is null)
+        {
+            _coordinator.Invalidate();
+            return;
+        }
+        IsBusy = true;
+        string code = LobbyCode;
+        try
+        {
+            LobbyPreparation preparation = await Task.Run(() => _lobbyClient.StartMatch(code, session.Token));
+            if (IsCurrentSession(session) && string.Equals(LobbyCode, code, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyPreparation(preparation);
+            }
+        }
+        catch (Exception exception)
+        {
+            HandleServiceFailure(exception, session, "Lobby.StartFailed");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void OnPreparationChanged(object? sender, LobbyPreparation preparation)
+    {
+        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
+        string eventLobby = LobbyCode;
+        long eventGeneration = _lobbyGeneration;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_disposed && eventSession is not null && IsCurrentSession(eventSession)
+                && eventGeneration == _lobbyGeneration
+                && string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyPreparation(preparation);
+            }
+        });
+    }
+
+    private void ApplyPreparation(LobbyPreparation preparation)
+    {
+        if (!_preparationRevision.TryAdvance(preparation, LobbyCode))
+        {
+            return;
+        }
+        HostPlayerId = preparation.HostPlayerId;
+        IsMatchStarted = preparation.IsInGame;
+        ReadyPlayerIds.Clear();
+        foreach (Guid playerId in preparation.ReadyPlayerIds)
+        {
+            ReadyPlayerIds.Add(playerId);
+        }
+        RefreshMemberRows();
+        OnPropertyChanged(nameof(IsHost));
+        OnPropertyChanged(nameof(IsReady));
+        OnPropertyChanged(nameof(ReadyActionText));
+        if (MatchEntryRules.CanEnter(preparation, LobbyCode))
+        {
+            bool activated = Match.Activate(preparation.MatchId, LobbyCode);
+            if (activated)
+            {
+                _navigation.NavigateTo(NavigationPage.Match);
+            }
+        }
+    }
+
+    private async Task SendMessageAsync()
+    {
+        if (IsBusy || string.IsNullOrWhiteSpace(MessageText) || string.IsNullOrEmpty(LobbyCode)) return;
+        SessionSnapshot? session = _playerSession.GetActiveSession();
+        if (session is null) { _coordinator.Invalidate(); return; }
+        string text = MessageText.Trim();
+        IsBusy = true;
+        ErrorMessage = string.Empty;
+        try
+        {
+            var result = await Task.Run(() => _chatClient.SendMessage(LobbyCode, text, session.Token));
+            if (_errors.IsUnauthorized(result)) { _coordinator.Invalidate(session); return; }
+            if (!IsCurrentSession(session))
+            {
+                return;
+            }
+            if (result.IsSuccess && result.Value) MessageText = string.Empty;
+            else ErrorMessage = _errors.FromResult(result, "Lobby.MessageFailed");
+        }
+        catch (Exception exception) { HandleServiceFailure(exception, session, "Lobby.MessageFailed"); }
+        finally { IsBusy = false; }
+    }
+
+    private async Task LeaveAsync()
+    {
+        if (IsBusy || string.IsNullOrEmpty(LobbyCode)) return;
+        SessionSnapshot? session = _playerSession.GetActiveSession();
+        if (session is null) { _coordinator.Invalidate(); return; }
+        IsBusy = true;
+        ErrorMessage = string.Empty;
+        try
+        {
+            bool left = await Task.Run(() => _lobbyClient.LeaveLobby(LobbyCode, session.Token));
+            if (!IsCurrentSession(session))
+            {
+                return;
+            }
+            if (!left) { Fail("Lobby.LeaveFailed"); return; }
+            _lobbyClient.Disconnect();
+            ResetState();
+            _navigation.NavigateTo(NavigationPage.Home);
+        }
+        catch (Exception exception)
+        {
+            HandleServiceFailure(exception, session, "Lobby.LeaveFailed");
+        }
+        finally { IsBusy = false; }
+    }
+
+    private void OnPlayerJoined(object? sender, LobbyMember member)
+    {
+        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
+        string eventLobby = LobbyCode;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (eventSession is null || !ReferenceEquals(_playerSession.GetActiveSession(), eventSession)
+                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+            if (_disposed || string.IsNullOrEmpty(LobbyCode)) return;
+            if (Members.All(existing => existing.PlayerId != member.PlayerId)) Members.Add(member);
+        });
+    }
+
+    private void OnPlayerLeft(object? sender, Guid playerId)
+    {
+        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
+        string eventLobby = LobbyCode;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (eventSession is null || !ReferenceEquals(_playerSession.GetActiveSession(), eventSession)
+                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+            if (_disposed || string.IsNullOrEmpty(LobbyCode)) return;
+            LobbyMember? member = Members.FirstOrDefault(existing => existing.PlayerId == playerId);
+            if (member is not null) Members.Remove(member);
+        });
+    }
+
+    private void OnMessageReceived(object? sender, LobbyChatMessage message)
+    {
+        if (message.MatchId.HasValue)
+        {
+            return;
+        }
+
+        SessionSnapshot? eventSession = _playerSession.GetActiveSession();
+        string eventLobby = LobbyCode;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (eventSession is null || !ReferenceEquals(_playerSession.GetActiveSession(), eventSession)
+                || !string.Equals(LobbyCode, eventLobby, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+            if (!_disposed && string.Equals(LobbyCode, message.LobbyCode, StringComparison.OrdinalIgnoreCase))
+                Messages.Add(message);
+        });
+    }
+
+    public void OnNavigatedTo()
+    {
+        RefreshRoomTexts();
+        if (!_coordinator.HasActiveSession()) return;
+        ErrorMessage = string.Empty;
+    }
+
+    public void OnNavigatedFrom()
+    {
+        // Keep the lobby connection only when moving back from a transient view.
+        if (_navigation.CurrentPage == NavigationPage.Access) ResetState();
+    }
+
+    public void ResetState()
+    {
+        _lobbyGeneration++;
+        _preparationRevision.Reset();
+        Match.Reset();
+        LobbyCode = string.Empty;
+        MessageText = string.Empty;
+        ErrorMessage = string.Empty;
+        Members.Clear();
+        Messages.Clear();
+        ReadyPlayerIds.Clear();
+        HostPlayerId = Guid.Empty;
+        IsMatchStarted = false;
+        RefreshMemberRows();
+        OnPropertyChanged(nameof(IsHost));
+        OnPropertyChanged(nameof(IsReady));
+    }
+
+    private bool IsCurrentSession(SessionSnapshot previous)
+    {
+        SessionSnapshot? current = _playerSession.GetActiveSession();
+        return ReferenceEquals(current, previous);
+    }
+
+    private bool HandleServiceFailure(Exception exception, SessionSnapshot session, string fallbackKey)
+    {
+        if (_errors.IsUnauthorized(exception) || !_coordinator.HasActiveSession())
+        {
+            _coordinator.Invalidate(session);
+            return false;
+        }
+
+        ErrorMessage = _errors.FromException(exception, fallbackKey);
+        return false;
+    }
+
+    private bool Fail(string key)
+    {
+        ErrorMessage = _text.Get(key);
+        return false;
+    }
+
+    private void RefreshMemberRows()
+    {
+        MemberRows.Clear();
+        foreach (LobbyMember member in Members)
+        {
+            bool host = member.PlayerId == HostPlayerId;
+            bool ready = ReadyPlayerIds.Contains(member.PlayerId);
+            MemberRows.Add(new LobbyMemberRow
+            {
+                Username = member.Username,
+                RoleText = _text.Get(host ? "Room.Host" : member.IsGuest ? "Room.Guest" : "Room.Player"),
+                ReadyText = _text.Get(ready ? "Room.Ready" : "Room.NotReady"),
+                IsReady = ready
+            });
+        }
+        OnPropertyChanged(nameof(HostUsername));
+    }
+
+    private void RefreshRoomTexts()
+    {
+        OnPropertyChanged(nameof(RoomTitleText));
+        OnPropertyChanged(nameof(CodeTitleText));
+        OnPropertyChanged(nameof(LeaveText));
+        OnPropertyChanged(nameof(MembersTitleText));
+        OnPropertyChanged(nameof(MembersDescriptionText));
+        OnPropertyChanged(nameof(PreparationTitleText));
+        OnPropertyChanged(nameof(PreparationHintText));
+        OnPropertyChanged(nameof(HostLabelText));
+        OnPropertyChanged(nameof(MatchStatusText));
+        OnPropertyChanged(nameof(ReadyActionText));
+        OnPropertyChanged(nameof(StartText));
+        OnPropertyChanged(nameof(ChatTitleText));
+        OnPropertyChanged(nameof(MessagePlaceholderText));
+        OnPropertyChanged(nameof(SendText));
+        OnPropertyChanged(nameof(ErrorHeadingText));
+        RefreshMemberRows();
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        _lobbyClient.PlayerJoined -= OnPlayerJoined;
+        _lobbyClient.PlayerLeft -= OnPlayerLeft;
+        _lobbyClient.MessageReceived -= OnMessageReceived;
+        _lobbyClient.PreparationChanged -= OnPreparationChanged;
+    }
+}
+````
+
 ## File: src/Client/Vertigo.Client.UI/Views/MainWindow.axaml
 ````
 <Window xmlns="https://github.com/avaloniaui"
@@ -19126,6 +24894,89 @@ internal sealed class MatchDeck
 }
 ````
 
+## File: src/Server/Vertigo.Server.Matchmaking/Chat/Services/ChatService.cs
+````csharp
+using CoreWCF;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Interfaces;
+using Vertigo.Contracts.Internal;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.PlayerManagement.Authentication.Models;
+
+namespace Vertigo.Server.Matchmaking.Chat.Services;
+
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
+public sealed class ChatService : IChatService
+{
+    private const int MaximumMessageLength = 30;
+
+    private readonly ILobbyDirectory _lobbies;
+    private readonly ChatServiceDependencies _dependencies;
+
+    public ChatService(ILobbyDirectory lobbies, ChatServiceDependencies dependencies)
+    {
+        _lobbies = lobbies;
+        _dependencies = dependencies;
+    }
+
+    public bool SendMessage(string lobbyCode, string text, string sessionToken)
+    {
+        SessionIdentity sender = _dependencies.Sessions.Require(sessionToken);
+        if (string.IsNullOrWhiteSpace(lobbyCode) || string.IsNullOrWhiteSpace(text)
+            || text.Length > MaximumMessageLength)
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        return Publish(sender, (lobbyCode, text, null));
+    }
+
+    public bool SendMatchMessage(MatchChatRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        SessionIdentity sender = _dependencies.Sessions.Require(request.SessionToken);
+        if (request.MatchId == Guid.Empty || string.IsNullOrWhiteSpace(request.LobbyCode)
+            || !MatchChatRules.CanSend(request.Text))
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        return Publish(sender, (request.LobbyCode, request.Text, request.MatchId));
+    }
+
+    private bool Publish(SessionIdentity sender, (string LobbyCode, string Text, Guid? MatchId) content)
+    {
+        if (_dependencies.LanguageFilter.ContainsBlockedLanguage(content.Text))
+        {
+            throw CreateFault(ServiceErrorCodes.ChatLanguageBlocked, ServiceMessageKeys.ChatLanguageBlocked);
+        }
+
+        LobbyChatMessage message = new()
+        {
+            LobbyCode = content.LobbyCode.Trim(),
+            MatchId = content.MatchId,
+            SenderId = sender.PlayerId,
+            SenderUsername = sender.Username,
+            Text = content.Text.Trim(),
+            SentAt = _dependencies.TimeProvider.GetUtcNow().UtcDateTime
+        };
+
+        if (!_lobbies.PublishChatMessage(message))
+        {
+            throw CreateFault(ServiceErrorCodes.LobbyChatNotAllowed, ServiceMessageKeys.LobbyChatNotAllowed);
+        }
+
+        return true;
+    }
+
+    private static FaultException<ServiceFault> CreateFault(string code, string key)
+    {
+        ServiceFault fault = new ServiceFault { ErrorCode = code, MessageKey = key };
+        return new FaultException<ServiceFault>(fault, new FaultReason(code));
+    }
+}
+````
+
 ## File: src/Server/Vertigo.Server.Matchmaking/Lobbies/Match/LobbyMatchFault.cs
 ````csharp
 using CoreWCF;
@@ -19195,6 +25046,112 @@ internal static class LobbyMatchFault
             MessageKey = messageKey
         };
 
+        return new FaultException<ServiceFault>(fault, new FaultReason(errorCode));
+    }
+}
+````
+
+## File: src/Server/Vertigo.Server.PlayerManagement/Authentication/Services/AuthenticationService.cs
+````csharp
+using CoreWCF;
+using Microsoft.Extensions.Logging;
+using Vertigo.Contracts.Faults;
+using Vertigo.Contracts.Interfaces;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.PlayerManagement.Authentication.Models;
+
+namespace Vertigo.Server.PlayerManagement.Authentication.Services;
+
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
+public class AuthenticationService : IAuthService
+{
+    private const string EventCategoryProperty = "EventCategory";
+    private const string SecurityCategory = "Security";
+    private const string AuthenticationSucceededResult = "Succeeded";
+    private const string AuthenticationFailedResult = "Failed";
+
+    private static readonly EventId AuthenticationFailedEvent = new(2001, "AuthenticationFailed");
+    private static readonly EventId AuthenticationSucceededEvent = new(2002, "AuthenticationSucceeded");
+
+    private readonly SessionService _authentication;
+    private readonly ILogger<AuthenticationService> _logger;
+
+    public AuthenticationService(SessionService authentication, ILogger<AuthenticationService> logger)
+    {
+        _authentication = authentication;
+        _logger = logger;
+    }
+
+    public UserSession Login(LoginCredentials credentials)
+    {
+        if (credentials is null || string.IsNullOrWhiteSpace(credentials.Username)
+            || string.IsNullOrWhiteSpace(credentials.Password))
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        AuthenticatedSession? session = _authentication.Login(credentials.Username, credentials.Password);
+        if (session is null)
+        {
+            LogAuthenticationResult(false, null);
+            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
+        }
+
+        LogAuthenticationResult(true, session.PlayerId);
+        return ConvertSession(session);
+    }
+
+    public UserSession ResumeSession(string token)
+    {
+        AuthenticatedSession? session = _authentication.ResumeSession(token);
+        if (session is null)
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidCredentials, ServiceMessageKeys.InvalidCredentials);
+        }
+
+        return ConvertSession(session);
+    }
+
+    public UserSession CreateGuestSession()
+    {
+        return ConvertSession(_authentication.CreateGuestSession());
+    }
+
+    public bool Logout(SessionLogout logout)
+    {
+        return logout is not null && _authentication.Logout(logout.SessionToken);
+    }
+
+    private void LogAuthenticationResult(bool isSucceeded, Guid? playerId)
+    {
+        EventId eventId = isSucceeded ? AuthenticationSucceededEvent : AuthenticationFailedEvent;
+        string result = isSucceeded ? AuthenticationSucceededResult : AuthenticationFailedResult;
+        Dictionary<string, object> properties = new()
+        {
+            [EventCategoryProperty] = SecurityCategory
+        };
+
+        using (IDisposable? scope = _logger.BeginScope(properties))
+        {
+            _logger.LogInformation(eventId, "Authentication {Result}. PlayerId: {PlayerId}", result, playerId);
+        }
+    }
+
+    private static UserSession ConvertSession(AuthenticatedSession session)
+    {
+        return new UserSession
+        {
+            PlayerId = session.PlayerId,
+            Username = session.Username,
+            Token = session.Token,
+            ExpiresAt = session.ExpiresAt,
+            IsGuest = session.IsGuest
+        };
+    }
+
+    private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)
+    {
+        ServiceFault fault = new ServiceFault { ErrorCode = errorCode, MessageKey = messageKey };
         return new FaultException<ServiceFault>(fault, new FaultReason(errorCode));
     }
 }
@@ -19296,6 +25253,78 @@ public interface ILobbyCallback
 }
 ````
 
+## File: src/Shared/Vertigo.Contracts/Faults/ServiceErrorCodes.cs
+````csharp
+namespace Vertigo.Contracts.Faults;
+
+public static class ServiceErrorCodes
+{
+    public const string UsernameAlreadyRegistered = "USERNAME_ALREADY_REGISTERED";
+    public const string EmailAlreadyRegistered = "EMAIL_ALREADY_REGISTERED";
+    public const string InvalidRegistrationData = "INVALID_REGISTRATION_DATA";
+    public const string LobbyNotFound = "ROOM_NOT_FOUND";
+    public const string LobbyFull = "ROOM_FULL";
+    public const string LobbyAlreadyStarted = "MSG-ROOM-009";
+    public const string InvalidLobbyCapacity = "INVALID_ROOM_CAPACITY";
+    public const string InvalidData = "INVALID_DATA";
+    public const string UserNotFound = "USER_NOT_FOUND";
+    public const string InvalidCode = "INVALID_CODE";
+    public const string InvalidCredentials = "INVALID_CREDENTIALS";
+    public const string SessionAlreadyActive = "SESSION_ALREADY_ACTIVE";
+    public const string FriendRequestAlreadySent = "FRIEND_REQUEST_ALREADY_SENT";
+    public const string AlreadyFriends = "ALREADY_FRIENDS";
+    public const string FriendshipBlocked = "FRIENDSHIP_BLOCKED";
+    public const string FriendRequestNotFound = "FRIEND_REQUEST_NOT_FOUND";
+    public const string LobbyInviteNotAllowed = "LOBBY_INVITE_NOT_ALLOWED";
+    public const string PlayerAlreadyInLobby = "PLAYER_ALREADY_IN_LOBBY";
+    
+    public const string LobbyNotMember = "LOBBY_NOT_MEMBER";
+    public const string LobbyNotHost = "LOBBY_NOT_HOST";
+    public const string LobbyNotReady = "LOBBY_NOT_READY";
+    public const string LobbyAlreadyInGame = "LOBBY_ALREADY_IN_GAME";
+
+    public const string Unauthorized = "UNAUTHORIZED";
+    public const string ChatLanguageBlocked = "CHAT_LANGUAGE_BLOCKED";
+    public const string LobbyChatNotAllowed = "LOBBY_CHAT_NOT_ALLOWED";
+}
+````
+
+## File: src/Shared/Vertigo.Contracts/Faults/ServiceMessageKeys.cs
+````csharp
+namespace Vertigo.Contracts.Faults;
+
+public static class ServiceMessageKeys
+{
+    public const string UsernameAlreadyRegistered = "RegisterAccount.UsernameAlreadyRegistered";
+    public const string EmailAlreadyRegistered = "RegisterAccount.EmailAlreadyRegistered";
+    public const string InvalidRegistrationData = "RegisterAccount.ValidationSummary";
+    public const string LobbyNotFound = "ROOM_NOT_FOUND";
+    public const string LobbyFull = "ROOM_FULL";    
+    public const string LobbyAlreadyStarted = "MSG-ROOM-009";
+    public const string InvalidLobbyCapacity = "MSG-ROOM-011";
+    public const string InvalidData = "ErrorInvalidData";
+    public const string UserNotFound = "ErrorUserNotFound";
+    public const string InvalidCode = "ErrorInvalidCode";
+    public const string InvalidCredentials = "ErrorInvalidCredentials";
+    public const string SessionAlreadyActive = "AccessMenu.SessionAlreadyActive";
+    public const string FriendRequestAlreadySent = "Friends.RequestSent";
+    public const string AlreadyFriends = "Friends.AlreadyFriends";
+    public const string FriendshipBlocked = "Friends.RequestBlocked";
+    public const string FriendRequestNotFound = "Notifications.FriendRequestNotFound";
+    public const string LobbyInviteNotAllowed = "InviteFriends.NotAllowed";
+    public const string PlayerAlreadyInLobby = "Lobby.PlayerAlreadyInLobby";
+    
+    public const string LobbyNotMember = "Lobby.NotMember";
+    public const string LobbyNotHost = "Lobby.NotHost";
+    public const string LobbyNotReady = "Lobby.NotReady";
+    public const string LobbyAlreadyInGame = "Lobby.AlreadyInGame";
+
+    public const string Unauthorized = "Authentication.Unauthorized";
+    public const string ChatLanguageBlocked = "Chat.LanguageBlocked";
+    public const string LobbyChatNotAllowed = "Lobby.ChatNotAllowed";
+}
+````
+
 ## File: src/Shared/Vertigo.Contracts/Models/MatchPrivateHand.cs
 ````csharp
 using System.Runtime.Serialization;
@@ -19328,383 +25357,589 @@ public sealed class MatchPrivateHand
 }
 ````
 
-## File: tests/Vertigo.Client.UnitTests/Matches/MatchTurnPresentationTests.cs
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchExpulsionVoteTests.cs
 ````csharp
-using Vertigo.Client.Core.Sessions;
-using Vertigo.Client.UI.Utilities.Localization.Interfaces;
-using Vertigo.Client.UI.ViewModels;
+using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
-using Vertigo.Client.UI.Utilities.Validation;
-using Vertigo.Client.UI.ViewModels.Presentation;
+using Vertigo.Server.Game.Matches.Implementations;
+using Vertigo.Server.Game.Matches.Models;
+using Xunit;
 
-namespace Vertigo.Client.UnitTests.Matches;
+namespace Vertigo.Server.Game.Tests.Matches;
 
-public sealed class MatchTurnPresentationTests
+public sealed class MatchExpulsionVoteTests
 {
-    private static readonly DateTimeOffset ServerTime = DateTimeOffset.UnixEpoch;
+    private static readonly DateTimeOffset Start = DateTimeOffset.UnixEpoch;
 
     [Fact]
-    public void GetRemainingSeconds_WithServerSample_IgnoresLocalWallClockAndClampsAtZero()
+    public void TryVoteToExpel_ThreePlayers_RequiresTwoDistinctVotersAndStartsNextTurn()
     {
         ManualClock clock = new();
-        MatchTurnClock countdown = new(clock);
-        countdown.SetDeadline(ServerTime.AddSeconds(20), ServerTime);
+        InMemoryMatchSessionStarter game = new(clock);
+        MatchBoardSnapshot initial = StartMatch(game, 3);
+        Guid target = initial.CurrentTurnPlayerId;
+        Guid[] playerOrder = initial.Players.Select(player => player.PlayerId).ToArray();
+        Guid next = playerOrder[(Array.IndexOf(playerOrder, target) + 1) % playerOrder.Length];
+        Guid other = playerOrder.Single(playerId => playerId != target && playerId != next);
+        MatchExpulsionVote vote = new(target, initial.VotingRevision);
+        clock.Now = Start.AddSeconds(7);
 
-        Assert.Equal(20, countdown.GetRemainingSeconds());
-        clock.MoveBy(TimeSpan.FromMilliseconds(600));
-        Assert.Equal(20, countdown.GetRemainingSeconds());
-        clock.MoveBy(TimeSpan.FromMilliseconds(400));
-        Assert.Equal(19, countdown.GetRemainingSeconds());
-        clock.MoveBy(TimeSpan.FromSeconds(25));
-        Assert.Equal(0, countdown.GetRemainingSeconds());
-        countdown.SetDeadline(null, null);
-        Assert.Null(countdown.GetRemainingSeconds());
+        Assert.Equal(2, initial.ExpulsionVotesRequired);
+        Assert.Equal(MatchExpulsionVoteResult.InvalidTarget, game.TryVoteToExpel(initial.MatchId, target, vote));
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(initial.MatchId, next, vote));
+        Assert.Equal(MatchExpulsionVoteResult.AlreadyVoted, game.TryVoteToExpel(initial.MatchId, next, vote));
+
+        MatchBoardSnapshot pending = game.GetBoard(initial.MatchId)!;
+        MatchExpulsionVoteSummary count = Assert.Single(pending.ExpulsionVotes);
+        Assert.Equal(target, count.TargetPlayerId);
+        Assert.Equal(1, count.VoteCount);
+        Assert.Equal(initial.Revision + 1, pending.Revision);
+        Assert.Equal(initial.TurnDeadlineUtc, pending.TurnDeadlineUtc);
+        Assert.Empty(pending.RecentMoves);
+        MatchPrivateHand votedHand = game.GetPrivateHand(initial.MatchId, next)!;
+        Assert.Equal(pending.VotingRevision, votedHand.VotingRevision);
+        Assert.Equal(target, Assert.Single(votedHand.VotedExpulsionTargetIds));
+        Assert.Empty(game.GetPrivateHand(initial.MatchId, other)!.VotedExpulsionTargetIds);
+        Assert.Equal(MatchExpulsionVoteResult.Expelled, game.TryVoteToExpel(initial.MatchId, other, vote));
+
+        MatchBoardSnapshot after = game.GetBoard(initial.MatchId)!;
+        Assert.Equal(next, after.CurrentTurnPlayerId);
+        Assert.Equal(clock.Now + (initial.TurnDeadlineUtc!.Value - Start), after.TurnDeadlineUtc);
+        Assert.Equal(initial.Revision + 2, after.Revision);
+        Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
+        Assert.Equal(MatchBoardActionKind.ExpelledByVote, Assert.Single(after.RecentMoves).ActionKind);
+        Assert.Empty(after.ExpulsionVotes);
+        Assert.Null(game.GetPrivateHand(initial.MatchId, target));
+        MatchPrivateHand afterHand = game.GetPrivateHand(initial.MatchId, next)!;
+        Assert.Equal(after.VotingRevision, afterHand.VotingRevision);
+        Assert.Empty(afterHand.VotedExpulsionTargetIds);
     }
 
     [Fact]
-    public void GetRemainingSeconds_AfterReconnect_UsesRemainingServerTime()
+    public void TryVoteToExpel_FourPlayers_RequiresThreeAndPreservesAnotherPlayersTurn()
     {
         ManualClock clock = new();
-        MatchTurnClock countdown = new(clock);
+        InMemoryMatchSessionStarter game = new(clock);
+        MatchBoardSnapshot initial = StartMatch(game, 4);
+        Guid target = initial.Players.First(player => player.PlayerId != initial.CurrentTurnPlayerId).PlayerId;
+        Guid[] voters = initial.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
+        MatchExpulsionVote vote = new(target, initial.VotingRevision);
+        clock.Now = Start.AddSeconds(12);
 
-        countdown.SetDeadline(ServerTime.AddSeconds(20), ServerTime.AddSeconds(14));
+        Assert.Equal(3, initial.ExpulsionVotesRequired);
+        MatchExpulsionVote oldVoteForAnotherPlayer = new(voters[1], initial.VotingRevision);
+        Assert.Equal(MatchExpulsionVoteResult.Recorded,
+            game.TryVoteToExpel(initial.MatchId, voters[0], oldVoteForAnotherPlayer));
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(initial.MatchId, voters[0], vote));
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(initial.MatchId, voters[1], vote));
+        Assert.Empty(game.GetBoard(initial.MatchId)!.ExpelledPlayerIds);
+        Assert.Equal(MatchExpulsionVoteResult.Expelled, game.TryVoteToExpel(initial.MatchId, voters[2], vote));
 
-        Assert.Equal(6, countdown.GetRemainingSeconds());
+        MatchBoardSnapshot after = game.GetBoard(initial.MatchId)!;
+        Assert.Equal(initial.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(initial.TurnDeadlineUtc, after.TurnDeadlineUtc);
+        Assert.Equal(initial.VotingRevision + 1, after.VotingRevision);
+        Assert.Empty(after.ExpulsionVotes);
+
+        Assert.Equal(MatchExpulsionVoteResult.StaleVotingRevision,
+            game.TryVoteToExpel(initial.MatchId, voters[0], oldVoteForAnotherPlayer));
+        Assert.Equal(MatchExpulsionVoteResult.InvalidVoter,
+            game.TryVoteToExpel(initial.MatchId, target, new MatchExpulsionVote(voters[1], after.VotingRevision)));
     }
 
     [Fact]
-    public void HasLegalPlacement_OnlyAnotherTowerAcceptsCard_ReturnsTrue()
+    public void TryVoteToExpel_ConcurrentVotesWithSameRevision_ExpelsExactlyOnce()
     {
-        int?[] tops = { 80, null, 12 };
-        int[] hand = { 15, 55 };
+        InMemoryMatchSessionStarter game = new(new ManualClock());
+        MatchBoardSnapshot board = StartMatch(game, 3);
+        Guid target = board.CurrentTurnPlayerId;
+        Guid[] voters = board.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
+        MatchExpulsionVote vote = new(target, board.VotingRevision);
+        MatchExpulsionVoteResult[] results = new MatchExpulsionVoteResult[voters.Length];
 
-        Assert.False(MatchTurnRules.CanPlace(tops[0], hand[0]));
-        Assert.True(MatchTurnRules.HasLegalPlacement(tops, hand));
-    }
-
-    [Fact]
-    public void HasLegalPlacement_NoTowerAcceptsAnyCard_ReturnsFalse()
-    {
-        int?[] tops = { 80, null, 12 };
-        int[] hand = { 10, 40, 100 };
-
-        Assert.False(MatchTurnRules.HasLegalPlacement(tops, hand));
-    }
-
-    [Theory]
-    [InlineData(12, 12, false)]
-    [InlineData(12, 13, true)]
-    [InlineData(12, 22, true)]
-    [InlineData(12, 23, false)]
-    [InlineData(95, 101, false)]
-    [InlineData(null, 15, false)]
-    public void CanPlace_ModuleAndTower_UsesGameLimits(int? top, int module, bool expected)
-    {
-        Assert.Equal(expected, MatchTurnRules.CanPlace(top, module));
-    }
-
-    [Fact]
-    public void ApplyBoardAndHand_LegalCardOnAnotherTower_EnablesOnlyItsPlacement()
-    {
-        TurnFixture turn = CreateTurn();
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-        turn.Model.SelectedCard = Assert.Single(turn.Model.Hand);
-
-        turn.Model.SelectedPile = turn.Model.Piles[0];
-        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
-        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
-
-        turn.Model.SelectedPile = turn.Model.Piles[1];
-        Assert.True(turn.Model.PlaceCardCommand.CanExecute(null));
-        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
-    }
-
-    [Fact]
-    public void ApplyBoardAndHand_BlockedHand_RequiresANonemptyTowerAndUnexpiredTurn()
-    {
-        TurnFixture turn = CreateTurn();
-        turn.Hand.Cards = new List<int> { 50 };
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-
-        turn.Model.SelectedPile = turn.Model.Piles[2];
-        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
-        turn.Model.SelectedPile = turn.Model.Piles[0];
-        Assert.True(turn.Model.DismantleTowerCommand.CanExecute(null));
-        turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
-        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
-        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
-    }
-
-    [Fact]
-    public void ApplyBoardAndHand_HandFromDifferentRevision_DisablesActionsUntilMatchingHandArrives()
-    {
-        TurnFixture turn = CreateTurn();
-        turn.Hand.Revision = turn.Board.Revision + 1;
-
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-
-        Assert.Empty(turn.Model.Hand);
-        turn.Model.SelectedPile = turn.Model.Piles[0];
-        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
-
-        turn.Board.Revision++;
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-        turn.Model.SelectedCard = Assert.Single(turn.Model.Hand);
-        turn.Model.SelectedPile = turn.Model.Piles[1];
-        Assert.True(turn.Model.PlaceCardCommand.CanExecute(null));
-    }
-
-    [Fact]
-    public void ApplyBoardAndHand_TurnChangesAndLocalPlayerIsExpelled_ClearsOldSelectionsAndDisablesActions()
-    {
-        TurnFixture turn = CreateTurn();
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-        MatchCardRow oldCard = Assert.Single(turn.Model.Hand);
-        MatchPileRow oldPile = turn.Model.Piles[1];
-        turn.Model.SelectedCard = oldCard;
-        turn.Model.SelectedPile = oldPile;
-        Assert.True(turn.Model.PlaceCardCommand.CanExecute(null));
-
-        turn.Board.Revision++;
-        turn.Board.CurrentTurnPlayerId = turn.Board.Players[1].PlayerId;
-        turn.Hand.Revision = turn.Board.Revision;
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-        Assert.Null(turn.Model.SelectedCard);
-        Assert.Null(turn.Model.SelectedPile);
-        turn.Model.SelectedCard = oldCard;
-        turn.Model.SelectedPile = oldPile;
-        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
-        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
-
-        turn.Board.Revision++;
-        turn.Board.ExpelledPlayerIds.Add(turn.Hand.PlayerId);
-        turn.Model.ApplyBoardAndHand(turn.Board, null);
-        Assert.Empty(turn.Model.Hand);
-        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
-    }
-
-    [Fact]
-    public void ApplyBoardAndHand_SameRevisionAfterReconnect_ResamplesRemainingTime()
-    {
-        TurnFixture turn = CreateTurn();
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-        turn.Clock.MoveBy(TimeSpan.FromSeconds(5));
-        turn.Board.ServerTimeUtc = ServerTime.AddSeconds(14);
-
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-
-        Assert.Equal("6", turn.Model.TurnSecondsLabel);
-    }
-
-    [Fact]
-    public void ApplyBoardAndHand_SlowPrivateHandRequest_DoesNotExtendCountdown()
-    {
-        TurnFixture turn = CreateTurn();
-        long boardReceivedAt = turn.Clock.GetTimestamp();
-        turn.Clock.MoveBy(TimeSpan.FromSeconds(4));
-
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand, boardReceivedAt);
-
-        Assert.Equal("16", turn.Model.TurnSecondsLabel);
-    }
-
-    [Fact]
-    public void MasterPlanDraft_PendingVoteAndUnchangedHand_PreservesChain()
-    {
-        TurnFixture turn = CreateTurnWithDraft();
-
-        turn.Board.Revision++;
-        turn.Hand.Revision = turn.Board.Revision;
-        turn.Board.ExpulsionVotes.Add(new MatchExpulsionVoteSummary { TargetPlayerId = Guid.NewGuid(), VoteCount = 1 });
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-
-        Assert.Equal("12 → 15 → 22", turn.Model.MasterPlanPreview);
-        Assert.True(turn.Model.PlayMasterPlanCommand.CanExecute(null));
-        turn.Model.SelectedCard = turn.Model.Hand[0];
-        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
-    }
-
-    [Fact]
-    public void MasterPlanDraft_ChangedTower_ClearsChainAndRejectsOldSelection()
-    {
-        TurnFixture turn = CreateTurnWithDraft();
-        MatchPileRow oldPile = turn.Model.Piles[1];
-        turn.Board.Revision++;
-        turn.Hand.Revision = turn.Board.Revision;
-        turn.Board.Piles[1].TopCardNumber = 14;
-
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-
-        Assert.Null(turn.Model.SelectedPile);
-        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
-        turn.Model.SelectedPile = oldPile;
-        turn.Model.SelectedCard = turn.Model.Hand[0];
-        Assert.False(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
-    }
-
-    [Fact]
-    public void MasterPlanDraft_MissingModule_ClearsDraftAndRejectsOldCard()
-    {
-        TurnFixture turn = CreateTurnWithDraft();
-        MatchCardRow oldCard = turn.Model.Hand[0];
-        turn.Board.Revision++;
-        turn.Hand.Revision = turn.Board.Revision;
-        turn.Hand.Cards.Remove(15);
-
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-
-        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
-        Assert.False(turn.Model.RemoveMasterPlanModuleCommand.CanExecute(null));
-        turn.Model.SelectedCard = oldCard;
-        Assert.False(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
-    }
-
-    [Fact]
-    public void MasterPlanDraft_ExpiredTurn_DisablesPlayAndClearsDraftOnRefresh()
-    {
-        TurnFixture turn = CreateTurnWithDraft();
-        turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
-
-        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
-        turn.Board.ServerTimeUtc = turn.Board.TurnDeadlineUtc;
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-
-        Assert.False(turn.Model.RemoveMasterPlanModuleCommand.CanExecute(null));
-        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
-    }
-
-    private static TurnFixture CreateTurnWithDraft()
-    {
-        TurnFixture turn = CreateTurn();
-        turn.Hand.MasterPlans = 1;
-        turn.Hand.Cards.Add(22);
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-        turn.Model.SelectedPile = turn.Model.Piles[1];
-
-        foreach (MatchCardRow card in turn.Model.Hand)
+        Parallel.For(0, voters.Length, index =>
         {
-            turn.Model.SelectedCard = card;
-            Assert.True(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
-            turn.Model.AddMasterPlanModuleCommand.Execute(null);
-        }
-
-        Assert.True(turn.Model.PlayMasterPlanCommand.CanExecute(null));
-
-        return turn;
-    }
-
-    [Fact]
-    public void VoteCommand_RefreshedPrivateVote_DisablesOnlyThePreviouslyVotedTarget()
-    {
-        TurnFixture turn = CreateTurn();
-        turn.Board.Players.Add(new MatchBoardPlayer { PlayerId = Guid.NewGuid(), Username = "Carla" });
-        turn.Board.CurrentTurnPlayerId = turn.Board.Players[1].PlayerId;
-        turn.Board.ExpulsionVotesRequired = 2;
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-        Assert.Null(turn.Model.Players[0].VoteCommand);
-        Assert.True(turn.Model.Players[1].VoteCommand!.CanExecute(null));
-
-        turn.Board.Revision++;
-        turn.Hand.Revision = turn.Board.Revision;
-        turn.Hand.VotedExpulsionTargetIds.Add(turn.Board.Players[1].PlayerId);
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-
-        Assert.False(turn.Model.Players[1].VoteCommand!.CanExecute(null));
-        Assert.True(turn.Model.Players[2].VoteCommand!.CanExecute(null));
-    }
-
-    [Fact]
-    public void VoteCommand_AtTurnDeadline_DisablesVoteForAnotherPlayer()
-    {
-        TurnFixture turn = CreateTurn();
-        turn.Board.Players.Add(new MatchBoardPlayer { PlayerId = Guid.NewGuid() });
-        turn.Board.ExpulsionVotesRequired = 2;
-        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
-        Assert.True(turn.Model.Players[1].VoteCommand!.CanExecute(null));
-
-        turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
-
-        Assert.False(turn.Model.Players[1].VoteCommand!.CanExecute(null));
-    }
-
-    private static TurnFixture CreateTurn()
-    {
-        ManualClock clock = new();
-        PlayerSession session = new(clock);
-        Guid player = Guid.NewGuid();
-        session.SetSession(new SessionSnapshot
-        {
-            PlayerId = player,
-            Username = "Ana",
-            Token = "test-token",
-            ExpiresAt = clock.GetUtcNow().UtcDateTime.AddHours(1),
-            IsGuest = true
+            results[index] = game.TryVoteToExpel(board.MatchId, voters[index], vote);
         });
-        Guid matchId = Guid.NewGuid();
-        MatchViewModel model = new(new TestText(), session, clock);
-        model.Activate(matchId, "ABC234");
-        MatchBoardSnapshot board = new()
-        {
-            MatchId = matchId,
-            Revision = 5,
-            CurrentTurnPlayerId = player,
-            ServerTimeUtc = ServerTime,
-            TurnDeadlineUtc = ServerTime.AddSeconds(20),
-            Players = { new MatchBoardPlayer { PlayerId = player }, new MatchBoardPlayer { PlayerId = Guid.NewGuid() } },
-            Piles =
-            {
-                new MatchBoardPile { Position = 1, TopCardNumber = 80 },
-                new MatchBoardPile { Position = 2, TopCardNumber = 12 },
-                new MatchBoardPile { Position = 3 }
-            }
-        };
-        MatchPrivateHand hand = new() { MatchId = matchId, PlayerId = player, Revision = 5, Cards = { 15 } };
 
-        return new TurnFixture
-        {
-            Model = model,
-            Board = board,
-            Hand = hand,
-            Clock = clock
-        };
+        Assert.Single(results, result => result == MatchExpulsionVoteResult.Recorded);
+        Assert.Single(results, result => result == MatchExpulsionVoteResult.Expelled);
+        MatchBoardSnapshot after = game.GetBoard(board.MatchId)!;
+        Assert.Equal(board.Revision + 2, after.Revision);
+        Assert.Equal(board.VotingRevision + 1, after.VotingRevision);
+        Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
+        Assert.Equal(MatchBoardActionKind.ExpelledByVote, Assert.Single(after.RecentMoves).ActionKind);
+        Assert.Empty(after.ExpulsionVotes);
     }
 
-    private sealed class TurnFixture
+    [Fact]
+    public void TryVoteToExpel_TwoPlayers_CannotReachMajority()
     {
-        public required MatchViewModel Model { get; init; }
-        public required MatchBoardSnapshot Board { get; init; }
-        public required MatchPrivateHand Hand { get; init; }
-        public required ManualClock Clock { get; init; }
+        InMemoryMatchSessionStarter game = new(new ManualClock());
+        MatchBoardSnapshot board = StartMatch(game, 2);
+        Guid voter = board.Players[0].PlayerId;
+        Guid target = board.Players[1].PlayerId;
+
+        MatchExpulsionVoteResult result = game.TryVoteToExpel(
+            board.MatchId, voter, new MatchExpulsionVote(target, board.VotingRevision));
+
+        Assert.Equal(MatchExpulsionVoteResult.TooFewPlayers, result);
+        Assert.Equal(board.Revision, game.GetBoard(board.MatchId)!.Revision);
+        Assert.Empty(game.GetBoard(board.MatchId)!.ExpulsionVotes);
     }
 
-    private sealed class TestText : ITextLocalizer
+    [Fact]
+    public void TryVoteToExpel_AtGraceExpiry_RecordsOneExpulsionAndClearsPreviousVotes()
     {
-        public string Get(string key)
+        ManualClock clock = new();
+        InMemoryMatchSessionStarter game = new(clock);
+        MatchBoardSnapshot board = StartMatch(game, 3);
+        Guid target = board.CurrentTurnPlayerId;
+        Guid[] voters = board.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
+        MatchExpulsionVote vote = new(target, board.VotingRevision);
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[0], vote));
+        clock.Now = board.TurnDeadlineUtc!.Value;
+        Assert.Equal(target, game.TryExpireTurn(board.MatchId));
+        clock.Now = game.GetBoard(board.MatchId)!.PresenceDeadlinesUtc[target];
+        MatchExpulsionVoteResult result = default;
+        Guid? expired = null;
+
+        Parallel.Invoke(
+            () => result = game.TryVoteToExpel(board.MatchId, voters[1], vote),
+            () => expired = game.TryExpireTurn(board.MatchId));
+
+        Assert.True(result is MatchExpulsionVoteResult.TurnExpired or MatchExpulsionVoteResult.StaleVotingRevision);
+        Assert.Equal(target, expired);
+        MatchBoardSnapshot after = game.GetBoard(board.MatchId)!;
+        Assert.Equal(board.Revision + 3, after.Revision);
+        Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
+        Assert.Equal(MatchBoardActionKind.TurnExpired, after.RecentMoves.Last().ActionKind);
+        Assert.Empty(after.ExpulsionVotes);
+    }
+
+    [Fact]
+    public void TryPlay_WhenOnlyAVoteChangedRevision_AcceptsTheCurrentTurnAction()
+    {
+        InMemoryMatchSessionStarter game = new(new ManualClock());
+        MatchBoardSnapshot board = StartMatch(game, 3);
+        Guid active = board.CurrentTurnPlayerId;
+        Guid voter = board.Players.First(player => player.PlayerId != active).PlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(board.MatchId, active)!;
+        (int Card, int Pile) position = (from card in hand.Cards
+                                        from pile in board.Piles
+                                        where pile.TopCardNumber is int top && MatchPlacementRules.IsValid(top, card)
+                                        select (card, pile.Position)).FirstOrDefault();
+        Assert.Equal(MatchExpulsionVoteResult.Recorded,
+            game.TryVoteToExpel(board.MatchId, voter, new MatchExpulsionVote(active, board.VotingRevision)));
+
+        if (position.Pile == 0)
         {
-            return key == "Match.Turn.Seconds" ? "{0}" : key;
+            MatchDismantle move = new(1, board.Revision);
+            Assert.Equal(MatchDismantleResult.Applied, game.TryDismantle(board.MatchId, active, move));
+            Assert.Equal(MatchDismantleResult.StaleRevision, game.TryDismantle(board.MatchId, active, move));
         }
+        else
+        {
+            MatchPlacement move = new(position.Card, position.Pile, board.Revision);
+            Assert.Equal(MatchPlacementResult.Applied, game.TryPlace(board.MatchId, active, move));
+            Assert.Equal(MatchPlacementResult.StaleRevision, game.TryPlace(board.MatchId, active, move));
+        }
+
+        Assert.Equal(board.Revision + 2, game.GetBoard(board.MatchId)!.Revision);
+    }
+
+    private static MatchBoardSnapshot StartMatch(InMemoryMatchSessionStarter game, int playerCount)
+    {
+        Guid[] players = Enumerable.Range(0, playerCount).Select(_ => Guid.NewGuid()).ToArray();
+        MatchSessionSnapshot session = game.Start(new MatchStartRequest
+        {
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            HostPlayerId = players[0],
+            PlayerIds = players
+        });
+
+        return game.GetBoard(session.MatchId)!;
     }
 
     private sealed class ManualClock : TimeProvider
     {
-        private long _ticks;
-
-        public override long TimestampFrequency => TimeSpan.TicksPerSecond;
+        public DateTimeOffset Now { get; set; } = Start;
 
         public override DateTimeOffset GetUtcNow()
         {
-            return ServerTime.AddHours(1);
+            return Now;
+        }
+    }
+}
+````
+
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchMasterPlanTests.cs
+````csharp
+using Vertigo.Contracts.Internal;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.Game.Matches.Models;
+using Xunit;
+
+namespace Vertigo.Server.Game.Tests.Matches;
+
+public sealed class MatchMasterPlanTests
+{
+    private static readonly DateTimeOffset Now = DateTimeOffset.UnixEpoch;
+
+    [Fact]
+    public void TryUseMasterPlan_ValidChain_ConsumesOnePlanAndPublishesOneMove()
+    {
+        MatchRecord match = CreateMatchWithEarnedPlan();
+        MatchBoardSnapshot before = match.ToBoard();
+        Guid playerId = before.CurrentTurnPlayerId;
+        MatchMasterPlan plan = new(new[] { 42, 48 }, 1, before.Revision);
+
+        MatchPlacementResult applied = match.TryUseMasterPlan(playerId, plan, Now);
+        MatchPlacementResult repeated = match.TryUseMasterPlan(playerId, plan, Now);
+
+        Assert.Equal(MatchPlacementResult.Applied, applied);
+        Assert.Equal(MatchPlacementResult.StaleRevision, repeated);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(before.Revision + 1, after.Revision);
+        Assert.Equal(match.Session.PlayerIds[0], after.CurrentTurnPlayerId);
+        Assert.Equal(48, after.Piles[0].TopCardNumber);
+        Assert.Equal(3, after.Piles[0].CardCount);
+        Assert.Equal(3, after.Players.Single(player => player.PlayerId == playerId).FloorsBuilt);
+        MatchPrivateHand hand = match.ToPrivateHand(playerId)!;
+        Assert.Equal(0, hand.MasterPlans);
+        Assert.Equal(new[] { 43, 44, 45, 46, 47, 49, 50 }, hand.Cards);
+        Assert.Equal(4, after.RecentMoves.Count);
+        Assert.Equal(new[] { MatchBoardActionKind.Placement, MatchBoardActionKind.Dismantle,
+            MatchBoardActionKind.Placement, MatchBoardActionKind.MasterPlan },
+            after.RecentMoves.Select(entry => entry.ActionKind));
+        MatchBoardMove move = after.RecentMoves[^1];
+        Assert.Equal(after.Revision, move.Revision);
+        Assert.Equal(playerId, move.PlayerId);
+        Assert.Equal(36, move.PreviousTop);
+        Assert.Equal(new[] { 42, 48 }, move.CardNumbers);
+
+        move.CardNumbers.Clear();
+        after.RecentMoves.Clear();
+        Assert.Equal(new[] { 42, 48 }, match.ToBoard().RecentMoves[^1].CardNumbers);
+    }
+
+    [Theory]
+    [InlineData(new[] { 42, 45, 44 }, 1, MatchPlacementResult.InvalidMasterPlanChain)]
+    [InlineData(new[] { 42, 45, 42 }, 1, MatchPlacementResult.InvalidMasterPlanChain)]
+    [InlineData(new[] { 42 }, 1, MatchPlacementResult.InvalidMasterPlanChain)]
+    [InlineData(new[] { 42, 51 }, 1, MatchPlacementResult.CardNotOwned)]
+    [InlineData(new[] { 42, 48 }, 5, MatchPlacementResult.InvalidPile)]
+    public void TryUseMasterPlan_InvalidRequest_PreservesTurnPlanHandTowerAndHistory(
+        int[] modules, int pile, MatchPlacementResult expected)
+    {
+        MatchRecord match = CreateMatchWithEarnedPlan();
+        MatchBoardSnapshot before = match.ToBoard();
+        Guid playerId = before.CurrentTurnPlayerId;
+        MatchPrivateHand hand = match.ToPrivateHand(playerId)!;
+        MatchMasterPlan plan = new(modules, pile, before.Revision);
+
+        MatchPlacementResult result = match.TryUseMasterPlan(playerId, plan, Now);
+
+        Assert.Equal(expected, result);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(before.Revision, after.Revision);
+        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(before.Piles[0].CardCount, after.Piles[0].CardCount);
+        Assert.Equal(before.Piles[0].TopCardNumber, after.Piles[0].TopCardNumber);
+        Assert.Equal(before.RecentMoves.Select(move => move.Revision), after.RecentMoves.Select(move => move.Revision));
+        MatchPrivateHand afterHand = match.ToPrivateHand(playerId)!;
+        Assert.Equal(hand.Cards, afterHand.Cards);
+        Assert.Equal(1, afterHand.MasterPlans);
+    }
+
+    [Fact]
+    public void TryUseMasterPlan_EmptyHand_ClosesRoundAndKeepsMoveInHistory()
+    {
+        MatchRecord match = CreateMatchWithEarnedPlan();
+        MatchBoardSnapshot before = match.ToBoard();
+        Guid playerId = before.CurrentTurnPlayerId;
+        int[] modules = Enumerable.Range(42, 9).ToArray();
+
+        MatchPlacementResult result = match.TryUseMasterPlan(
+            playerId, new MatchMasterPlan(modules, 1, before.Revision), Now);
+
+        Assert.Equal(MatchPlacementResult.Applied, result);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(2, after.RoundNumber);
+        Assert.Equal(before.Revision + 1, after.Revision);
+        Assert.Equal(match.Session.PlayerIds[0], after.CurrentTurnPlayerId);
+        MatchRoundSummary summary = Assert.Single(after.RoundSummaries);
+        Assert.Equal(playerId, summary.ClosedByPlayerId);
+        MatchRoundPlayerScore score = summary.Players.Single(entry => entry.PlayerId == playerId);
+        Assert.Equal((3, 10, 13), (score.FloorsBuilt, score.BonusFloors, score.TotalFloors));
+        Assert.Equal(modules, after.RecentMoves[^1].CardNumbers);
+        Assert.Equal(0, match.ToPrivateHand(playerId)!.MasterPlans);
+        Assert.Equal(10, match.ToPrivateHand(playerId)!.Cards.Count);
+    }
+
+    [Fact]
+    public void TryUseMasterPlan_ClosesRoundWhileOpenerIsInGrace_KeepsTheOriginalDeadline()
+    {
+        MatchRecord match = CreateMatchWithEarnedPlan(skipOtherPlayer: true);
+        MatchBoardSnapshot before = match.ToBoard();
+        Guid skippedPlayer = match.Session.PlayerIds[0];
+        DateTimeOffset deadline = before.PresenceDeadlinesUtc[skippedPlayer];
+
+        MatchPlacementResult result = match.TryUseMasterPlan(before.CurrentTurnPlayerId,
+            new MatchMasterPlan(Enumerable.Range(42, 9).ToArray(), 1, before.Revision), deadline.AddSeconds(-1));
+
+        Assert.Equal(MatchPlacementResult.Applied, result);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(2, after.RoundNumber);
+        Assert.Equal(skippedPlayer, after.CurrentTurnPlayerId);
+        Assert.Equal(deadline, after.TurnDeadlineUtc);
+        Assert.Equal(deadline, after.PresenceDeadlinesUtc[skippedPlayer]);
+        Assert.Equal(skippedPlayer, match.TryExpireTurn(deadline));
+    }
+
+    private static MatchRecord CreateMatchWithEarnedPlan(bool skipOtherPlayer = false)
+    {
+        Guid[] players = { Guid.NewGuid(), Guid.NewGuid() };
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            InitialHostPlayerId = players[0],
+            PlayerIds = players,
+            CreatedAtUtc = Now.UtcDateTime
+        };
+        int[] modules = { 4, 91, 20, 21, 22, 23, 24, 25, 26, 27,
+            3, 42, 43, 44, 45, 46, 47, 48, 49, 50, 1, 36, 90, 100 };
+        MatchRecord match = new(session, Now, (() => new MatchDeck(modules), _ => 1));
+
+        MatchBoardSnapshot before = match.ToBoard();
+        Assert.Equal(MatchPlacementResult.MasterPlanRequired, match.TryUseMasterPlan(
+            players[1], new MatchMasterPlan(new[] { 42, 48 }, 1, before.Revision), Now));
+        Place(match, 3, 1);
+        Place(match, 4, 1);
+        MatchBoardSnapshot towerReady = match.ToBoard();
+        Assert.Equal(MatchDismantleResult.Applied, match.TryDismantle(
+            players[1], new MatchDismantle(1, towerReady.Revision), Now));
+        if (skipOtherPlayer)
+        {
+            DateTimeOffset deadline = match.ToBoard().TurnDeadlineUtc!.Value;
+            Assert.Equal(players[0], match.TryExpireTurn(deadline));
+        }
+        else
+        {
+            Place(match, 91, 2);
         }
 
-        public override long GetTimestamp()
-        {
-            return _ticks;
-        }
+        return match;
+    }
 
-        public void MoveBy(TimeSpan elapsed)
+    private static void Place(MatchRecord match, int module, int position)
+    {
+        MatchBoardSnapshot board = match.ToBoard();
+        MatchPlacement placement = new(module, position, board.Revision);
+
+        Assert.Equal(MatchPlacementResult.Applied, match.TryPlace(board.CurrentTurnPlayerId, placement, Now));
+    }
+}
+````
+
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchPlacementTests.cs
+````csharp
+using Vertigo.Contracts.Internal;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.Game.Matches.Implementations;
+using Vertigo.Server.Game.Matches.Models;
+using Xunit;
+
+namespace Vertigo.Server.Game.Tests.Matches;
+
+public sealed class MatchPlacementTests
+{
+    private static (InMemoryMatchSessionStarter Game, Guid MatchId, Guid Host, Guid Other) Create()
+    {
+        InMemoryMatchSessionStarter game = new(TimeProvider.System);
+        Guid host = Guid.NewGuid();
+        Guid other = Guid.NewGuid();
+        MatchStartRequest request = new()
         {
-            _ticks += elapsed.Ticks;
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            HostPlayerId = host,
+            PlayerIds = new[] { host, other }
+        };
+        return (game, game.Start(request).MatchId, host, other);
+    }
+
+    [Fact]
+    public void Start_FoundationsAndHands_UseDistinctModules()
+    {
+        var state = Create();
+        var board = state.Game.GetBoard(state.MatchId)!;
+        var host = state.Game.GetPrivateHand(state.MatchId, state.Host)!;
+        var other = state.Game.GetPrivateHand(state.MatchId, state.Other)!;
+        int[] foundations = board.Piles.Select(pile => pile.TopCardNumber!.Value).ToArray();
+        Assert.Single(foundations);
+        Assert.Equal(10, host.Cards.Count);
+        Assert.Equal(10, other.Cards.Count);
+        Assert.Equal(21, foundations.Concat(host.Cards).Concat(other.Cards).Distinct().Count());
+        Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
+    }
+
+    [Fact]
+    public void TryPlace_OtherPlayerTurn_DoesNotMutateBoard()
+    {
+        var state = Create();
+        var board = state.Game.GetBoard(state.MatchId)!;
+        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
+        MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, waitingPlayer)!;
+        var move = new MatchPlacement(hand.Cards[0], 1, board.Revision);
+        Assert.Equal(MatchPlacementResult.NotYourTurn,
+            state.Game.TryPlace(state.MatchId, waitingPlayer, move));
+        AssertPlacementStateUnchanged(state.Game, board, hand);
+    }
+
+    [Fact]
+    public void TryPlace_ForgedCard_DoesNotMutateBoard()
+    {
+        var state = Create();
+        var board = state.Game.GetBoard(state.MatchId)!;
+        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
+        MatchPrivateHand other = state.Game.GetPrivateHand(state.MatchId, waitingPlayer)!;
+        MatchPrivateHand activeHand = state.Game.GetPrivateHand(state.MatchId, board.CurrentTurnPlayerId)!;
+        var move = new MatchPlacement(other.Cards[0], 1, board.Revision);
+        Assert.Equal(MatchPlacementResult.CardNotOwned,
+            state.Game.TryPlace(state.MatchId, board.CurrentTurnPlayerId, move));
+        AssertPlacementStateUnchanged(state.Game, board, activeHand);
+    }
+
+    [Theory]
+    [InlineData(MatchLifecycleStatus.Suspended)]
+    [InlineData(MatchLifecycleStatus.Finished)]
+    [InlineData(MatchLifecycleStatus.Cancelled)]
+    public void TryPlace_InactiveMatchWithStaleRevision_ReturnsUnavailableWithoutMutatingState(
+        MatchLifecycleStatus status)
+    {
+        var (game, matchId, host, other) = Create();
+        bool changed = status switch
+        {
+            MatchLifecycleStatus.Suspended => game.TryDisconnect(matchId, host) && game.TryDisconnect(matchId, other),
+            MatchLifecycleStatus.Finished => game.TryFinish(matchId),
+            MatchLifecycleStatus.Cancelled => game.TryCancel(matchId),
+            _ => throw new ArgumentOutOfRangeException(nameof(status))
+        };
+        Assert.True(changed);
+        Assert.Equal(status, game.Get(matchId)!.Status);
+
+        MatchBoardSnapshot board = game.GetBoard(matchId)!;
+        Guid playerId = board.CurrentTurnPlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(matchId, playerId)!;
+        MatchPlacement move = new(hand.Cards[0], 1, board.Revision - 1);
+
+        MatchPlacementResult result = game.TryPlace(matchId, playerId, move);
+
+        Assert.Equal(MatchPlacementResult.MatchUnavailable, result);
+        AssertPlacementStateUnchanged(game, board, hand);
+        Assert.Equal(status, game.Get(matchId)!.Status);
+    }
+
+    [Fact]
+    public void TryPlace_StaleRevisionOutsideTurn_ReturnsStaleRevisionWithoutMutatingState()
+    {
+        var (game, matchId, _, _) = Create();
+        MatchBoardSnapshot board = game.GetBoard(matchId)!;
+        Guid waitingPlayer = board.Players.Single(player => player.PlayerId != board.CurrentTurnPlayerId).PlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(matchId, waitingPlayer)!;
+        MatchPlacement move = new(hand.Cards[0], 1, board.Revision - 1);
+
+        MatchPlacementResult result = game.TryPlace(matchId, waitingPlayer, move);
+
+        Assert.Equal(MatchPlacementResult.StaleRevision, result);
+        AssertPlacementStateUnchanged(game, board, hand);
+    }
+
+    [Fact]
+    public void TryPlace_UnstablePlacement_RejectsWithoutMutatingState()
+    {
+        var (game, matchId, _, _) = Create();
+        MatchBoardSnapshot board = game.GetBoard(matchId)!;
+        Guid playerId = board.CurrentTurnPlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(matchId, playerId)!;
+        MatchPlacement invalidPlacement = (from pile in board.Piles
+                                from card in hand.Cards
+                                where card - pile.TopCardNumber!.Value is < 1 or > 10
+                                select new MatchPlacement(card, pile.Position, board.Revision)).First();
+
+        MatchPlacementResult result = game.TryPlace(matchId, playerId, invalidPlacement);
+
+        Assert.Equal(MatchPlacementResult.InvalidPlacement, result);
+        AssertPlacementStateUnchanged(game, board, hand);
+    }
+
+    [Fact]
+    public void TryPlace_ValidCard_ConsumesItAndAdvancesTurn()
+    {
+        // Repeatedly create a randomized initial board until a valid move is available.
+        // Avoid probabilistic test failure: check only within a bounded number of attempts.
+        for (int attempt = 0; attempt < 100; attempt++)
+        {
+            var state = Create();
+            var board = state.Game.GetBoard(state.MatchId)!;
+            Guid openingPlayer = board.CurrentTurnPlayerId;
+            Guid waitingPlayer = board.Players.Single(player => player.PlayerId != openingPlayer).PlayerId;
+            MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
+            var match = (from card in hand.Cards
+                         from pile in board.Piles
+                         where MatchPlacementRules.IsValid(pile.TopCardNumber!.Value, card)
+                         select (card, pile.Position)).FirstOrDefault();
+            if (match.card == 0)
+            {
+                continue;
+            }
+            var move = new MatchPlacement(match.card, match.Position, board.Revision);
+            Assert.Equal(MatchPlacementResult.Applied,
+                state.Game.TryPlace(state.MatchId, openingPlayer, move));
+            var next = state.Game.GetBoard(state.MatchId)!;
+            Assert.Equal(board.Revision + 1, next.Revision);
+            Assert.Equal(waitingPlayer, next.CurrentTurnPlayerId);
+            Assert.Equal(match.card, next.Piles[match.Position - 1].TopCardNumber);
+            Assert.Equal(board.Piles[match.Position - 1].CardCount + 1, next.Piles[match.Position - 1].CardCount);
+            MatchPrivateHand afterMove = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
+            Assert.Equal(hand.Cards.Where(card => card != match.card), afterMove.Cards);
+            Assert.Equal(MatchPlacementResult.StaleRevision,
+                state.Game.TryPlace(state.MatchId, openingPlayer, move));
+            AssertPlacementStateUnchanged(state.Game, next, afterMove);
+            return;
         }
+        throw new InvalidOperationException("No playable test board generated in 100 attempts.");
+    }
+
+    [Fact]
+    public void TryPlace_UnknownPile_IsRejected()
+    {
+        var state = Create();
+        var board = state.Game.GetBoard(state.MatchId)!;
+        Guid openingPlayer = board.CurrentTurnPlayerId;
+        MatchPrivateHand hand = state.Game.GetPrivateHand(state.MatchId, openingPlayer)!;
+        Assert.Equal(MatchPlacementResult.InvalidPile,
+            state.Game.TryPlace(state.MatchId, openingPlayer, new MatchPlacement(hand.Cards[0], 5, board.Revision)));
+        AssertPlacementStateUnchanged(state.Game, board, hand);
+    }
+
+    private static void AssertPlacementStateUnchanged(
+        InMemoryMatchSessionStarter game, MatchBoardSnapshot expectedBoard, MatchPrivateHand expectedHand)
+    {
+        MatchBoardSnapshot board = game.GetBoard(expectedBoard.MatchId)!;
+        MatchPrivateHand hand = game.GetPrivateHand(expectedBoard.MatchId, expectedHand.PlayerId)!;
+
+        Assert.Equal(expectedBoard.Revision, board.Revision);
+        Assert.Equal(expectedBoard.CurrentTurnPlayerId, board.CurrentTurnPlayerId);
+        Assert.Equal(expectedBoard.RoundNumber, board.RoundNumber);
+        Assert.Equal(
+            expectedBoard.Piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.CardCount)),
+            board.Piles.Select(pile => (pile.Position, pile.TopCardNumber, pile.CardCount)));
+        Assert.Equal(expectedHand.Cards, hand.Cards);
     }
 }
 ````
@@ -20116,6 +26351,61 @@ public sealed class LobbyStateTests
 </Solution>
 ````
 
+## File: src/Client/Vertigo.Client.Networking/Callbacks/LobbyCallbackHandler.cs
+````csharp
+using System.ServiceModel;
+using Vertigo.Contracts.Callbacks;
+using Vertigo.Contracts.Models;
+
+namespace Vertigo.Client.Networking.Callbacks;
+
+[CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Single, UseSynchronizationContext = false)]
+public sealed class LobbyCallbackHandler : ILobbyCallback
+{
+    public event EventHandler<LobbyMember>? PlayerJoined;
+
+    public event EventHandler<Guid>? PlayerLeft;
+
+    public event EventHandler<LobbyChatMessage>? MessageReceived;
+
+    public event EventHandler<LobbyPreparation>? PreparationChanged;
+
+    public event EventHandler<MatchBoardChanged>? MatchBoardUpdated;
+
+    void ILobbyCallback.Notify(LobbyNotification notification)
+    {
+        switch (notification)
+        {
+            case { Kind: LobbyNotificationKind.PlayerJoined, JoinedPlayer: { } player,
+                LeftPlayerId: null, ChatMessage: null, Preparation: null, BoardChange: null }:
+                PlayerJoined?.Invoke(this, player);
+                break;
+
+            case { Kind: LobbyNotificationKind.PlayerLeft, LeftPlayerId: Guid playerId,
+                JoinedPlayer: null, ChatMessage: null, Preparation: null, BoardChange: null }
+                when playerId != Guid.Empty:
+                PlayerLeft?.Invoke(this, playerId);
+                break;
+
+            case { Kind: LobbyNotificationKind.MessageReceived, ChatMessage: { } message,
+                JoinedPlayer: null, LeftPlayerId: null, Preparation: null, BoardChange: null }:
+                MessageReceived?.Invoke(this, message);
+                break;
+
+            case { Kind: LobbyNotificationKind.PreparationChanged, Preparation: { } preparation,
+                JoinedPlayer: null, LeftPlayerId: null, ChatMessage: null, BoardChange: null }:
+                PreparationChanged?.Invoke(this, preparation);
+                break;
+
+            case { Kind: LobbyNotificationKind.MatchBoardUpdated, BoardChange: { } change,
+                JoinedPlayer: null, LeftPlayerId: null, ChatMessage: null, Preparation: null }:
+                MatchBoardUpdated?.Invoke(this, change);
+                break;
+        }
+    }
+}
+````
+
 ## File: src/Client/Vertigo.Client.UI/Vertigo.Client.UI.csproj
 ````
 <Project Sdk="Microsoft.NET.Sdk">
@@ -20150,323 +26440,1205 @@ public sealed class LobbyStateTests
 </Project>
 ````
 
-## File: src/Shared/Vertigo.Contracts/Models/MatchBoardActionKind.cs
+## File: tests/Vertigo.Client.UnitTests/Matches/MatchTurnPresentationTests.cs
 ````csharp
-using System.Runtime.Serialization;
+using Vertigo.Client.Core.Sessions;
+using Vertigo.Client.UI.Utilities.Localization.Interfaces;
+using Vertigo.Client.UI.ViewModels;
+using Vertigo.Contracts.Models;
+using Vertigo.Client.UI.Utilities.Validation;
+using Vertigo.Client.UI.ViewModels.Presentation;
 
-namespace Vertigo.Contracts.Models;
+namespace Vertigo.Client.UnitTests.Matches;
 
-[DataContract]
-public enum MatchBoardActionKind
+public sealed class MatchTurnPresentationTests
 {
-    [EnumMember]
-    Placement,
+    private static readonly DateTimeOffset ServerTime = DateTimeOffset.UnixEpoch;
 
-    [EnumMember]
-    Dismantle,
+    [Fact]
+    public void GetRemainingSeconds_WithServerSample_IgnoresLocalWallClockAndClampsAtZero()
+    {
+        ManualClock clock = new();
+        MatchTurnClock countdown = new(clock);
+        countdown.SetDeadline(ServerTime.AddSeconds(20), ServerTime);
 
-    [EnumMember]
-    MasterPlan,
+        Assert.Equal(20, countdown.GetRemainingSeconds());
+        clock.MoveBy(TimeSpan.FromMilliseconds(600));
+        Assert.Equal(20, countdown.GetRemainingSeconds());
+        clock.MoveBy(TimeSpan.FromMilliseconds(400));
+        Assert.Equal(19, countdown.GetRemainingSeconds());
+        clock.MoveBy(TimeSpan.FromSeconds(25));
+        Assert.Equal(0, countdown.GetRemainingSeconds());
+        countdown.SetDeadline(null, null);
+        Assert.Null(countdown.GetRemainingSeconds());
+    }
 
-    [EnumMember]
-    TurnExpired,
+    [Fact]
+    public void GetRemainingSeconds_AfterReconnect_UsesRemainingServerTime()
+    {
+        ManualClock clock = new();
+        MatchTurnClock countdown = new(clock);
 
-    [EnumMember]
-    ExpulsionVoteRecorded,
+        countdown.SetDeadline(ServerTime.AddSeconds(20), ServerTime.AddSeconds(14));
 
-    [EnumMember]
-    ExpelledByVote,
+        Assert.Equal(6, countdown.GetRemainingSeconds());
+    }
 
-    [EnumMember]
-    LeftMatch
+    [Fact]
+    public void HasLegalPlacement_OnlyAnotherTowerAcceptsCard_ReturnsTrue()
+    {
+        int?[] tops = { 80, null, 12 };
+        int[] hand = { 15, 55 };
+
+        Assert.False(MatchTurnRules.CanPlace(tops[0], hand[0]));
+        Assert.True(MatchTurnRules.HasLegalPlacement(tops, hand));
+    }
+
+    [Fact]
+    public void HasLegalPlacement_NoTowerAcceptsAnyCard_ReturnsFalse()
+    {
+        int?[] tops = { 80, null, 12 };
+        int[] hand = { 10, 40, 100 };
+
+        Assert.False(MatchTurnRules.HasLegalPlacement(tops, hand));
+    }
+
+    [Theory]
+    [InlineData(12, 12, false)]
+    [InlineData(12, 13, true)]
+    [InlineData(12, 22, true)]
+    [InlineData(12, 23, false)]
+    [InlineData(95, 101, false)]
+    [InlineData(null, 15, false)]
+    public void CanPlace_ModuleAndTower_UsesGameLimits(int? top, int module, bool expected)
+    {
+        Assert.Equal(expected, MatchTurnRules.CanPlace(top, module));
+    }
+
+    [Fact]
+    public void ApplyBoardAndHand_LegalCardOnAnotherTower_EnablesOnlyItsPlacement()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        turn.Model.SelectedCard = Assert.Single(turn.Model.Hand);
+
+        turn.Model.SelectedPile = turn.Model.Piles[0];
+        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
+        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
+
+        turn.Model.SelectedPile = turn.Model.Piles[1];
+        Assert.True(turn.Model.PlaceCardCommand.CanExecute(null));
+        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void ApplyBoardAndHand_BlockedHand_RequiresANonemptyTowerAndUnexpiredTurn()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Hand.Cards = new List<int> { 50 };
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        turn.Model.SelectedPile = turn.Model.Piles[2];
+        Assert.True(turn.Model.Piles[2].IsEmpty);
+        Assert.Equal("—", turn.Model.Piles[2].TopCardText);
+        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
+        turn.Model.SelectedPile = turn.Model.Piles[0];
+        Assert.False(turn.Model.Piles[0].IsEmpty);
+        Assert.True(turn.Model.DismantleTowerCommand.CanExecute(null));
+        turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
+        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
+        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void ApplyBoardAndHand_HandFromDifferentRevision_DisablesActionsUntilMatchingHandArrives()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Hand.Revision = turn.Board.Revision + 1;
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Empty(turn.Model.Hand);
+        turn.Model.SelectedPile = turn.Model.Piles[0];
+        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
+
+        turn.Board.Revision++;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        turn.Model.SelectedCard = Assert.Single(turn.Model.Hand);
+        turn.Model.SelectedPile = turn.Model.Piles[1];
+        Assert.True(turn.Model.PlaceCardCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void ApplyBoardAndHand_TurnChangesAndLocalPlayerIsExpelled_ClearsOldSelectionsAndDisablesActions()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        MatchCardRow oldCard = Assert.Single(turn.Model.Hand);
+        MatchPileRow oldPile = turn.Model.Piles[1];
+        turn.Model.SelectedCard = oldCard;
+        turn.Model.SelectedPile = oldPile;
+        Assert.True(turn.Model.PlaceCardCommand.CanExecute(null));
+
+        turn.Board.Revision++;
+        turn.Board.CurrentTurnPlayerId = turn.Board.Players[1].PlayerId;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.Null(turn.Model.SelectedCard);
+        Assert.Null(turn.Model.SelectedPile);
+        turn.Model.SelectedCard = oldCard;
+        turn.Model.SelectedPile = oldPile;
+        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
+        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
+
+        turn.Board.Revision++;
+        turn.Board.ExpelledPlayerIds.Add(turn.Hand.PlayerId);
+        turn.Model.ApplyBoardAndHand(turn.Board, null);
+        Assert.Empty(turn.Model.Hand);
+        Assert.False(turn.Model.DismantleTowerCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void ApplyBoardAndHand_PresenceNoticeChangesFromConfirmationToPlayingAndExpulsion()
+    {
+        TurnFixture turn = CreateTurn();
+        Guid playerId = turn.Hand.PlayerId;
+        turn.Board.CurrentTurnPlayerId = turn.Board.Players[1].PlayerId;
+        turn.Board.PresenceDeadlinesUtc[playerId] = ServerTime.AddSeconds(12);
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.True(turn.Model.ShowConfirmPresence);
+        Assert.Contains("Match.Presence.Skipped", turn.Model.PresenceNotice);
+
+        turn.Board.Revision++;
+        turn.Board.CurrentTurnPlayerId = playerId;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.False(turn.Model.ShowConfirmPresence);
+        Assert.Contains("Match.Presence.Play", turn.Model.PresenceNotice);
+
+        turn.Board.Revision++;
+        turn.Board.PresenceDeadlinesUtc.Clear();
+        turn.Board.ExpelledPlayerIds.Add(playerId);
+        turn.Board.InactivePlayerIds.Add(playerId);
+        turn.Model.ApplyBoardAndHand(turn.Board, null);
+        Assert.True(turn.Model.HasPresenceNotice);
+        Assert.Equal("Match.Presence.Expelled", turn.Model.PresenceNotice);
+        Assert.Empty(turn.Model.Hand);
+    }
+
+    [Fact]
+    public void ApplyBoardAndHand_SameRevisionAfterReconnect_ResamplesRemainingTime()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        turn.Clock.MoveBy(TimeSpan.FromSeconds(5));
+        turn.Board.ServerTimeUtc = ServerTime.AddSeconds(14);
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Equal("6", turn.Model.TurnSecondsLabel);
+    }
+
+    [Fact]
+    public void ApplyBoardAndHand_SlowPrivateHandRequest_DoesNotExtendCountdown()
+    {
+        TurnFixture turn = CreateTurn();
+        long boardReceivedAt = turn.Clock.GetTimestamp();
+        turn.Clock.MoveBy(TimeSpan.FromSeconds(4));
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand, boardReceivedAt);
+
+        Assert.Equal("16", turn.Model.TurnSecondsLabel);
+    }
+
+    [Fact]
+    public void MasterPlanDraft_PendingVoteAndUnchangedHand_PreservesChain()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Board.ExpulsionVotes.Add(new MatchExpulsionVoteSummary { TargetPlayerId = Guid.NewGuid(), VoteCount = 1 });
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Equal("12 → 15 → 22", turn.Model.MasterPlanPreview);
+        MatchMasterPlanStep[] expected = [new(12, true), new(15, false), new(22, false)];
+        Assert.Equal(expected, turn.Model.MasterPlanSteps);
+        Assert.Equal(1, turn.Model.MasterPlanCount);
+        Assert.Equal(new int?[] { 1, 2 }, turn.Model.Hand.Select(card => card.PlanOrder));
+        Assert.True(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        turn.Model.SelectedCard = turn.Model.Hand[0];
+        Assert.False(turn.Model.PlaceCardCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_UndoLast_UpdatesCardBadgesAndChainPreview()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        MatchCardRow lastCard = turn.Model.Hand[1];
+        List<string?> changes = [];
+        List<string?> modelChanges = [];
+        lastCard.PropertyChanged += (_, args) => changes.Add(args.PropertyName);
+        turn.Model.PropertyChanged += (_, args) => modelChanges.Add(args.PropertyName);
+
+        turn.Model.RemoveMasterPlanModuleCommand.Execute(null);
+
+        Assert.True(turn.Model.HasMasterPlanDraft);
+        Assert.Equal("12 → 15", turn.Model.MasterPlanPreview);
+        MatchMasterPlanStep[] expected = [new(12, true), new(15, false)];
+        Assert.Equal(expected, turn.Model.MasterPlanSteps);
+        Assert.Contains(nameof(MatchViewModel.MasterPlanSteps), modelChanges);
+        Assert.Equal(new int?[] { 1, null }, turn.Model.Hand.Select(card => card.PlanOrder));
+        Assert.Contains(nameof(MatchCardRow.PlanOrder), changes);
+        Assert.Contains(nameof(MatchCardRow.IsInMasterPlan), changes);
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        turn.Model.RemoveMasterPlanModuleCommand.Execute(null);
+
+        Assert.False(turn.Model.HasMasterPlanDraft);
+        Assert.Empty(turn.Model.MasterPlanSteps);
+        Assert.All(turn.Model.Hand, card => Assert.False(card.IsInMasterPlan));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_ChangedTower_ClearsChainAndRejectsOldSelection()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        MatchPileRow oldPile = turn.Model.Piles[1];
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Board.Piles[1].TopCardNumber = 14;
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Null(turn.Model.SelectedPile);
+        Assert.Empty(turn.Model.MasterPlanSteps);
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        turn.Model.SelectedPile = oldPile;
+        turn.Model.SelectedCard = turn.Model.Hand[0];
+        Assert.False(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_MissingModule_ClearsDraftAndRejectsOldCard()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        MatchCardRow oldCard = turn.Model.Hand[0];
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Hand.Cards.Remove(15);
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.False(turn.Model.HasMasterPlanDraft);
+        Assert.All(turn.Model.Hand, card => Assert.False(card.IsInMasterPlan));
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        Assert.False(turn.Model.RemoveMasterPlanModuleCommand.CanExecute(null));
+        turn.Model.SelectedCard = oldCard;
+        Assert.False(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_NoPlansRemaining_UpdatesCounterAndClearsPreview()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        List<string?> changes = [];
+        turn.Model.PropertyChanged += (_, args) => changes.Add(args.PropertyName);
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Hand.MasterPlans = 0;
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Equal(0, turn.Model.MasterPlanCount);
+        Assert.Contains(nameof(MatchViewModel.MasterPlanCount), changes);
+        Assert.Empty(turn.Model.MasterPlanSteps);
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void MasterPlanDraft_ExpiredTurn_DisablesPlayAndClearsDraftOnRefresh()
+    {
+        TurnFixture turn = CreateTurnWithDraft();
+        turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
+
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+        turn.Board.ServerTimeUtc = turn.Board.TurnDeadlineUtc;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.False(turn.Model.RemoveMasterPlanModuleCommand.CanExecute(null));
+        Assert.False(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+    }
+
+    private static TurnFixture CreateTurnWithDraft()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Hand.MasterPlans = 1;
+        turn.Hand.Cards.Add(22);
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        turn.Model.SelectedPile = turn.Model.Piles[1];
+
+        foreach (MatchCardRow card in turn.Model.Hand)
+        {
+            turn.Model.SelectedCard = card;
+            Assert.True(turn.Model.AddMasterPlanModuleCommand.CanExecute(null));
+            turn.Model.AddMasterPlanModuleCommand.Execute(null);
+        }
+
+        Assert.True(turn.Model.PlayMasterPlanCommand.CanExecute(null));
+
+        return turn;
+    }
+
+    [Fact]
+    public void VoteCommand_RefreshedPrivateVote_DisablesOnlyThePreviouslyVotedTarget()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Board.Players.Add(new MatchBoardPlayer { PlayerId = Guid.NewGuid(), Username = "Carla" });
+        turn.Board.CurrentTurnPlayerId = turn.Board.Players[1].PlayerId;
+        turn.Board.ExpulsionVotesRequired = 2;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.Null(turn.Model.Players[0].VoteCommand);
+        Assert.True(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+
+        turn.Board.Revision++;
+        turn.Hand.Revision = turn.Board.Revision;
+        turn.Hand.VotedExpulsionTargetIds.Add(turn.Board.Players[1].PlayerId);
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.False(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+        Assert.True(turn.Model.Players[2].VoteCommand!.CanExecute(null));
+    }
+
+    [Fact]
+    public void VoteCommand_AtTurnDeadline_DisablesVoteForAnotherPlayer()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Board.Players.Add(new MatchBoardPlayer { PlayerId = Guid.NewGuid() });
+        turn.Board.ExpulsionVotesRequired = 2;
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+        Assert.True(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+
+        turn.Clock.MoveBy(TimeSpan.FromSeconds(20));
+
+        Assert.False(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+    }
+
+    private static TurnFixture CreateTurn()
+    {
+        ManualClock clock = new();
+        PlayerSession session = new(clock);
+        Guid player = Guid.NewGuid();
+        session.SetSession(new SessionSnapshot
+        {
+            PlayerId = player,
+            Username = "Ana",
+            Token = "test-token",
+            ExpiresAt = clock.GetUtcNow().UtcDateTime.AddHours(1),
+            IsGuest = true
+        });
+        Guid matchId = Guid.NewGuid();
+        MatchViewModel model = new(new TestText(), session, clock);
+        model.Activate(matchId, "ABC234");
+        MatchBoardSnapshot board = new()
+        {
+            MatchId = matchId,
+            Revision = 5,
+            CurrentTurnPlayerId = player,
+            ServerTimeUtc = ServerTime,
+            TurnDeadlineUtc = ServerTime.AddSeconds(20),
+            Players = { new MatchBoardPlayer { PlayerId = player }, new MatchBoardPlayer { PlayerId = Guid.NewGuid() } },
+            Piles =
+            {
+                new MatchBoardPile { Position = 1, TopCardNumber = 80 },
+                new MatchBoardPile { Position = 2, TopCardNumber = 12 },
+                new MatchBoardPile { Position = 3 }
+            }
+        };
+        MatchPrivateHand hand = new() { MatchId = matchId, PlayerId = player, Revision = 5, Cards = { 15 } };
+
+        return new TurnFixture
+        {
+            Model = model,
+            Board = board,
+            Hand = hand,
+            Clock = clock
+        };
+    }
+
+    private sealed class TurnFixture
+    {
+        public required MatchViewModel Model { get; init; }
+        public required MatchBoardSnapshot Board { get; init; }
+        public required MatchPrivateHand Hand { get; init; }
+        public required ManualClock Clock { get; init; }
+    }
+
+    private sealed class TestText : ITextLocalizer
+    {
+        public string Get(string key)
+        {
+            return key == "Match.Turn.Seconds" ? "{0}" : key;
+        }
+    }
+
+    private sealed class ManualClock : TimeProvider
+    {
+        private long _ticks;
+
+        public override long TimestampFrequency => TimeSpan.TicksPerSecond;
+
+        public override DateTimeOffset GetUtcNow()
+        {
+            return ServerTime.AddHours(1);
+        }
+
+        public override long GetTimestamp()
+        {
+            return _ticks;
+        }
+
+        public void MoveBy(TimeSpan elapsed)
+        {
+            _ticks += elapsed.Ticks;
+        }
+    }
 }
 ````
 
-## File: tests/Vertigo.Client.MatchBoard.Smoke/RoundClosureSmoke.cs
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchDismantleTests.cs
 ````csharp
-using System.ServiceModel;
-using System.Threading.Channels;
-using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
+using Vertigo.Server.Game.Matches.Models;
+using Xunit;
 
-internal static class RoundClosureSmoke
+namespace Vertigo.Server.Game.Tests.Matches;
+
+public sealed class MatchDismantleTests
 {
-    private const int MaximumRoundActions = 100;
-    private const int MaximumPlacementDifference = 10;
-    private static readonly TimeSpan NotificationTimeout = TimeSpan.FromSeconds(15);
-    private static readonly TimeSpan TurnExpiryTimeout = TimeSpan.FromSeconds(45);
+    private static readonly DateTimeOffset Now = DateTimeOffset.UnixEpoch;
 
-    public static async Task<bool> VerifyAsync(
-        (ILobbyClient Lobby, UserSession Session) first,
-        (ILobbyClient Lobby, UserSession Session) second,
-        string lobbyCode)
+    [Fact]
+    public void TryDismantle_PlacementOnAnotherTower_RejectsWithoutChangingState()
     {
-        Channel<MatchBoardChanged> firstChanges = Channel.CreateUnbounded<MatchBoardChanged>();
-        Channel<MatchBoardChanged> secondChanges = Channel.CreateUnbounded<MatchBoardChanged>();
-        first.Lobby.MatchBoardUpdated += ObserveFirst;
-        second.Lobby.MatchBoardUpdated += ObserveSecond;
+        MatchRecord match = Create(
+            Enumerable.Range(1, 10).Select(module => module * 2),
+            Enumerable.Range(1, 10).Select(module => module * 2 + 1),
+            [80, 90, 1, 70]);
+        Dismantle(match, 1);
+        MatchBoardSnapshot board = match.ToBoard();
+        Guid active = board.CurrentTurnPlayerId;
+        MatchPrivateHand hand = match.ToPrivateHand(active)!;
 
-        try
+        MatchDismantleResult result = match.TryDismantle(active, new MatchDismantle(1, board.Revision), Now);
+
+        Assert.Equal(MatchDismantleResult.PlacementAvailable, result);
+        Assert.Equal(board.Revision, match.ToBoard().Revision);
+        Assert.Equal(active, match.ToBoard().CurrentTurnPlayerId);
+        Assert.Equal(90, match.ToBoard().Piles[0].TopCardNumber);
+        Assert.Equal(board.Players.Select(player => player.FloorsBuilt),
+            match.ToBoard().Players.Select(player => player.FloorsBuilt));
+        Assert.Equal(hand.Cards, match.ToPrivateHand(active)!.Cards);
+        Assert.Equal(0, match.ToPrivateHand(active)!.MasterPlans);
+    }
+
+    [Fact]
+    public void TryDismantle_ThirteenBlocks_CreditsTenFloorsAndOnePlanExactlyOnce()
+    {
+        MatchRecord match = Create(
+            new[] { 3, 5, 7, 9, 11, 13, 41, 43, 45, 47 },
+            new[] { 2, 4, 6, 8, 10, 12, 14, 40, 42, 81 },
+            [1, 70, 71]);
+        Guid opener = match.ToBoard().CurrentTurnPlayerId;
+        for (int module = 3; module <= 14; module++)
         {
-            RoundParticipant firstPlayer = new(first.Lobby, first.Session, firstChanges.Reader);
-            RoundParticipant secondPlayer = new(second.Lobby, second.Session, secondChanges.Reader);
-            (MatchBoardSnapshot board, bool dismantled) = await PlayFirstRoundAsync(firstPlayer, secondPlayer, lobbyCode);
+            Place(match, module);
+        }
 
-            Check(board.RoundNumber == 2 && board.RoundSummaries.Count == 1, "The first round did not close.");
-            VerifySummary(board, first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token));
-            VerifySummary(board, second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token));
+        MatchBoardSnapshot before = match.ToBoard();
+        MatchPrivateHand hand = match.ToPrivateHand(opener)!;
+        Assert.Equal(opener, before.CurrentTurnPlayerId);
+        Assert.Equal(13, before.Piles[0].CardCount);
+        Assert.Equal(0, before.Players.Single(player => player.PlayerId == opener).FloorsBuilt);
+        MatchDismantle move = new(1, before.Revision);
 
-            second.Lobby.Disconnect();
-            second.Lobby.JoinLobby(lobbyCode, second.Session.Token);
-            VerifySummary(board, second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token));
+        MatchDismantleResult result = match.TryDismantle(opener, move, Now);
+        MatchDismantleResult repeated = match.TryDismantle(opener, move, Now);
 
-            if (dismantled)
+        Assert.Equal(MatchDismantleResult.Applied, result);
+        Assert.Equal(MatchDismantleResult.StaleRevision, repeated);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(before.Revision + 1, after.Revision);
+        Assert.Equal(1, after.RoundNumber);
+        Assert.Equal(before.Players.Single(player => player.PlayerId != opener).PlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(70, after.Piles[0].TopCardNumber);
+        Assert.Equal(1, after.Piles[0].CardCount);
+        Assert.Equal(10, after.Players.Single(player => player.PlayerId == opener).FloorsBuilt);
+        Assert.Equal(0, after.Players.Single(player => player.PlayerId == opener).GlobalFloors);
+        Assert.Equal(1, match.ToPrivateHand(opener)!.MasterPlans);
+        Assert.Equal(hand.Cards, match.ToPrivateHand(opener)!.Cards);
+    }
+
+    [Fact]
+    public void TryDismantle_EmptyDeckAndAnotherPlayerCanPlace_LeavesSpaceEmptyAndContinues()
+    {
+        MatchRecord match = CreateMatchWithTwoTowersAndEmptyDeck();
+
+        MatchBoardSnapshot before = match.ToBoard();
+        Guid blocked = before.CurrentTurnPlayerId;
+        MatchDismantleResult result = match.TryDismantle(blocked, new MatchDismantle(2, before.Revision), Now);
+
+        Assert.Equal(MatchDismantleResult.Applied, result);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(1, after.RoundNumber);
+        Assert.Equal(match.Session.PlayerIds[0], after.CurrentTurnPlayerId);
+        Assert.Null(after.Piles[1].TopCardNumber);
+        Assert.Equal(0, after.Piles[1].CardCount);
+        Assert.Equal(1, after.Players.Single(player => player.PlayerId == blocked).FloorsBuilt);
+        Assert.Equal(0, match.ToPrivateHand(blocked)!.MasterPlans);
+    }
+
+    [Theory]
+    [InlineData(-1L, MatchDismantleResult.StaleRevision)]
+    [InlineData(0L, MatchDismantleResult.NotYourTurn)]
+    public void TryDismantle_WaitingPlayerRequest_PreservesBoardAndHands(long revisionOffset, MatchDismantleResult expected)
+    {
+        AssertRejectedDismantle(true, (2, revisionOffset), expected);
+    }
+
+    [Theory]
+    [InlineData(2, MatchDismantleResult.EmptyPile)]
+    [InlineData(5, MatchDismantleResult.InvalidPile)]
+    public void TryDismantle_InvalidActivePlayerPile_PreservesBoardAndHands(int pilePosition, MatchDismantleResult expected)
+    {
+        AssertRejectedDismantle(false, (pilePosition, 0L), expected);
+    }
+
+    private static void AssertRejectedDismantle(
+        bool useWaitingPlayer, (int PilePosition, long RevisionOffset) request, MatchDismantleResult expected)
+    {
+        MatchRecord match = CreateMatchWithTwoTowersAndEmptyDeck();
+        Guid active = match.Session.PlayerIds[0];
+        Guid waiting = match.Session.PlayerIds[1];
+        Dismantle(match, 2);
+        MatchBoardSnapshot before = match.ToBoard();
+        MatchPrivateHand activeHand = match.ToPrivateHand(active)!;
+        MatchPrivateHand waitingHand = match.ToPrivateHand(waiting)!;
+
+        Guid playerId = useWaitingPlayer ? waiting : active;
+        MatchDismantle move = new(request.PilePosition, before.Revision + request.RevisionOffset);
+
+        MatchDismantleResult result = match.TryDismantle(playerId, move, Now);
+
+        Assert.Equal(expected, result);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(before.Revision, after.Revision);
+        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(before.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)),
+            after.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)));
+        Assert.Equal(before.Players.Select(player => (player.FloorsBuilt, player.GlobalFloors)),
+            after.Players.Select(player => (player.FloorsBuilt, player.GlobalFloors)));
+        Assert.Equal(activeHand.Cards, match.ToPrivateHand(active)!.Cards);
+        Assert.Equal(waitingHand.Cards, match.ToPrivateHand(waiting)!.Cards);
+        Assert.Equal(activeHand.MasterPlans, match.ToPrivateHand(active)!.MasterPlans);
+        Assert.Equal(waitingHand.MasterPlans, match.ToPrivateHand(waiting)!.MasterPlans);
+    }
+
+    [Fact]
+    public void TryDismantle_ThreeBlocksAndExhaustedDeck_CreditsFloorsAndResetsRoundState()
+    {
+        MatchRecord match = Create(
+            new[] { 31, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new[] { 32, 81, 10, 11, 12, 13, 14, 15, 16, 17 },
+            [30, 80]);
+        Guid scorer = match.Session.PlayerIds[0];
+        Guid other = match.Session.PlayerIds[1];
+        Place(match, 31);
+        Place(match, 32);
+        MatchBoardSnapshot before = match.ToBoard();
+
+        MatchDismantleResult result = match.TryDismantle(scorer, new MatchDismantle(1, before.Revision), Now);
+        if (match.ToBoard().RoundNumber == 1)
+        {
+            Assert.Equal(1, match.ToPrivateHand(scorer)!.MasterPlans);
+            Place(match, 81);
+        }
+
+        Assert.Equal(MatchDismantleResult.Applied, result);
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(2, after.RoundNumber);
+        Assert.Equal(other, after.CurrentTurnPlayerId);
+        Assert.Equal(13, after.Players.Single(player => player.PlayerId == scorer).GlobalFloors);
+        Assert.All(after.Players, player => Assert.Equal(0, player.FloorsBuilt));
+        Assert.All(match.Session.PlayerIds, playerId =>
+        {
+            MatchPrivateHand hand = match.ToPrivateHand(playerId)!;
+            Assert.Equal(0, hand.MasterPlans);
+            Assert.Equal(10, hand.Cards.Count);
+        });
+    }
+
+    [Fact]
+    public void TryDismantle_ExhaustionAcrossThreeRounds_ScoresAndFinishesWithWinner()
+    {
+        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(11, 10), [90]);
+        Guid initialOpener = match.ToBoard().CurrentTurnPlayerId;
+        Guid other = match.Session.PlayerIds.Single(playerId => playerId != initialOpener);
+
+        for (int round = 1; round <= 3; round++)
+        {
+            MatchBoardSnapshot board = match.ToBoard();
+            Assert.Equal(round, board.RoundNumber);
+            Guid opener = round == 2 ? other : initialOpener;
+            Assert.Equal(opener, board.CurrentTurnPlayerId);
+            Assert.Equal(MatchDismantleResult.Applied,
+                match.TryDismantle(opener, new MatchDismantle(1, board.Revision), Now));
+            Assert.Equal(board.Revision + 1, match.ToBoard().Revision);
+            if (round < 3)
             {
-                await VerifyTurnExpiryAsync(firstPlayer, secondPlayer, (lobbyCode, board));
+                Assert.All(match.ToBoard().Players, player => Assert.Equal(0, player.FloorsBuilt));
+                Assert.Equal(1, Assert.Single(match.ToBoard().Piles).CardCount);
             }
-
-            return dismantled;
-        }
-        finally
-        {
-            first.Lobby.MatchBoardUpdated -= ObserveFirst;
-            second.Lobby.MatchBoardUpdated -= ObserveSecond;
         }
 
-        void ObserveFirst(object? sender, MatchBoardChanged change)
-        {
-            firstChanges.Writer.TryWrite(change);
-        }
-
-        void ObserveSecond(object? sender, MatchBoardChanged change)
-        {
-            secondChanges.Writer.TryWrite(change);
-        }
+        MatchBoardSnapshot final = match.ToBoard();
+        Assert.Equal(MatchLifecycleStatus.Finished, match.Lifecycle.Status);
+        Assert.Equal(Guid.Empty, final.CurrentTurnPlayerId);
+        Assert.Equal(initialOpener, Assert.Single(final.WinnerIds));
+        Assert.Equal(22, final.Players.Single(player => player.PlayerId == initialOpener).GlobalFloors);
+        Assert.Equal(11, final.Players.Single(player => player.PlayerId == other).GlobalFloors);
+        Assert.Equal(1, final.Players.Single(player => player.PlayerId == initialOpener).FinalPosition);
+        Assert.Equal(2, final.Players.Single(player => player.PlayerId == other).FinalPosition);
+        Assert.Equal(MatchDismantleResult.MatchUnavailable,
+            match.TryDismantle(initialOpener, new MatchDismantle(1, final.Revision), Now));
     }
 
-    private static async Task<(MatchBoardSnapshot Board, bool Dismantled)> PlayFirstRoundAsync(
-        RoundParticipant first, RoundParticipant second, string lobbyCode)
+    [Fact]
+    public void TryPlace_EmptyHand_ClosesRoundWithoutAwardingFloors()
     {
-        MatchBoardSnapshot board = first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token);
-        Check(board.RoundNumber == 1 && board.RoundSummaries.Count == 0, "Expected the first round in progress.");
-        bool dismantled = false;
-        for (int step = 0; step < MaximumRoundActions && board.RoundNumber == 1; step++)
+        MatchRecord match = Create(
+            Enumerable.Range(1, 10).Select(module => module * 2),
+            Enumerable.Range(1, 10).Select(module => module * 2 + 1),
+            [1, 90, 95, 100, 70]);
+        Guid opener = match.ToBoard().CurrentTurnPlayerId;
+        int firstModule = match.ToPrivateHand(opener)!.Cards.Min();
+        for (int module = firstModule; module < firstModule + 19; module++)
         {
-            RoundParticipant active =
-                board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
-            TurnResult turn = PlayTurn((active.Lobby, active.Session), board, lobbyCode);
-            dismantled |= turn.Kind == MatchBoardActionKind.Dismantle;
-
-            Check(turn.Board.Revision == board.Revision + 1, "A turn must increase the board revision once.");
-            await VerifyTurnNoticesAsync((first.Changes, second.Changes), turn, active.Session.Username);
-            board = turn.Board;
+            Place(match, module);
         }
-        return (board, dismantled);
+
+        MatchBoardSnapshot next = match.ToBoard();
+        Assert.Equal(2, next.RoundNumber);
+        Assert.Equal(20, next.Revision);
+        Assert.Equal(match.Session.PlayerIds.Single(playerId => playerId != opener), next.CurrentTurnPlayerId);
+        Assert.All(next.Players, player => Assert.Equal(0, player.GlobalFloors));
+        MatchRoundSummary closure = Assert.Single(next.RoundSummaries);
+        Assert.Equal(1, closure.RoundNumber);
+        Assert.Equal(opener, closure.ClosedByPlayerId);
+        Assert.All(closure.Players, player => Assert.Equal(0, player.BonusFloors));
+        Assert.All(match.Session.PlayerIds, playerId => Assert.Equal(10, match.ToPrivateHand(playerId)!.Cards.Count));
     }
 
-    private static async Task VerifyTurnNoticesAsync(
-        (ChannelReader<MatchBoardChanged> First, ChannelReader<MatchBoardChanged> Second) notices,
-        TurnResult turn, string username)
+    [Fact]
+    public void TryDismantle_LastDeckCard_RefillsTheSameTowerWithoutGrowing()
     {
-        using CancellationTokenSource timeout = new(NotificationTimeout);
-        MatchBoardChanged firstChange = await notices.First.ReadAsync(timeout.Token);
-        MatchBoardChanged secondChange = await notices.Second.ReadAsync(timeout.Token);
-        CheckNotice(firstChange, turn, username);
-        CheckNotice(secondChange, turn, username);
+        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(81, 10), [70, 80]);
+        MatchBoardSnapshot before = match.ToBoard();
+
+        Dismantle(match, 1);
+
+        MatchBoardSnapshot after = match.ToBoard();
+        MatchBoardPile tower = Assert.Single(after.Piles);
+        Assert.Equal(1, tower.Position);
+        Assert.Equal(80, tower.TopCardNumber);
+        Assert.Equal(1, tower.CardCount);
+        Assert.Equal(1, after.RoundNumber);
+        Assert.Equal(before.Revision + 1, after.Revision);
     }
 
-    private static async Task VerifyTurnExpiryAsync(
-        RoundParticipant first, RoundParticipant second, (string LobbyCode, MatchBoardSnapshot Board) state)
+    [Fact]
+    public void TryDismantle_NextRound_ResetsAnExpandedBoardToOneTower()
     {
-        string lobbyCode = state.LobbyCode;
-        MatchBoardSnapshot board = state.Board;
-        using CancellationTokenSource timeout = new(TurnExpiryTimeout);
-        MatchBoardChanged timedOutForFirst = await first.Changes.ReadAsync(timeout.Token);
-        MatchBoardChanged timedOutForSecond = await second.Changes.ReadAsync(timeout.Token);
-        CheckTimeout(timedOutForFirst, board);
-        CheckTimeout(timedOutForSecond, board);
-        CheckAbandonment(first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token), board);
-        CheckAbandonment(second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token), board);
+        MatchRecord match = CreateMatchWithTwoTowersAndEmptyDeck();
+        Assert.Equal(2, match.ToBoard().Piles.Count);
 
-        RoundParticipant expelled =
-            board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
-        MatchPrivateHand hand = expelled.Lobby.GetMatchPrivateHand(lobbyCode, expelled.Session.Token);
-        Check(hand.MatchId == board.MatchId && hand.PlayerId == expelled.Session.PlayerId
-            && hand.Cards.Count == 0 && hand.MasterPlans == 0,
-            "The expelled client could not refresh its board with an empty private hand.");
+        Dismantle(match, 2);
+        Place(match, 2);
+        Dismantle(match, 1);
+
+        MatchBoardSnapshot next = match.ToBoard();
+        Assert.Equal(2, next.RoundNumber);
+        MatchBoardPile tower = Assert.Single(next.Piles);
+        Assert.Equal(1, tower.Position);
+        Assert.Equal(80, tower.TopCardNumber);
+        Assert.Equal(1, tower.CardCount);
     }
 
-    private static TurnResult PlayTurn(
-        (ILobbyClient Lobby, UserSession Session) active, MatchBoardSnapshot board, string lobbyCode)
+    [Fact]
+    public void TryDismantle_GrowsOneTowerPerActionThenCapsAtSix()
     {
-        MatchPrivateHand hand = active.Lobby.GetMatchPrivateHand(lobbyCode, active.Session.Token);
+        MatchRecord match = Create(Enumerable.Range(1, 10), Enumerable.Range(11, 10),
+            Enumerable.Range(80, 14).ToArray());
+
+        Assert.Equal(80, Assert.Single(match.ToBoard().Piles).TopCardNumber);
+        for (int expected = 2; expected <= 6; expected++)
+        {
+            Dismantle(match, 1);
+            MatchBoardSnapshot board = match.ToBoard();
+            Assert.Equal(Enumerable.Range(1, expected), board.Piles.Select(pile => pile.Position));
+            Assert.Equal(80 + 2 * (expected - 1), board.Piles[^1].TopCardNumber);
+            Assert.All(board.Piles, pile => Assert.Equal(1, pile.CardCount));
+        }
+
+        Dismantle(match, 6);
+        MatchBoardSnapshot capped = match.ToBoard();
+        Assert.Equal(6, capped.Piles.Count);
+        Assert.Equal(91, capped.Piles[^1].TopCardNumber);
+        Assert.Equal(1, capped.RoundNumber);
+    }
+
+    [Fact]
+    public void TryDismantle_ReusesAnEmptySpaceWhenReturnedCardsRefillTheDeck()
+    {
+        Guid[] players = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            InitialHostPlayerId = players[0],
+            PlayerIds = players,
+            CreatedAtUtc = Now.UtcDateTime
+        };
+        int[] modules = Enumerable.Range(2, 10).Concat(Enumerable.Range(50, 10))
+            .Concat(Enumerable.Range(61, 10)).Concat(new[] { 80, 1, 90 }).ToArray();
+        MatchRecord match = new(session, Now, (() => new MatchDeck(modules), _ => 0));
+        Dismantle(match, 1);
+        Dismantle(match, 2);
+        Assert.Null(match.ToBoard().Piles[1].TopCardNumber);
+
+        Assert.True(match.TryLeaveMatch(players[2], Now).IsAccepted);
+        Place(match, 2);
+        Dismantle(match, 1);
+
+        MatchBoardSnapshot after = match.ToBoard();
+        Assert.Equal(new[] { 1, 2 }, after.Piles.Select(pile => pile.Position));
+        Assert.Equal(new int?[] { 61, 62 }, after.Piles.Select(pile => pile.TopCardNumber));
+    }
+
+    private static MatchRecord CreateMatchWithTwoTowersAndEmptyDeck()
+    {
+        MatchRecord match = Create(
+            new[] { 2, 4, 40, 41, 42, 43, 44, 45, 46, 47 }, Enumerable.Range(50, 10),
+            [80, 1, 90]);
+        Dismantle(match, 1);
+        return match;
+    }
+
+    private static void Dismantle(MatchRecord match, int position)
+    {
+        MatchBoardSnapshot board = match.ToBoard();
+        MatchDismantle move = new(position, board.Revision);
+        MatchDismantleResult result = match.TryDismantle(board.CurrentTurnPlayerId, move, Now);
+        Assert.Equal(MatchDismantleResult.Applied, result);
+    }
+
+    private static void Place(MatchRecord match, int module, int pilePosition = 1)
+    {
+        MatchBoardSnapshot board = match.ToBoard();
+        MatchPlacement action = new(module, pilePosition, board.Revision);
+
+        Assert.Equal(MatchPlacementResult.Applied, match.TryPlace(board.CurrentTurnPlayerId, action, Now));
+    }
+
+    private static MatchRecord Create(
+        IEnumerable<int> firstHand, IEnumerable<int> secondHand, int[] towerAndDeckCards)
+    {
+        Guid[] players = { Guid.NewGuid(), Guid.NewGuid() };
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            InitialHostPlayerId = players[0],
+            PlayerIds = players,
+            CreatedAtUtc = Now.UtcDateTime
+        };
+        int[] modules = firstHand.Concat(secondHand).Concat(towerAndDeckCards).ToArray();
+        Assert.Equal(modules.Length, modules.Distinct().Count());
+
+        return new MatchRecord(session, Now, (() => new MatchDeck(modules), _ => 0));
+    }
+}
+````
+
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchTurnClockTests.cs
+````csharp
+using Vertigo.Contracts.Internal;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.Game.Matches.Implementations;
+using Vertigo.Server.Game.Matches.Models;
+using Xunit;
+
+namespace Vertigo.Server.Game.Tests.Matches;
+
+public sealed class MatchTurnClockTests
+{
+    private static readonly DateTimeOffset StartTime = DateTimeOffset.UnixEpoch;
+
+    [Fact]
+    public void TryExpireTurn_AtDeadline_SkipsOnceAndStartsNextTurn()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 3);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Guid active = before.CurrentTurnPlayerId;
+        Guid[] order = before.Players.Select(player => player.PlayerId).ToArray();
+        Guid nextPlayer = order[(Array.IndexOf(order, active) + 1) % order.Length];
+
+        Assert.Equal(StartTime.AddSeconds(30), before.TurnDeadlineUtc);
+        Assert.Equal(StartTime, before.ServerTimeUtc);
+        clock.Set(before.TurnDeadlineUtc!.Value.AddTicks(-1));
+        Assert.Null(game.TryExpireTurn(matchId));
+        Assert.Equal(before.Revision, game.GetBoard(matchId)!.Revision);
+
+        clock.Set(before.TurnDeadlineUtc!.Value);
+        Assert.Equal(active, game.TryExpireTurn(matchId));
+        Assert.Null(game.TryExpireTurn(matchId));
+
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(before.Revision + 1, after.Revision);
+        Assert.Equal(nextPlayer, after.CurrentTurnPlayerId);
+        Assert.Equal(clock.GetUtcNow() + (before.TurnDeadlineUtc!.Value - StartTime), after.TurnDeadlineUtc);
+        Assert.Equal(clock.GetUtcNow(), after.ServerTimeUtc);
+        Assert.Equal(MatchEndReason.None, after.EndReason);
+        Assert.Equal(clock.GetUtcNow().AddSeconds(30), after.PresenceDeadlinesUtc[active]);
+        Assert.Empty(after.ExpelledPlayerIds);
+        Assert.NotNull(game.GetPrivateHand(matchId, active));
+        MatchBoardMove move = Assert.Single(after.RecentMoves);
+        Assert.Equal(active, move.PlayerId);
+        Assert.Equal(MatchBoardActionKind.TurnSkipped, move.ActionKind);
+        Assert.Equal(after.Revision, move.Revision);
+    }
+
+    [Fact]
+    public void TryReconnect_BeforeDeadline_KeepsOriginalTurnAndDeadline()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 2);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Guid active = before.CurrentTurnPlayerId;
+
+        clock.Set(StartTime.AddSeconds(8));
+        Assert.True(game.TryDisconnect(matchId, active));
+        clock.Set(StartTime.AddSeconds(12));
+        Assert.Equal(MatchReconnectResult.Reconnected, game.TryReconnect(matchId, active));
+        Assert.Equal(MatchPlacementResult.StaleRevision,
+            game.TryPlace(matchId, active, new MatchPlacement(1, 1, before.Revision - 1)));
+
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(before.TurnDeadlineUtc, after.TurnDeadlineUtc);
+        Assert.Equal(before.Revision, after.Revision);
+    }
+
+    [Fact]
+    public void TryExpireTurn_OnlyOnePlayerRemains_FinishesByAbandonment()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 2);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Guid winner = before.Players.Single(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
+
+        clock.Set(before.TurnDeadlineUtc!.Value);
+        Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
+        clock.Set(game.GetBoard(matchId)!.PresenceDeadlinesUtc[before.CurrentTurnPlayerId]);
+        Assert.False(game.TryConfirmPresence(matchId, before.CurrentTurnPlayerId));
+        Assert.Equal(MatchReconnectResult.Rejected, game.TryReconnect(matchId, before.CurrentTurnPlayerId));
+        Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
+
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(before.CurrentTurnPlayerId, Assert.Single(after.InactivePlayerIds));
+        Assert.Empty(after.PresenceDeadlinesUtc);
+        Assert.Equal(MatchLifecycleStatus.Finished, game.Get(matchId)!.Status);
+        Assert.Equal(MatchEndReason.Abandonment, after.EndReason);
+        Assert.Equal(winner, Assert.Single(after.WinnerIds));
+        Assert.Equal(Guid.Empty, after.CurrentTurnPlayerId);
+        Assert.Null(after.TurnDeadlineUtc);
+        Assert.Empty(after.RoundSummaries);
+        Assert.Equal(0, Assert.Single(after.Players).GlobalFloors);
+    }
+
+    [Fact]
+    public void TryExpireTurn_AllPlayersDisconnected_UsesOriginalDeadline()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 2);
+        MatchBoardSnapshot board = game.GetBoard(matchId)!;
+        clock.Set(StartTime.AddSeconds(12));
+        Assert.All(board.Players, player => Assert.True(game.TryDisconnect(matchId, player.PlayerId)));
+        Assert.Equal(MatchLifecycleStatus.Suspended, game.Get(matchId)!.Status);
+        clock.Set(board.TurnDeadlineUtc!.Value.AddSeconds(-1));
+        Assert.Null(game.TryExpireTurn(matchId));
+        clock.Set(board.TurnDeadlineUtc!.Value);
+
+        Assert.Equal(board.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot skipped = game.GetBoard(matchId)!;
+        Assert.Equal(MatchEndReason.None, skipped.EndReason);
+        Assert.Equal(MatchLifecycleStatus.Suspended, game.Get(matchId)!.Status);
+        clock.Set(skipped.PresenceDeadlinesUtc[board.CurrentTurnPlayerId]);
+        Assert.Equal(board.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
+        Assert.Equal(MatchEndReason.Abandonment, game.GetBoard(matchId)!.EndReason);
+    }
+
+    [Fact]
+    public void TryExpireTurn_ConcurrentLegalActionAtDeadline_OnlySkipTakesEffect()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 3);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Func<bool> playTurn = GetLegalTurn(game, before);
+        bool played = false;
+        Guid? skipped = null;
+        clock.Set(before.TurnDeadlineUtc!.Value);
+
+        Parallel.Invoke(() => played = playTurn(), () => skipped = game.TryExpireTurn(matchId));
+
+        Assert.False(played);
+        Assert.Equal(before.CurrentTurnPlayerId, skipped);
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(before.Revision + 1, after.Revision);
+        Assert.Equal(MatchBoardActionKind.TurnSkipped, Assert.Single(after.RecentMoves).ActionKind);
+        Assert.Equal(before.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)),
+            after.Piles.Select(pile => (pile.TopCardNumber, pile.CardCount)));
+    }
+
+    [Fact]
+    public void TurnActions_AtDeadlineBeforeClockSweep_RejectWithoutChangingState()
+    {
+        ManualClock clock = new();
+        (InMemoryMatchSessionStarter game, Guid matchId) = StartMatch(clock, 3);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Guid active = before.CurrentTurnPlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(matchId, active)!;
+        clock.Set(before.TurnDeadlineUtc!.Value);
+
+        MatchPlacementResult placement = game.TryPlace(
+            matchId, active, new MatchPlacement(hand.Cards[0], 1, before.Revision));
+        MatchPlacementResult plan = game.TryUseMasterPlan(
+            matchId, active, new MatchMasterPlan(hand.Cards.Take(2).ToArray(), 1, before.Revision));
+        MatchDismantleResult dismantle = game.TryDismantle(matchId, active, new MatchDismantle(1, before.Revision));
+
+        Assert.Equal(MatchPlacementResult.TurnExpired, placement);
+        Assert.Equal(MatchPlacementResult.TurnExpired, plan);
+        Assert.Equal(MatchDismantleResult.TurnExpired, dismantle);
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(before.Revision, after.Revision);
+        Assert.Equal(before.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(before.TurnDeadlineUtc, after.TurnDeadlineUtc);
+        Assert.Empty(after.RecentMoves);
+        Assert.Equal(hand.Cards, game.GetPrivateHand(matchId, active)!.Cards);
+    }
+
+    [Fact]
+    public void TryExpireTurn_LegalActionAcceptedBeforeDeadline_DoesNotExpireNewTurnEarly()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 3);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Func<bool> playTurn = GetLegalTurn(game, before);
+        clock.Set(before.TurnDeadlineUtc!.Value.AddSeconds(-1));
+
+        Assert.True(playTurn());
+        clock.Set(before.TurnDeadlineUtc!.Value);
+        Assert.Null(game.TryExpireTurn(matchId));
+
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(before.TurnDeadlineUtc!.Value.AddSeconds(-1) + (before.TurnDeadlineUtc.Value - StartTime),
+            after.TurnDeadlineUtc);
+        Assert.Equal(before.Revision + 1, after.Revision);
+        Assert.Empty(after.ExpelledPlayerIds);
+    }
+
+    [Fact]
+    public void TryExpireTurn_ExpelledHand_ReturnsAfterExistingModules()
+    {
+        Guid[] players = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+        MatchSessionSnapshot session = new()
+        {
+            MatchId = Guid.NewGuid(),
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            InitialHostPlayerId = players[0],
+            PlayerIds = players,
+            CreatedAtUtc = StartTime.UtcDateTime
+        };
+        int[] modules = Enumerable.Range(1, 10).Concat(Enumerable.Range(21, 10))
+            .Concat(Enumerable.Range(41, 10)).Concat(new[] { 90, 95 }).ToArray();
+        MatchRecord record = new(session, StartTime, (() => new MatchDeck(modules), _ => 0));
+        MatchBoardSnapshot board = record.ToBoard();
+        int expectedReturnedModule = record.ToPrivateHand(board.CurrentTurnPlayerId)!.Cards[0];
+        DateTimeOffset now = board.TurnDeadlineUtc!.Value.AddSeconds(1);
+
+        Assert.Equal(board.CurrentTurnPlayerId, record.TryExpireTurn(now));
+        now = record.ToBoard().PresenceDeadlinesUtc[board.CurrentTurnPlayerId];
+        Assert.Equal(board.CurrentTurnPlayerId, record.TryExpireTurn(now));
+        Assert.Equal(MatchEndReason.None, record.ToBoard().EndReason);
+        Assert.Equal(1, record.ToBoard().RoundNumber);
+        Dismantle(record, now);
+
+        Assert.Equal(new int?[] { 95, expectedReturnedModule },
+            record.ToBoard().Piles.Select(pile => pile.TopCardNumber));
+    }
+
+    [Fact]
+    public void TryReconnect_DuringGrace_KeepsSeatAndDeadlineUntilPresenceIsConfirmed()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 3);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Guid active = before.CurrentTurnPlayerId;
+        Assert.True(game.TryDisconnect(matchId, active));
+        clock.Set(before.TurnDeadlineUtc!.Value.AddSeconds(2));
+        Assert.Equal(active, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot skipped = game.GetBoard(matchId)!;
+        Assert.False(game.TryConfirmPresence(matchId, active));
+
+        Assert.Equal(MatchReconnectResult.Reconnected, game.TryReconnect(matchId, active));
+        Assert.Equal(before.TurnDeadlineUtc.Value.AddSeconds(30),
+            game.GetBoard(matchId)!.PresenceDeadlinesUtc[active]);
+        Assert.True(game.TryConfirmPresence(matchId, active));
+        Assert.False(game.TryConfirmPresence(matchId, active));
+
+        MatchBoardSnapshot confirmed = game.GetBoard(matchId)!;
+        Assert.Equal(skipped.CurrentTurnPlayerId, confirmed.CurrentTurnPlayerId);
+        Assert.Equal(skipped.TurnDeadlineUtc, confirmed.TurnDeadlineUtc);
+        Assert.Empty(confirmed.PresenceDeadlinesUtc);
+        Assert.Equal(MatchBoardActionKind.PresenceConfirmed, confirmed.RecentMoves.Last().ActionKind);
+        clock.Set(skipped.PresenceDeadlinesUtc[active]);
+        Assert.Null(game.TryExpireTurn(matchId));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Grace_WhenTurnReturns_RequiresValidMoveWithinOriginalDeadline(bool play)
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 2);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        Guid skippedPlayer = before.CurrentTurnPlayerId;
+        clock.Set(before.TurnDeadlineUtc!.Value);
+        Assert.Equal(skippedPlayer, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot skipped = game.GetBoard(matchId)!;
+        DateTimeOffset deadline = skipped.PresenceDeadlinesUtc[skippedPlayer];
+        clock.Set(deadline.AddSeconds(-20));
+        Assert.True(GetLegalTurn(game, skipped)());
+
+        MatchBoardSnapshot returned = game.GetBoard(matchId)!;
+        Assert.Equal(skippedPlayer, returned.CurrentTurnPlayerId);
+        Assert.Equal(deadline, returned.TurnDeadlineUtc);
+        Assert.False(game.TryConfirmPresence(matchId, skippedPlayer));
+        Assert.Equal(MatchPlacementResult.CardNotOwned,
+            game.TryPlace(matchId, skippedPlayer, new MatchPlacement(0, 1, returned.Revision)));
+        Assert.Equal(deadline, game.GetBoard(matchId)!.PresenceDeadlinesUtc[skippedPlayer]);
+
+        if (play)
+        {
+            clock.Set(deadline.AddTicks(-1));
+            Assert.True(GetLegalTurn(game, returned)());
+        }
+
+        clock.Set(deadline);
+        Assert.Equal(play ? (Guid?)null : skippedPlayer, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Empty(after.PresenceDeadlinesUtc);
+        Assert.Equal(!play, after.InactivePlayerIds.Contains(skippedPlayer));
+    }
+
+    [Fact]
+    public void Grace_ExpiresDuringAnotherTurn_WithoutChangingThatDeadline()
+    {
+        ManualClock clock = new();
+        var (game, matchId) = StartMatch(clock, 3);
+        MatchBoardSnapshot before = game.GetBoard(matchId)!;
+        clock.Set(before.TurnDeadlineUtc!.Value);
+        Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot skipped = game.GetBoard(matchId)!;
+        DateTimeOffset deadline = skipped.PresenceDeadlinesUtc[before.CurrentTurnPlayerId];
+        clock.Set(deadline.AddSeconds(-20));
+        Assert.True(GetLegalTurn(game, skipped)());
+        MatchBoardSnapshot next = game.GetBoard(matchId)!;
+
+        clock.Set(deadline);
+        Guid inactive = before.CurrentTurnPlayerId;
+        Guid active = next.CurrentTurnPlayerId;
+        Assert.False(game.TryConfirmPresence(matchId, inactive));
+        Assert.Equal(MatchExpulsionVoteResult.TurnExpired,
+            game.TryVoteToExpel(matchId, inactive, new MatchExpulsionVote(active, next.VotingRevision)));
+        Assert.Equal(MatchExpulsionVoteResult.TurnExpired,
+            game.TryVoteToExpel(matchId, active, new MatchExpulsionVote(inactive, next.VotingRevision)));
+        Assert.Equal(next.Revision, game.GetBoard(matchId)!.Revision);
+        Assert.Equal(inactive, game.TryExpireTurn(matchId));
+        MatchBoardSnapshot after = game.GetBoard(matchId)!;
+        Assert.Equal(next.CurrentTurnPlayerId, after.CurrentTurnPlayerId);
+        Assert.Equal(next.TurnDeadlineUtc, after.TurnDeadlineUtc);
+        Assert.Equal(before.CurrentTurnPlayerId, Assert.Single(after.InactivePlayerIds));
+        Assert.Null(game.TryExpireTurn(matchId));
+    }
+
+    private static void Dismantle(MatchRecord record, DateTimeOffset now)
+    {
+        MatchBoardSnapshot board = record.ToBoard();
+        Assert.Equal(MatchDismantleResult.Applied,
+            record.TryDismantle(board.CurrentTurnPlayerId, new MatchDismantle(1, board.Revision), now));
+    }
+
+    private static Func<bool> GetLegalTurn(InMemoryMatchSessionStarter game, MatchBoardSnapshot board)
+    {
+        Guid active = board.CurrentTurnPlayerId;
+        MatchPrivateHand hand = game.GetPrivateHand(board.MatchId, active)!;
         (int Card, int Pile) placement = (from card in hand.Cards
                                          from pile in board.Piles
-                                         where pile.TopCardNumber is int top
-                                             && card - top is >= 1 and <= MaximumPlacementDifference
+                                         where pile.TopCardNumber is int top && MatchPlacementRules.IsValid(top, card)
                                          select (card, pile.Position)).FirstOrDefault();
-        int existingTower = board.Piles.First(pile => pile.TopCardNumber.HasValue).Position;
-        MatchDismantleRequest request = new()
+
+        return placement.Pile == 0
+            ? () => game.TryDismantle(board.MatchId, active, new MatchDismantle(1, board.Revision))
+                == MatchDismantleResult.Applied
+            : () => game.TryPlace(board.MatchId, active, new MatchPlacement(placement.Card, placement.Pile,
+                board.Revision)) == MatchPlacementResult.Applied;
+    }
+
+    private static (InMemoryMatchSessionStarter Game, Guid MatchId) StartMatch(ManualClock clock, int playerCount)
+    {
+        InMemoryMatchSessionStarter game = new(clock);
+        Guid[] players = Enumerable.Range(0, playerCount).Select(_ => Guid.NewGuid()).ToArray();
+        MatchStartRequest request = new()
         {
-            LobbyCode = lobbyCode,
-            SessionToken = active.Session.Token,
-            PilePosition = existingTower,
-            ExpectedRevision = board.Revision
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABC234",
+            HostPlayerId = players[0],
+            PlayerIds = players
         };
 
-        TurnResult result;
-        (int First, int Second, int Pile) chain = FindMasterPlan(board, hand);
-        if (chain.Pile != 0)
+        return (game, game.Start(request).MatchId);
+    }
+
+    private sealed class ManualClock : TimeProvider
+    {
+        private DateTimeOffset _now = StartTime;
+
+        public override DateTimeOffset GetUtcNow()
         {
-            MatchBoardSnapshot updated = active.Lobby.UseMatchMasterPlan(new MatchMasterPlanRequest
-            {
-                LobbyCode = lobbyCode,
-                SessionToken = active.Session.Token,
-                CardNumbers = new List<int> { chain.First, chain.Second },
-                PilePosition = chain.Pile,
-                ExpectedRevision = board.Revision
-            });
-            MatchBoardMove latest = updated.RecentMoves.Last();
-            Check(latest.ActionKind == MatchBoardActionKind.MasterPlan && latest.Revision == updated.Revision
-                && latest.PlayerId == active.Session.PlayerId && latest.PlayerUsername == active.Session.Username
-                && latest.PilePosition == chain.Pile
-                && latest.CardNumbers.SequenceEqual(new[] { chain.First, chain.Second }),
-                "The master plan did not produce one history entry with the expected chain.");
-            Console.WriteLine("PASS: MASTER PLAN CHAIN IN PUBLIC MOVE HISTORY");
-            result = new TurnResult(updated, MatchBoardActionKind.MasterPlan, chain.Pile);
-        }
-        else
-        {
-            result = placement.Pile == 0 ? PlayDismantle(active.Lobby, request)
-                : PlayPlacement(active.Lobby, request, placement);
+            return _now;
         }
 
-        return result;
-    }
-
-    private static (int First, int Second, int Pile) FindMasterPlan(MatchBoardSnapshot board, MatchPrivateHand hand)
-    {
-        (int First, int Second, int Pile) chain = default;
-        if (hand.MasterPlans > 0)
+        public void Set(DateTimeOffset value)
         {
-            chain = (from pile in board.Piles
-                     from first in hand.Cards
-                     from second in hand.Cards
-                     where pile.TopCardNumber is int top && first - top is >= 1 and <= MaximumPlacementDifference
-                         && second - first is >= 1 and <= MaximumPlacementDifference
-                     select (first, second, pile.Position)).FirstOrDefault();
-        }
-
-        return chain;
-    }
-
-    private static TurnResult PlayDismantle(ILobbyClient lobby, MatchDismantleRequest request)
-    {
-        MatchBoardSnapshot board = lobby.DismantleMatchTower(request);
-        bool rejected = false;
-        try
-        {
-            lobby.DismantleMatchTower(request);
-        }
-        catch (FaultException<ServiceFault> ex)
-        {
-            rejected = ex.Detail.MessageKey == "Match.Error.Stale";
-        }
-
-        Check(rejected, "Repeating the dismantle request did not return the stale revision fault.");
-
-        return new TurnResult(board, MatchBoardActionKind.Dismantle, request.PilePosition);
-    }
-
-    private static TurnResult PlayPlacement(
-        ILobbyClient lobby, MatchDismantleRequest request, (int Card, int Pile) placement)
-    {
-        bool rejected = false;
-        try
-        {
-            lobby.DismantleMatchTower(request);
-        }
-        catch (FaultException<ServiceFault> ex)
-        {
-            rejected = ex.Detail.MessageKey == "Match.Error.PlacementAvailable";
-        }
-
-        Check(rejected, "The server accepted dismantling when a placement was available.");
-        MatchBoardSnapshot board = lobby.PlaceMatchCard(new MatchPlaceRequest
-        {
-            LobbyCode = request.LobbyCode,
-            SessionToken = request.SessionToken,
-            CardNumber = placement.Card,
-            PilePosition = placement.Pile,
-            ExpectedRevision = request.ExpectedRevision
-        });
-
-        return new TurnResult(board, MatchBoardActionKind.Placement, placement.Pile);
-    }
-
-    private static void CheckNotice(MatchBoardChanged notice, TurnResult turn, string username)
-    {
-        Check(notice.MatchId == turn.Board.MatchId && notice.Revision == turn.Board.Revision
-            && notice.ActionKind == turn.Kind && notice.PilePosition == turn.Pile && notice.PlayerUsername == username,
-            "A client received the wrong action notification.");
-    }
-
-    private static void CheckTimeout(MatchBoardChanged notice, MatchBoardSnapshot before)
-    {
-        Check(notice.MatchId == before.MatchId && notice.Revision == before.Revision + 1
-            && notice.ActionKind == MatchBoardActionKind.TurnExpired,
-            "A client did not receive the turn-expiry notification.");
-    }
-
-    private static void CheckAbandonment(MatchBoardSnapshot after, MatchBoardSnapshot before)
-    {
-        Guid expelled = before.CurrentTurnPlayerId;
-        Guid winner = before.Players.Single(player => player.PlayerId != expelled).PlayerId;
-        Check(after.EndReason == MatchEndReason.Abandonment && after.CurrentTurnPlayerId == Guid.Empty
-            && after.TurnDeadlineUtc is null && after.Revision == before.Revision + 1
-            && after.WinnerIds.SequenceEqual(new[] { winner })
-            && after.ExpelledPlayerIds.SequenceEqual(new[] { expelled }),
-            "The timed-out match did not end with the expected winner and expelled player.");
-    }
-
-    private static void VerifySummary(MatchBoardSnapshot expected, MatchBoardSnapshot received)
-    {
-        Check(received.RoundNumber == expected.RoundNumber && received.Revision == expected.Revision
-            && received.CurrentTurnPlayerId == expected.CurrentTurnPlayerId,
-            "The clients disagree on the opening player or board revision.");
-        MatchRoundSummary actual = received.RoundSummaries.Single();
-        MatchRoundSummary target = expected.RoundSummaries.Single();
-        Check(actual.RoundNumber == 1 && actual.ClosedByPlayerId == target.ClosedByPlayerId
-            && actual.Players.Count == 2 && actual.Players.OrderBy(score => score.PlayerId).Select(Score)
-                .SequenceEqual(target.Players.OrderBy(score => score.PlayerId).Select(Score)),
-            "The clients received different round summaries.");
-        foreach (MatchRoundPlayerScore score in actual.Players)
-        {
-            MatchBoardPlayer player = received.Players.Single(player => player.PlayerId == score.PlayerId);
-            Check(score.TotalFloors == score.FloorsBuilt + score.BonusFloors
-                && player.GlobalFloors == score.TotalFloors && !string.IsNullOrWhiteSpace(score.PlayerUsername)
-                && player.Username == score.PlayerUsername,
-                "The round summary does not match the player name and total on the board.");
+            _now = value;
         }
     }
-
-    private static (Guid PlayerId, int FloorsBuilt, int BonusFloors, int TotalFloors) Score(MatchRoundPlayerScore score)
-    {
-        return (score.PlayerId, score.FloorsBuilt, score.BonusFloors, score.TotalFloors);
-    }
-
-    private static void Check(bool condition, string message)
-    {
-        if (!condition)
-        {
-            throw new InvalidOperationException(message);
-        }
-    }
-
-    private sealed record RoundParticipant(
-        ILobbyClient Lobby, UserSession Session, ChannelReader<MatchBoardChanged> Changes);
-
-    private sealed record TurnResult(MatchBoardSnapshot Board, MatchBoardActionKind Kind, int Pile);
 }
 ````
 
@@ -20779,16 +27951,137 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 }
 ````
 
+## File: src/Shared/Vertigo.Contracts/Models/MatchBoardActionKind.cs
+````csharp
+using System.Runtime.Serialization;
+
+namespace Vertigo.Contracts.Models;
+
+[DataContract]
+public enum MatchBoardActionKind
+{
+    [EnumMember]
+    Placement,
+
+    [EnumMember]
+    Dismantle,
+
+    [EnumMember]
+    MasterPlan,
+
+    [EnumMember]
+    TurnExpired,
+
+    [EnumMember]
+    ExpulsionVoteRecorded,
+
+    [EnumMember]
+    ExpelledByVote,
+
+    [EnumMember]
+    LeftMatch,
+
+    [EnumMember]
+    TurnSkipped,
+
+    [EnumMember]
+    PresenceConfirmed
+}
+````
+
+## File: tests/Vertigo.Server.Game.Tests/Matches/MatchLifecycleRegistrationTests.cs
+````csharp
+using Microsoft.Extensions.DependencyInjection;
+using Vertigo.Contracts.Internal;
+using Vertigo.Server.Game.Matches.DependencyInjection;
+
+namespace Vertigo.Server.Game.Tests.Matches;
+
+public sealed class MatchLifecycleRegistrationTests
+{
+    [Fact]
+    public void TryLeaveMatch_ThroughCommandContract_UpdatesBoardAndHandThroughReader()
+    {
+        ServiceCollection services = new();
+        services.AddSingleton(TimeProvider.System);
+        services.AddMatchLifecycleServices();
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IMatchSessionStarter starter = provider.GetRequiredService<IMatchSessionStarter>();
+        IMatchStateReader reader = provider.GetRequiredService<IMatchStateReader>();
+        IMatchCommandService commands = provider.GetRequiredService<IMatchCommandService>();
+        Guid leaving = Guid.NewGuid();
+        Guid remaining = Guid.NewGuid();
+        MatchSessionSnapshot match = starter.Start(new MatchStartRequest
+        {
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABCDEF",
+            HostPlayerId = leaving,
+            PlayerIds = new[] { leaving, remaining }
+        });
+        Assert.NotNull(reader.GetPrivateHand(match.MatchId, leaving));
+
+        MatchDepartureResult result = commands.TryLeaveMatch(match.MatchId, leaving);
+
+        Assert.Equal(new MatchDepartureResult(true, true), result);
+        Assert.Null(reader.GetPrivateHand(match.MatchId, leaving));
+        Assert.Equal(remaining, Assert.Single(reader.GetBoard(match.MatchId)!.WinnerIds));
+    }
+
+    [Fact]
+    public void AddMatchLifecycleServices_ResolvedInterfaces_ShareGameRegistry()
+    {
+        ServiceCollection services = new();
+        services.AddSingleton(TimeProvider.System);
+        services.AddMatchLifecycleServices();
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IMatchSessionStarter starter = provider.GetRequiredService<IMatchSessionStarter>();
+        IMatchLifecycle lifecycle = provider.GetRequiredService<IMatchLifecycle>();
+        IMatchStateReader stateReader = provider.GetRequiredService<IMatchStateReader>();
+        IMatchCommandService commands = provider.GetRequiredService<IMatchCommandService>();
+        IMatchDismantleService dismantle = provider.GetRequiredService<IMatchDismantleService>();
+        IMatchTurnClock clock = provider.GetRequiredService<IMatchTurnClock>();
+        IMatchExpulsionVoteService votes = provider.GetRequiredService<IMatchExpulsionVoteService>();
+        IMatchDepartureService departures = provider.GetRequiredService<IMatchDepartureService>();
+        Guid host = Guid.NewGuid();
+        MatchStartRequest request = new()
+        {
+            LobbyInstanceId = Guid.NewGuid(),
+            LobbyCode = "ABCDEF",
+            HostPlayerId = host,
+            PlayerIds = new[] { host, Guid.NewGuid() }
+        };
+
+        MatchSessionSnapshot match = starter.Start(request);
+        bool finished = lifecycle.TryFinish(match.MatchId);
+
+        Assert.True(finished);
+        Assert.Equal(MatchLifecycleStatus.Finished, lifecycle.Get(match.MatchId)?.Status);
+        Assert.Equal(2, lifecycle.Get(match.MatchId)?.Revision);
+        Assert.Same(starter, lifecycle);
+        Assert.Same(starter, stateReader);
+        Assert.Same(starter, commands);
+        Assert.Equal(match.MatchId, stateReader.GetBoard(match.MatchId)?.MatchId);
+        Assert.Same(starter, dismantle);
+        Assert.Same(starter, clock);
+        Assert.Same(starter, votes);
+        Assert.Same(starter, departures);
+        Assert.Null(clock.TryExpireTurn(match.MatchId));
+        Assert.Equal(MatchDismantleResult.MatchUnavailable,
+            commands.TryDismantle(match.MatchId, host, new MatchDismantle(1, 1)));
+    }
+}
+````
+
 ## File: src/Client/Vertigo.Client.UI/Views/MatchView.axaml
 ````
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:views="using:Vertigo.Client.UI.Views"
              xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
              xmlns:contracts="clr-namespace:Vertigo.Contracts.Models;assembly=Vertigo.Contracts"
              x:Class="Vertigo.Client.UI.Views.MatchView"
              x:DataType="vm:MatchViewModel"
-             xmlns:validation="using:Vertigo.Client.UI.Utilities.Validation"
              x:CompileBindings="True">
     <UserControl.KeyBindings>
         <KeyBinding Gesture="Escape" Command="{Binding CancelExitCommand}"/>
@@ -20810,14 +28103,76 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             <Setter Property="BorderBrush" Value="{DynamicResource ColorSnesBlue}"/>
             <Setter Property="BorderThickness" Value="3,0,0,1"/>
         </Style>
-        <Style Selector="Border.match-pile">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorSnesBlue}"/>
+        <Style Selector="ListBox.module-picker">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="ListBox.module-picker ListBoxItem /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Background" Value="{DynamicResource ColorInfoBackground}"/>
-            <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
-            <Setter Property="Padding" Value="12"/>
-            <Setter Property="MinWidth" Value="86"/>
-            <Setter Property="MinHeight" Value="132"/>
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+        <Style Selector="ListBox.module-picker ListBoxItem:pointerover /template/
+                         ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleHover}"/>
+        </Style>
+        <Style Selector="ListBox.module-picker ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleSelected}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleSelectedBorder}"/>
+        </Style>
+        <Style Selector="ListBox.module-picker ListBoxItem:focus-visible /template/
+                         ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleFocus}"/>
+        </Style>
+        <Style Selector="Border.module-face">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleFace}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Width" Value="74"/>
+            <Setter Property="Height" Value="98"/>
+        </Style>
+        <Style Selector="Border.module-face.hand-card">
+            <Setter Property="Width" Value="NaN"/>
+            <Setter Property="MaxWidth" Value="82"/>
+            <Setter Property="Height" Value="72"/>
+        </Style>
+        <Style Selector="ListBox.hand-picker ListBoxItem">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+        <Style Selector="Border.plan-step">
+            <Setter Property="Background" Value="{DynamicResource ColorPlanStepSurface}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorPlanStepBorder}"/>
+        </Style>
+        <Style Selector="Border.plan-step.tower-top">
+            <Setter Property="Background" Value="{DynamicResource ColorPlanTowerSurface}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorPlanTowerBorder}"/>
+        </Style>
+        <Style Selector="Button.match-compact">
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Padding" Value="9,4"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style Selector="Border.module-face.queued">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleQueuedFace}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleQueuedBorder}"/>
+        </Style>
+        <Style Selector="Border.module-face.empty">
+            <Setter Property="Background" Value="{DynamicResource ColorModuleEmptyFace}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorModuleEmptyBorder}"/>
+        </Style>
+        <Style Selector="Border.module-face.empty TextBlock.module-number">
+            <Setter Property="Foreground" Value="{DynamicResource ColorModuleEmptyText}"/>
+        </Style>
+        <Style Selector="TextBlock.module-number">
+            <Setter Property="Foreground" Value="{DynamicResource ColorModuleNumber}"/>
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontMono}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style Selector="Button:focus-visible">
             <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
@@ -20828,184 +28183,291 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
         </Style>
     </UserControl.Styles>
-    <Grid Background="{DynamicResource ColorCanvas}">
+    <Grid x:Name="grdMatchViewport" ClipToBounds="True">
+        <Border IsHitTestVisible="False">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="{DynamicResource ColorBoardSkyTop}" Offset="0"/>
+                    <GradientStop Color="{DynamicResource ColorBoardSkyMiddle}" Offset="0.6"/>
+                    <GradientStop Color="{DynamicResource ColorBoardSkyBottom}" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <Viewbox Height="260" Stretch="Fill" VerticalAlignment="Bottom"
+                 IsHitTestVisible="False" Opacity="0.55">
+            <Canvas Width="1200" Height="218">
+                <Path Fill="{DynamicResource ColorBoardSkylineFar}"
+                      Data="M 0,218 V 158 H 72 V 118 H 156 V 158 H 212 V 77 H 282 V 153 H 354 V 123 H 424 V 161 H 513
+                            V 92 H 586 V 149 H 661 V 115 H 717 V 71 H 792 V 155 H 880 V 101 H 948 V 167 H 1002 V 115
+                            H 1074 V 150 H 1150 V 100 H 1200 V 218 Z"/>
+                <Path Fill="{DynamicResource ColorBoardSkyline}"
+                      Data="M 0,158 L 53,158 L 53,115 L 121,115 L 121,170 L 195,170 L 195,110 L 256,110 L 256,145 L
+                            325,145 L 325,78 L 397,78 L 397,173 L 493,173 L 493,125 L 560,125 L 560,159 L 654,159 L
+                            654,99 L 720,99 L 720,158 L 802,158 L 802,120 L 878,120 L 878,65 L 951,65 L 951,147 L
+                            1026,147 L 1026,102 L 1095,102 L 1095,153 L 1159,153 L 1159,125 L 1200,125 L 1200,218 L
+                            0,218 Z"/>
+                <Path Stroke="{DynamicResource ColorBoardSkylineDetail}" StrokeThickness="1.4"
+                      Data="M 0,197 H 1200 M 325,78 V 65 H 397 M 361,65 V 45 M 878,65 V 50 H 951 M 915,50 V 32 M
+                            1060,102 V 61 H 1170 M 1060,61 L 1092,47 H 1170 L 1150,61 M 1170,61 V 82"/>
+                <Path Fill="{DynamicResource ColorBoardSkylineNear}" Opacity="0.6"
+                      Data="M 73,188 H 116 V 143 H 150 V 123 H 204 V 188 H 264 V 218 H 73 Z
+                            M 770,184 H 827 V 146 H 858 V 188 H 918 V 218 H 770 Z
+                            M 1060,175 H 1108 V 141 H 1140 V 175 H 1200 V 218 H 1060 Z"/>
+                <Path Stroke="{DynamicResource ColorBoardSkylineOutline}" StrokeThickness="1.7"
+                      Data="M 1051,218 V 62 H 1063 V 218 M 1051,80 L 1063,96 L 1051,112 L 1063,128 L 1051,144 L 1063,160
+                            L 1051,176
+                            M 982,63 L 1057,34 L 1166,63 Z M 1057,34 V 63 M 1008,53 L 1028,63 L 1037,44 L 1057,63
+                            M 1057,63 L 1080,40 L 1101,63 L 1122,51 L 1144,63 M 1144,63 V 99 H 1151 V 106"/>
+                <Path Stroke="{DynamicResource ColorBoardSkylineWindows}" StrokeThickness="1"
+                      Data="M 152,142 H 197 M 152,152 H 197 M 152,162 H 197 M 152,172 H 197
+                            M 331,92 H 389 M 331,102 H 389 M 331,112 H 389 M 331,122 H 389
+                            M 884,80 H 944 M 884,91 H 944 M 884,102 H 944 M 884,113 H 944 M 884,124 H 944"/>
+            </Canvas>
+        </Viewbox>
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto"
                       IsEnabled="{Binding !IsExitConfirmationOpen}">
-            <StackPanel MinWidth="980" MaxWidth="1510" Margin="24" Spacing="14"
-                        HorizontalAlignment="Center">
-                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="20">
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="VÉRTIGO" FontSize="32" FontWeight="Bold"
-                                   FontFamily="{DynamicResource FontTitleDisplay}"/>
-                        <TextBlock Text="{Binding TitleText}" FontSize="12"
-                                   Foreground="{DynamicResource ColorTextSecondary}"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12"
-                                VerticalAlignment="Center">
-                        <TextBlock Text="{Binding RoundText}" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding RoundLabel}" FontFamily="{DynamicResource FontMono}"
-                                   Foreground="{DynamicResource ColorSnesBlue}"/>
-                        <Border Margin="12,0,0,0" Padding="10,6"
-                                CornerRadius="{DynamicResource RadiusSmall}"
+            <Border MinWidth="760"
+                    MinHeight="600"
+                    Width="{Binding #grdMatchViewport.Bounds.Width}"
+                    Height="{Binding #grdMatchViewport.Bounds.Height}"
+                    Padding="18,12,18,18">
+                <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="10">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="VÉRTIGO" FontSize="32" FontWeight="Bold"
+                                       FontFamily="{DynamicResource FontTitleDisplay}"/>
+                            <TextBlock Text="{Binding TitleText}" FontSize="12"
+                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{Binding RoundText}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding RoundLabel}" FontFamily="{DynamicResource FontMono}"
+                                       Foreground="{DynamicResource ColorSnesBlue}"/>
+                            <Border Margin="12,0,0,0" Padding="10,6"
+                                    CornerRadius="{DynamicResource RadiusSmall}"
+                                    Background="{DynamicResource ColorInfoBackground}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="{Binding CurrentTurnLabel}" FontWeight="Bold" MaxWidth="220"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding TurnSecondsLabel}" IsVisible="{Binding HasTurnCountdown}"
+                                               FontFamily="{DynamicResource FontMono}"
+                                               Foreground="{DynamicResource ColorSnesBlue}"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Button Grid.Column="2" Classes="vertigo-button danger" TabIndex="0"
+                                Content="{Binding ExitText}" Command="{Binding RequestExitCommand}"/>
+                    </Grid>
+                    <StackPanel Grid.Row="1" Spacing="6">
+                        <Border IsVisible="{Binding NeedsReconnect}" Classes="match-panel" Padding="10,6"
+                                Background="{DynamicResource ColorErrorBackground}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock
+                                           Text="{Binding ConnectionText}"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                        Content="{Binding ReconnectText}" Command="{Binding ReconnectCommand}"/>
+                            </Grid>
+                        </Border>
+                        <Border IsVisible="{Binding MatchUnavailable}" Classes="match-panel" Padding="10,6"
+                                Background="{DynamicResource ColorErrorBackground}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock
+                                           Text="{Binding MatchUnavailableText}"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                        Content="{Binding ReturnToMenuText}" Command="{Binding ReturnToMenuCommand}"/>
+                            </Grid>
+                        </Border>
+                        <Border IsVisible="{Binding HasPresenceNotice}" Classes="match-panel" Padding="10,6"
                                 Background="{DynamicResource ColorInfoBackground}">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <TextBlock Text="{Binding CurrentTurnLabel}" FontWeight="Bold"/>
-                                <TextBlock Text="{Binding TurnSecondsLabel}" IsVisible="{Binding HasTurnCountdown}"
-                                           FontFamily="{DynamicResource FontMono}"
-                                           Foreground="{DynamicResource ColorSnesBlue}"/>
-                            </StackPanel>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock
+                                           Text="{Binding PresenceNotice}"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                        IsVisible="{Binding ShowConfirmPresence}"
+                                        Content="{Binding ConfirmPresenceText}"
+                                        Command="{Binding ConfirmPresenceCommand}"/>
+                            </Grid>
+                        </Border>
+                        <Border IsVisible="{Binding HasError}" Classes="match-panel" Padding="10,6"
+                                Background="{DynamicResource ColorErrorBackground}"
+                                BorderBrush="{DynamicResource ColorError}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                <Path Width="18" Height="18" Stretch="Uniform"
+                                      Stroke="{DynamicResource ColorError}" StrokeThickness="2"
+                                      Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
+                                <TextBlock Grid.Column="1" Text="{Binding ErrorMessage}" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+                        <Border IsVisible="{Binding Results.HasRoundSummaries}">
+                            <ScrollViewer IsVisible="{Binding !Results.HasFinalResult}" MaxHeight="118"
+                                          HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                <views:MatchResultsView DataContext="{Binding Results}"/>
+                            </ScrollViewer>
                         </Border>
                     </StackPanel>
-                    <Button Grid.Column="2" Classes="vertigo-button danger" TabIndex="0"
-                            Content="{Binding ExitText}" Command="{Binding RequestExitCommand}"/>
-                </Grid>
-                <Border IsVisible="{Binding HasError}" Classes="match-panel"
-                        Background="{DynamicResource ColorErrorBackground}"
-                        BorderBrush="{DynamicResource ColorError}">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Path Width="18" Height="18" Stretch="Uniform"
-                              Stroke="{DynamicResource ColorError}" StrokeThickness="2"
-                              Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
-                        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"/>
-                    </StackPanel>
-                </Border>
-                <Border Classes="match-panel" IsVisible="{Binding Results.HasResults}">
-                    <Expander Header="{Binding Results.HeaderText}" HorizontalAlignment="Stretch"
-                              HorizontalContentAlignment="Stretch"
-                              IsExpanded="{Binding Results.IsExpanded, Mode=TwoWay}">
-                        <StackPanel Spacing="10">
-                            <StackPanel Spacing="4" IsVisible="{Binding Results.HasFinalResult}">
-                                <TextBlock Text="{Binding Results.WinnerText}" FontSize="18" FontWeight="Bold"
-                                           TextWrapping="Wrap"/>
-                                <TextBlock Text="{Binding Results.AbandonmentText}"
-                                           IsVisible="{Binding Results.IsAbandonment}"
-                                           Foreground="{DynamicResource ColorTextSecondary}"/>
-                            </StackPanel>
-                            <StackPanel Spacing="8" IsVisible="{Binding Results.HasRoundSummaries}">
-                                <ComboBox ItemsSource="{Binding Results.Rounds}"
-                                          SelectedItem="{Binding Results.SelectedRound, Mode=TwoWay}"
-                                          AutomationProperties.Name="{Binding Results.SelectRoundText}">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate x:DataType="rows:MatchRoundResultRow">
-                                            <TextBlock Text="{Binding Title}"/>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
-                                <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="12" Margin="8,0">
-                                    <TextBlock Text="{Binding Results.PlayerText}" FontWeight="SemiBold"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding Results.FloorsText}"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Grid.Column="2" Text="{Binding Results.BonusText}"
-                                               FontWeight="SemiBold"/>
-                                    <TextBlock Grid.Column="3" Text="{Binding Results.TotalText}"
-                                               FontWeight="SemiBold"/>
-                                </Grid>
-                                <ItemsControl ItemsSource="{Binding Results.SelectedScores}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="contracts:MatchRoundPlayerScore">
-                                            <Border Padding="8,6" BorderThickness="0,0,0,1"
-                                                    BorderBrush="{DynamicResource ColorDivider}">
-                                                <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="12">
-                                                    <TextBlock Text="{Binding PlayerUsername}"
-                                                               TextTrimming="CharacterEllipsis"/>
-                                                    <TextBlock Grid.Column="1" Text="{Binding FloorsBuilt}"
-                                                               FontFamily="{DynamicResource FontMono}"/>
-                                                    <TextBlock Grid.Column="2" Text="{Binding BonusFloors}"
-                                                               FontFamily="{DynamicResource FontMono}"/>
-                                                    <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
-                                                               FontWeight="Bold"
-                                                               FontFamily="{DynamicResource FontMono}"/>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </StackPanel>
-                    </Expander>
-                </Border>
-                <Grid ColumnDefinitions="210,*,260" ColumnSpacing="14" MinHeight="450">
-                    <Border Grid.Column="0" Classes="match-panel">
-                        <StackPanel Spacing="12">
-                            <TextBlock Text="{Binding PlayersText}" FontSize="18" FontWeight="Bold"/>
-                            <ListBox ItemsSource="{Binding Players}" TabIndex="1" MinHeight="300"
-                                     AutomationProperties.Name="{Binding PlayersText}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate x:DataType="rows:MatchPlayerRow">
-                                        <Border Classes="match-player" Padding="6,10"
-                                                Classes.active-turn="{Binding IsCurrentTurn}">
-                                            <StackPanel Spacing="5">
-                                                <TextBlock Text="{Binding Username}" FontWeight="SemiBold"
-                                                           TextTrimming="CharacterEllipsis"/>
-                                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                                    <Path Width="15" Height="15" Stroke="{DynamicResource ColorSnesBlue}"
-                                                          StrokeThickness="1.6" Data="M 2,13 L 13,13 L 13,2 L 2,2 Z"/>
-                                                    <TextBlock Text="{Binding FloorsBuilt}"
-                                                               FontFamily="{DynamicResource FontMono}"/>
-                                                </StackPanel>
-                                                <TextBlock Text="{Binding VoteCountText}"
-                                                           IsVisible="{Binding HasVoteCount}" FontSize="12"
-                                                           Foreground="{DynamicResource ColorTextSecondary}"/>
-                                                <Button Classes="vertigo-button neutral" TabIndex="1"
-                                                        IsVisible="{Binding HasVoteButton}"
-                                                        Content="{Binding VoteText}" Command="{Binding VoteCommand}"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
-                    </Border>
-                    <Border Grid.Column="1" Classes="match-panel">
-                        <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="12">
-                            <TextBlock Text="{Binding BoardText}" FontSize="18" FontWeight="Bold"/>
-                            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
-                                          VerticalScrollBarVisibility="Disabled">
-                                <ListBox ItemsSource="{Binding Piles}"
-                                         SelectedItem="{Binding SelectedPile, Mode=TwoWay}"
-                                         SelectionMode="Single" TabIndex="7"
-                                         AutomationProperties.Name="{Binding BoardText}">
-                                    <ListBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" Spacing="14"/>
-                                        </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="168,*,250" ColumnSpacing="12" MaxHeight="360">
+                        <Border Classes="match-panel" IsVisible="{Binding !Results.HasFinalResult}" Padding="10">
+                            <Grid RowDefinitions="Auto,*" RowSpacing="8">
+                                <TextBlock Text="{Binding PlayersText}" FontSize="17" FontWeight="Bold"/>
+                                <ListBox ItemsSource="{Binding Players}" Grid.Row="1" TabIndex="1"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         AutomationProperties.Name="{Binding PlayersText}">
                                     <ListBox.ItemTemplate>
-                                        <DataTemplate x:DataType="rows:MatchPileRow">
-                                            <StackPanel Spacing="8">
-                                                <TextBlock Text="{Binding Label}" HorizontalAlignment="Center"
-                                                           FontWeight="SemiBold"/>
-                                                <Border Classes="match-pile">
-                                                    <Grid RowDefinitions="*,Auto">
-                                                        <Path Stretch="Uniform" Width="46" Height="55"
+                                        <DataTemplate x:DataType="rows:MatchPlayerRow">
+                                            <Border Classes="match-player" Padding="6,10"
+                                                    Classes.active-turn="{Binding IsCurrentTurn}">
+                                                <StackPanel Spacing="5">
+                                                    <TextBlock Text="{Binding Username}" FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                        <Path
+                                                              Width="15"
+                                                              Height="15"
                                                               Stroke="{DynamicResource ColorSnesBlue}"
-                                                              StrokeThickness="1.5"
-                                                              Data="M 5,5 L 41,5 L 41,50 L 5,50 Z M 12,12 L 34,12 M 12,18 L 34,18"/>
-                                                        <TextBlock Grid.Row="1" Text="{Binding TopCardText}"
-                                                                   FontSize="24" FontWeight="Bold"
-                                                                   HorizontalAlignment="Center"
+                                                              StrokeThickness="1.6" Data="M 2,13 L 13,13 L 13,2 L 2,2
+                                                                                          Z"/>
+                                                        <TextBlock Text="{Binding FloorsBuilt}"
                                                                    FontFamily="{DynamicResource FontMono}"/>
-                                                    </Grid>
-                                                </Border>
-                                            </StackPanel>
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding VoteCountText}"
+                                                               IsVisible="{Binding HasVoteCount}" FontSize="12"
+                                                               Foreground="{DynamicResource ColorTextSecondary}"/>
+                                                    <Button Classes="vertigo-button neutral" Grid.Row="1" TabIndex="1"
+                                                            IsVisible="{Binding HasVoteButton}"
+                                                            Content="{Binding VoteText}"
+                                                            Command="{Binding VoteCommand}"/>
+                                                </StackPanel>
+                                            </Border>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                            </ScrollViewer>
-                            <TextBlock Grid.Row="2" Text="{Binding BoardHintText}"
-                                       TextWrapping="Wrap" Foreground="{DynamicResource ColorTextSecondary}"
-                                       FontSize="12"/>
-                            <Button Grid.Row="3" Classes="vertigo-button neutral" TabIndex="8"
-                                    Content="{Binding DismantleTowerText}" Command="{Binding DismantleTowerCommand}"/>
-                        </Grid>
-                    </Border>
-                    <Border Grid.Column="2" Classes="match-panel">
-                        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto,Auto" RowSpacing="10">
-                            <Border BorderBrush="{DynamicResource ColorDivider}"
-                                    BorderThickness="0,0,0,1" Padding="0,0,0,10">
-                                <StackPanel Spacing="6">
-                                    <TextBlock Text="{Binding RecentMovesText}" FontSize="15" FontWeight="SemiBold"/>
+                            </Grid>
+                        </Border>
+                        <Border
+                                Grid.Column="1"
+                                Classes="match-panel"
+                                IsVisible="{Binding !Results.HasFinalResult}"
+                                BorderBrush="{DynamicResource ColorBoardBorder}"
+                                MaxWidth="620" Padding="10" ClipToBounds="True">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Color="{DynamicResource ColorBoardPanelTop}" Offset="0"/>
+                                    <GradientStop Color="{DynamicResource ColorBoardPanelBottom}" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Grid>
+                                <Viewbox Stretch="Fill" Opacity="0.25" IsHitTestVisible="False">
+                                    <Canvas Width="440" Height="400">
+                                        <Path Stroke="{DynamicResource ColorBoardGrid}" StrokeThickness="1"
+                                              Data="M 0,40 H 440 M 0,80 H 440 M 0,120 H 440 M 0,160 H 440 M 0,200 H 440
+                                              M
+                                                    0,240 H 440 M 0,280 H 440 M 0,320 H 440 M 0,360 H 440 M 40,0 V 400 M
+                                                    80,0
+                                                    V 400 M 120,0 V 400 M 160,0 V 400 M 200,0 V 400 M 240,0 V 400 M
+                                                    280,0 V
+                                                    400 M 320,0 V 400 M 360,0 V 400 M 400,0 V 400"/>
+                                    </Canvas>
+                                </Viewbox>
+                                <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
+                                    <TextBlock
+                                               Text="{Binding BoardText}"
+                                               Foreground="{DynamicResource ColorBoardHeading}"
+                                               FontSize="18" FontWeight="Bold"/>
+                                    <Viewbox Grid.Row="1" Stretch="Uniform" StretchDirection="DownOnly"
+                                             HorizontalAlignment="Center">
+                                        <ListBox Classes="module-picker" VerticalAlignment="Center"
+                                                 HorizontalAlignment="Center"
+                                                 ItemsSource="{Binding Piles}"
+                                                 SelectedItem="{Binding SelectedPile, Mode=TwoWay}"
+                                                 SelectionMode="Single" TabIndex="7"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                                 AutomationProperties.Name="{Binding BoardText}">
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" Spacing="8"/>
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate x:DataType="rows:MatchPileRow">
+                                                    <StackPanel Spacing="7">
+                                                        <TextBlock Text="{Binding Label}" HorizontalAlignment="Center"
+                                                                   Foreground="{DynamicResource ColorTowerLabel}"
+                                                                   FontFamily="{DynamicResource FontMono}"/>
+                                                        <Border Classes="module-face" Classes.empty="{Binding IsEmpty}">
+                                                            <Grid>
+                                                                <Path
+                                                                      Width="62"
+                                                                      Height="38"
+                                                                      Stretch="Fill"
+                                                                      VerticalAlignment="Bottom"
+                                                                      Margin="0,0,0,8"
+                                                                      Stroke="{DynamicResource
+                                                                      ColorTowerCardIllustration}"
+                                                                      Opacity="0.5"
+                                                                      Data="M 3,34 H 59 M 8,30 V 21 H 19 V 30 M 22,30 V
+                                                                      13 H
+                                                                            37 V 30 M 41,30 V 6 H 54 V 30"/>
+                                                                <TextBlock
+                                                                           Classes="module-number"
+                                                                           Text="{Binding TopCardText}"
+                                                                           Margin="0,0,0,18"/>
+                                                            </Grid>
+                                                        </Border>
+                                                        <StackPanel
+                                                                    Orientation="Horizontal"
+                                                                    Spacing="5"
+                                                                    HorizontalAlignment="Center">
+                                                            <Path
+                                                                  Width="14"
+                                                                  Height="12"
+                                                                  Stretch="Uniform"
+                                                                  Stroke="{DynamicResource ColorTowerCountIcon}"
+                                                                  StrokeThickness="1.4"
+                                                                  Data="M 2,3 L 8,0 L 14,3 L 8,6 Z M 2,7 L 8,10 L 14,7 M
+                                                                  2,11
+                                                                        L 8,14 L 14,11"/>
+                                                            <TextBlock
+                                                                       Text="{Binding Count}"
+                                                                       Foreground="{DynamicResource ColorBoardHeading}"
+                                                                       FontFamily="{DynamicResource FontMono}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Viewbox>
+                                    <TextBlock
+                                               Grid.Row="2"
+                                               Text="{Binding BoardHintText}"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTip.Tip="{Binding BoardHintText}"
+                                               Foreground="{DynamicResource ColorBoardHint}"
+                                               FontSize="12"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <ScrollViewer Grid.ColumnSpan="2" IsVisible="{Binding Results.HasFinalResult}"
+                                      HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <views:MatchResultsView DataContext="{Binding Results}"/>
+                        </ScrollViewer>
+                        <Border Grid.Column="2" Classes="match-panel" Padding="8">
+                            <Grid RowDefinitions="Auto,*,5*" RowSpacing="3">
+                                <TextBlock Text="{Binding RecentMovesText}" FontSize="13" FontWeight="Bold"/>
+                                <ScrollViewer
+                                              Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
                                     <ItemsControl ItemsSource="{Binding RecentMoves}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="rows:MatchMoveRow">
@@ -21015,88 +28477,268 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                </StackPanel>
-                            </Border>
-                            <TextBlock Grid.Row="1" Text="{Binding ChatText}" FontSize="18" FontWeight="Bold"/>
-                            <ListBox Grid.Row="2" TabIndex="2" MinHeight="240"
-                                     ItemsSource="{Binding ChatMessages}"
-                                     AutomationProperties.Name="{Binding ChatText}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate x:DataType="rows:MatchChatRow">
-                                        <StackPanel Margin="4,6" Spacing="3">
-                                            <TextBlock Text="{Binding Sender}" FontWeight="Bold"
-                                                       Foreground="{DynamicResource ColorSnesBlue}"/>
-                                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                </ScrollViewer>
+                                <Border Grid.Row="2" BorderThickness="0,1,0,0"
+                                        BorderBrush="{DynamicResource ColorDivider}" Padding="0,3,0,0">
+                                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="2">
+                                        <TextBlock Text="{Binding ChatText}" FontSize="12" FontWeight="Bold"/>
+                                        <ListBox Grid.Row="1" TabIndex="2" ItemsSource="{Binding ChatMessages}"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                 AutomationProperties.Name="{Binding ChatText}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate x:DataType="rows:MatchChatRow">
+                                                    <StackPanel Margin="2,3" Spacing="2">
+                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                                            <TextBlock Text="{Binding Sender}" FontWeight="Bold"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       Foreground="{DynamicResource ColorSnesBlue}"/>
+                                                            <TextBlock
+                                                                       Grid.Column="1"
+                                                                       Text="{Binding LocalTimeText}"
+                                                                       FontSize="11"
+                                                                       VerticalAlignment="Center"
+                                                                       FontFamily="{DynamicResource FontMono}"
+                                                                       Foreground="{DynamicResource
+                                                                       ColorTextSecondary}"/>
+                                                        </Grid>
+                                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                        <StackPanel Grid.Row="2" Spacing="3">
+                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="5">
+                                                <TextBox
+                                                         TabIndex="3"
+                                                         MaxLength="{x:Static contracts:MatchChatRules.MaximumLength}"
+                                                         Text="{Binding DraftMessage, Mode=TwoWay}"
+                                                         AcceptsReturn="False"
+                                                         PlaceholderText="{Binding MessageHintText}"
+                                                         AutomationProperties.Name="{Binding MessageHintText}">
+                                                    <TextBox.KeyBindings>
+                                                        <KeyBinding
+                                                                    Gesture="Enter"
+                                                                    Command="{Binding SendChatCommand}"/>
+                                                    </TextBox.KeyBindings>
+                                                </TextBox>
+                                                <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                                        TabIndex="4"
+                                                        Content="{Binding SendText}"
+                                                        Command="{Binding SendChatCommand}"/>
+                                                <TextBlock
+                                                           Grid.Column="2"
+                                                           Text="{Binding ChatLengthLabel}"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="11"
+                                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                                            </Grid>
+                                            <TextBlock
+                                                       Text="{Binding ChatErrorMessage}"
+                                                       IsVisible="{Binding HasChatError}"
+                                                       TextWrapping="Wrap" Foreground="{DynamicResource ColorError}"/>
                                         </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            <TextBox Grid.Row="3" TabIndex="3"
-                                     MaxLength="{x:Static validation:MatchChatRules.MaximumLength}"
-                                     Text="{Binding DraftMessage, Mode=TwoWay}"
-                                     PlaceholderText="{Binding MessageHintText}" AcceptsReturn="False"
-                                     AutomationProperties.Name="{Binding MessageHintText}"/>
-                            <TextBlock Grid.Row="4" Text="{Binding ChatLengthLabel}"
-                                       HorizontalAlignment="Right" FontSize="11"
-                                       Foreground="{DynamicResource ColorTextSecondary}"/>
-                            <Button Grid.Row="5" Classes="vertigo-button primary" TabIndex="4"
-                                    Content="{Binding SendText}" IsEnabled="False"/>
-                        </Grid>
-                    </Border>
-                </Grid>
-                <Border Classes="match-panel">
-                    <Grid ColumnDefinitions="*,240" ColumnSpacing="24">
-                        <StackPanel Spacing="10">
-                            <TextBlock Text="{Binding HandText}" FontSize="19" FontWeight="Bold"/>
-                            <ListBox ItemsSource="{Binding Hand}" SelectedItem="{Binding SelectedCard, Mode=TwoWay}"
-                                     TabIndex="5" MaxHeight="168" SelectionMode="Single">
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Border
+                            Grid.Row="3"
+                            Classes="match-panel"
+                            Padding="10,8"
+                            Background="{DynamicResource ColorBoardHandPanel}">
+                        <Grid RowDefinitions="Auto,80,Auto" RowSpacing="5">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                <TextBlock
+                                           Text="{Binding HandText}"
+                                           FontWeight="Bold"
+                                           FontSize="17"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Classes="vertigo-button neutral match-compact" TabIndex="8"
+                                        Content="{Binding DismantleTowerText}"
+                                        Command="{Binding DismantleTowerCommand}"/>
+                                <Button Grid.Column="2" Classes="vertigo-button primary match-compact" TabIndex="6"
+                                        Content="{Binding PlayCardText}" Command="{Binding PlaceCardCommand}"/>
+                            </Grid>
+                            <ListBox Grid.Row="1" Classes="module-picker hand-picker" ItemsSource="{Binding Hand}"
+                                     SelectedItem="{Binding SelectedCard, Mode=TwoWay}"
+                                     TabIndex="5" Height="80" SelectionMode="Single" UseLayoutRounding="False"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                     AutomationProperties.Name="{Binding HandText}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" Spacing="9"/>
+                                        <UniformGrid Columns="10"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate x:DataType="rows:MatchCardRow">
-                                        <Border Classes="match-pile" MinHeight="100" MinWidth="75"
-                                                Background="{DynamicResource ColorWhite}">
-                                            <TextBlock Text="{Binding DisplayValue}" FontSize="28"
-                                                       FontWeight="Bold" HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center"
-                                                       FontFamily="{DynamicResource FontMono}"/>
+                                        <Border
+                                                Classes="module-face hand-card"
+                                                ClipToBounds="True"
+                                                Classes.queued="{Binding IsInMasterPlan}">
+                                            <Grid Margin="4">
+                                                <Border
+                                                        Height="3"
+                                                        Width="21"
+                                                        Background="{DynamicResource ColorModuleStripe}"
+                                                        CornerRadius="1"
+                                                        HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                                <Path
+                                                      MaxWidth="51"
+                                                      Height="18"
+                                                      HorizontalAlignment="Stretch"
+                                                      Stretch="Fill"
+                                                      VerticalAlignment="Bottom"
+                                                      Stroke="{DynamicResource ColorModuleIllustration}" Opacity="0.7"
+                                                      Data="M 2,23 H 54 M 5,20 V 13 H 18 V 20 M 21,20 V 8 H 32 V 20 M
+                                                      35,20 V
+                                                            2 H 50 V 20 M 41,6 V 9 M 45,6 V 9"/>
+                                                <TextBlock Classes="module-number" Text="{Binding DisplayValue}"
+                                                           Margin="0,0,0,6" FontSize="26"/>
+                                                <Border
+                                                        Width="19"
+                                                        Height="19"
+                                                        Background="{DynamicResource ColorModuleBadge}"
+                                                        CornerRadius="9"
+                                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                        IsVisible="{Binding IsInMasterPlan}">
+                                                    <TextBlock
+                                                               Text="{Binding PlanOrder}"
+                                                               Foreground="{DynamicResource ColorTextOnDark}"
+                                                               FontSize="11"
+                                                               FontWeight="Bold" HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Border>
+                                            </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Spacing="8">
-                            <Button Classes="vertigo-button primary" TabIndex="6"
-                                    Content="{Binding PlayCardText}" Command="{Binding PlaceCardCommand}"/>
-                            <TextBlock Text="{Binding MasterPlanCountLabel}" FontWeight="SemiBold"/>
-                            <StackPanel Spacing="6" IsVisible="{Binding HasMasterPlans}">
-                                <Border Padding="8" Background="{DynamicResource ColorInfoBackground}"
-                                        CornerRadius="{DynamicResource RadiusSmall}">
-                                    <TextBlock Text="{Binding MasterPlanPreview}" TextWrapping="Wrap"
-                                               FontSize="13"/>
-                                </Border>
-                                <Button Classes="vertigo-button neutral" TabIndex="9"
-                                        Content="{Binding AddMasterPlanModuleText}"
-                                        Command="{Binding AddMasterPlanModuleCommand}"/>
-                                <Button Classes="vertigo-button neutral" TabIndex="10"
-                                        Content="{Binding RemoveMasterPlanModuleText}"
-                                        Command="{Binding RemoveMasterPlanModuleCommand}"/>
-                                <Button Classes="vertigo-button primary" TabIndex="11"
-                                        Content="{Binding PlayMasterPlanText}"
-                                        Command="{Binding PlayMasterPlanCommand}"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </StackPanel>
+                            <Border
+                                    Grid.Row="2"
+                                    MinHeight="40"
+                                    Padding="6,3"
+                                    Background="{DynamicResource ColorBoardMasterPlanStrip}"
+                                    CornerRadius="5">
+                                <Grid ColumnDefinitions="*,*,2*" ColumnSpacing="8">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"
+                                          ToolTip.Tip="{Binding MasterPlanCountLabel}">
+                                        <Border
+                                                MinWidth="46"
+                                                Height="32"
+                                                CornerRadius="5"
+                                                Background="{DynamicResource ColorPlanCountSurface}"
+                                                BorderBrush="{DynamicResource ColorPlanTowerBorder}"
+                                                BorderThickness="1"
+                                                VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="3" Margin="4,0"
+                                                        VerticalAlignment="Center">
+                                                <Path
+                                                      Width="19"
+                                                      Height="20"
+                                                      Stretch="Uniform"
+                                                      Stroke="{DynamicResource ColorPlanCountIcon}"
+                                                      StrokeThickness="1.5" VerticalAlignment="Center"
+                                                      Data="M 2,2 H 17 V 19 H 2 Z M 5,15 V 10 H 8 V 15
+                                                            M 8,15 V 6 H 12 V 15 M 12,15 V 8 H 14 V 15 M 4,15 H 15"/>
+                                                <TextBlock Text="{Binding MasterPlanCount}" FontWeight="Bold"
+                                                           FontSize="12"
+                                                           Foreground="{DynamicResource ColorTextOnDark}"
+                                                           VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBlock
+                                                   Grid.Column="1"
+                                                   Text="{Binding MasterPlanTitle}"
+                                                   FontWeight="Bold"
+                                                   FontSize="12"
+                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                    </Grid>
+                                    <Panel Grid.Column="1" ClipToBounds="True" IsVisible="{Binding HasMasterPlans}">
+                                        <TextBlock Text="{Binding MasterPlanPreview}" FontSize="12"
+                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                                   ToolTip.Tip="{Binding MasterPlanPreview}"
+                                                   IsVisible="{Binding !HasMasterPlanDraft}"/>
+                                        <Viewbox
+                                                 Stretch="Uniform"
+                                                 StretchDirection="DownOnly"
+                                                 HorizontalAlignment="Left"
+                                                 IsVisible="{Binding HasMasterPlanDraft}"
+                                                 ToolTip.Tip="{Binding MasterPlanPreview}">
+                                            <ItemsControl ItemsSource="{Binding MasterPlanSteps}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" Spacing="3"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="rows:MatchMasterPlanStep">
+                                                        <StackPanel Orientation="Horizontal" Spacing="3">
+                                                            <TextBlock
+                                                                       Text="→"
+                                                                       Foreground="{DynamicResource ColorPlanStepArrow}"
+                                                                       VerticalAlignment="Center"
+                                                                       IsVisible="{Binding !IsTowerTop}"/>
+                                                            <Border
+                                                                    Classes="plan-step"
+                                                                    Classes.tower-top="{Binding IsTowerTop}"
+                                                                    BorderThickness="1" CornerRadius="4" Padding="5,3">
+                                                                <TextBlock Text="{Binding Number}" FontWeight="Bold"
+                                                                           FontFamily="{DynamicResource FontMono}"
+                                                                           FontSize="13"/>
+                                                            </Border>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Viewbox>
+                                    </Panel>
+                                    <Grid Grid.Column="2" ColumnDefinitions="*,*,*" ColumnSpacing="4"
+                                          IsVisible="{Binding HasMasterPlans}">
+                                        <Button Classes="vertigo-button neutral match-compact" TabIndex="9"
+                                                HorizontalAlignment="Stretch"
+                                                ToolTip.Tip="{Binding AddMasterPlanModuleText}"
+                                                Command="{Binding AddMasterPlanModuleCommand}">
+                                            <TextBlock
+                                                       Text="{Binding AddMasterPlanModuleText}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </Button>
+                                        <Button
+                                                Grid.Column="1"
+                                                Classes="vertigo-button neutral match-compact"
+                                                TabIndex="10"
+                                                HorizontalAlignment="Stretch"
+                                                ToolTip.Tip="{Binding RemoveMasterPlanModuleText}"
+                                                Command="{Binding RemoveMasterPlanModuleCommand}">
+                                            <TextBlock
+                                                       Text="{Binding RemoveMasterPlanModuleText}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </Button>
+                                        <Button
+                                                Grid.Column="2"
+                                                Classes="vertigo-button primary match-compact"
+                                                TabIndex="11"
+                                                HorizontalAlignment="Stretch" ToolTip.Tip="{Binding PlayMasterPlanText}"
+                                                Command="{Binding PlayMasterPlanCommand}">
+                                            <TextBlock
+                                                       Text="{Binding PlayMasterPlanText}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
         </ScrollViewer>
         <Border IsVisible="{Binding IsExitConfirmationOpen}" Background="{DynamicResource ColorCanvas}"
                 BorderBrush="{DynamicResource ColorCoal}" BorderThickness="2"
                 CornerRadius="{DynamicResource RadiusSmall}"
-                Width="450" MaxWidth="450" Padding="24"
+                Margin="14" MaxWidth="450" Padding="24"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 Focusable="True">
             <StackPanel Spacing="14">
@@ -21114,6 +28756,607 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         </Border>
     </Grid>
 </UserControl>
+````
+
+## File: src/Server/Vertigo.Server.Game/Matches/DependencyInjection/MatchLifecycleServiceCollectionExtensions.cs
+````csharp
+using Microsoft.Extensions.DependencyInjection;
+using Vertigo.Contracts.Internal;
+using Vertigo.Server.Game.Matches.Implementations;
+
+namespace Vertigo.Server.Game.Matches.DependencyInjection;
+
+public static class MatchLifecycleServiceCollectionExtensions
+{
+    public static IServiceCollection AddMatchLifecycleServices(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddSingleton<InMemoryMatchSessionStarter>();
+        services.AddSingleton<IMatchSessionStarter>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+        services.AddSingleton<IMatchLifecycle>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+        services.AddSingleton<IMatchPresence>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchStateReader>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchCommandService>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchBoardReader>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchPrivateHandReader>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchPlacementService>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchDismantleService>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchTurnClock>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchExpulsionVoteService>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        services.AddSingleton<IMatchDepartureService>(provider =>
+            provider.GetRequiredService<InMemoryMatchSessionStarter>());
+
+        return services;
+    }
+}
+````
+
+## File: tests/Vertigo.Client.MatchBoard.Smoke/RoundClosureSmoke.cs
+````csharp
+using System.ServiceModel;
+using System.Threading.Channels;
+using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Contracts.Models;
+
+internal static class RoundClosureSmoke
+{
+    private const int MaximumRoundActions = 100;
+    private const int MaximumPlacementDifference = 10;
+    private static readonly TimeSpan NotificationTimeout = TimeSpan.FromSeconds(15);
+    private static readonly TimeSpan TurnExpiryTimeout = TimeSpan.FromSeconds(75);
+
+    public static async Task<bool> VerifyAsync(
+        (ILobbyClient Lobby, UserSession Session) first,
+        (ILobbyClient Lobby, UserSession Session) second,
+        string lobbyCode)
+    {
+        Channel<MatchBoardChanged> firstChanges = Channel.CreateUnbounded<MatchBoardChanged>();
+        Channel<MatchBoardChanged> secondChanges = Channel.CreateUnbounded<MatchBoardChanged>();
+        first.Lobby.MatchBoardUpdated += ObserveFirst;
+        second.Lobby.MatchBoardUpdated += ObserveSecond;
+
+        try
+        {
+            RoundParticipant firstPlayer = new(first.Lobby, first.Session, firstChanges.Reader);
+            RoundParticipant secondPlayer = new(second.Lobby, second.Session, secondChanges.Reader);
+            (MatchBoardSnapshot board, bool dismantled) = await PlayFirstRoundAsync(firstPlayer, secondPlayer, lobbyCode);
+
+            Check(board.RoundNumber == 2 && board.RoundSummaries.Count == 1, "The first round did not close.");
+            Check(board.Piles is [{ Position: 1, CardCount: 1, TopCardNumber: not null }],
+                "The second round must start with one foundation.");
+            VerifySummary(board, first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token));
+            VerifySummary(board, second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token));
+
+            second.Lobby.Disconnect();
+            second.Lobby.ReconnectMatch(new MatchPresenceRequest
+            {
+                MatchId = board.MatchId,
+                LobbyCode = lobbyCode,
+                SessionToken = second.Session.Token
+            });
+            VerifySummary(board, second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token));
+
+            if (dismantled)
+            {
+                await VerifyTurnExpiryAsync(firstPlayer, secondPlayer, (lobbyCode, board));
+            }
+
+            return dismantled;
+        }
+        finally
+        {
+            first.Lobby.MatchBoardUpdated -= ObserveFirst;
+            second.Lobby.MatchBoardUpdated -= ObserveSecond;
+        }
+
+        void ObserveFirst(object? sender, MatchBoardChanged change)
+        {
+            firstChanges.Writer.TryWrite(change);
+        }
+
+        void ObserveSecond(object? sender, MatchBoardChanged change)
+        {
+            secondChanges.Writer.TryWrite(change);
+        }
+    }
+
+    private static async Task<(MatchBoardSnapshot Board, bool Dismantled)> PlayFirstRoundAsync(
+        RoundParticipant first, RoundParticipant second, string lobbyCode)
+    {
+        MatchBoardSnapshot board = first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token);
+        Check(board.RoundNumber == 1 && board.RoundSummaries.Count == 0, "Expected the first round in progress.");
+        bool dismantled = false;
+        for (int step = 0; step < MaximumRoundActions && board.RoundNumber == 1; step++)
+        {
+            RoundParticipant active =
+                board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
+            TurnResult turn = PlayTurn((active.Lobby, active.Session), board, lobbyCode);
+            if (!dismantled && turn.Kind == MatchBoardActionKind.Dismantle)
+            {
+                Check(turn.Board.Piles.Count == 2 && turn.Board.Piles.All(pile => pile.CardCount == 1),
+                    "The first dismantle must replenish its tower and open a second one.");
+                dismantled = true;
+            }
+
+            Check(turn.Board.Revision == board.Revision + 1, "A turn must increase the board revision once.");
+            await VerifyTurnNoticesAsync((first.Changes, second.Changes), turn, active.Session.Username);
+            board = turn.Board;
+        }
+        return (board, dismantled);
+    }
+
+    private static async Task VerifyTurnNoticesAsync(
+        (ChannelReader<MatchBoardChanged> First, ChannelReader<MatchBoardChanged> Second) notices,
+        TurnResult turn, string username)
+    {
+        using CancellationTokenSource timeout = new(NotificationTimeout);
+        MatchBoardChanged firstChange = await notices.First.ReadAsync(timeout.Token);
+        MatchBoardChanged secondChange = await notices.Second.ReadAsync(timeout.Token);
+        CheckNotice(firstChange, turn, username);
+        CheckNotice(secondChange, turn, username);
+    }
+
+    private static async Task VerifyTurnExpiryAsync(
+        RoundParticipant first, RoundParticipant second, (string LobbyCode, MatchBoardSnapshot Board) state)
+    {
+        string lobbyCode = state.LobbyCode;
+        MatchBoardSnapshot board = state.Board;
+        using CancellationTokenSource timeout = new(TurnExpiryTimeout);
+        CheckTimeout(await first.Changes.ReadAsync(timeout.Token), board, MatchBoardActionKind.TurnSkipped);
+        CheckTimeout(await second.Changes.ReadAsync(timeout.Token), board, MatchBoardActionKind.TurnSkipped);
+        MatchBoardSnapshot skipped = first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token);
+        Check(skipped.ExpelledPlayerIds.Count == 0 && skipped.CurrentTurnPlayerId != board.CurrentTurnPlayerId
+            && skipped.PresenceDeadlinesUtc.ContainsKey(board.CurrentTurnPlayerId),
+            "The skipped player did not keep their seat during the grace period.");
+        CheckTimeout(await first.Changes.ReadAsync(timeout.Token), skipped, MatchBoardActionKind.TurnExpired);
+        CheckTimeout(await second.Changes.ReadAsync(timeout.Token), skipped, MatchBoardActionKind.TurnExpired);
+        CheckAbandonment(first.Lobby.GetMatchBoard(lobbyCode, first.Session.Token), board);
+        CheckAbandonment(second.Lobby.GetMatchBoard(lobbyCode, second.Session.Token), board);
+
+        RoundParticipant expelled =
+            board.CurrentTurnPlayerId == first.Session.PlayerId ? first : second;
+        MatchPrivateHand hand = expelled.Lobby.GetMatchPrivateHand(lobbyCode, expelled.Session.Token);
+        Check(hand.MatchId == board.MatchId && hand.PlayerId == expelled.Session.PlayerId
+            && hand.Cards.Count == 0 && hand.MasterPlans == 0,
+            "The expelled client could not refresh its board with an empty private hand.");
+    }
+
+    private static TurnResult PlayTurn(
+        (ILobbyClient Lobby, UserSession Session) active, MatchBoardSnapshot board, string lobbyCode)
+    {
+        MatchPrivateHand hand = active.Lobby.GetMatchPrivateHand(lobbyCode, active.Session.Token);
+        (int Card, int Pile) placement = (from card in hand.Cards
+                                         from pile in board.Piles
+                                         where pile.TopCardNumber is int top
+                                             && card - top is >= 1 and <= MaximumPlacementDifference
+                                         select (card, pile.Position)).FirstOrDefault();
+        int existingTower = board.Piles.First(pile => pile.TopCardNumber.HasValue).Position;
+        MatchDismantleRequest request = new()
+        {
+            LobbyCode = lobbyCode,
+            SessionToken = active.Session.Token,
+            PilePosition = existingTower,
+            ExpectedRevision = board.Revision
+        };
+
+        TurnResult result;
+        (int First, int Second, int Pile) chain = FindMasterPlan(board, hand);
+        if (chain.Pile != 0)
+        {
+            MatchBoardSnapshot updated = active.Lobby.UseMatchMasterPlan(new MatchMasterPlanRequest
+            {
+                LobbyCode = lobbyCode,
+                SessionToken = active.Session.Token,
+                CardNumbers = new List<int> { chain.First, chain.Second },
+                PilePosition = chain.Pile,
+                ExpectedRevision = board.Revision
+            });
+            MatchBoardMove latest = updated.RecentMoves.Last();
+            Check(latest.ActionKind == MatchBoardActionKind.MasterPlan && latest.Revision == updated.Revision
+                && latest.PlayerId == active.Session.PlayerId && latest.PlayerUsername == active.Session.Username
+                && latest.PilePosition == chain.Pile
+                && latest.CardNumbers.SequenceEqual(new[] { chain.First, chain.Second }),
+                "The master plan did not produce one history entry with the expected chain.");
+            Console.WriteLine("PASS: MASTER PLAN CHAIN IN PUBLIC MOVE HISTORY");
+            result = new TurnResult(updated, MatchBoardActionKind.MasterPlan, chain.Pile);
+        }
+        else
+        {
+            result = placement.Pile == 0 ? PlayDismantle(active.Lobby, request)
+                : PlayPlacement(active.Lobby, request, placement);
+        }
+
+        return result;
+    }
+
+    private static (int First, int Second, int Pile) FindMasterPlan(MatchBoardSnapshot board, MatchPrivateHand hand)
+    {
+        (int First, int Second, int Pile) chain = default;
+        if (hand.MasterPlans > 0)
+        {
+            chain = (from pile in board.Piles
+                     from first in hand.Cards
+                     from second in hand.Cards
+                     where pile.TopCardNumber is int top && first - top is >= 1 and <= MaximumPlacementDifference
+                         && second - first is >= 1 and <= MaximumPlacementDifference
+                     select (first, second, pile.Position)).FirstOrDefault();
+        }
+
+        return chain;
+    }
+
+    private static TurnResult PlayDismantle(ILobbyClient lobby, MatchDismantleRequest request)
+    {
+        MatchBoardSnapshot board = lobby.DismantleMatchTower(request);
+        bool rejected = false;
+        try
+        {
+            lobby.DismantleMatchTower(request);
+        }
+        catch (FaultException<ServiceFault> ex)
+        {
+            rejected = ex.Detail.MessageKey == "Match.Error.Stale";
+        }
+
+        Check(rejected, "Repeating the dismantle request did not return the stale revision fault.");
+
+        return new TurnResult(board, MatchBoardActionKind.Dismantle, request.PilePosition);
+    }
+
+    private static TurnResult PlayPlacement(
+        ILobbyClient lobby, MatchDismantleRequest request, (int Card, int Pile) placement)
+    {
+        bool rejected = false;
+        try
+        {
+            lobby.DismantleMatchTower(request);
+        }
+        catch (FaultException<ServiceFault> ex)
+        {
+            rejected = ex.Detail.MessageKey == "Match.Error.PlacementAvailable";
+        }
+
+        Check(rejected, "The server accepted dismantling when a placement was available.");
+        MatchBoardSnapshot board = lobby.PlaceMatchCard(new MatchPlaceRequest
+        {
+            LobbyCode = request.LobbyCode,
+            SessionToken = request.SessionToken,
+            CardNumber = placement.Card,
+            PilePosition = placement.Pile,
+            ExpectedRevision = request.ExpectedRevision
+        });
+
+        return new TurnResult(board, MatchBoardActionKind.Placement, placement.Pile);
+    }
+
+    private static void CheckNotice(MatchBoardChanged notice, TurnResult turn, string username)
+    {
+        Check(notice.MatchId == turn.Board.MatchId && notice.Revision == turn.Board.Revision
+            && notice.ActionKind == turn.Kind && notice.PilePosition == turn.Pile && notice.PlayerUsername == username,
+            "A client received the wrong action notification.");
+    }
+
+    private static void CheckTimeout(MatchBoardChanged notice, MatchBoardSnapshot before, MatchBoardActionKind kind)
+    {
+        Check(notice.MatchId == before.MatchId && notice.Revision == before.Revision + 1
+            && notice.ActionKind == kind,
+            "A client did not receive the turn-expiry notification.");
+    }
+
+    private static void CheckAbandonment(MatchBoardSnapshot after, MatchBoardSnapshot before)
+    {
+        Guid expelled = before.CurrentTurnPlayerId;
+        Guid winner = before.Players.Single(player => player.PlayerId != expelled).PlayerId;
+        Check(after.EndReason == MatchEndReason.Abandonment && after.CurrentTurnPlayerId == Guid.Empty
+            && after.TurnDeadlineUtc is null && after.Revision == before.Revision + 2
+            && after.WinnerIds.SequenceEqual(new[] { winner })
+            && after.Players.Single(player => player.PlayerId == winner).FinalPosition == 1
+            && after.ExpelledPlayerIds.SequenceEqual(new[] { expelled }),
+            "The timed-out match did not end with the expected winner and expelled player.");
+    }
+
+    private static void VerifySummary(MatchBoardSnapshot expected, MatchBoardSnapshot received)
+    {
+        Check(received.RoundNumber == expected.RoundNumber && received.Revision == expected.Revision
+            && received.CurrentTurnPlayerId == expected.CurrentTurnPlayerId,
+            "The clients disagree on the opening player or board revision.");
+        MatchRoundSummary actual = received.RoundSummaries.Single();
+        MatchRoundSummary target = expected.RoundSummaries.Single();
+        Check(actual.RoundNumber == 1 && actual.ClosedByPlayerId == target.ClosedByPlayerId
+            && actual.Players.Count == 2 && actual.Players.OrderBy(score => score.PlayerId).Select(Score)
+                .SequenceEqual(target.Players.OrderBy(score => score.PlayerId).Select(Score)),
+            "The clients received different round summaries.");
+        foreach (MatchRoundPlayerScore score in actual.Players)
+        {
+            MatchBoardPlayer player = received.Players.Single(player => player.PlayerId == score.PlayerId);
+            Check(score.TotalFloors == score.FloorsBuilt + score.BonusFloors
+                && player.GlobalFloors == score.TotalFloors && !string.IsNullOrWhiteSpace(score.PlayerUsername)
+                && player.Username == score.PlayerUsername,
+                "The round summary does not match the player name and total on the board.");
+        }
+    }
+
+    private static (Guid PlayerId, int FloorsBuilt, int BonusFloors, int TotalFloors) Score(MatchRoundPlayerScore score)
+    {
+        return (score.PlayerId, score.FloorsBuilt, score.BonusFloors, score.TotalFloors);
+    }
+
+    private static void Check(bool condition, string message)
+    {
+        if (!condition)
+        {
+            throw new InvalidOperationException(message);
+        }
+    }
+
+    private sealed record RoundParticipant(
+        ILobbyClient Lobby, UserSession Session, ChannelReader<MatchBoardChanged> Changes);
+
+    private sealed record TurnResult(MatchBoardSnapshot Board, MatchBoardActionKind Kind, int Pile);
+}
+````
+
+## File: Vertigo.Client.slnx
+````
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Client/">
+    <Project Path="src/Client/Vertigo.Client.Core/Vertigo.Client.Core.csproj" />
+    <Project Path="src/Client/Vertigo.Client.Networking/Vertigo.Client.Networking.csproj" />
+    <Project Path="src/Client/Vertigo.Client.UI/Vertigo.Client.UI.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/Vertigo.Contracts/Vertigo.Contracts.csproj" />
+    <Project Path="src/Shared/Vertigo.Registration/Vertigo.Registration.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Vertigo.Client.Networking.Smoke/Vertigo.Client.Networking.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.Multiplayer.Smoke/Vertigo.Client.Multiplayer.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.LobbyPreparation.Smoke/Vertigo.Client.LobbyPreparation.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.PrivateInvitations.Smoke/Vertigo.Client.PrivateInvitations.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.UnitTests/Vertigo.Client.UnitTests.csproj" />
+    <Project Path="tests/Vertigo.Server.Matchmaking.Tests/Vertigo.Server.Matchmaking.Tests.csproj" />
+    <Project Path="tests/Vertigo.Client.TestAccounts.Setup/Vertigo.Client.TestAccounts.Setup.csproj" />
+    <Project Path="tests/Vertigo.Client.Reconnection.Smoke/Vertigo.Client.Reconnection.Smoke.csproj" />
+    <Project Path="tests/Vertigo.Client.MatchBoard.Smoke/Vertigo.Client.MatchBoard.Smoke.csproj" />
+  </Folder>
+</Solution>
+````
+
+## File: src/Client/Vertigo.Client.UI/App.axaml.cs
+````csharp
+using Vertigo.Client.UI.Utilities.Settings.Interfaces;
+using Vertigo.Client.UI.Utilities.Settings.Services;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.DependencyInjection;
+using Vertigo.Client.Networking;
+using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Client.UI.ViewModels;
+using Vertigo.Client.UI.ViewModels.Dependencies;
+using Vertigo.Client.UI.Views;
+using Vertigo.Client.UI.ViewModels.Social;
+using Vertigo.Client.UI.ViewModels.Utilities;
+using Vertigo.Client.UI.Utilities.Localization.Interfaces;
+using Vertigo.Client.UI.Utilities.Localization.Services;
+using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
+using Vertigo.Client.UI.Utilities.Sessions.Services;
+
+namespace Vertigo.Client.UI;
+
+public partial class App : Application
+{
+    private ServiceProvider? _services;
+
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+
+    public override void OnFrameworkInitializationCompleted()
+    {
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            ServiceCollection registrations = new();
+            registrations.AddVertigoClientNetworking();
+            registrations.AddSingleton<ITextLocalizer, TextLocalizer>();
+            registrations.AddSingleton<IClientErrorText, ClientErrorText>();
+            registrations.AddSingleton<ISessionGuard, SessionGuard>();
+            registrations.AddTransient<UiServices>();
+            registrations.AddTransient<UiNavigationContext>();
+            registrations.AddTransient<AccessContext>();
+            registrations.AddTransient<LobbyContext>();
+            registrations.AddTransient<HomeContext>();
+            registrations.AddSingleton<IUserSettingsStore, JsonUserSettingsStore>();
+            registrations.AddSingleton<SettingsViewModel>();
+            registrations.AddSingleton<ProfileViewModel>();
+            registrations.AddTransient<MainScreensContext>();
+            registrations.AddTransient<MainContext>();
+            registrations.AddSingleton<AccessViewModel>();
+            registrations.AddSingleton<PlayViewModel>();
+            registrations.AddSingleton<HomeViewModel>();
+            registrations.AddTransient<MatchBoardContext>();
+            registrations.AddSingleton<MatchViewModel>(provider =>
+                new MatchViewModel(provider.GetRequiredService<MatchBoardContext>(),
+                    provider.GetRequiredService<IChatClient>()));
+            registrations.AddSingleton<LobbyViewModel>();
+            registrations.AddSingleton<SocialOperation>();
+            registrations.AddSingleton<FriendsViewModel>();
+            registrations.AddSingleton<BlockedPlayersViewModel>();
+            registrations.AddTransient<LobbyInvitationContext>();
+            registrations.AddSingleton<LobbyInvitationsViewModel>();
+            registrations.AddTransient<SocialNavigationContext>();
+            registrations.AddTransient<SocialViewModelContext>();
+            registrations.AddTransient<MainSocialContext>();
+            registrations.AddSingleton<SocialViewModel>();
+            registrations.AddSingleton<MainViewModel>();
+            _services = registrations.BuildServiceProvider();
+            UiLanguage.Apply(_services.GetRequiredService<IUserSettingsStore>().Load().Language);
+            desktop.MainWindow = new MainWindow
+            {
+                DataContext = _services.GetRequiredService<MainViewModel>()
+            };
+            desktop.Exit += OnDesktopExit;
+        }
+
+        base.OnFrameworkInitializationCompleted();
+    }
+
+    private void OnDesktopExit(object? sender, ControlledApplicationLifetimeExitEventArgs eventArgs)
+    {
+        _services?.Dispose();
+        _services = null;
+    }
+}
+````
+
+## File: src/Server/Vertigo.Server.Matchmaking/Lobbies/Match/LobbyGameOperations.cs
+````csharp
+using Vertigo.Contracts.Internal;
+using Vertigo.Contracts.Models;
+using Vertigo.Server.Matchmaking.Lobbies;
+
+namespace Vertigo.Server.Matchmaking.Lobbies.Match;
+
+// One dependency for Matchmaking's internal Game interactions.
+// All methods are invoked while the owning LobbyService holds its lobby lock.
+public sealed class LobbyGameOperations
+{
+    private readonly LobbyMatchActivation _activation;
+    private readonly IMatchStateReader _state;
+    private readonly IMatchCommandService _commands;
+
+    public LobbyGameOperations(
+        LobbyMatchActivation activation,
+        IMatchStateReader state,
+        IMatchCommandService commands)
+    {
+        _activation = activation;
+        _state = state;
+        _commands = commands;
+    }
+
+    public void Activate(LobbyState lobby)
+    {
+        _activation.Activate(lobby);
+    }
+
+    public MatchBoardSnapshot? GetBoard(LobbyState lobby)
+    {
+        MatchBoardSnapshot? board = _state.GetBoard(lobby.MatchId);
+        if (board is not null)
+        {
+            IReadOnlyDictionary<Guid, string> names = lobby.MatchPlayerNames;
+            foreach (MatchBoardMove move in board.RecentMoves)
+            {
+                if (names.TryGetValue(move.PlayerId, out string? username))
+                {
+                    move.PlayerUsername = username;
+                }
+            }
+
+            foreach (MatchRoundPlayerScore score in board.RoundSummaries.SelectMany(round => round.Players))
+            {
+                if (names.TryGetValue(score.PlayerId, out string? username))
+                {
+                    score.PlayerUsername = username;
+                }
+            }
+
+            foreach (MatchBoardPlayer player in board.Players)
+            {
+                if (names.TryGetValue(player.PlayerId, out string? username))
+                {
+                    player.Username = username;
+                }
+            }
+        }
+
+        return board;
+    }
+
+    public MatchPrivateHand? GetPrivateHand(Guid matchId, Guid playerId)
+    {
+        return _state.GetPrivateHand(matchId, playerId);
+    }
+
+    public MatchPlacementResult TryPlace(Guid matchId, Guid playerId, MatchPlacement move)
+    {
+        return _commands.TryPlace(matchId, playerId, move);
+    }
+
+    public MatchPlacementResult TryUseMasterPlan(Guid matchId, Guid playerId, MatchMasterPlan move)
+    {
+        return _commands.TryUseMasterPlan(matchId, playerId, move);
+    }
+
+    public MatchDismantleResult TryDismantle(Guid matchId, Guid playerId, MatchDismantle move)
+    {
+        return _commands.TryDismantle(matchId, playerId, move);
+    }
+
+    public MatchExpulsionVoteResult TryVoteToExpel(Guid matchId, Guid voterId, MatchExpulsionVote vote)
+    {
+        return _commands.TryVoteToExpel(matchId, voterId, vote);
+    }
+
+    public bool TryConfirmPresence(Guid matchId, Guid playerId)
+    {
+        return _commands.TryConfirmPresence(matchId, playerId);
+    }
+
+    public Guid? TryExpireTurn(Guid matchId)
+    {
+        return _commands.TryExpireTurn(matchId);
+    }
+
+    public MatchDepartureResult TryLeaveMatch(Guid matchId, Guid playerId)
+    {
+        return _commands.TryLeaveMatch(matchId, playerId);
+    }
+
+    public bool TryReconnect(LobbyState lobby, Guid playerId)
+    {
+        MatchReconnectResult result = _commands.TryReconnect(lobby.MatchId, playerId);
+        bool accepted = result is MatchReconnectResult.Reconnected
+            or MatchReconnectResult.AlreadyConnected;
+        if (!accepted)
+        {
+            MatchBoardSnapshot? board = _state.GetBoard(lobby.MatchId);
+            accepted = board is not null && (board.TurnDeadlineUtc is null
+                || board.ExpelledPlayerIds.Contains(playerId));
+        }
+
+        return accepted;
+    }
+
+    public void Disconnect(LobbyState lobby, Guid playerId)
+    {
+        _commands.TryDisconnect(lobby.MatchId, playerId);
+    }
+}
 ````
 
 ## File: src/Server/Vertigo.Server.Matchmaking/Lobbies/LobbyState.cs
@@ -21187,7 +29430,7 @@ public sealed class LobbyState
         else
         {
             _connections.Add(connection);
-            _readyPlayerIds.Clear(); // Joining changes the preparation quorum.
+            _readyPlayerIds.Clear(); 
             _revision++;
         }
     }
@@ -21202,7 +29445,6 @@ public sealed class LobbyState
             _revision++;
         }
 
-        // The role passes to the participant who has been longest in the lobby (CU-014 FA-04).
         if (removedCount > 0 && playerId == HostPlayerId && _connections.Count > 0)
         {
             HostPlayerId = _connections[0].Member.PlayerId;
@@ -21210,9 +29452,7 @@ public sealed class LobbyState
 
         return removedCount > 0;
     }
-
-    // In-game transport loss does not remove a player or transfer the host role.
-    // A delayed Closed event from the old channel cannot disconnect a new channel.
+    
     public List<Guid> DisconnectSession(string sessionId)
     {
         List<Guid> changed = new();
@@ -21356,15 +29596,20 @@ public sealed class LobbyState
         return members;
     }
 
+    public bool IsDisconnected(Guid playerId) => _disconnectedPlayerIds.Contains(playerId);
+
     public List<ILobbyCallback> GetCallbacksExcept(Guid playerId)
     {
-        List<ILobbyCallback> callbacks = _connections
-            .Where(connection => connection.Member.PlayerId != playerId
+        return GetConnectedCallbacks(id => id != playerId);
+    }
+
+    public List<ILobbyCallback> GetConnectedCallbacks(Predicate<Guid> includesPlayer)
+    {
+        return _connections
+            .Where(connection => includesPlayer(connection.Member.PlayerId)
                 && !_disconnectedPlayerIds.Contains(connection.Member.PlayerId))
             .Select(connection => connection.Callback)
             .ToList();
-
-        return callbacks;
     }
 
     public LobbySummary ToSummary()
@@ -21381,351 +29626,6 @@ public sealed class LobbyState
         };
 
         return summary;
-    }
-}
-````
-
-## File: tests/Vertigo.Server.Game.Tests/Matches/MatchLifecycleRegistrationTests.cs
-````csharp
-using Microsoft.Extensions.DependencyInjection;
-using Vertigo.Contracts.Internal;
-using Vertigo.Server.Game.Matches.DependencyInjection;
-
-namespace Vertigo.Server.Game.Tests.Matches;
-
-public sealed class MatchLifecycleRegistrationTests
-{
-    [Fact]
-    public void TryLeaveMatch_ThroughCommandContract_UpdatesBoardAndHandThroughReader()
-    {
-        ServiceCollection services = new();
-        services.AddSingleton(TimeProvider.System);
-        services.AddMatchLifecycleServices();
-        using ServiceProvider provider = services.BuildServiceProvider();
-        IMatchSessionStarter starter = provider.GetRequiredService<IMatchSessionStarter>();
-        IMatchStateReader reader = provider.GetRequiredService<IMatchStateReader>();
-        IMatchCommandService commands = provider.GetRequiredService<IMatchCommandService>();
-        Guid leaving = Guid.NewGuid();
-        Guid remaining = Guid.NewGuid();
-        MatchSessionSnapshot match = starter.Start(new MatchStartRequest
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABCDEF",
-            HostPlayerId = leaving,
-            PlayerIds = new[] { leaving, remaining }
-        });
-        Assert.NotNull(reader.GetPrivateHand(match.MatchId, leaving));
-
-        MatchDepartureResult result = commands.TryLeaveMatch(match.MatchId, leaving);
-
-        Assert.Equal(new MatchDepartureResult(true, true), result);
-        Assert.Null(reader.GetPrivateHand(match.MatchId, leaving));
-        Assert.Equal(remaining, Assert.Single(reader.GetBoard(match.MatchId)!.WinnerIds));
-    }
-
-    [Fact]
-    public void AddMatchLifecycleServices_ResolvedInterfaces_ShareGameRegistry()
-    {
-        ServiceCollection services = new();
-        services.AddSingleton(TimeProvider.System);
-        services.AddMatchLifecycleServices();
-        using ServiceProvider provider = services.BuildServiceProvider();
-        IMatchSessionStarter starter = provider.GetRequiredService<IMatchSessionStarter>();
-        IMatchLifecycle lifecycle = provider.GetRequiredService<IMatchLifecycle>();
-        IMatchStateReader stateReader = provider.GetRequiredService<IMatchStateReader>();
-        IMatchCommandService commands = provider.GetRequiredService<IMatchCommandService>();
-        IMatchDismantleService dismantle = provider.GetRequiredService<IMatchDismantleService>();
-        IMatchTurnClock clock = provider.GetRequiredService<IMatchTurnClock>();
-        IMatchExpulsionVoteService votes = provider.GetRequiredService<IMatchExpulsionVoteService>();
-        IMatchDepartureService departures = provider.GetRequiredService<IMatchDepartureService>();
-        Guid host = Guid.NewGuid();
-        MatchStartRequest request = new()
-        {
-            LobbyInstanceId = Guid.NewGuid(),
-            LobbyCode = "ABCDEF",
-            HostPlayerId = host,
-            PlayerIds = new[] { host, Guid.NewGuid() }
-        };
-
-        MatchSessionSnapshot match = starter.Start(request);
-        bool finished = lifecycle.TryFinish(match.MatchId);
-
-        Assert.True(finished);
-        Assert.Equal(MatchLifecycleStatus.Finished, lifecycle.Get(match.MatchId)?.Status);
-        Assert.Equal(2, lifecycle.Get(match.MatchId)?.Revision);
-        Assert.Same(starter, lifecycle);
-        Assert.Same(starter, stateReader);
-        Assert.Same(starter, commands);
-        Assert.Equal(match.MatchId, stateReader.GetBoard(match.MatchId)?.MatchId);
-        Assert.Same(starter, dismantle);
-        Assert.Same(starter, clock);
-        Assert.Same(starter, votes);
-        Assert.Same(starter, departures);
-        Assert.Null(clock.TryExpireTurn(match.MatchId));
-        Assert.Equal(MatchDismantleResult.MatchUnavailable,
-            commands.TryDismantle(match.MatchId, host, new MatchDismantle(1, 1)));
-    }
-}
-````
-
-## File: src/Client/Vertigo.Client.UI/App.axaml.cs
-````csharp
-using Vertigo.Client.UI.Utilities.Settings.Interfaces;
-using Vertigo.Client.UI.Utilities.Settings.Services;
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Markup.Xaml;
-using Microsoft.Extensions.DependencyInjection;
-using Vertigo.Client.Networking;
-using Vertigo.Client.UI.ViewModels;
-using Vertigo.Client.UI.ViewModels.Dependencies;
-using Vertigo.Client.UI.Views;
-using Vertigo.Client.UI.ViewModels.Social;
-using Vertigo.Client.UI.ViewModels.Utilities;
-using Vertigo.Client.UI.Utilities.Localization.Interfaces;
-using Vertigo.Client.UI.Utilities.Localization.Services;
-using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
-using Vertigo.Client.UI.Utilities.Sessions.Services;
-
-namespace Vertigo.Client.UI;
-
-public partial class App : Application
-{
-    private ServiceProvider? _services;
-
-    public override void Initialize()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    public override void OnFrameworkInitializationCompleted()
-    {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            ServiceCollection registrations = new();
-            registrations.AddVertigoClientNetworking();
-            registrations.AddSingleton<ITextLocalizer, TextLocalizer>();
-            registrations.AddSingleton<IClientErrorText, ClientErrorText>();
-            registrations.AddSingleton<ISessionGuard, SessionGuard>();
-            registrations.AddTransient<UiServices>();
-            registrations.AddTransient<UiNavigationContext>();
-            registrations.AddTransient<AccessContext>();
-            registrations.AddTransient<LobbyContext>();
-            registrations.AddTransient<HomeContext>();
-            registrations.AddSingleton<IUserSettingsStore, JsonUserSettingsStore>();
-            registrations.AddSingleton<SettingsViewModel>();
-            registrations.AddSingleton<ProfileViewModel>();
-            registrations.AddTransient<MainScreensContext>();
-            registrations.AddTransient<MainContext>();
-            registrations.AddSingleton<AccessViewModel>();
-            registrations.AddSingleton<PlayViewModel>();
-            registrations.AddSingleton<HomeViewModel>();
-            registrations.AddTransient<MatchBoardContext>();
-            registrations.AddSingleton<MatchViewModel>(provider =>
-                new MatchViewModel(provider.GetRequiredService<MatchBoardContext>()));
-            registrations.AddSingleton<LobbyViewModel>();
-            registrations.AddSingleton<SocialOperation>();
-            registrations.AddSingleton<FriendsViewModel>();
-            registrations.AddSingleton<BlockedPlayersViewModel>();
-            registrations.AddTransient<LobbyInvitationContext>();
-            registrations.AddSingleton<LobbyInvitationsViewModel>();
-            registrations.AddTransient<SocialNavigationContext>();
-            registrations.AddTransient<SocialViewModelContext>();
-            registrations.AddTransient<MainSocialContext>();
-            registrations.AddSingleton<SocialViewModel>();
-            registrations.AddSingleton<MainViewModel>();
-            _services = registrations.BuildServiceProvider();
-            UiLanguage.Apply(_services.GetRequiredService<IUserSettingsStore>().Load().Language);
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = _services.GetRequiredService<MainViewModel>()
-            };
-            desktop.Exit += OnDesktopExit;
-        }
-
-        base.OnFrameworkInitializationCompleted();
-    }
-
-    private void OnDesktopExit(object? sender, ControlledApplicationLifetimeExitEventArgs eventArgs)
-    {
-        _services?.Dispose();
-        _services = null;
-    }
-}
-````
-
-## File: src/Server/Vertigo.Server.Game/Matches/DependencyInjection/MatchLifecycleServiceCollectionExtensions.cs
-````csharp
-using Microsoft.Extensions.DependencyInjection;
-using Vertigo.Contracts.Internal;
-using Vertigo.Server.Game.Matches.Implementations;
-
-namespace Vertigo.Server.Game.Matches.DependencyInjection;
-
-public static class MatchLifecycleServiceCollectionExtensions
-{
-    public static IServiceCollection AddMatchLifecycleServices(this IServiceCollection services)
-    {
-        ArgumentNullException.ThrowIfNull(services);
-
-        services.AddSingleton<InMemoryMatchSessionStarter>();
-        services.AddSingleton<IMatchSessionStarter>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-        services.AddSingleton<IMatchLifecycle>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-        services.AddSingleton<IMatchPresence>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchStateReader>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchCommandService>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchBoardReader>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchPrivateHandReader>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchPlacementService>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchDismantleService>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchTurnClock>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchExpulsionVoteService>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        services.AddSingleton<IMatchDepartureService>(provider =>
-            provider.GetRequiredService<InMemoryMatchSessionStarter>());
-
-        return services;
-    }
-}
-````
-
-## File: src/Server/Vertigo.Server.Matchmaking/Lobbies/Match/LobbyGameOperations.cs
-````csharp
-using Vertigo.Contracts.Internal;
-using Vertigo.Contracts.Models;
-using Vertigo.Server.Matchmaking.Lobbies;
-
-namespace Vertigo.Server.Matchmaking.Lobbies.Match;
-
-// One dependency for Matchmaking's internal Game interactions.
-// All methods are invoked while the owning LobbyService holds its lobby lock.
-public sealed class LobbyGameOperations
-{
-    private readonly LobbyMatchActivation _activation;
-    private readonly IMatchStateReader _state;
-    private readonly IMatchCommandService _commands;
-
-    public LobbyGameOperations(
-        LobbyMatchActivation activation,
-        IMatchStateReader state,
-        IMatchCommandService commands)
-    {
-        _activation = activation;
-        _state = state;
-        _commands = commands;
-    }
-
-    public void Activate(LobbyState lobby)
-    {
-        _activation.Activate(lobby);
-    }
-
-    public MatchBoardSnapshot? GetBoard(LobbyState lobby)
-    {
-        MatchBoardSnapshot? board = _state.GetBoard(lobby.MatchId);
-        if (board is not null)
-        {
-            IReadOnlyDictionary<Guid, string> names = lobby.MatchPlayerNames;
-            foreach (MatchBoardMove move in board.RecentMoves)
-            {
-                if (names.TryGetValue(move.PlayerId, out string? username))
-                {
-                    move.PlayerUsername = username;
-                }
-            }
-
-            foreach (MatchRoundPlayerScore score in board.RoundSummaries.SelectMany(round => round.Players))
-            {
-                if (names.TryGetValue(score.PlayerId, out string? username))
-                {
-                    score.PlayerUsername = username;
-                }
-            }
-
-            foreach (MatchBoardPlayer player in board.Players)
-            {
-                if (names.TryGetValue(player.PlayerId, out string? username))
-                {
-                    player.Username = username;
-                }
-            }
-        }
-
-        return board;
-    }
-
-    public MatchPrivateHand? GetPrivateHand(Guid matchId, Guid playerId)
-    {
-        return _state.GetPrivateHand(matchId, playerId);
-    }
-
-    public MatchPlacementResult TryPlace(Guid matchId, Guid playerId, MatchPlacement move)
-    {
-        return _commands.TryPlace(matchId, playerId, move);
-    }
-
-    public MatchPlacementResult TryUseMasterPlan(Guid matchId, Guid playerId, MatchMasterPlan move)
-    {
-        return _commands.TryUseMasterPlan(matchId, playerId, move);
-    }
-
-    public MatchDismantleResult TryDismantle(Guid matchId, Guid playerId, MatchDismantle move)
-    {
-        return _commands.TryDismantle(matchId, playerId, move);
-    }
-
-    public MatchExpulsionVoteResult TryVoteToExpel(Guid matchId, Guid voterId, MatchExpulsionVote vote)
-    {
-        return _commands.TryVoteToExpel(matchId, voterId, vote);
-    }
-
-    public Guid? TryExpireTurn(Guid matchId)
-    {
-        return _commands.TryExpireTurn(matchId);
-    }
-
-    public MatchDepartureResult TryLeaveMatch(Guid matchId, Guid playerId)
-    {
-        return _commands.TryLeaveMatch(matchId, playerId);
-    }
-
-    public bool TryReconnect(LobbyState lobby, Guid playerId)
-    {
-        MatchReconnectResult result = _commands.TryReconnect(lobby.MatchId, playerId);
-        bool accepted = result is MatchReconnectResult.Reconnected
-            or MatchReconnectResult.AlreadyConnected;
-        if (!accepted)
-        {
-            MatchBoardSnapshot? board = _state.GetBoard(lobby.MatchId);
-            accepted = board is not null && (board.TurnDeadlineUtc is null
-                || board.ExpelledPlayerIds.Contains(playerId));
-        }
-
-        return accepted;
-    }
-
-    public void Disconnect(LobbyState lobby, Guid playerId)
-    {
-        _commands.TryDisconnect(lobby.MatchId, playerId);
     }
 }
 ````
@@ -21748,6 +29648,14 @@ public interface ILobbyService
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
     LobbyAdmission JoinLobby(string lobbyCode, string sessionToken);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    LobbyAdmission ReconnectMatch(MatchPresenceRequest request);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request);
 
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
@@ -21837,6 +29745,12 @@ public sealed class MatchBoardSnapshot
     public List<Guid> ExpelledPlayerIds { get; set; } = new();
 
     [DataMember]
+    public Dictionary<Guid, DateTimeOffset> PresenceDeadlinesUtc { get; set; } = new();
+
+    [DataMember]
+    public List<Guid> InactivePlayerIds { get; set; } = new();
+
+    [DataMember]
     public long VotingRevision { get; set; }
 
     [DataMember]
@@ -21866,36 +29780,11 @@ public sealed class MatchBoardSnapshot
         RoundSummaries = new List<MatchRoundSummary>();
         RecentMoves = new List<MatchBoardMove>();
         ExpelledPlayerIds = new List<Guid>();
+        PresenceDeadlinesUtc = new Dictionary<Guid, DateTimeOffset>();
+        InactivePlayerIds = new List<Guid>();
         ExpulsionVotes = new List<MatchExpulsionVoteSummary>();
     }
 }
-````
-
-## File: Vertigo.Client.slnx
-````
-<Solution>
-  <Folder Name="/src/" />
-  <Folder Name="/src/Client/">
-    <Project Path="src/Client/Vertigo.Client.Core/Vertigo.Client.Core.csproj" />
-    <Project Path="src/Client/Vertigo.Client.Networking/Vertigo.Client.Networking.csproj" />
-    <Project Path="src/Client/Vertigo.Client.UI/Vertigo.Client.UI.csproj" />
-  </Folder>
-  <Folder Name="/src/Shared/">
-    <Project Path="src/Shared/Vertigo.Contracts/Vertigo.Contracts.csproj" />
-    <Project Path="src/Shared/Vertigo.Registration/Vertigo.Registration.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/Vertigo.Client.Networking.Smoke/Vertigo.Client.Networking.Smoke.csproj" />
-    <Project Path="tests/Vertigo.Client.Multiplayer.Smoke/Vertigo.Client.Multiplayer.Smoke.csproj" />
-    <Project Path="tests/Vertigo.Client.LobbyPreparation.Smoke/Vertigo.Client.LobbyPreparation.Smoke.csproj" />
-    <Project Path="tests/Vertigo.Client.PrivateInvitations.Smoke/Vertigo.Client.PrivateInvitations.Smoke.csproj" />
-    <Project Path="tests/Vertigo.Client.UnitTests/Vertigo.Client.UnitTests.csproj" />
-    <Project Path="tests/Vertigo.Server.Matchmaking.Tests/Vertigo.Server.Matchmaking.Tests.csproj" />
-    <Project Path="tests/Vertigo.Client.TestAccounts.Setup/Vertigo.Client.TestAccounts.Setup.csproj" />
-    <Project Path="tests/Vertigo.Client.Reconnection.Smoke/Vertigo.Client.Reconnection.Smoke.csproj" />
-    <Project Path="tests/Vertigo.Client.MatchBoard.Smoke/Vertigo.Client.MatchBoard.Smoke.csproj" />
-  </Folder>
-</Solution>
 ````
 
 ## File: src/Client/Vertigo.Client.Networking/Interfaces/ILobbyClient.cs
@@ -21915,6 +29804,12 @@ public interface ILobbyClient : IDisposable
     event EventHandler<LobbyPreparation>? PreparationChanged;
 
     event EventHandler<MatchBoardChanged>? MatchBoardUpdated;
+
+    event EventHandler? ConnectionLost;
+
+    LobbyAdmission ReconnectMatch(MatchPresenceRequest request);
+
+    MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request);
 
     string CreateLobby(bool isPublic, int maxPlayers, string sessionToken);
 
@@ -21954,17 +29849,20 @@ public interface ILobbyClient : IDisposable
 
 ## File: tests/Vertigo.Client.UnitTests/Matches/MatchViewModelTests.cs
 ````csharp
+using System.Globalization;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking;
+using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
 using Vertigo.Client.UI.Utilities.Localization.Services;
 using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
 using Vertigo.Client.UI.Utilities.Sessions.Services;
 using Vertigo.Client.UI.ViewModels;
 using Vertigo.Client.UI.ViewModels.Dependencies;
+using Vertigo.Client.UI.ViewModels.Presentation;
 using Vertigo.Contracts.Models;
 using Xunit;
 
@@ -21972,6 +29870,39 @@ namespace Vertigo.Client.UnitTests.Matches;
 
 public sealed class MatchViewModelTests
 {
+    [Theory]
+    [InlineData("es-MX", "Plano Maestro")]
+    [InlineData("en-US", "Master Plan")]
+    public void MasterPlanTitle_UsesLocalizedResources(string cultureName, string expected)
+    {
+        CultureInfo previousCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
+            MatchViewModel model = new(new TextLocalizer());
+
+            Assert.Equal(expected, model.MasterPlanTitle);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = previousCulture;
+        }
+    }
+
+    [Fact]
+    public void RefreshLocalization_NotifiesMatchPanelLabels()
+    {
+        MatchViewModel model = CreateModel();
+        List<string?> changes = [];
+        model.PropertyChanged += (_, args) => changes.Add(args.PropertyName);
+
+        model.RefreshLocalization();
+
+        Assert.Contains(nameof(MatchViewModel.ChatText), changes);
+        Assert.Contains(nameof(MatchViewModel.RecentMovesText), changes);
+        Assert.Contains(nameof(MatchViewModel.MasterPlanTitle), changes);
+    }
+
     [Fact]
     public void Activate_ValidMatch_SetsMatchIdentity()
     {
@@ -21997,6 +29928,87 @@ public sealed class MatchViewModelTests
 
         Assert.False(activated);
         Assert.Equal("Mensaje sin enviar", model.DraftMessage);
+    }
+
+    [Fact]
+    public void ApplyChatMessage_IgnoresLobbyChatAndMessagesFromOtherMatches()
+    {
+        MatchViewModel model = CreateModel();
+        Guid matchId = Guid.NewGuid();
+        model.Activate(matchId, "ABC234");
+        model.ApplyChatMessage(new LobbyChatMessage { LobbyCode = "ABC234", Text = "Solo sala" });
+        model.ApplyChatMessage(new LobbyChatMessage
+        {
+            LobbyCode = "ABC234", MatchId = Guid.NewGuid(), Text = "Otra partida"
+        });
+        model.ApplyChatMessage(new LobbyChatMessage { LobbyCode = "XYZ789", MatchId = matchId });
+        DateTime sentAt = new(2026, 1, 15, 23, 7, 0, DateTimeKind.Utc);
+        model.ApplyChatMessage(new LobbyChatMessage
+        {
+            LobbyCode = "abc234", MatchId = matchId, Text = "¡Vamos!", SenderUsername = "Ana", SentAt = sentAt
+        });
+
+        MatchChatRow message = Assert.Single(model.ChatMessages);
+        Assert.Equal("¡Vamos!", message.Text);
+        Assert.Equal("Ana", message.Sender);
+        Assert.Equal(sentAt, message.SentAt);
+        Assert.Equal(DateTimeKind.Utc, message.SentAt.Kind);
+        Assert.Equal(sentAt.ToLocalTime().ToString("HH:mm", CultureInfo.InvariantCulture), message.LocalTimeText);
+    }
+
+    [Theory]
+    [InlineData(-360, "17:07")]
+    [InlineData(120, "01:07")]
+    [InlineData(330, "04:37")]
+    public void FormatTime_ServerTimestamp_ShowsTimeInPlayersZone(int offsetMinutes, string expected)
+    {
+        const string ZoneName = "Test zone";
+        TimeZoneInfo zone = TimeZoneInfo.CreateCustomTimeZone(
+            ZoneName,
+            TimeSpan.FromMinutes(offsetMinutes),
+            ZoneName,
+            ZoneName);
+        DateTime utc = new(2026, 1, 15, 23, 7, 0, DateTimeKind.Utc);
+
+        Assert.Equal(expected, MatchChatRow.FormatTime(utc, zone));
+        Assert.Equal(expected, MatchChatRow.FormatTime(DateTime.SpecifyKind(utc, DateTimeKind.Unspecified), zone));
+    }
+
+    [Fact]
+    public void LocalTimeText_MissingTimestamp_IsEmpty()
+    {
+        MatchChatRow message = new() { Sender = "Ana", Text = "¡Vamos!" };
+
+        Assert.Empty(message.LocalTimeText);
+    }
+
+    [Fact]
+    public void ApplyChatMessage_HistoryAtCapacity_DropsOnlyOldestMessage()
+    {
+        MatchViewModel model = CreateModel();
+        Guid matchId = Guid.NewGuid();
+        model.Activate(matchId, "ABC234");
+
+        for (int index = 0; index <= 100; index++)
+        {
+            model.ApplyChatMessage(new LobbyChatMessage { LobbyCode = "ABC234", MatchId = matchId, Text = $"#{index}" });
+        }
+
+        Assert.Equal(100, model.ChatMessages.Count);
+        Assert.Equal("#100", model.ChatMessages[0].Text);
+        Assert.Equal("#1", model.ChatMessages[^1].Text);
+    }
+
+    [Fact]
+    public void Activate_AnotherMatch_ClearsChatHistory()
+    {
+        MatchViewModel model = CreateModel();
+        Guid firstMatch = Guid.NewGuid();
+        model.Activate(firstMatch, "ABC234");
+        model.ApplyChatMessage(new LobbyChatMessage { LobbyCode = "ABC234", MatchId = firstMatch, Text = "Hola" });
+        model.Activate(Guid.NewGuid(), "ABC234");
+
+        Assert.Empty(model.ChatMessages);
     }
 
     [Fact]
@@ -22206,7 +30218,8 @@ public sealed class MatchViewModelTests
         services.AddTransient<UiNavigationContext>();
         services.AddTransient<MatchBoardContext>();
         using ServiceProvider provider = services.BuildServiceProvider();
-        MatchViewModel model = new(provider.GetRequiredService<MatchBoardContext>());
+        MatchViewModel model = new(provider.GetRequiredService<MatchBoardContext>(),
+            provider.GetRequiredService<IChatClient>());
         model.Activate(Guid.NewGuid(), "ABC234");
         Assert.False(model.ConfirmExitCommand.CanExecute(null));
 
@@ -22396,6 +30409,9 @@ public sealed class LobbyInvitationsViewModelTests
 
     private sealed class FakeChatClient : IChatClient
     {
+        public ClientResult<bool> SendMatchMessage(MatchChatRequest request) =>
+            throw new NotSupportedException();
+
         public ClientResult<bool> SendMessage(string lobbyCode, string text, string sessionToken)
         {
             return ClientResult<bool>.Success(true);
@@ -22411,6 +30427,12 @@ public sealed class LobbyInvitationsViewModelTests
         public event EventHandler<LobbyChatMessage>? MessageReceived;
         public event EventHandler<LobbyPreparation>? PreparationChanged;
         public event EventHandler<MatchBoardChanged>? MatchBoardUpdated { add { } remove { } }
+        public event EventHandler? ConnectionLost { add { } remove { } }
+
+        public LobbyAdmission ReconnectMatch(MatchPresenceRequest request) => throw new NotSupportedException();
+
+        public MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request) =>
+            throw new NotSupportedException();
 
         public string CreateLobby(bool isPublic, int maxPlayers, string sessionToken)
         {
@@ -22643,6 +30665,30 @@ public sealed class LobbyClient : ILobbyClient
                 _matchBoardUpdated -= value;
             }
         }
+    }
+
+    public event EventHandler? ConnectionLost;
+
+    public LobbyAdmission ReconnectMatch(MatchPresenceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        Disconnect();
+        ILobbyService channel = GetOrCreateChannel();
+        try
+        {
+            return channel.ReconnectMatch(request);
+        }
+        catch (Exception exception) when (IsTransportFailure(exception))
+        {
+            AbortChannel(channel);
+            throw;
+        }
+    }
+
+    public MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ReadOnIndependentChannel(channel => channel.ConfirmMatchPresence(request));
     }
 
     public string CreateLobby(bool isPublic, int maxPlayers, string sessionToken)
@@ -22948,8 +30994,20 @@ public sealed class LobbyClient : ILobbyClient
             _channelFactory = new DuplexChannelFactory<ILobbyService>(
                 new InstanceContext(handler), binding,
                 new EndpointAddress(ServiceEndpoints.LobbyServiceAddress));
-            _channel = _channelFactory.CreateChannel();
-            return _channel;
+            ILobbyService channel = _channelFactory.CreateChannel();
+            ICommunicationObject transport = (ICommunicationObject)channel;
+            _channel = channel;
+            transport.Faulted += (_, _) => OnConnectionLost(channel);
+            transport.Closed += (_, _) => OnConnectionLost(channel);
+            return channel;
+        }
+    }
+
+    private void OnConnectionLost(ILobbyService channel)
+    {
+        if (ReferenceEquals(Volatile.Read(ref _channel), channel))
+        {
+            ConnectionLost?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -23121,7 +31179,7 @@ try
     builder.Services.AddTransient<AccountPasswordService>();
     builder.Services.AddTransient<PlayerCredentialsVerifier>();
     builder.Services.AddTransient<RegisteredPlayerSessions>();
-    builder.Services.AddTransient<AuthService>();
+    builder.Services.AddTransient<SessionService>();
     builder.Services.AddTransient<AuthenticationService>();
     builder.Services.AddTransient<AccountService>();
     builder.Services.AddTransient<BlockedPlayerService>();
@@ -23140,6 +31198,10 @@ try
     builder.Services.AddTransient<LobbyInvitationFriendLookup>();
     builder.Services.AddTransient<LobbyInvitationOperations>();
     builder.Services.AddTransient<LobbyInvitationService>();
+    IEnumerable<string> blockedChatTerms = builder.Configuration.GetSection("ChatModeration:BlockedTerms")
+        .GetChildren().Select(entry => entry.Value).OfType<string>();
+    builder.Services.AddSingleton(new ChatLanguageFilter(blockedChatTerms));
+    builder.Services.AddScoped<ChatServiceDependencies>();
     builder.Services.AddTransient<ChatService>();
 
     WebApplication app = builder.Build();
@@ -23206,6 +31268,7 @@ try
     }
 
     Require(played, "No attempt exercised both an opening placement and a dismantle before round two.");
+    await RunMatchChatAsync();
     await RunExpulsionVoteAsync();
     await RunMatchExitAsync();
     return 0;
@@ -23338,6 +31401,9 @@ static (MatchBoardSnapshot Host, MatchBoardSnapshot Member) VerifyOpeningBoards(
     Require(second.MatchId == matchId, "Member board has wrong MatchId.");
     Require(first.Players.Count == 2 && second.Players.Count == 2,
         "Match board did not return two participants.");
+    Require(first.Piles.Count == 1 && second.Piles.Count == 1
+        && first.Piles[0].TopCardNumber == second.Piles[0].TopCardNumber,
+        "Both clients must start with the same single tower.");
     Console.WriteLine("PASS: GET MATCH BOARD OVER NETTCP FOR BOTH PARTICIPANTS");
     return (first, second);
 }
@@ -23473,6 +31539,93 @@ static void VerifyReconnectedMember(
     Console.WriteLine("PASS: PRIVATE HANDS, OUTSIDER DENIAL, RECONNECTION AND RECENT MOVES");
 }
 
+static async Task RunMatchChatAsync()
+{
+    using ServiceProvider host = CreateClient();
+    using ServiceProvider member = CreateClient();
+    using ServiceProvider outsider = CreateClient();
+    SmokeParticipant hostPlayer = new(host.GetRequiredService<ILobbyClient>(), CreateGuest(host));
+    SmokeParticipant memberPlayer = new(member.GetRequiredService<ILobbyClient>(), CreateGuest(member));
+    UserSession outsiderSession = CreateGuest(outsider);
+    (string lobbyCode, Guid matchId) = StartSmokeMatch(hostPlayer, new[] { memberPlayer });
+    MatchChatRequest request = new()
+    {
+        LobbyCode = lobbyCode, MatchId = matchId, Text = new string('a', 30),
+        SessionToken = hostPlayer.Session.Token
+    };
+    IChatClient chat = host.GetRequiredService<IChatClient>();
+    VerifyMatchChatRejections(chat, request, outsiderSession.Token);
+    await VerifyMatchChatDeliveryAsync(chat, request, (hostPlayer, memberPlayer));
+    VerifyFinishedMatchChat(chat, request, memberPlayer);
+    Console.WriteLine("PASS: MATCH CHAT SCOPE, VALIDATION AND CALLBACKS");
+}
+
+static void VerifyFinishedMatchChat(IChatClient chat, MatchChatRequest request, SmokeParticipant member)
+{
+    Require(member.Lobby.LeaveMatch(new MatchLeaveRequest
+    {
+        LobbyCode = request.LobbyCode,
+        MatchId = request.MatchId,
+        SessionToken = member.Session.Token
+    }), "The member could not leave the chat test match.");
+    Require(chat.SendMatchMessage(request).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed,
+        "The remaining player could still chat after the match ended.");
+}
+
+static void VerifyMatchChatRejections(IChatClient chat, MatchChatRequest request, string outsiderToken)
+{
+    string token = request.SessionToken;
+    request.SessionToken = outsiderToken;
+    Require(chat.SendMatchMessage(request).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed,
+        "The server accepted match chat from an outsider.");
+    request.SessionToken = token;
+
+    Guid matchId = request.MatchId;
+    request.MatchId = Guid.NewGuid();
+    Require(chat.SendMatchMessage(request).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed,
+        "The server accepted match chat for an unrelated match.");
+    request.MatchId = matchId;
+
+    string text = request.Text;
+    request.Text += "b";
+    Require(chat.SendMatchMessage(request).ErrorCode == ServiceErrorCodes.InvalidData,
+        "The server accepted a match message exceeding 30 characters.");
+    request.Text = text;
+    Require(chat.SendMessage(request.LobbyCode, request.Text, token).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed,
+        "The waiting-room endpoint bypassed match chat scoping.");
+}
+
+static async Task VerifyMatchChatDeliveryAsync(IChatClient chat, MatchChatRequest request,
+    (SmokeParticipant Sender, SmokeParticipant Receiver) players)
+{
+    Channel<LobbyChatMessage> senderMessages = Channel.CreateUnbounded<LobbyChatMessage>();
+    Channel<LobbyChatMessage> receiverMessages = Channel.CreateUnbounded<LobbyChatMessage>();
+    players.Sender.Lobby.MessageReceived += OnSenderMessage;
+    players.Receiver.Lobby.MessageReceived += OnReceiverMessage;
+    try
+    {
+        Require(chat.SendMatchMessage(request).Value, "The server rejected a 30-character match message.");
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(15));
+        LobbyChatMessage senderMessage = await senderMessages.Reader.ReadAsync(timeout.Token);
+        LobbyChatMessage receiverMessage = await receiverMessages.Reader.ReadAsync(timeout.Token);
+        foreach (LobbyChatMessage message in new[] { senderMessage, receiverMessage })
+        {
+            Require(message.MatchId == request.MatchId && message.LobbyCode == request.LobbyCode
+                && message.Text == request.Text && message.SenderId == players.Sender.Session.PlayerId,
+                "The callback delivered a different match message.");
+        }
+    }
+    finally
+    {
+        players.Sender.Lobby.MessageReceived -= OnSenderMessage;
+        players.Receiver.Lobby.MessageReceived -= OnReceiverMessage;
+    }
+
+    void OnSenderMessage(object? sender, LobbyChatMessage message) => senderMessages.Writer.TryWrite(message);
+
+    void OnReceiverMessage(object? sender, LobbyChatMessage message) => receiverMessages.Writer.TryWrite(message);
+}
+
 static async Task RunExpulsionVoteAsync()
 {
     using ServiceProvider first = CreateClient();
@@ -23516,6 +31669,14 @@ static async Task RunExpulsionVoteAsync()
             && initial.TurnDeadlineUtc == expelled.TurnDeadlineUtc,
             "A vote against a waiting player did not preserve the active turn.");
         await VerifyVoteNoticesAsync(notices.Reader, (recorded, expelled), target.Session.Username);
+        IChatClient chat = first.GetRequiredService<IChatClient>();
+        Require(chat.SendMatchMessage(new MatchChatRequest
+        {
+            LobbyCode = lobbyCode,
+            MatchId = expelled.MatchId,
+            SessionToken = target.Session.Token,
+            Text = "Test message"
+        }).ErrorCode == ServiceErrorCodes.LobbyChatNotAllowed, "An expelled member could still use match chat.");
         VerifyExpelledPlayerExit(target, voters[0], (lobbyCode, expelled));
         Console.WriteLine("PASS: EXPULSION VOTE OVER NETTCP PRESERVES THE ACTIVE TURN");
     }
@@ -23866,7 +32027,7 @@ using Vertigo.Client.UI.ViewModels.Dependencies;
 
 namespace Vertigo.Client.UI.ViewModels;
 
-public sealed class MatchViewModel : ViewModelBase, INavigationAware
+public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
 {
     private readonly ITextLocalizer _text;
     private readonly ILobbyClient? _lobbies;
@@ -23877,6 +32038,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private static readonly TimeSpan CountdownInterval = TimeSpan.FromMilliseconds(200);
     private readonly MatchBoardRevision _boardRevision = new();
     private readonly MatchTurnClock _turnClock;
+    private readonly MatchTurnClock _presenceClock;
+    private int? _presenceSeconds;
+    private bool _wasExpelledForInactivity;
+    private bool _needsReconnect;
+    private bool _matchUnavailable;
+    private int _connectionLossCount;
     private readonly MatchMasterPlanDraft _masterPlanDraft = new();
     private readonly MatchExpulsionVoting _voting = new();
     private DateTimeOffset? _turnDeadlineUtc;
@@ -23886,7 +32053,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     private bool _isExitConfirmationOpen;
     private bool _isLeavingMatch;
     private string _exitErrorMessage = string.Empty;
-    private string _draftMessage = string.Empty;
     private string _roundLabel = "—";
     private string? _turnPlayerName;
     private DispatcherTimer? _countdownTimer;
@@ -23913,8 +32079,14 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     {
         _text = text;
         Results = new MatchResultsViewModel(text);
+        SendChatCommand = new AsyncRelayCommand(SendChatAsync, CanSendChat);
         _session = session;
         _turnClock = new MatchTurnClock(timeProvider);
+        _presenceClock = new MatchTurnClock(timeProvider);
+        ReconnectCommand = new AsyncRelayCommand(ReconnectAsync, () => NeedsReconnect && !IsLoadingBoard
+            && !_isSubmittingTurn && !_isLeavingMatch);
+        ConfirmPresenceCommand = new AsyncRelayCommand(ConfirmPresenceAsync, CanConfirmPresence);
+        ReturnToMenuCommand = new RelayCommand(ReturnToMenu);
         RefreshBoardCommand = new AsyncRelayCommand(RefreshBoardAsync);
         PlaceCardCommand = new AsyncRelayCommand(PlaceCardAsync, CanPlaceSelectedCard);
         DismantleTowerCommand = new AsyncRelayCommand(DismantleTowerAsync, CanDismantleSelectedTower);
@@ -23926,14 +32098,19 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         ConfirmExitCommand = new AsyncRelayCommand(ConfirmExitAsync, CanConfirmExit);
     }
 
-    public MatchViewModel(MatchBoardContext context) : this(context.Text, context.Session, TimeProvider.System)
+    public MatchViewModel(MatchBoardContext context, IChatClient chatClient)
+        : this(context.Text, context.Session, TimeProvider.System)
     {
         _lobbies = context.Lobbies;
+        _chatClient = chatClient;
         _guard = context.Guard;
         _errors = context.Errors;
         _navigation = context.Ui.Navigation;
     }
 
+    public IRelayCommand ReturnToMenuCommand { get; }
+    public IAsyncRelayCommand ReconnectCommand { get; }
+    public IAsyncRelayCommand ConfirmPresenceCommand { get; }
     public IAsyncRelayCommand RefreshBoardCommand { get; }
     public IAsyncRelayCommand PlaceCardCommand { get; }
     public IAsyncRelayCommand DismantleTowerCommand { get; }
@@ -24002,6 +32179,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         Hand.Clear();
         ChatMessages.Clear();
         DraftMessage = string.Empty;
+        ChatErrorMessage = string.Empty;
         SelectedCard = null;
         SelectedPile = null;
         _currentBoardRevision = 0;
@@ -24022,6 +32200,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         SetMasterPlanCount(0);
         ClearMasterPlanDraft();
         _turnClock.SetDeadline(null, null);
+        _presenceClock.SetDeadline(null, null);
+        _wasExpelledForInactivity = false;
+        SetMatchUnavailable(false);
+        SetNeedsReconnect(false);
         RefreshTurnCountdown();
         OnPropertyChanged(nameof(CurrentTurnLabel));
         RefreshTurnCommands();
@@ -24040,6 +32222,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
             _lobbies.MatchBoardUpdated += OnMatchBoardUpdated;
+            _lobbies.ConnectionLost -= OnConnectionLost;
+            _lobbies.ConnectionLost += OnConnectionLost;
+            _lobbies.MessageReceived -= OnMatchChatReceived;
+            _lobbies.MessageReceived += OnMatchChatReceived;
         }
         StartCountdownTimer();
         RefreshLocalization();
@@ -24051,6 +32237,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         if (_lobbies is not null)
         {
             _lobbies.MatchBoardUpdated -= OnMatchBoardUpdated;
+            _lobbies.ConnectionLost -= OnConnectionLost;
+            _lobbies.MessageReceived -= OnMatchChatReceived;
         }
         StopCountdownTimer();
         ClearMasterPlanDraft();
@@ -24064,6 +32252,18 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         RefreshTurnCommands();
         IsExitConfirmationOpen = false;
         ExitErrorMessage = string.Empty;
+    }
+
+    private void OnConnectionLost(object? sender, EventArgs args)
+    {
+        int generation = _generation;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_generation == generation && _matchId != Guid.Empty)
+            {
+                SetNeedsReconnect(true);
+            }
+        });
     }
 
     private void OnMatchBoardUpdated(object? sender, MatchBoardChanged change)
@@ -24092,7 +32292,17 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         });
     }
 
-    public async Task RefreshBoardAsync()
+    public Task RefreshBoardAsync()
+    {
+        return NeedsReconnect || MatchUnavailable ? Task.CompletedTask : RequestBoardAsync(reconnect: false);
+    }
+
+    private Task ReconnectAsync()
+    {
+        return RequestBoardAsync(reconnect: true);
+    }
+
+    private async Task RequestBoardAsync(bool reconnect)
     {
         SessionSnapshot? original = _session?.GetActiveSession();
         Guid matchId = _matchId;
@@ -24102,37 +32312,35 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             && _guard.HasActiveSession() && original is not null)
         {
             BoardRequestIdentity request = new(original, matchId, generation);
-            await LoadBoardAsync(_lobbies, lobbyCode, request);
+            await LoadBoardAsync(_lobbies, (lobbyCode, reconnect), request);
         }
     }
 
-    private async Task LoadBoardAsync(ILobbyClient lobbies, string lobbyCode, BoardRequestIdentity request)
+    private async Task LoadBoardAsync(ILobbyClient lobbies, (string LobbyCode, bool Reconnect) options,
+        BoardRequestIdentity request)
     {
         _hasCurrentHand = false;
         IsLoadingBoard = true;
+        int lossCount = _connectionLossCount;
         try
         {
             (MatchBoardSnapshot board, MatchPrivateHand? hand, long receivedAt) =
-                await Task.Run(() => ReadBoardAndHand(lobbies, lobbyCode, request.Session));
+                await Task.Run(() => ReadBoard(lobbies, options, request));
+            await Dispatcher.UIThread.InvokeAsync(() =>
+                ApplyLoadedBoard((board, hand, receivedAt), request, (options.Reconnect, lossCount)));
+        }
+        catch (FaultException<ServiceFault> exception) when (options.Reconnect
+            && exception.Detail.ErrorCode == ServiceErrorCodes.LobbyNotFound)
+        {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 if (IsCurrent(request.Session, request.MatchId, request.Generation))
                 {
-                    ApplyBoardAndHand(board, hand, receivedAt);
+                    SetMatchUnavailable(true);
+                    SetNeedsReconnect(false);
+                    ErrorMessage = string.Empty;
                 }
             });
-        }
-        catch (FaultException<ServiceFault> exception)
-        {
-            await ReportBoardFailureAsync(exception, request);
-        }
-        catch (TimeoutException exception)
-        {
-            await ReportBoardFailureAsync(exception, request);
-        }
-        catch (CommunicationException exception)
-        {
-            await ReportBoardFailureAsync(exception, request);
         }
         catch (Exception exception)
         {
@@ -24142,6 +32350,38 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             await Dispatcher.UIThread.InvokeAsync(() => CompleteBoardRefresh(request));
         }
+    }
+
+    private void ApplyLoadedBoard(
+        (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) state,
+        BoardRequestIdentity request,
+        (bool Requested, int LossCount) reconnect)
+    {
+        if (IsCurrent(request.Session, request.MatchId, request.Generation))
+        {
+            ApplyBoardAndHand(state.Board, state.Hand, state.ReceivedAt);
+            if (reconnect.Requested && reconnect.LossCount == _connectionLossCount
+                && state.Board.MatchId == request.MatchId && state.Board.Revision == _currentBoardRevision
+                && (_hasCurrentHand || state.Board.ExpelledPlayerIds.Contains(request.Session.PlayerId)))
+            {
+                SetNeedsReconnect(false);
+            }
+            else if (!reconnect.Requested && NeedsReconnect)
+            {
+                _hasCurrentHand = false;
+            }
+        }
+    }
+
+    private (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadBoard(
+        ILobbyClient lobbies, (string LobbyCode, bool Reconnect) options, BoardRequestIdentity request)
+    {
+        if (options.Reconnect)
+        {
+            lobbies.ReconnectMatch(CreatePresenceRequest(options.LobbyCode, request.MatchId, request.Session.Token));
+        }
+
+        return ReadBoardAndHand(lobbies, options.LobbyCode, request.Session);
     }
 
     private (MatchBoardSnapshot Board, MatchPrivateHand? Hand, long ReceivedAt) ReadBoardAndHand(
@@ -24207,7 +32447,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     {
         if (!ApplyBoard(board, receivedAt) && board.ServerTimeUtc.HasValue)
         {
-            _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+            SetBoardClocks(board, _session?.GetActiveSession()?.PlayerId, receivedAt);
             RefreshTurnCountdown();
         }
     }
@@ -24233,6 +32473,11 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             if (IsCurrent(request.Session, request.MatchId, request.Generation))
             {
+                if (exception is TimeoutException or (CommunicationException and not FaultException))
+                {
+                    SetNeedsReconnect(true);
+                }
+
                 ErrorMessage = _errors?.FromException(exception, "Error.Unknown")
                     ?? _text.Get("Error.Unknown");
                 if (_errors?.IsUnauthorized(exception) == true)
@@ -24262,7 +32507,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             UpdatePiles(board.Piles);
 
             int previousRoundCount = RoundSummaries.Count;
-            Results.ApplyBoard(board);
+            Results.ApplyBoard(board, localPlayerId);
             RefreshExitLabels();
             if (previousRoundCount != RoundSummaries.Count)
             {
@@ -24283,8 +32528,10 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             }
 
             _turnDeadlineUtc = board.TurnDeadlineUtc;
-            _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+            SetBoardClocks(board, localPlayerId, receivedAt);
+            _wasExpelledForInactivity = localPlayerId is Guid playerId && board.InactivePlayerIds.Contains(playerId);
             RefreshTurnCountdown();
+            RefreshPresenceNotice();
             OnPropertyChanged(nameof(CurrentTurnLabel));
             RefreshTurnCommands();
             ErrorMessage = string.Empty;
@@ -24327,9 +32574,78 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         };
     }
 
+    private static MatchPresenceRequest CreatePresenceRequest(string lobbyCode, Guid matchId, string token)
+    {
+        return new MatchPresenceRequest { LobbyCode = lobbyCode, MatchId = matchId, SessionToken = token };
+    }
+
+    public bool NeedsReconnect => _needsReconnect && !MatchUnavailable;
+    public bool MatchUnavailable => _matchUnavailable;
+    public string MatchUnavailableText => _text.Get("Match.Connection.Unavailable");
+    public string ReturnToMenuText => _text.Get("Match.Exit.ReturnHome");
+
+    private void SetMatchUnavailable(bool value)
+    {
+        if (SetProperty(ref _matchUnavailable, value, nameof(MatchUnavailable)))
+        {
+            OnPropertyChanged(nameof(NeedsReconnect));
+            RefreshPresenceNotice();
+            RefreshTurnCommands();
+        }
+    }
+    public string ReconnectText => _text.Get("Match.Connection.Reconnect");
+    public string ConnectionText => _text.Get("Match.Connection.Lost");
+    public string ConfirmPresenceText => _text.Get("Match.Presence.Confirm");
+    public bool ShowConfirmPresence => _presenceSeconds is > 0 && !_isMyTurn && !NeedsReconnect && !MatchUnavailable;
+    public bool HasPresenceNotice => !MatchUnavailable && (_wasExpelledForInactivity || _presenceSeconds.HasValue);
+    public string PresenceNotice => _wasExpelledForInactivity
+        ? _text.Get("Match.Presence.Expelled")
+        : _presenceSeconds == 0 ? _text.Get("Match.Presence.Pending")
+        : string.Format(_text.Get(_isMyTurn ? "Match.Presence.Play" : "Match.Presence.Skipped"), _presenceSeconds);
+
+    private void SetNeedsReconnect(bool value)
+    {
+        if (value)
+        {
+            _connectionLossCount++;
+            _hasCurrentHand = false;
+        }
+
+        if (SetProperty(ref _needsReconnect, value, nameof(NeedsReconnect)))
+        {
+            RefreshPresenceNotice();
+            RefreshTurnCommands();
+        }
+    }
+
+    private void RefreshPresenceNotice()
+    {
+        OnPropertyChanged(nameof(HasPresenceNotice));
+        OnPropertyChanged(nameof(PresenceNotice));
+        OnPropertyChanged(nameof(ShowConfirmPresence));
+        ConfirmPresenceCommand.NotifyCanExecuteChanged();
+    }
+
+    private bool CanConfirmPresence()
+    {
+        return ShowConfirmPresence && _presenceClock.GetRemainingSeconds() is > 0
+            && !IsLoadingBoard && !_isSubmittingTurn && !_isLeavingMatch;
+    }
+
+    private Task ConfirmPresenceAsync()
+    {
+        string lobbyCode = _lobbyCode;
+        Guid matchId = _matchId;
+        return CanConfirmPresence()
+            ? SubmitTurnAsync((lobbies, token) =>
+                lobbies.ConfirmMatchPresence(CreatePresenceRequest(lobbyCode, matchId, token)))
+            : Task.CompletedTask;
+    }
+
     private bool CanVoteToExpel(Guid targetId)
     {
-        return _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn && !_isLeavingMatch
+        return _hasCurrentHand && !NeedsReconnect && !MatchUnavailable && !IsLoadingBoard
+            && !_isSubmittingTurn && !_isLeavingMatch
             && _turnClock.GetRemainingSeconds() is > 0
             && _voting.CanVoteFor(targetId);
     }
@@ -24368,7 +32684,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
                     TopCardNumber = pile.TopCardNumber,
                     Label = pile.Position.ToString(),
                     Count = pile.CardCount,
-                    TopCardText = pile.TopCardNumber?.ToString() ?? string.Empty
+                    TopCardText = pile.TopCardNumber?.ToString() ?? "—"
                 });
             }
         }
@@ -24376,7 +32692,8 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private bool CanSubmitTurn()
     {
-        return _isMyTurn && _hasCurrentHand && !IsLoadingBoard && !_isSubmittingTurn && !_isLeavingMatch
+        return _isMyTurn && _hasCurrentHand && !NeedsReconnect && !MatchUnavailable && !IsLoadingBoard
+            && !_isSubmittingTurn && !_isLeavingMatch
             && _turnClock.GetRemainingSeconds() is > 0;
     }
 
@@ -24570,7 +32887,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             foreach (int card in hand.Cards)
             {
-                Hand.Add(new MatchCardRow { DisplayValue = card.ToString(), CardNumber = card, IsWildcard = false });
+                Hand.Add(new MatchCardRow
+                {
+                    DisplayValue = card.ToString(),
+                    CardNumber = card,
+                    PlanOrder = _masterPlanDraft.GetOrder(card)
+                });
             }
         }
 
@@ -24579,6 +32901,9 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private void RefreshTurnCommands()
     {
+        SendChatCommand.NotifyCanExecuteChanged();
+        ReconnectCommand.NotifyCanExecuteChanged();
+        ConfirmPresenceCommand.NotifyCanExecuteChanged();
         ConfirmExitCommand.NotifyCanExecuteChanged();
         PlaceCardCommand.NotifyCanExecuteChanged();
         DismantleTowerCommand.NotifyCanExecuteChanged();
@@ -24596,6 +32921,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         if (SetProperty(ref _masterPlanCount, count, nameof(MasterPlanCountLabel)))
         {
             OnPropertyChanged(nameof(HasMasterPlans));
+            OnPropertyChanged(nameof(MasterPlanCount));
         }
     }
 
@@ -24610,7 +32936,14 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     private void OnMasterPlanDraftChanged()
     {
+        foreach (MatchCardRow card in Hand)
+        {
+            card.PlanOrder = _masterPlanDraft.GetOrder(card.CardNumber);
+        }
+
         OnPropertyChanged(nameof(MasterPlanPreview));
+        OnPropertyChanged(nameof(HasMasterPlanDraft));
+        OnPropertyChanged(nameof(MasterPlanSteps));
         RefreshTurnCommands();
     }
 
@@ -24641,8 +32974,23 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         RefreshTurnCountdown();
     }
 
+    private void SetBoardClocks(MatchBoardSnapshot board, Guid? playerId, long? receivedAt)
+    {
+        _turnClock.SetDeadline(board.TurnDeadlineUtc, board.ServerTimeUtc, receivedAt);
+        DateTimeOffset? presenceDeadline = playerId is Guid id
+            && board.PresenceDeadlinesUtc.TryGetValue(id, out DateTimeOffset deadline) ? deadline : null;
+        _presenceClock.SetDeadline(presenceDeadline, board.ServerTimeUtc, receivedAt);
+    }
+
     private void RefreshTurnCountdown()
     {
+        int? presenceSeconds = _presenceClock.GetRemainingSeconds();
+        if (presenceSeconds != _presenceSeconds)
+        {
+            _presenceSeconds = presenceSeconds;
+            RefreshPresenceNotice();
+        }
+
         if (SetProperty(ref _turnSeconds, _turnClock.GetRemainingSeconds(), nameof(TurnSecondsLabel)))
         {
             OnPropertyChanged(nameof(HasTurnCountdown));
@@ -24666,7 +33014,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public ObservableCollection<MatchPlayerRow> Players { get; } = new();
     public ObservableCollection<MatchPileRow> Piles { get; } = new();
     public ObservableCollection<MatchCardRow> Hand { get; } = new();
-    public ObservableCollection<MatchChatRow> ChatMessages { get; } = new();
 
     public string RoundLabel
     {
@@ -24696,23 +33043,6 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
 
     public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
 
-    public string DraftMessage
-    {
-        get => _draftMessage;
-        set
-        {
-            string nextValue = value ?? string.Empty;
-            if (SetProperty(ref _draftMessage, nextValue))
-            {
-                OnPropertyChanged(nameof(ChatLengthLabel));
-                OnPropertyChanged(nameof(CanSendChat));
-            }
-        }
-    }
-
-    public bool CanSendChat => MatchChatRules.CanSend(DraftMessage);
-    public string ChatLengthLabel => $"{DraftMessage.Length}/{MatchChatRules.MaximumLength}";
-
     public MatchCardRow? SelectedCard
     {
         get => _selectedCard;
@@ -24733,6 +33063,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
             if (SetProperty(ref _isExitConfirmationOpen, value))
             {
                 ConfirmExitCommand.NotifyCanExecuteChanged();
+                SendChatCommand.NotifyCanExecuteChanged();
             }
         }
     }
@@ -24758,10 +33089,19 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public string BoardText => _text.Get("Match.Board");
     public string BoardHintText => _text.Get("Match.BoardHint");
     public string HandText => _text.Get("Match.Hand");
-    public bool HasMasterPlans => _masterPlanCount > 0;
+    public int MasterPlanCount => _masterPlanCount;
+    public string MasterPlanTitle => _text.Get("Match.MasterPlan.Title");
+    public bool HasMasterPlans => MasterPlanCount > 0;
     public string MasterPlanCountLabel => string.Format(_text.Get("Match.MasterPlan.Count"), _masterPlanCount);
+    public bool HasMasterPlanDraft => _masterPlanDraft.Modules.Count > 0;
     public string MasterPlanPreview => SelectedPile?.TopCardNumber is int top && _masterPlanDraft.Modules.Count > 0
         ? string.Join(" → ", _masterPlanDraft.Modules.Prepend(top)) : _text.Get("Match.MasterPlan.Hint");
+    public IReadOnlyList<MatchMasterPlanStep> MasterPlanSteps =>
+        HasMasterPlanDraft && SelectedPile?.TopCardNumber is int top
+            ? _masterPlanDraft.Modules.Select(number => new MatchMasterPlanStep(number, IsTowerTop: false))
+                .Prepend(new MatchMasterPlanStep(top, IsTowerTop: true)).ToArray()
+            : Array.Empty<MatchMasterPlanStep>();
+
     public string AddMasterPlanModuleText => _text.Get("Match.MasterPlan.AddModule");
     public string RemoveMasterPlanModuleText => _text.Get("Match.MasterPlan.RemoveModule");
     public string PlayMasterPlanText => _text.Get("Match.MasterPlan.Play");
@@ -24791,6 +33131,12 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
     public void RefreshLocalization()
     {
         Results.RefreshLocalization();
+        OnPropertyChanged(nameof(ReconnectText));
+        OnPropertyChanged(nameof(ConnectionText));
+        OnPropertyChanged(nameof(MatchUnavailableText));
+        OnPropertyChanged(nameof(ReturnToMenuText));
+        OnPropertyChanged(nameof(ConfirmPresenceText));
+        RefreshPresenceNotice();
         RefreshPlayers();
         OnPropertyChanged(nameof(TitleText));
         OnPropertyChanged(nameof(RoundText));
@@ -24802,6 +33148,7 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(BoardHintText));
         OnPropertyChanged(nameof(HandText));
         OnPropertyChanged(nameof(MasterPlanCountLabel));
+        OnPropertyChanged(nameof(MasterPlanTitle));
         OnPropertyChanged(nameof(MasterPlanPreview));
         OnPropertyChanged(nameof(AddMasterPlanModuleText));
         OnPropertyChanged(nameof(RemoveMasterPlanModuleText));
@@ -24838,6 +33185,14 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         else if (move.ActionKind == MatchBoardActionKind.TurnExpired)
         {
             label = string.Format(_text.Get("Match.Move.TurnExpired"), move.PlayerUsername);
+        }
+        else if (move.ActionKind == MatchBoardActionKind.TurnSkipped)
+        {
+            label = string.Format(_text.Get("Match.Move.TurnSkipped"), move.PlayerUsername);
+        }
+        else if (move.ActionKind == MatchBoardActionKind.PresenceConfirmed)
+        {
+            label = string.Format(_text.Get("Match.Move.PresenceConfirmed"), move.PlayerUsername);
         }
         else if (move.ActionKind == MatchBoardActionKind.LeftMatch)
         {
@@ -24928,19 +33283,24 @@ public sealed class MatchViewModel : ViewModelBase, INavigationAware
         {
             if (left)
             {
-                try
-                {
-                    _lobbies?.Disconnect();
-                }
-                finally
-                {
-                    _navigation?.NavigateTo(NavigationPage.Home);
-                }
+                ReturnToMenu();
             }
             else
             {
                 ExitErrorMessage = _text.Get("Match.Exit.Failed");
             }
+        }
+    }
+
+    private void ReturnToMenu()
+    {
+        try
+        {
+            _lobbies?.Disconnect();
+        }
+        finally
+        {
+            _navigation?.NavigateTo(NavigationPage.Home);
         }
     }
 
@@ -25121,16 +33481,16 @@ public sealed class InMemoryMatchSessionStarter :
 
     public Guid? TryExpireTurn(Guid matchId)
     {
-        Guid? expelledPlayerId = null;
+        Guid? affectedPlayerId = null;
         lock (_syncRoot)
         {
             if (_matchesById.TryGetValue(matchId, out MatchRecord? record))
             {
-                expelledPlayerId = record.TryExpireTurn(_timeProvider.GetUtcNow());
+                affectedPlayerId = record.TryExpireTurn(_timeProvider.GetUtcNow());
             }
         }
 
-        return expelledPlayerId;
+        return affectedPlayerId;
     }
 
     public MatchLifecycleSnapshot? Get(Guid matchId)
@@ -25173,6 +33533,15 @@ public sealed class InMemoryMatchSessionStarter :
         }
 
         return result;
+    }
+
+    public bool TryConfirmPresence(Guid matchId, Guid playerId)
+    {
+        lock (_syncRoot)
+        {
+            return _matchesById.TryGetValue(matchId, out MatchRecord? record)
+                && record.TryConfirmPresence(playerId, _timeProvider.GetUtcNow());
+        }
     }
 
     public bool TryDisconnect(Guid matchId, Guid playerId)
@@ -25299,10 +33668,9 @@ using Vertigo.Contracts.Models;
 
 namespace Vertigo.Server.Game.Matches.Models;
 
-// Protected by the owning starter's synchronization lock.
 internal sealed class MatchRecord
 {
-    private const int InitialTowerCount = 4;
+    private const int MaximumTowerCount = 6;
     private const int FirstRoundNumber = 1;
     private const int FinalRoundNumber = 3;
     private const int MaximumFloorsPerDismantle = 10;
@@ -25312,6 +33680,10 @@ internal sealed class MatchRecord
 
     private static readonly TimeSpan TurnDuration = TimeSpan.FromSeconds(30);
 
+    private static readonly TimeSpan PresenceGraceDuration = TimeSpan.FromSeconds(30);
+
+    private readonly Dictionary<Guid, DateTimeOffset> _presenceDeadlinesUtc = new();
+    private readonly List<Guid> _inactivePlayerIds = new();
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
     private readonly HashSet<Guid> _activePlayerIds;
     private readonly Dictionary<Guid, HashSet<Guid>> _expulsionVotes = new();
@@ -25336,17 +33708,20 @@ internal sealed class MatchRecord
     private int ExpulsionVotesRequired => _activePlayerIds.Count / 2 + 1;
 
     public MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc)
-        : this(session, createdAtUtc, () => new MatchDeck())
+        : this(session, createdAtUtc, (() => new MatchDeck(), RandomNumberGenerator.GetInt32))
     {
     }
 
-    internal MatchRecord(MatchSessionSnapshot session, DateTimeOffset createdAtUtc, Func<MatchDeck> createDeck)
+    internal MatchRecord(
+        MatchSessionSnapshot session,
+        DateTimeOffset createdAtUtc,
+        (Func<MatchDeck> CreateDeck, Func<int, int> PickOpeningPlayer) setup)
     {
         Session = session;
         _activePlayerIds = new HashSet<Guid>(session.PlayerIds);
-        _createDeck = createDeck;
+        _createDeck = setup.CreateDeck;
         _deck = _createDeck();
-        Guid opener = session.PlayerIds[RandomNumberGenerator.GetInt32(session.PlayerIds.Count)];
+        Guid opener = session.PlayerIds[setup.PickOpeningPlayer(session.PlayerIds.Count)];
         DealRound(opener, createdAtUtc);
         Lifecycle = new MatchLifecycleSnapshot
         {
@@ -25367,17 +33742,8 @@ internal sealed class MatchRecord
             _masterPlans[playerId] = 0;
         }
 
-        IReadOnlyList<int> foundations = _deck.Draw(InitialTowerCount);
         _piles.Clear();
-        for (int position = 1; position <= InitialTowerCount; position++)
-        {
-            _piles.Add(new MatchBoardPile
-            {
-                Position = position,
-                TopCardNumber = foundations[position - 1],
-                CardCount = 1
-            });
-        }
+        AddTower();
 
         _roundOpenerId = opener;
         BeginTurn(opener, now);
@@ -25389,6 +33755,10 @@ internal sealed class MatchRecord
 
     public MatchBoardSnapshot ToBoard()
     {
+        Guid[] activePlayers = Session.PlayerIds.Where(_activePlayerIds.Contains).ToArray();
+        Dictionary<Guid, int>? positions = _endReason == MatchEndReason.Completed
+            ? _scoring.GetFinalPositions(activePlayers) : null;
+
         return new MatchBoardSnapshot
         {
             MatchId = Session.MatchId,
@@ -25397,6 +33767,8 @@ internal sealed class MatchRecord
             CurrentTurnPlayerId = _currentTurnPlayerId,
             TurnDeadlineUtc = _turnDeadlineUtc,
             EndReason = _endReason,
+            PresenceDeadlinesUtc = new(_presenceDeadlinesUtc),
+            InactivePlayerIds = new(_inactivePlayerIds),
             ExpelledPlayerIds = Session.PlayerIds.Where(id => !_activePlayerIds.Contains(id)).ToList(),
             VotingRevision = _votingRevision,
             ExpulsionVotesRequired = ExpulsionVotesRequired,
@@ -25413,11 +33785,12 @@ internal sealed class MatchRecord
                 PreviousTop = move.PreviousTop,
                 CardNumbers = move.CardNumbers.ToList()
             }).ToList(),
-            Players = Session.PlayerIds.Where(_activePlayerIds.Contains).Select(id => new MatchBoardPlayer
+            Players = activePlayers.Select(id => new MatchBoardPlayer
             {
                 PlayerId = id,
                 FloorsBuilt = _personalFloors[id],
-                GlobalFloors = _scoring.GetGlobalFloors(id)
+                GlobalFloors = _scoring.GetGlobalFloors(id),
+                FinalPosition = _endReason == MatchEndReason.Abandonment ? 1 : positions?[id]
             }).ToList(),
             Piles = _piles.Select(pile => new MatchBoardPile
             {
@@ -25642,6 +34015,37 @@ internal sealed class MatchRecord
             _masterPlans[playerId]++;
         }
 
+        RefillTower(pile);
+        OpenAdditionalTower();
+    }
+
+    private void OpenAdditionalTower()
+    {
+        if (_deck.RemainingCount == 0)
+        {
+            return;
+        }
+
+        MatchBoardPile? vacant = _piles.Find(pile => pile.TopCardNumber is null);
+        if (vacant is not null)
+        {
+            RefillTower(vacant);
+        }
+        else if (_piles.Count < MaximumTowerCount)
+        {
+            AddTower();
+        }
+    }
+
+    private void AddTower()
+    {
+        MatchBoardPile pile = new() { Position = _piles.Count + 1 };
+        RefillTower(pile);
+        _piles.Add(pile);
+    }
+
+    private void RefillTower(MatchBoardPile pile)
+    {
         pile.TopCardNumber = _deck.RemainingCount > 0 ? _deck.Draw(1)[0] : null;
         pile.CardCount = pile.TopCardNumber.HasValue ? 1 : 0;
     }
@@ -25664,15 +34068,49 @@ internal sealed class MatchRecord
 
     public Guid? TryExpireTurn(DateTimeOffset now)
     {
-        Guid? expelledPlayerId = null;
-        if (IsTurnExpired(now))
+        if (IsTerminal)
         {
-            Guid playerId = _currentTurnPlayerId;
-            RemoveActivePlayer(playerId, MatchBoardActionKind.TurnExpired, now);
-            expelledPlayerId = playerId;
+            return null;
         }
 
-        return expelledPlayerId;
+        Guid expiredPlayerId = _presenceDeadlinesUtc
+            .Where(entry => entry.Value <= now)
+            .OrderBy(entry => entry.Value)
+            .Select(entry => entry.Key)
+            .FirstOrDefault();
+        if (expiredPlayerId != Guid.Empty)
+        {
+            _inactivePlayerIds.Add(expiredPlayerId);
+            RemoveActivePlayer(expiredPlayerId, MatchBoardActionKind.TurnExpired, now);
+            return expiredPlayerId;
+        }
+
+        if (!IsTurnExpired(now))
+        {
+            return null;
+        }
+
+        Guid skippedPlayerId = _currentTurnPlayerId;
+        _presenceDeadlinesUtc.Add(skippedPlayerId, _turnDeadlineUtc!.Value + PresenceGraceDuration);
+        RecordMove(skippedPlayerId, (MatchBoardActionKind.TurnSkipped, 0, null), Array.Empty<int>());
+        AdvanceGameplayRevision();
+        BeginTurn(GetActivePlayersAfter(skippedPlayerId).First(), now);
+        return skippedPlayerId;
+    }
+
+    public bool TryConfirmPresence(Guid playerId, DateTimeOffset now)
+    {
+        bool confirmed = !IsTerminal && playerId != _currentTurnPlayerId
+            && !_disconnectedPlayerIds.Contains(playerId)
+            && _presenceDeadlinesUtc.TryGetValue(playerId, out DateTimeOffset deadline) && now < deadline;
+        if (confirmed)
+        {
+            _presenceDeadlinesUtc.Remove(playerId);
+            RecordMove(playerId, (MatchBoardActionKind.PresenceConfirmed, 0, null), Array.Empty<int>());
+            _boardRevision++;
+        }
+
+        return confirmed;
     }
 
     public MatchExpulsionVoteResult TryVoteToExpel(Guid voterId, MatchExpulsionVote vote, DateTimeOffset now)
@@ -25682,7 +34120,7 @@ internal sealed class MatchRecord
         {
             result = MatchExpulsionVoteResult.MatchUnavailable;
         }
-        else if (IsTurnExpired(now))
+        else if (IsTurnExpired(now) || HasPresenceExpired(voterId, now) || HasPresenceExpired(vote.TargetPlayerId, now))
         {
             result = MatchExpulsionVoteResult.TurnExpired;
         }
@@ -25736,6 +34174,11 @@ internal sealed class MatchRecord
         return result;
     }
 
+    private bool HasPresenceExpired(Guid playerId, DateTimeOffset now)
+    {
+        return _presenceDeadlinesUtc.TryGetValue(playerId, out DateTimeOffset deadline) && now >= deadline;
+    }
+
     private bool IsTurnExpired(DateTimeOffset now)
     {
         return !IsTerminal && _turnDeadlineUtc is DateTimeOffset deadline && now >= deadline;
@@ -25748,6 +34191,7 @@ internal sealed class MatchRecord
         _deck.ReturnToBottom(_hands[playerId]);
         _hands.Remove(playerId);
         _activePlayerIds.Remove(playerId);
+        _presenceDeadlinesUtc.Remove(playerId);
         _disconnectedPlayerIds.Remove(playerId);
         _expulsionVotes.Clear();
         _votingRevision++;
@@ -25781,6 +34225,7 @@ internal sealed class MatchRecord
 
     private void CompleteTurn(Guid playerId, DateTimeOffset now)
     {
+        _presenceDeadlinesUtc.Remove(playerId);
         AdvanceGameplayRevision();
         if (_hands[playerId].Count == 0)
         {
@@ -25807,7 +34252,8 @@ internal sealed class MatchRecord
     private void BeginTurn(Guid playerId, DateTimeOffset now)
     {
         _currentTurnPlayerId = playerId;
-        _turnDeadlineUtc = now + TurnDuration;
+        _turnDeadlineUtc = _presenceDeadlinesUtc.TryGetValue(playerId, out DateTimeOffset deadline)
+            ? deadline : now + TurnDuration;
     }
 
     private void CloseRound(Guid? closedBy, DateTimeOffset now)
@@ -25907,7 +34353,7 @@ internal sealed class MatchRecord
     public MatchReconnectResult TryReconnect(Guid playerId, DateTimeOffset now)
     {
         MatchReconnectResult result = MatchReconnectResult.Rejected;
-        if (!IsTerminal && _activePlayerIds.Contains(playerId))
+        if (!IsTerminal && _activePlayerIds.Contains(playerId) && !HasPresenceExpired(playerId, now))
         {
             if (_disconnectedPlayerIds.Remove(playerId))
             {
@@ -25936,6 +34382,7 @@ internal sealed class MatchRecord
         if (!IsTerminal && (next is MatchLifecycleStatus.Finished or MatchLifecycleStatus.Cancelled))
         {
             _turnDeadlineUtc = null;
+            _presenceDeadlinesUtc.Clear();
             _expulsionVotes.Clear();
             Lifecycle = Lifecycle with
             {
@@ -25971,6 +34418,7 @@ internal sealed class MatchRecord
   <data name="Lobby.MessageFailed" xml:space="preserve"><value>The message could not be sent.</value></data>
   <data name="Lobby.LeaveFailed" xml:space="preserve"><value>The lobby could not be left.</value></data>
   <data name="Authentication.Unauthorized" xml:space="preserve"><value>Your session is no longer valid. Sign in again.</value></data>
+  <data name="Chat.LanguageBlocked" xml:space="preserve"><value>The message contains language that is not allowed. Edit it and send it again.</value></data>
   <data name="Lobby.ChatNotAllowed" xml:space="preserve"><value>You cannot send messages in this lobby.</value></data>
   <data name="RegisterAccount.UsernameAlreadyRegistered" xml:space="preserve"><value>Username already exists.</value></data>
   <data name="RegisterAccount.EmailAlreadyRegistered" xml:space="preserve"><value>Email already exists.</value></data>
@@ -26398,10 +34846,10 @@ internal sealed class MatchRecord
     <value>Floors</value>
   </data>
   <data name="Match.Board" xml:space="preserve">
-    <value>DISCARD PILES</value>
+    <value>Central towers</value>
   </data>
   <data name="Match.BoardHint" xml:space="preserve">
-    <value>Select a card from your hand and a compatible pile. Moves become available when Game is connected.</value>
+    <value>Choose a card that is 1 to 10 numbers higher than the top of a tower.</value>
   </data>
   <data name="Match.Hand" xml:space="preserve">
     <value>MY HAND</value>
@@ -26413,7 +34861,7 @@ internal sealed class MatchRecord
     <value>MATCH CHAT</value>
   </data>
   <data name="Match.MessageHint" xml:space="preserve">
-    <value>Message (max. 40 characters)</value>
+    <value>Write a message</value>
   </data>
   <data name="Match.Send" xml:space="preserve">
     <value>Send</value>
@@ -26492,6 +34940,7 @@ internal sealed class MatchRecord
   <data name="Match.Turn.OtherPlayer" xml:space="preserve"><value>{0}’s turn</value></data>
   <data name="Match.Turn.Seconds" xml:space="preserve"><value>{0} s</value></data>
   <data name="Match.DismantleTower" xml:space="preserve"><value>Dismantle tower</value></data>
+  <data name="Match.MasterPlan.Title" xml:space="preserve"><value>Master Plan</value></data>
   <data name="Match.MasterPlan.Count" xml:space="preserve">
     <value>Master Plans available · {0}</value>
   </data>
@@ -26499,10 +34948,10 @@ internal sealed class MatchRecord
     <value>Choose a tower and add two or more modules in order.</value>
   </data>
   <data name="Match.MasterPlan.AddModule" xml:space="preserve">
-    <value>Add selected module</value>
+    <value>Add card</value>
   </data>
   <data name="Match.MasterPlan.RemoveModule" xml:space="preserve">
-    <value>Remove last module</value>
+    <value>Remove last</value>
   </data>
   <data name="Match.MasterPlan.Play" xml:space="preserve">
     <value>Play Master Plan</value>
@@ -26524,6 +34973,24 @@ internal sealed class MatchRecord
   </data>
   <data name="Match.Results.Abandonment" xml:space="preserve">
     <value>Win by abandonment</value>
+  </data>
+  <data name="Match.Results.Victory" xml:space="preserve">
+    <value>Victory</value>
+  </data>
+  <data name="Match.Results.SharedVictory" xml:space="preserve">
+    <value>Shared victory</value>
+  </data>
+  <data name="Match.Results.PersonalTower" xml:space="preserve">
+    <value>Your tower this round</value>
+  </data>
+  <data name="Match.Results.FinalTower" xml:space="preserve">
+    <value>Your final tower</value>
+  </data>
+  <data name="Match.Results.Standings" xml:space="preserve">
+    <value>Final standings</value>
+  </data>
+  <data name="Match.Results.TowerCaption" xml:space="preserve">
+    <value>{0} floors built · +{1} bonus · {2} overall</value>
   </data>
   <data name="Match.Results.SelectRound" xml:space="preserve">
     <value>Select round</value>
@@ -26558,6 +35025,36 @@ internal sealed class MatchRecord
   <data name="Match.Move.LeftMatch" xml:space="preserve">
     <value>{0} left the match.</value>
   </data>
+  <data name="Match.Connection.Lost" xml:space="preserve">
+    <value>Communication with the server was interrupted. Reconnect to update the match.</value>
+  </data>
+  <data name="Match.Connection.Reconnect" xml:space="preserve">
+    <value>Reconnect</value>
+  </data>
+  <data name="Match.Presence.Confirm" xml:space="preserve">
+    <value>Keep playing</value>
+  </data>
+  <data name="Match.Presence.Expelled" xml:space="preserve">
+    <value>You were removed for inactivity.</value>
+  </data>
+  <data name="Match.Presence.Play" xml:space="preserve">
+    <value>It is your turn. Make a valid move within the remaining {0} s.</value>
+  </data>
+  <data name="Match.Presence.Skipped" xml:space="preserve">
+    <value>Your turn was skipped. You have {0} s to confirm you are still playing.</value>
+  </data>
+  <data name="Match.Presence.Pending" xml:space="preserve">
+    <value>The grace period has ended. Waiting for the server.</value>
+  </data>
+  <data name="Match.Move.TurnSkipped" xml:space="preserve">
+    <value>{0}'s turn was skipped.</value>
+  </data>
+  <data name="Match.Move.PresenceConfirmed" xml:space="preserve">
+    <value>{0} confirmed they are still playing.</value>
+  </data>
+  <data name="Match.Connection.Unavailable" xml:space="preserve">
+    <value>The match is no longer available on the server.</value>
+  </data>
 </root>
 ````
 
@@ -26581,6 +35078,7 @@ internal sealed class MatchRecord
   <data name="Lobby.MessageFailed" xml:space="preserve"><value>No se pudo enviar el mensaje.</value></data>
   <data name="Lobby.LeaveFailed" xml:space="preserve"><value>No se pudo salir de la sala.</value></data>
   <data name="Authentication.Unauthorized" xml:space="preserve"><value>Tu sesión ya no es válida. Inicia sesión nuevamente.</value></data>
+  <data name="Chat.LanguageBlocked" xml:space="preserve"><value>El mensaje contiene lenguaje no permitido. Edítalo y vuelve a enviarlo.</value></data>
   <data name="Lobby.ChatNotAllowed" xml:space="preserve"><value>No puedes enviar mensajes en esta sala.</value></data>
   <data name="RegisterAccount.UsernameAlreadyRegistered" xml:space="preserve"><value>Ese nombre de usuario ya está registrado.</value></data>
   <data name="RegisterAccount.EmailAlreadyRegistered" xml:space="preserve"><value>Ese correo ya está registrado.</value></data>
@@ -27008,10 +35506,10 @@ internal sealed class MatchRecord
     <value>Pisos</value>
   </data>
   <data name="Match.Board" xml:space="preserve">
-    <value>PILAS DE DESCARTE</value>
+    <value>Torres centrales</value>
   </data>
   <data name="Match.BoardHint" xml:space="preserve">
-    <value>Selecciona una carta de tu mano y una pila compatible. Las jugadas se activarán al conectar Game.</value>
+    <value>Elige una carta entre 1 y 10 números mayor que el tope de una torre.</value>
   </data>
   <data name="Match.Hand" xml:space="preserve">
     <value>MI MANO</value>
@@ -27023,7 +35521,7 @@ internal sealed class MatchRecord
     <value>CHAT DE PARTIDA</value>
   </data>
   <data name="Match.MessageHint" xml:space="preserve">
-    <value>Mensaje (máx. 40 caracteres)</value>
+    <value>Escribe un mensaje</value>
   </data>
   <data name="Match.Send" xml:space="preserve">
     <value>Enviar</value>
@@ -27102,6 +35600,7 @@ internal sealed class MatchRecord
   <data name="Match.Turn.OtherPlayer" xml:space="preserve"><value>Turno de {0}</value></data>
   <data name="Match.Turn.Seconds" xml:space="preserve"><value>{0} s</value></data>
   <data name="Match.DismantleTower" xml:space="preserve"><value>Desmontar torre</value></data>
+  <data name="Match.MasterPlan.Title" xml:space="preserve"><value>Plano Maestro</value></data>
   <data name="Match.MasterPlan.Count" xml:space="preserve">
     <value>Planos Maestros disponibles · {0}</value>
   </data>
@@ -27109,10 +35608,10 @@ internal sealed class MatchRecord
     <value>Elige una torre y añade dos o más módulos en orden.</value>
   </data>
   <data name="Match.MasterPlan.AddModule" xml:space="preserve">
-    <value>Añadir módulo seleccionado</value>
+    <value>Añadir carta</value>
   </data>
   <data name="Match.MasterPlan.RemoveModule" xml:space="preserve">
-    <value>Quitar último módulo</value>
+    <value>Quitar última</value>
   </data>
   <data name="Match.MasterPlan.Play" xml:space="preserve">
     <value>Jugar Plano Maestro</value>
@@ -27134,6 +35633,24 @@ internal sealed class MatchRecord
   </data>
   <data name="Match.Results.Abandonment" xml:space="preserve">
     <value>Victoria por abandono</value>
+  </data>
+  <data name="Match.Results.Victory" xml:space="preserve">
+    <value>Victoria</value>
+  </data>
+  <data name="Match.Results.SharedVictory" xml:space="preserve">
+    <value>Victoria compartida</value>
+  </data>
+  <data name="Match.Results.PersonalTower" xml:space="preserve">
+    <value>Tu rascacielos de la ronda</value>
+  </data>
+  <data name="Match.Results.FinalTower" xml:space="preserve">
+    <value>Tu rascacielos final</value>
+  </data>
+  <data name="Match.Results.Standings" xml:space="preserve">
+    <value>Clasificación final</value>
+  </data>
+  <data name="Match.Results.TowerCaption" xml:space="preserve">
+    <value>{0} pisos construidos · +{1} de bono · {2} acumulados</value>
   </data>
   <data name="Match.Results.SelectRound" xml:space="preserve">
     <value>Elegir ronda</value>
@@ -27167,6 +35684,36 @@ internal sealed class MatchRecord
   </data>
   <data name="Match.Move.LeftMatch" xml:space="preserve">
     <value>{0} abandonó la partida.</value>
+  </data>
+  <data name="Match.Connection.Lost" xml:space="preserve">
+    <value>Se interrumpió la comunicación con el servidor. Reconecta para actualizar la partida.</value>
+  </data>
+  <data name="Match.Connection.Reconnect" xml:space="preserve">
+    <value>Reconectar</value>
+  </data>
+  <data name="Match.Presence.Confirm" xml:space="preserve">
+    <value>Sigo jugando</value>
+  </data>
+  <data name="Match.Presence.Expelled" xml:space="preserve">
+    <value>Fuiste expulsado por inactividad.</value>
+  </data>
+  <data name="Match.Presence.Play" xml:space="preserve">
+    <value>Es tu turno. Haz una jugada válida en los {0} s restantes.</value>
+  </data>
+  <data name="Match.Presence.Skipped" xml:space="preserve">
+    <value>Se omitió tu turno. Tienes {0} s para confirmar que sigues jugando.</value>
+  </data>
+  <data name="Match.Presence.Pending" xml:space="preserve">
+    <value>La tolerancia ha terminado. Esperando al servidor.</value>
+  </data>
+  <data name="Match.Move.TurnSkipped" xml:space="preserve">
+    <value>Se omitió el turno de {0}.</value>
+  </data>
+  <data name="Match.Move.PresenceConfirmed" xml:space="preserve">
+    <value>{0} confirmó que sigue jugando.</value>
+  </data>
+  <data name="Match.Connection.Unavailable" xml:space="preserve">
+    <value>La partida ya no está disponible en el servidor.</value>
   </data>
 </root>
 ````
@@ -27241,6 +35788,17 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public LobbyAdmission JoinLobby(string lobbyCode, string sessionToken)
     {
+        return JoinLobby(lobbyCode, sessionToken, null);
+    }
+
+    public LobbyAdmission ReconnectMatch(MatchPresenceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return JoinLobby(request.LobbyCode, request.SessionToken, request.MatchId);
+    }
+
+    private LobbyAdmission JoinLobby(string lobbyCode, string sessionToken, Guid? matchId)
+    {
         SessionIdentity identity = ResolveIdentity(sessionToken);
         LobbyMember player = CreateMember(identity);
         LobbyConnection connection = new(player, GetCurrentCallback(), WatchCurrentSession());
@@ -27256,6 +35814,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             {
                 throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
             }
+
+            EnsureReconnectMatchesLobby(lobby, player.PlayerId, matchId);
 
             if (lobby.Status != LobbyStatus.Waiting && !lobby.Contains(player.PlayerId))
             {
@@ -27291,6 +35851,15 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         Notify(preparationCallbacks, CreatePreparationNotification(preparation));
 
         return response;
+    }
+
+    private static void EnsureReconnectMatchesLobby(LobbyState lobby, Guid playerId, Guid? matchId)
+    {
+        if (matchId.HasValue && (lobby.Status != LobbyStatus.InGame
+            || lobby.MatchId != matchId.Value || !lobby.Contains(playerId)))
+        {
+            throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+        }
     }
 
     private void EnsureNewMemberCanJoin(LobbyState lobby, Guid playerId)
@@ -27489,7 +36058,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
             (move.PilePosition, move.CardNumber), ApplyPlacement);
 
-        MatchBoardActionKind ApplyPlacement(Guid matchId, Guid playerId)
+        MatchBoardActionKind? ApplyPlacement(Guid matchId, Guid playerId)
         {
             MatchPlacementResult result = _gameOperations.TryPlace(matchId, playerId, move);
             if (result != MatchPlacementResult.Applied)
@@ -27509,7 +36078,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
             (move.PilePosition, 0), ApplyDismantle);
 
-        MatchBoardActionKind ApplyDismantle(Guid matchId, Guid playerId)
+        MatchBoardActionKind? ApplyDismantle(Guid matchId, Guid playerId)
         {
             MatchDismantleResult result = _gameOperations.TryDismantle(matchId, playerId, move);
             if (result != MatchDismantleResult.Applied)
@@ -27530,7 +36099,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken),
             (move.PilePosition, modules.LastOrDefault()), ApplyMasterPlan);
 
-        MatchBoardActionKind ApplyMasterPlan(Guid matchId, Guid playerId)
+        MatchBoardActionKind? ApplyMasterPlan(Guid matchId, Guid playerId)
         {
             MatchPlacementResult result = _gameOperations.TryUseMasterPlan(matchId, playerId, move);
             if (result != MatchPlacementResult.Applied)
@@ -27550,7 +36119,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken), (0, 0), ApplyVote);
 
-        MatchBoardActionKind ApplyVote(Guid matchId, Guid voterId)
+        MatchBoardActionKind? ApplyVote(Guid matchId, Guid voterId)
         {
             MatchExpulsionVoteResult result = matchId == matchToVote
                 ? _gameOperations.TryVoteToExpel(matchId, voterId, vote)
@@ -27565,14 +36134,31 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         }
     }
 
+    public MatchBoardSnapshot ConfirmMatchPresence(MatchPresenceRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken), (0, 0), Confirm);
+
+        MatchBoardActionKind? Confirm(Guid matchId, Guid playerId)
+        {
+            if (matchId != request.MatchId)
+            {
+                throw CreateFault(ServiceErrorCodes.LobbyNotFound, ServiceMessageKeys.LobbyNotFound);
+            }
+
+            return _gameOperations.TryConfirmPresence(matchId, playerId)
+                ? MatchBoardActionKind.PresenceConfirmed : null;
+        }
+    }
+
     private MatchBoardSnapshot ApplyMatchBoardAction(
         (string LobbyCode, string SessionToken) access,
         (int PilePosition, int CardNumber) action,
-        Func<Guid, Guid, MatchBoardActionKind> apply)
+        Func<Guid, Guid, MatchBoardActionKind?> apply)
     {
         SessionIdentity identity = ResolveIdentity(access.SessionToken);
         MatchBoardSnapshot board;
-        MatchBoardActionKind kind;
+        MatchBoardActionKind? kind;
         List<ILobbyCallback> callbacks;
         lock (_lobbyLock)
         {
@@ -27588,6 +36174,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             callbacks = lobby.GetCallbacksExcept(Guid.Empty);
         }
 
+        if (!kind.HasValue)
+        {
+            return board;
+        }
+
         MatchBoardChanged changed = new()
         {
             LobbyCode = access.LobbyCode,
@@ -27599,7 +36190,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                 MatchBoardActionKind.ExpulsionVoteRecorded => string.Empty,
                 _ => identity.Username
             },
-            ActionKind = kind,
+            ActionKind = kind.Value,
             CardNumber = action.CardNumber,
             PilePosition = action.PilePosition
         };
@@ -27615,11 +36206,11 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
             foreach (LobbyState lobby in _lobbies.Values)
             {
                 if (lobby.Status == LobbyStatus.InGame
-                    && _gameOperations.TryExpireTurn(lobby.MatchId) is Guid expelledId)
+                    && _gameOperations.TryExpireTurn(lobby.MatchId) is Guid affectedPlayerId)
                 {
                     MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
                     MatchBoardMove? move = board?.RecentMoves.LastOrDefault();
-                    if (board is not null && move is not null && move.PlayerId == expelledId)
+                    if (board is not null && move is not null && move.PlayerId == affectedPlayerId)
                     {
                         MatchBoardChanged notice = new()
                         {
@@ -27627,7 +36218,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                             MatchId = board.MatchId,
                             Revision = board.Revision,
                             PlayerUsername = move.PlayerUsername,
-                            ActionKind = MatchBoardActionKind.TurnExpired
+                            ActionKind = move.ActionKind
                         };
                         notifications.Add((lobby.GetCallbacksExcept(Guid.Empty), notice));
                     }
@@ -27804,24 +36395,48 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         return overviews;
     }
 
-    // A closed or faulted channel means the client left or dropped: its players are removed from every lobby.
     public bool PublishChatMessage(LobbyChatMessage message)
     {
-        List<ILobbyCallback> callbacks;
+        List<ILobbyCallback>? callbacks;
         lock (_lobbyLock)
         {
             if (!_lobbies.TryGetValue(message.LobbyCode, out LobbyState? lobby)
-                || lobby.Status != LobbyStatus.Waiting
                 || !lobby.Contains(message.SenderId))
             {
                 return false;
             }
 
-            callbacks = lobby.GetCallbacksExcept(Guid.Empty);
+            callbacks = message.MatchId.HasValue
+                ? GetMatchChatCallbacks(lobby, message)
+                : lobby.Status == LobbyStatus.Waiting ? lobby.GetCallbacksExcept(Guid.Empty) : null;
+        }
+
+        if (callbacks is null)
+        {
+            return false;
         }
 
         Notify(callbacks, CreateChatNotification(message));
         return true;
+    }
+
+    private List<ILobbyCallback>? GetMatchChatCallbacks(LobbyState lobby, LobbyChatMessage message)
+    {
+        if (lobby.Status != LobbyStatus.InGame || lobby.MatchId != message.MatchId
+            || lobby.IsDisconnected(message.SenderId))
+        {
+            return null;
+        }
+
+        MatchBoardSnapshot? board = _gameOperations.GetBoard(lobby);
+        if (board is not { EndReason: MatchEndReason.None, TurnDeadlineUtc: not null }
+            || !board.Players.Exists(player => player.PlayerId == message.SenderId))
+        {
+            return null;
+        }
+
+        HashSet<Guid> activePlayers = board.Players.Select(player => player.PlayerId).ToHashSet();
+        return lobby.GetConnectedCallbacks(activePlayers.Contains);
     }
 
     private SessionIdentity ResolveIdentity(string sessionToken)

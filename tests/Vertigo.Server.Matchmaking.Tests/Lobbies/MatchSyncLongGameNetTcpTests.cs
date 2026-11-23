@@ -1,11 +1,22 @@
 using System.Runtime.Serialization;
 using System.ServiceModel;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Vertigo.Contracts.Callbacks;
+using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Interfaces;
+using Vertigo.Contracts.Internal;
 using Vertigo.Contracts.Models;
 using Vertigo.Contracts.Synchronization;
+using Vertigo.Server.CrossCutting.Recovery;
+using Vertigo.Server.DataAccess.Contexts;
 using Vertigo.Server.Game.Matches.Models;
+using Vertigo.Server.Host.Matches;
 using Vertigo.Server.PlayerManagement.Authentication.Models;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
+using Vertigo.Server.PlayerManagement.Statistics;
 using Xunit.Abstractions;
 
 namespace Vertigo.Server.Matchmaking.Tests.Lobbies;
@@ -29,7 +40,7 @@ public sealed class MatchSyncLongGameNetTcpTests
     [InlineData(6)]
     public async Task GetMatchUpdate_EachRoomSizeCompletesThreeRounds_SyncsEveryPrivateHand(int playerCount)
     {
-        await using LobbyHarness server = await LobbyHarness.StartAsync(clock: new FixedClock());
+        await using LobbyHarness server = await LobbyHarness.StartAsync(clock: new FixedClock(DateTimeOffset.UnixEpoch));
         using PlayerChannels players = new(server, playerCount);
         MatchIdentity match = players.StartMatch();
         Dictionary<Guid, MatchSyncState> baselines = ReadInitialStates(players, match);
@@ -74,6 +85,214 @@ public sealed class MatchSyncLongGameNetTcpTests
         }
 
         return states;
+    }
+
+    [Fact]
+    public async Task LeaveMatch_AbandonmentDoesNotGenerateStatistics()
+    {
+        await using LobbyHarness server = await LobbyHarness.StartAsync();
+        using PlayerChannels players = new(server, 2, CreateRegisteredSession(server));
+        MatchIdentity match = players.StartMatch();
+        PlayerChannel guest = players.All[1];
+
+        bool left = guest.Channel.LeaveMatch(new MatchLeaveRequest
+        {
+            LobbyCode = match.LobbyCode, MatchId = match.MatchId, SessionToken = guest.Session.Token
+        });
+
+        Assert.True(left);
+        MatchBoardSnapshot board = players.Host.Channel.GetMatchBoard(match.LobbyCode, players.Host.Session.Token);
+        Assert.Equal(MatchEndReason.Abandonment, board.EndReason);
+        Assert.Contains(players.Host.Session.PlayerId, board.WinnerIds);
+        Assert.Empty(server.Services.GetRequiredService<ICompletedMatchSource>().GetPendingResults(16));
+    }
+
+    [Fact]
+    public async Task StatisticsWorker_RepeatedWriteFailureDoesNotBlockOtherMatches()
+    {
+        DirectoryInfo directory = Directory.CreateTempSubdirectory();
+        try
+        {
+            using RecoveryDirectory journal = new(directory.FullName);
+            await using LobbyHarness server = await LobbyHarness.StartAsync(recovery: journal);
+            using PlayerChannels firstRoom = new(server, 2, CreateRegisteredSession(server));
+            using PlayerChannels secondRoom = new(server, 2, CreateRegisteredSession(server));
+            Guid first = FinishMatch(firstRoom, firstRoom.StartMatch()).MatchId;
+            Guid second = FinishMatch(secondRoom, secondRoom.StartMatch()).MatchId;
+            ICompletedMatchSource source = server.Services.GetRequiredService<ICompletedMatchSource>();
+            CompletedMatch rejected = source.GetPendingResults(16).Single(result => result.MatchId == first);
+            TimeProvider clock = new FixedClock(new DateTimeOffset(rejected.CompletedAt).AddHours(2));
+            using MatchStatisticsWorker worker = new(source, server.Services.GetRequiredService<IServiceScopeFactory>(),
+                server.Services.GetRequiredService<ILogger<MatchStatisticsWorker>>(), clock);
+            using IServiceScope scope = server.Services.CreateScope();
+            var database = scope.ServiceProvider.GetRequiredService<VertigoDatabaseContext>();
+            var connection = (SqliteConnection)database.Database.GetDbConnection();
+            connection.CreateFunction("BlockedResult", (string id) => Guid.Parse(id) == first);
+            await database.Database.ExecuteSqlRawAsync(
+                "CREATE TRIGGER RejectOneResult BEFORE INSERT ON MatchHistory "
+                + "WHEN BlockedResult(NEW.MatchId) BEGIN SELECT RAISE(ABORT, 'rejected result'); END;");
+
+            await worker.ProcessPendingAsync(CancellationToken.None);
+
+            Assert.Equal(new[] { second, first }, source.GetPendingResults(16).Select(result => result.MatchId));
+            Assert.Empty(await database.MatchHistory.ToListAsync());
+            string warning = Assert.Single(server.Log.Messages(2301));
+            Assert.Contains("7200 seconds", warning, StringComparison.Ordinal);
+            Assert.DoesNotContain("rejected result", warning, StringComparison.Ordinal);
+
+            await worker.ProcessPendingAsync(CancellationToken.None);
+
+            Assert.Equal(second, (await database.MatchHistory.SingleAsync()).MatchId);
+            Assert.Equal(first, Assert.Single(source.GetPendingResults(16)).MatchId);
+
+            await database.Database.ExecuteSqlRawAsync("DROP TRIGGER RejectOneResult");
+            string blockedMarker = Path.Combine(directory.FullName, "matches-v1", first.ToString("N"),
+                "statistics-recorded.json.pending");
+            Directory.CreateDirectory(blockedMarker);
+            await worker.ProcessPendingAsync(CancellationToken.None);
+
+            Assert.Equal(2, await database.MatchHistory.CountAsync());
+            Assert.Equal(first, Assert.Single(source.GetPendingResults(16)).MatchId);
+
+            Directory.Delete(blockedMarker);
+            await worker.ProcessPendingAsync(CancellationToken.None);
+
+            Assert.Empty(source.GetPendingResults(16));
+            Assert.Equal(2, await database.MatchHistory.CountAsync());
+            var statistics = await database.PlayerStats.ToListAsync();
+            Assert.Equal(2, statistics.Count);
+            Assert.All(statistics, stats => Assert.Equal(1, stats.MatchesPlayed));
+        }
+        finally
+        {
+            directory.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task FinishedMatch_ReplaysUnacknowledgedResultAndRecordsStatisticsOnlyOnce()
+    {
+        DirectoryInfo directory = Directory.CreateTempSubdirectory();
+        await using SqliteConnection database = new("Data Source=:memory:");
+        await database.OpenAsync();
+        try
+        {
+            (CompletedMatch expected, string token) = await FinishAndRecordAsync(database, directory.FullName);
+            using (RecoveryDirectory journal = new(directory.FullName))
+            await using (LobbyHarness restarted = await LobbyHarness.StartAsync(database, journal))
+            {
+                ICompletedMatchSource source = restarted.Services.GetRequiredService<ICompletedMatchSource>();
+                CompletedMatch replayed = Assert.Single(source.GetPendingResults(16));
+                Assert.Equal(expected.MatchId, replayed.MatchId);
+                Assert.Equal(expected.Players, replayed.Players);
+                await RecordResultsAsync(restarted, replayed, failFirstWrite: false);
+                await VerifyRankingAsync(restarted, replayed, token);
+                source.AcknowledgeResult(replayed.MatchId);
+                Assert.Empty(source.GetPendingResults(16));
+            }
+
+            using RecoveryDirectory acknowledged = new(directory.FullName);
+            await using LobbyHarness finalHost = await LobbyHarness.StartAsync(database, acknowledged);
+            Assert.Empty(finalHost.Services.GetRequiredService<ICompletedMatchSource>().GetPendingResults(16));
+        }
+        finally
+        {
+            directory.Delete(recursive: true);
+        }
+    }
+
+    private static async Task<(CompletedMatch, string)> FinishAndRecordAsync(SqliteConnection database, string directory)
+    {
+        using RecoveryDirectory journal = new(directory);
+        await using LobbyHarness server = await LobbyHarness.StartAsync(database, journal);
+        using PlayerChannels players = new(server, 2, CreateRegisteredSession(server));
+        MatchIdentity match = players.StartMatch();
+        AuthenticatedSession host = players.Host.Session;
+        MatchBoardSnapshot board = FinishMatch(players, match);
+        CompletedMatch result = Assert.Single(
+            server.Services.GetRequiredService<ICompletedMatchSource>().GetPendingResults(16));
+        CompletedMatchPlayer player = Assert.Single(result.Players);
+        Assert.Equal(host.PlayerId, player.PlayerId);
+        Assert.Equal(board.WinnerIds.Contains(host.PlayerId), player.Won);
+        Assert.Equal(board.RoundSummaries.SelectMany(round => round.Players)
+            .Where(score => score.PlayerId == host.PlayerId).Sum(score => score.FloorsBuilt), player.FloorsBuilt);
+        await RecordResultsAsync(server, result, failFirstWrite: true);
+        return (result, host.Token);
+    }
+
+    private static MatchBoardSnapshot FinishMatch(PlayerChannels players, MatchIdentity match)
+    {
+        MatchBoardSnapshot board = players.Host.Channel.GetMatchBoard(match.LobbyCode, players.Host.Session.Token);
+        for (int turn = 0; turn < TurnLimit && board.EndReason == MatchEndReason.None; turn++)
+        {
+            board = PlayTurn(players.For(board.CurrentTurnPlayerId), match.LobbyCode, board);
+        }
+
+        Assert.Equal(MatchEndReason.Completed, board.EndReason);
+        return board;
+    }
+
+    private static AuthenticatedSession CreateRegisteredSession(LobbyHarness server)
+    {
+        DateTime expiration = DateTime.UtcNow.AddMinutes(5);
+        string token = server.SeedRegisteredSession(expiration, false);
+        using IServiceScope scope = server.Services.CreateScope();
+        SessionIdentity identity = scope.ServiceProvider.GetRequiredService<ISessionIdentityResolver>().Require(token);
+        return new AuthenticatedSession
+        {
+            Token = token, PlayerId = identity.PlayerId, Username = identity.Username, ExpiresAt = expiration
+        };
+    }
+
+    private static async Task RecordResultsAsync(LobbyHarness server, CompletedMatch result, bool failFirstWrite)
+    {
+        using IServiceScope scope = server.Services.CreateScope();
+        var database = scope.ServiceProvider.GetRequiredService<VertigoDatabaseContext>();
+        var recorder = scope.ServiceProvider.GetRequiredService<CompletedMatchRecorder>();
+        if (failFirstWrite)
+        {
+            await database.Database.ExecuteSqlRawAsync(
+                "CREATE TRIGGER RejectStatistics BEFORE INSERT ON PlayerStats "
+                + "BEGIN SELECT RAISE(ABORT, 'statistics unavailable'); END;");
+            await Assert.ThrowsAsync<DbUpdateException>(() => recorder.RecordAsync(result, CancellationToken.None));
+            database.ChangeTracker.Clear();
+            Assert.Empty(await database.MatchHistory.ToListAsync());
+            Assert.Empty(await database.PlayerStats.ToListAsync());
+            await database.Database.ExecuteSqlRawAsync("DROP TRIGGER RejectStatistics");
+        }
+
+        await recorder.RecordAsync(result, CancellationToken.None);
+        Assert.Equal(result.MatchId, (await database.MatchHistory.SingleAsync()).MatchId);
+        Assert.Equal(1, (await database.PlayerStats.SingleAsync()).MatchesPlayed);
+    }
+
+    private static async Task VerifyRankingAsync(LobbyHarness server, CompletedMatch result, string token)
+    {
+        UriBuilder address = new(server.Address.Uri) { Path = "/StatisticsService" };
+        using ChannelFactory<IStatisticsService> factory = new(server.Binding, new EndpointAddress(address.Uri));
+        IStatisticsService channel = factory.CreateChannel();
+        try
+        {
+            CompletedMatchPlayer expected = Assert.Single(result.Players);
+            string guest = server.Guests.Create().Token;
+            RankingEntry entry = Assert.Single(channel.GetRanking(guest));
+            PlayerMatchRecord record = channel.GetMyRecord(token);
+            FaultException<ServiceFault> denied = Assert.Throws<FaultException<ServiceFault>>(
+                () => channel.GetMyRecord(guest));
+            Assert.Equal(ServiceErrorCodes.Unauthorized, denied.Detail.ErrorCode);
+            Assert.Equal(expected.FloorsBuilt, entry.FloorsBuilt);
+            Assert.Equal(expected.Won ? 1 : 0, entry.MatchesWon);
+            Assert.Equal((1, entry.MatchesWon), (record.MatchesPlayed, record.MatchesWon));
+
+            using IServiceScope scope = server.Services.CreateScope();
+            var database = scope.ServiceProvider.GetRequiredService<VertigoDatabaseContext>();
+            Assert.Equal(expected.HighestSkyscraper, (await database.PlayerStats.SingleAsync()).HighestSkyscraper);
+        }
+        finally
+        {
+            ((IClientChannel)channel).Abort();
+            factory.Abort();
+        }
     }
 
     private void VerifyUpdates(PlayerChannels players, MatchIdentity match, Dictionary<Guid, MatchSyncState> baselines)
@@ -198,13 +417,14 @@ public sealed class MatchSyncLongGameNetTcpTests
         private readonly DuplexChannelFactory<ILobbyService> _factory;
         private readonly List<PlayerChannel> _players = new();
 
-        public PlayerChannels(LobbyHarness server, int playerCount)
+        public PlayerChannels(LobbyHarness server, int playerCount, AuthenticatedSession? host = null)
         {
             _factory = new DuplexChannelFactory<ILobbyService>(
                 new InstanceContext(new Callbacks()), server.Binding, server.Address);
             for (int index = 0; index < playerCount; index++)
             {
-                _players.Add(new PlayerChannel(server.Guests.Create(), _factory.CreateChannel()));
+                AuthenticatedSession session = index == 0 && host is not null ? host : server.Guests.Create();
+                _players.Add(new PlayerChannel(session, _factory.CreateChannel()));
             }
         }
 
@@ -251,11 +471,11 @@ public sealed class MatchSyncLongGameNetTcpTests
 
     private sealed record PlayerChannel(AuthenticatedSession Session, ILobbyService Channel);
 
-    private sealed class FixedClock : TimeProvider
+    private sealed class FixedClock(DateTimeOffset now) : TimeProvider
     {
         public override DateTimeOffset GetUtcNow()
         {
-            return DateTimeOffset.UnixEpoch;
+            return now;
         }
     }
 

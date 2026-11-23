@@ -26,6 +26,9 @@ public sealed class MatchChatRulesTests
     [Theory]
     [InlineData("Hola\rAdiós")]
     [InlineData("Hola\nAdiós")]
+    [InlineData("Hola\u0085Adiós")]
+    [InlineData("Hola\u2028Adiós")]
+    [InlineData("Hola\u2029Adiós")]
     public void CanSend_MultipleLines_ReturnsFalse(string message)
     {
         Assert.False(MatchChatRules.CanSend(message));

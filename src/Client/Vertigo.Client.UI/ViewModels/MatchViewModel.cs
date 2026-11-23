@@ -32,6 +32,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     private readonly ISessionGuard? _guard;
     private readonly IClientErrorText? _errors;
     private static readonly TimeSpan CountdownInterval = TimeSpan.FromMilliseconds(200);
+    private readonly MatchBoardRetry _boardRetry;
     private readonly MatchBoardRevision _boardRevision = new();
     private readonly MatchTurnClock _turnClock;
     private readonly MatchTurnClock _presenceClock;
@@ -75,7 +76,9 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     internal MatchViewModel(ITextLocalizer text, PlayerSession? session, TimeProvider timeProvider)
     {
         _text = text;
-        Results = new MatchResultsViewModel(text);
+        _boardRetry = new MatchBoardRetry(timeProvider);
+        Results = new MatchResultsViewModel(text, timeProvider);
+        ToggleRoundSummaryCommand = new RelayCommand(Results.ToggleRoundSummary);
         SendChatCommand = new AsyncRelayCommand(SendChatAsync, CanSendChat);
         _session = session;
         _turnClock = new MatchTurnClock(timeProvider);
@@ -109,6 +112,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     public IAsyncRelayCommand ReconnectCommand { get; }
     public IAsyncRelayCommand ConfirmPresenceCommand { get; }
     public IAsyncRelayCommand RefreshBoardCommand { get; }
+    public IRelayCommand ToggleRoundSummaryCommand { get; }
     public IAsyncRelayCommand PlaceCardCommand { get; }
     public IAsyncRelayCommand DismantleTowerCommand { get; }
     public IRelayCommand AddMasterPlanModuleCommand { get; }
@@ -182,6 +186,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         _currentBoardRevision = 0;
         _syncBaseline = null;
         _pendingBoardRefresh = false;
+        _boardRetry.Reset();
         _notifiedRevision = 0;
         _recentMoves = Array.Empty<MatchBoardMove>();
         RecentMoves.Clear();
@@ -242,6 +247,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         ClearMasterPlanDraft();
         _generation++;
         _pendingBoardRefresh = false;
+        _boardRetry.Reset();
         _hasCurrentHand = false;
         _voting.ApplyPrivateHand(null);
         _isSubmittingTurn = false;
@@ -282,7 +288,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
                 {
                     _pendingBoardRefresh = true;
                 }
-                else
+                else if (!_boardRetry.IsPending)
                 {
                     _ = RefreshBoardAsync();
                 }
@@ -317,6 +323,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     private async Task LoadBoardAsync(ILobbyClient lobbies, (string LobbyCode, bool Reconnect) options,
         BoardRequestIdentity request)
     {
+        _boardRetry.BeginAttempt();
         _hasCurrentHand = false;
         IsLoadingBoard = true;
         int lossCount = _connectionLossCount;
@@ -343,7 +350,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         }
         catch (Exception exception)
         {
-            await ReportBoardFailureAsync(exception, request);
+            await ReportBoardFailureAsync(exception, request, isBoardRead: !options.Reconnect);
         }
         finally
         {
@@ -364,6 +371,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
             ApplySynchronizedBoard(state.Snapshot, state.ReceivedAt, supersededRevision);
             if (board.Revision == _currentBoardRevision)
             {
+                _boardRetry.Reset();
                 _syncBaseline = (request.Session, state.Snapshot);
             }
 
@@ -459,33 +467,49 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
             IsLoadingBoard = false;
             bool needsRefresh = _pendingBoardRefresh && (_notifiedRevision > _currentBoardRevision || !_hasCurrentHand);
             _pendingBoardRefresh = false;
-            if (needsRefresh && IsCurrent(request.Session, request.MatchId, request.Generation))
+            if (needsRefresh && !_boardRetry.IsPending && IsCurrent(request.Session, request.MatchId, request.Generation))
             {
                 _ = RefreshBoardAsync();
             }
         }
     }
 
-    private async Task ReportBoardFailureAsync(Exception exception, BoardRequestIdentity request)
+    private async Task ReportBoardFailureAsync(Exception exception, BoardRequestIdentity request, bool isBoardRead)
     {
         Debug.WriteLine($"Match operation failed: {exception.GetType().Name} (0x{exception.HResult:X8}).");
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             if (IsCurrent(request.Session, request.MatchId, request.Generation))
             {
-                if (exception is TimeoutException or (CommunicationException and not FaultException))
+                bool awaitingNotifiedRevision = _notifiedRevision > _currentBoardRevision;
+                if (!NeedsReconnect && IsRetryableBoardFailure(exception, isBoardRead, awaitingNotifiedRevision))
+                {
+                    _boardRetry.Schedule();
+                }
+                else if (exception is TimeoutException or (CommunicationException and not FaultException))
                 {
                     SetNeedsReconnect(true);
                 }
+                else if (isBoardRead)
+                {
+                    _boardRetry.Reset();
+                }
 
-                ErrorMessage = _errors?.FromException(exception, "Error.Unknown")
-                    ?? _text.Get("Error.Unknown");
+                ErrorMessage = _boardRetry.IsPending ? _text.Get("Match.Connection.SyncRetry")
+                    : _errors?.FromException(exception, "Error.Unknown") ?? _text.Get("Error.Unknown");
                 if (_errors?.IsUnauthorized(exception) == true)
                 {
                     _guard?.Invalidate(request.Session);
                 }
             }
         });
+    }
+
+    internal static bool IsRetryableBoardFailure(Exception exception, bool isBoardRead, bool awaitingNotifiedRevision)
+    {
+        return isBoardRead && (exception is FaultException<ServiceFault>
+            { Detail.ErrorCode: ServiceErrorCodes.Unexpected }
+            || (exception is TimeoutException && awaitingNotifiedRevision));
     }
 
     public bool ApplyBoard(MatchBoardSnapshot board)
@@ -607,6 +631,12 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     {
         if (value)
         {
+            if (_boardRetry.IsPending)
+            {
+                ErrorMessage = string.Empty;
+            }
+
+            _boardRetry.Reset();
             _connectionLossCount++;
             _hasCurrentHand = false;
         }
@@ -833,11 +863,11 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
                         }
                     }
                 });
-                await ReportBoardFailureAsync(exception, request);
+                await ReportBoardFailureAsync(exception, request, isBoardRead: false);
             }
             catch (Exception exception)
             {
-                await ReportBoardFailureAsync(exception, request);
+                await ReportBoardFailureAsync(exception, request, isBoardRead: false);
             }
             finally
             {
@@ -972,6 +1002,12 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     private void OnCountdownTick(object? sender, EventArgs args)
     {
         RefreshTurnCountdown();
+        Results.UpdateRoundPreview();
+        if (!IsLoadingBoard && !NeedsReconnect && !MatchUnavailable && !_isLeavingMatch && !_isSubmittingTurn
+            && _boardRetry.IsDue)
+        {
+            _ = RefreshBoardAsync();
+        }
     }
 
     private void SetBoardClocks(MatchBoardSnapshot board, Guid? playerId, long? receivedAt)

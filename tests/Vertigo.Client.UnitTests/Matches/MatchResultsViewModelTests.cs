@@ -7,20 +7,38 @@ namespace Vertigo.Client.UnitTests.Matches;
 public sealed class MatchResultsViewModelTests
 {
     [Fact]
-    public void ApplyBoard_RoundCloses_OffersScoresWithoutOpeningPanel()
+    public void ApplyBoard_RoundCloses_OpensPreviewThenCollapsesAndCanBeReopened()
     {
-        MatchResultsViewModel results = new(new ResultsText());
+        PreviewClock clock = new();
+        MatchResultsViewModel results = new(new ResultsText(), clock);
         MatchRoundSummary round = CreateRound(1, (5, 10), 15);
+        MatchBoardSnapshot board = new() { RoundNumber = 2, RoundSummaries = { round } };
 
-        results.ApplyBoard(new MatchBoardSnapshot { RoundNumber = 2, RoundSummaries = { round } });
+        results.ApplyBoard(board);
 
         Assert.True(results.HasResults);
         Assert.False(results.HasFinalResult);
-        Assert.False(results.IsExpanded);
+        Assert.True(results.IsRoundSummaryOpen);
         Assert.Equal("Ronda 1 finalizada", results.HeaderText);
         MatchRoundPlayerScore score = Assert.Single(results.SelectedScores);
         Assert.Equal("Ana", score.PlayerUsername);
         Assert.Equal((5, 10, 15), (score.FloorsBuilt, score.BonusFloors, score.TotalFloors));
+
+        clock.Advance(TimeSpan.FromSeconds(6));
+        results.UpdateRoundPreview();
+        Assert.True(results.IsRoundSummaryOpen);
+        results.ApplyBoard(board);
+        clock.Advance(TimeSpan.FromSeconds(1));
+        results.UpdateRoundPreview();
+        Assert.False(results.IsRoundSummaryOpen);
+        Assert.True(results.ShowRoundSummary);
+
+        results.ToggleRoundSummary();
+        clock.Advance(TimeSpan.FromSeconds(7));
+        results.UpdateRoundPreview();
+        Assert.True(results.IsRoundSummaryOpen);
+        results.ToggleRoundSummary();
+        Assert.False(results.IsRoundSummaryOpen);
     }
 
     [Fact]
@@ -124,11 +142,25 @@ public sealed class MatchResultsViewModelTests
         results.SelectedRound = results.Rounds.Single(round => round.RoundNumber == 1);
 
         Assert.True(results.ShowLatestTower);
-        Assert.False(results.IsExpanded);
+        Assert.True(results.IsRoundSummaryOpen);
         Assert.Equal(4, results.LatestTower!.BuiltFloors);
         Assert.Equal(10, results.SelectedTower!.BonusFloors);
         Assert.False(Assert.Single(results.SelectedTower.Segments).IsBonus);
         Assert.Equal(15, results.SelectedTower.TotalFloors);
+    }
+
+    private sealed class PreviewClock : TimeProvider
+    {
+        private long _timestamp;
+
+        public override long TimestampFrequency => TimeSpan.TicksPerSecond;
+
+        public override long GetTimestamp() => _timestamp;
+
+        public void Advance(TimeSpan duration)
+        {
+            _timestamp += duration.Ticks;
+        }
     }
 
     [Fact]

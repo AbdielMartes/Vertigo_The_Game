@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Runtime.Serialization;
+using System.ServiceModel;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Vertigo.Client.Core.Sessions;
@@ -12,6 +13,7 @@ using Vertigo.Client.UI.Utilities.Sessions.Services;
 using Vertigo.Client.UI.ViewModels;
 using Vertigo.Client.UI.ViewModels.Dependencies;
 using Vertigo.Client.UI.ViewModels.Presentation;
+using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
 using Xunit;
 
@@ -19,6 +21,28 @@ namespace Vertigo.Client.UnitTests.Matches;
 
 public sealed class MatchViewModelTests
 {
+    [Theory]
+    [InlineData(true, true, true)]
+    [InlineData(true, false, false)]
+    [InlineData(false, true, false)]
+    public void IsRetryableBoardFailure_TimeoutRequiresAReadWithNewerNotification(
+        bool isBoardRead, bool newerNotification, bool retryable)
+    {
+        Assert.Equal(retryable,
+            MatchViewModel.IsRetryableBoardFailure(new TimeoutException(), isBoardRead, newerNotification));
+    }
+
+    [Theory]
+    [InlineData(ServiceErrorCodes.Unexpected, true, true)]
+    [InlineData(ServiceErrorCodes.Unexpected, false, false)]
+    [InlineData(ServiceErrorCodes.Unauthorized, true, false)]
+    public void IsRetryableBoardFailure_OnlyRetriesUnexpectedServiceFaultOnRead(
+        string errorCode, bool isBoardRead, bool retryable)
+    {
+        FaultException<ServiceFault> fault = new(new ServiceFault { ErrorCode = errorCode });
+        Assert.Equal(retryable, MatchViewModel.IsRetryableBoardFailure(fault, isBoardRead, false));
+    }
+
     [Theory]
     [InlineData("es-MX", "Plano Maestro")]
     [InlineData("en-US", "Master Plan")]

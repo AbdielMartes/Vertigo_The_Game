@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Vertigo.Server.DataAccess.Contexts;
 using Vertigo.Server.DataAccess.Repositories.Implementations;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.DataAccess.Repositories.Statistics;
 
 namespace Vertigo.Server.DataAccess;
 
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<IFriendshipRepository, FriendshipRepository>();
         services.AddScoped<IBlockedPlayerRepository, BlockedPlayerRepository>();
         services.AddScoped<ISessionTokenRepository, SessionTokenRepository>();
+        services.AddScoped<MatchStatisticsRepository>();
 
         return services;
     }

@@ -10,7 +10,8 @@ namespace Vertigo.Server.Game.Matches.Implementations;
 // One synchronized in-memory registry for idempotent starts and terminal transitions.
 // Deliberately no automatic cancellation when lobby connections disappear (Phase 7B).
 public sealed class InMemoryMatchSessionStarter :
-    IMatchSessionStarter, IMatchLifecycle, IMatchPresence, IMatchStateReader, IMatchCommandService, IMatchRecovery
+    IMatchSessionStarter, IMatchLifecycle, IMatchPresence, IMatchStateReader, IMatchCommandService, IMatchRecovery,
+    ICompletedMatchSource
 {
     private const int MinimumPlayerCount = 2;
     private const int MaximumPlayerCount = 6;
@@ -18,6 +19,7 @@ public sealed class InMemoryMatchSessionStarter :
     private readonly object _syncRoot = new();
     private readonly Dictionary<Guid, MatchRecord> _matchesByLobby = new();
     private readonly Dictionary<Guid, MatchRecord> _matchesById = new();
+    private readonly OrderedDictionary<Guid, CompletedMatch> _pendingResults = new();
     private readonly TimeProvider _timeProvider;
 
     private readonly MatchJournal? _journal;
@@ -62,6 +64,11 @@ public sealed class InMemoryMatchSessionStarter :
             }
             else
             {
+                if (!_journal.AreStatisticsRecorded(header.Session.MatchId))
+                {
+                    TrackCompletedResult(record, header.Lobby);
+                }
+
                 _journalPositions.Remove(header.Session.MatchId);
             }
         }
@@ -91,6 +98,7 @@ public sealed class InMemoryMatchSessionStarter :
     private T Apply<T>(MatchRecord record, MatchJournal.Entry entry, Func<DateTimeOffset, T> operation)
     {
         Guid id = record.Session.MatchId;
+        bool wasTerminal = record.IsTerminal;
         (long Board, long Lifecycle) previous = (record.BoardRevision, record.Lifecycle.Revision);
         T result;
         try
@@ -116,7 +124,67 @@ public sealed class InMemoryMatchSessionStarter :
             throw;
         }
 
+        if (!wasTerminal && record.IsTerminal)
+        {
+            TrackCompletedResult(record, _journalPositions.GetValueOrDefault(id).Header?.Lobby);
+        }
+
         return result;
+    }
+
+    public IReadOnlyList<CompletedMatch> GetPendingResults(int limit)
+    {
+        lock (_syncRoot)
+        {
+            return _pendingResults.Values.Take(limit).ToArray();
+        }
+    }
+
+    public void AcknowledgeResult(Guid matchId)
+    {
+        _journal?.AcknowledgeStatistics(matchId);
+        lock (_syncRoot)
+        {
+            _pendingResults.Remove(matchId);
+        }
+    }
+
+    public void DeferResult(Guid matchId)
+    {
+        lock (_syncRoot)
+        {
+            if (_pendingResults.Remove(matchId, out CompletedMatch? result))
+            {
+                _pendingResults.Add(matchId, result);
+            }
+        }
+    }
+
+    private void TrackCompletedResult(MatchRecord record, RecoverableLobby? lobby)
+    {
+        MatchBoardSnapshot board = record.ToBoard();
+        if (board.EndReason == MatchEndReason.Completed)
+        {
+            HashSet<Guid>? registered = lobby?.Members.Where(member => !member.IsGuest)
+                .Select(member => member.PlayerId).ToHashSet();
+            var participants = board.Players.Where(player => registered is null || registered.Contains(player.PlayerId))
+                .Select(player => BuildPlayerResult(board, player.PlayerId)).ToArray();
+            if (participants.Length > 0)
+            {
+                _pendingResults[board.MatchId] = new CompletedMatch(board.MatchId,
+                    record.Lifecycle.UpdatedAtUtc.UtcDateTime, board.RoundSummaries.Count,
+                    board.Players.Max(player => player.GlobalFloors),
+                    board.WinnerIds.Count == 1 ? board.WinnerIds[0] : null, participants);
+            }
+        }
+    }
+
+    private static CompletedMatchPlayer BuildPlayerResult(MatchBoardSnapshot board, Guid playerId)
+    {
+        int[] floors = board.RoundSummaries.SelectMany(round => round.Players)
+            .Where(score => score.PlayerId == playerId).Select(score => score.FloorsBuilt).ToArray();
+        return new CompletedMatchPlayer(playerId, board.WinnerIds.Contains(playerId),
+            floors.Sum(), floors.DefaultIfEmpty().Max());
     }
 
     private MatchJournal.Entry Entry(string action, Guid player, object? payload = null)

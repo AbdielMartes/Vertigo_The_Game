@@ -17,6 +17,8 @@
   <data name="Lobby.LeaveFailed" xml:space="preserve"><value>No se pudo salir de la sala.</value></data>
   <data name="Authentication.Unauthorized" xml:space="preserve"><value>Tu sesión ya no es válida. Inicia sesión nuevamente.</value></data>
   <data name="Chat.LanguageBlocked" xml:space="preserve"><value>El mensaje contiene lenguaje no permitido. Edítalo y vuelve a enviarlo.</value></data>
+  <data name="Chat.ExplicitContent" xml:space="preserve"><value>Mensaje bloqueado por contenido explícito</value></data>
+  <data name="Match.Connection.SyncRetry" xml:space="preserve"><value>No se pudo actualizar el tablero. Se volverá a intentar en unos segundos.</value></data>
   <data name="Lobby.ChatNotAllowed" xml:space="preserve"><value>No puedes enviar mensajes en esta sala.</value></data>
   <data name="RegisterAccount.UsernameAlreadyRegistered" xml:space="preserve"><value>Ese nombre de usuario ya está registrado.</value></data>
   <data name="RegisterAccount.EmailAlreadyRegistered" xml:space="preserve"><value>Ese correo ya está registrado.</value></data>
@@ -653,4 +655,12 @@
   <data name="Match.Connection.Unavailable" xml:space="preserve">
     <value>La partida ya no está disponible en el servidor.</value>
   </data>
+  <data name="Ranking.Refresh" xml:space="preserve"><value>Actualizar</value></data>
+  <data name="Ranking.Player" xml:space="preserve"><value>Jugador</value></data>
+  <data name="Ranking.Wins" xml:space="preserve"><value>Victorias</value></data>
+  <data name="Ranking.Floors" xml:space="preserve"><value>Pisos construidos</value></data>
+  <data name="Ranking.Loading" xml:space="preserve"><value>Cargando…</value></data>
+  <data name="Ranking.Empty" xml:space="preserve"><value>Todavía no hay jugadores en el ranking.</value></data>
+  <data name="Profile.WinRate" xml:space="preserve"><value>Porcentaje de victorias</value></data>
+  <data name="Profile.NoMatches" xml:space="preserve"><value>Sin partidas terminadas</value></data>
 </root>

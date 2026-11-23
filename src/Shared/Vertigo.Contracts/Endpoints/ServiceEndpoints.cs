@@ -12,4 +12,5 @@ public static class ServiceEndpoints
     public static readonly string BlockedPlayerServiceAddress = $"net.tcp://localhost:{TcpPort}/BlockedPlayerService";
     public static readonly string ChatServiceAddress = $"net.tcp://localhost:{TcpPort}/ChatService";
     public static readonly string LobbyServiceAddress = $"net.tcp://localhost:{TcpPort}/LobbyService";
+    public static readonly string StatisticsServiceAddress = $"net.tcp://localhost:{TcpPort}/StatisticsService";
 }

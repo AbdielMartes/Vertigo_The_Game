@@ -10,22 +10,21 @@ namespace Vertigo.Server.Matchmaking.Chat.Services;
 [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall, ConcurrencyMode = ConcurrencyMode.Single)]
 public sealed class ChatService : IChatService
 {
-    private const int MaximumMessageLength = 30;
-
     private readonly ILobbyDirectory _lobbies;
     private readonly ChatServiceDependencies _dependencies;
 
     public ChatService(ILobbyDirectory lobbies, ChatServiceDependencies dependencies)
     {
+        ArgumentNullException.ThrowIfNull(lobbies);
+        ArgumentNullException.ThrowIfNull(dependencies);
         _lobbies = lobbies;
         _dependencies = dependencies;
     }
 
     public bool SendMessage(string lobbyCode, string text, string sessionToken)
     {
-        SessionIdentity sender = _dependencies.Sessions.Require(sessionToken);
-        if (string.IsNullOrWhiteSpace(lobbyCode) || string.IsNullOrWhiteSpace(text)
-            || text.Length > MaximumMessageLength)
+        SessionIdentity sender = _dependencies.Sessions.Require(sessionToken, nameof(SendMessage));
+        if (string.IsNullOrWhiteSpace(lobbyCode) || !MatchChatRules.CanSend(text))
         {
             throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
         }
@@ -35,8 +34,12 @@ public sealed class ChatService : IChatService
 
     public bool SendMatchMessage(MatchChatRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
-        SessionIdentity sender = _dependencies.Sessions.Require(request.SessionToken);
+        if (request is null)
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        SessionIdentity sender = _dependencies.Sessions.Require(request.SessionToken, nameof(SendMatchMessage));
         if (request.MatchId == Guid.Empty || string.IsNullOrWhiteSpace(request.LobbyCode)
             || !MatchChatRules.CanSend(request.Text))
         {

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.ServiceModel;
 using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Client.Networking.Results;
@@ -31,28 +30,25 @@ public sealed class ServiceCaller : IServiceCaller
             TResult value = operation(channel, argument);
             result = ClientResult<TResult>.Success(value);
         }
-        catch (FaultException<ServiceFault> ex)
+        catch (FaultException<ServiceFault> ex) when (ex.Detail is { } detail
+            && !string.IsNullOrWhiteSpace(detail.ErrorCode) && !string.IsNullOrWhiteSpace(detail.MessageKey))
         {
-            result = ClientResult<TResult>.BusinessFailure(ex.Detail.ErrorCode, ex.Detail.MessageKey);
+            result = ClientResult<TResult>.BusinessFailure(detail.ErrorCode, detail.MessageKey);
         }
-        catch (FaultException ex)
+        catch (FaultException)
         {
-            Debug.WriteLine($"ServiceCaller: server fault at {address}: {ex.GetType().Name}");
             result = ClientResult<TResult>.TechnicalFailure(FailureKind.Unexpected);
         }
-        catch (TimeoutException ex)
+        catch (TimeoutException)
         {
-            Debug.WriteLine($"ServiceCaller: timeout at {address}: {ex.GetType().Name}");
             result = ClientResult<TResult>.TechnicalFailure(FailureKind.Timeout);
         }
-        catch (CommunicationException ex)
+        catch (CommunicationException)
         {
-            Debug.WriteLine($"ServiceCaller: unreachable {address}: {ex.GetType().Name}");
             result = ClientResult<TResult>.TechnicalFailure(FailureKind.ServerUnreachable);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Debug.WriteLine($"ServiceCaller: unexpected failure at {address}: {ex.GetType().Name}");
             result = ClientResult<TResult>.TechnicalFailure(FailureKind.Unexpected);
         }
         finally

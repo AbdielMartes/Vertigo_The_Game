@@ -22,4 +22,7 @@ public sealed class LobbyChatMessage
 
     [DataMember]
     public DateTime SentAt { get; set; }
+
+    [DataMember(EmitDefaultValue = false, Order = 1)]
+    public long Sequence { get; set; }
 }

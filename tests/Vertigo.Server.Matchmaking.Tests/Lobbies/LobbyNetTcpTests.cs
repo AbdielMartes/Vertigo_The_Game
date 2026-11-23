@@ -126,6 +126,71 @@ public sealed class LobbyNetTcpTests
     }
 
     [Fact]
+    public async Task GetMatchUpdate_WhenSessionStoreIsUnavailable_RecoversCommittedGuestMove()
+    {
+        await using LobbyHarness server = await LobbyHarness.StartAsync();
+        var first = server.Guests.Create();
+        var second = server.Guests.Create();
+        string registered = server.SeedRegisteredSession(DateTime.UtcNow.AddMinutes(5), false);
+        ILobbyService lobby = server.Channel;
+        string code = lobby.CreateLobby(true, 3, first.Token);
+        lobby.JoinLobby(code, second.Token);
+        lobby.JoinLobby(code, registered);
+        lobby.SetReady(code, true, first.Token);
+        lobby.SetReady(code, true, second.Token);
+        lobby.SetReady(code, true, registered);
+        lobby.StartMatch(code, first.Token);
+        MatchBoardSnapshot before = lobby.GetMatchBoard(code, first.Token);
+        if (before.CurrentTurnPlayerId != first.PlayerId && before.CurrentTurnPlayerId != second.PlayerId)
+        {
+            before = PlayTurn(lobby, (code, registered), before);
+        }
+
+        string guest = before.CurrentTurnPlayerId == first.PlayerId ? first.Token : second.Token;
+        MatchSyncRequest read = new() { LobbyCode = code, MatchId = before.MatchId, SessionToken = registered };
+        using IServiceScope scope = server.Services.CreateScope();
+        VertigoDatabaseContext database = scope.ServiceProvider.GetRequiredService<VertigoDatabaseContext>();
+        database.Database.ExecuteSqlRaw("ALTER TABLE SessionTokens RENAME TO UnavailableSessions");
+
+        MatchBoardSnapshot played = PlayTurn(lobby, (code, guest), before);
+        FaultException<ServiceFault> fault = Assert.Throws<FaultException<ServiceFault>>(() => lobby.GetMatchUpdate(read));
+
+        Assert.True(played.Revision > before.Revision);
+        Assert.Equal(ServiceErrorCodes.Unexpected, fault.Detail.ErrorCode);
+        Assert.Contains(nameof(ILobbyService.GetMatchUpdate), Assert.Single(server.Log.Messages(2102)),
+            StringComparison.Ordinal);
+
+        database.Database.ExecuteSqlRaw("ALTER TABLE UnavailableSessions RENAME TO SessionTokens");
+        MatchSyncUpdate recovered = lobby.GetMatchUpdate(read);
+
+        Assert.Equal(played.Revision, recovered.Revision);
+        Assert.Equal(played.RecentMoves.Select(move => (move.ActionKind, move.PlayerId)),
+            recovered.RecentMoves!.Select(move => (move.ActionKind, move.PlayerId)));
+        Assert.Equal(played.Revision, lobby.GetMatchBoard(code, guest).Revision);
+    }
+
+    private static MatchBoardSnapshot PlayTurn(ILobbyService lobby, (string Code, string Token) access,
+        MatchBoardSnapshot board)
+    {
+        MatchPrivateHand hand = lobby.GetMatchPrivateHand(access.Code, access.Token);
+        (int Position, int Card) play = (from pile in board.Piles
+            from card in hand.Cards
+            where pile.TopCardNumber is int top && card > top && card - top <= 10
+            select (pile.Position, card)).FirstOrDefault();
+        return play.Card > 0
+            ? lobby.PlaceMatchCard(new MatchPlaceRequest
+            {
+                LobbyCode = access.Code, SessionToken = access.Token, PilePosition = play.Position,
+                CardNumber = play.Card, ExpectedRevision = board.Revision
+            })
+            : lobby.DismantleMatchTower(new MatchDismantleRequest
+            {
+                LobbyCode = access.Code, SessionToken = access.Token, PilePosition = board.Piles[0].Position,
+                ExpectedRevision = board.Revision
+            });
+    }
+
+    [Fact]
     public async Task CreateLobby_PlayerAlreadyInLobby_PreservesExistingRoom()
     {
         await using LobbyHarness server = await LobbyHarness.StartAsync();

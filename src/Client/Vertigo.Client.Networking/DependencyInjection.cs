@@ -24,6 +24,7 @@ public static class DependencyInjection
         services.AddTransient<IFriendshipClient, FriendshipClient>();
         services.AddTransient<ILobbyInvitationClient, LobbyInvitationClient>();
         services.AddTransient<IChatClient, ChatClient>();
+        services.AddTransient<IStatisticsClient, StatisticsClient>();
         services.AddSingleton<ISessionCoordinator, SessionCoordinator>();
         services.AddSingleton<ILobbyClient, LobbyClient>();
         services.AddSingleton<IFriendshipNotificationClient, FriendshipNotificationClient>();

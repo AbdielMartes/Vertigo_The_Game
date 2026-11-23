@@ -29,6 +29,10 @@
                     <TextBlock Text="{Binding Username}" FontSize="22" FontWeight="Bold"/>
                     <TextBlock Text="{Binding AccountText}" Foreground="{DynamicResource ColorTextSecondary}"/>
                     <TextBlock Text="{Binding AccountType}" FontSize="18"/>
+                    <StackPanel Spacing="4" IsVisible="{Binding ShowWinRate}">
+                        <TextBlock Text="{Binding WinRateText}" Foreground="{DynamicResource ColorTextSecondary}"/>
+                        <TextBlock Text="{Binding WinRate}" FontSize="18" TextWrapping="Wrap"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </StackPanel>

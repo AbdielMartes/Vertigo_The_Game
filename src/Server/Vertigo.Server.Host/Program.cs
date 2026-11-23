@@ -15,6 +15,7 @@ using Vertigo.Server.DataAccess;
 using Vertigo.Server.Game.Matches.DependencyInjection;
 using Vertigo.Server.Host.Logging;
 using Vertigo.Server.Host.Matches;
+using Vertigo.Server.Host.Transport;
 using Vertigo.Server.Matchmaking.Chat.Services;
 using Vertigo.Server.Matchmaking.Invitations.Services;
 using Vertigo.Server.Matchmaking.Lobbies.Match;
@@ -25,6 +26,7 @@ using Vertigo.Server.PlayerManagement.Authentication.Services;
 using Vertigo.Server.PlayerManagement.Blocking.Services;
 using Vertigo.Server.PlayerManagement.Friendships.Services;
 using Vertigo.Server.PlayerManagement.Registration.Services;
+using Vertigo.Server.PlayerManagement.Statistics;
 
 WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
 builder.Logging.ClearProviders();
@@ -66,6 +68,9 @@ try
     builder.Services.AddSingleton<LobbyLifecycle>();
     builder.Services.AddSingleton<LobbyService>();
     builder.Services.AddHostedService<MatchTurnClockWorker>();
+    builder.Services.AddScoped<CompletedMatchRecorder>();
+    builder.Services.AddTransient<StatisticsService>();
+    builder.Services.AddHostedService<MatchStatisticsWorker>();
     builder.Services.AddSingleton<ILobbyDirectory>(services => services.GetRequiredService<LobbyService>());
     builder.Services.AddTransient<LobbyInvitationFriendLookup>();
     builder.Services.AddTransient<LobbyInvitationOperations>();
@@ -77,8 +82,8 @@ try
     builder.Services.AddTransient<ChatService>();
 
     await using WebApplication app = builder.Build();
-    ILogger<LobbyDispatchErrors> lobbyLogger = app.Services.GetRequiredService<ILogger<LobbyDispatchErrors>>();
-    ((IApplicationBuilder)app).UseServiceModel(services => ConfigureServices(services, lobbyLogger));
+    ILogger<ServiceDispatchErrors> dispatchLogger = app.Services.GetRequiredService<ILogger<ServiceDispatchErrors>>();
+    ((IApplicationBuilder)app).UseServiceModel(services => ConfigureServices(services, dispatchLogger));
     app.Run();
 }
 finally
@@ -94,13 +99,15 @@ finally
     }
 }
 
-static void ConfigureServices(IServiceBuilder services, ILogger<LobbyDispatchErrors> lobbyLogger)
+static void ConfigureServices(IServiceBuilder services, ILogger<ServiceDispatchErrors> dispatchLogger)
 {
     NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
     services.AddService<AccountService>()
         .AddServiceEndpoint<AccountService, IAccountService>(binding, ServiceEndpoints.AccountServiceAddress);
     services.AddService<AuthenticationService>()
         .AddServiceEndpoint<AuthenticationService, IAuthService>(binding, ServiceEndpoints.AuthServiceAddress);
+    services.AddService<StatisticsService>()
+        .AddServiceEndpoint<StatisticsService, IStatisticsService>(binding, ServiceEndpoints.StatisticsServiceAddress);
     services.AddService<BlockedPlayerService>()
         .AddServiceEndpoint<BlockedPlayerService, IBlockedPlayerService>(
             binding, ServiceEndpoints.BlockedPlayerServiceAddress);
@@ -113,9 +120,21 @@ static void ConfigureServices(IServiceBuilder services, ILogger<LobbyDispatchErr
         .AddServiceEndpoint<ChatService, IChatService>(binding, ServiceEndpoints.ChatServiceAddress);
     services.AddService<LobbyService>()
         .AddServiceEndpoint<LobbyService, ILobbyService>(binding, ServiceEndpoints.LobbyServiceAddress);
-    services.ConfigureServiceHostBase<LobbyService>(host =>
-        host.Description.Behaviors.Add(new LobbyDispatchErrors(lobbyLogger)));
     services.AddService<LobbyInvitationService>()
         .AddServiceEndpoint<LobbyInvitationService, ILobbyInvitationService>(
             binding, ServiceEndpoints.LobbyInvitationServiceAddress);
+    AddDispatchErrors<AccountService>(services, dispatchLogger);
+    AddDispatchErrors<AuthenticationService>(services, dispatchLogger);
+    AddDispatchErrors<StatisticsService>(services, dispatchLogger);
+    AddDispatchErrors<BlockedPlayerService>(services, dispatchLogger);
+    AddDispatchErrors<FriendshipService>(services, dispatchLogger);
+    AddDispatchErrors<FriendshipNotificationService>(services, dispatchLogger);
+    AddDispatchErrors<ChatService>(services, dispatchLogger);
+    AddDispatchErrors<LobbyService>(services, dispatchLogger);
+    AddDispatchErrors<LobbyInvitationService>(services, dispatchLogger);
+}
+
+static void AddDispatchErrors<T>(IServiceBuilder services, ILogger<ServiceDispatchErrors> logger) where T : class
+{
+    services.ConfigureServiceHostBase<T>(host => host.Description.Behaviors.Add(new ServiceDispatchErrors(logger)));
 }

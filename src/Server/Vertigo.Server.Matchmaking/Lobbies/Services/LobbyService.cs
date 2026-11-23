@@ -761,11 +761,37 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
 
     public bool PublishChatMessage(LobbyChatMessage message)
     {
-        List<ILobbyCallback> callbacks = new();
+        LobbyState? lobby;
+        lock (_lobbyLock)
+        {
+            _lobbies.TryGetValue(message.LobbyCode, out lobby);
+        }
+
+        bool accepted = false;
+        if (lobby is not null)
+        {
+            // Keep callbacks in sequence for this lobby. The directory lock is used only to snapshot recipients.
+            lock (lobby.ChatDispatchLock)
+            {
+                accepted = TryGetChatCallbacks(lobby, message, out List<ILobbyCallback> callbacks);
+                if (accepted)
+                {
+                    message.Sequence = lobby.NextChatSequence();
+                    Notify(callbacks, CreateChatNotification(message));
+                }
+            }
+        }
+
+        return accepted;
+    }
+
+    private bool TryGetChatCallbacks(LobbyState lobby, LobbyChatMessage message, out List<ILobbyCallback> callbacks)
+    {
+        callbacks = new();
         bool accepted = false;
         lock (_lobbyLock)
         {
-            if (_lobbies.TryGetValue(message.LobbyCode, out LobbyState? lobby)
+            if (_lobbies.TryGetValue(message.LobbyCode, out LobbyState? current) && ReferenceEquals(current, lobby)
                 && lobby.Contains(message.SenderId))
             {
                 accepted = message.MatchId.HasValue
@@ -776,11 +802,6 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
                     callbacks = lobby.GetCallbacksExcept(Guid.Empty);
                 }
             }
-        }
-
-        if (accepted)
-        {
-            Notify(callbacks, CreateChatNotification(message));
         }
 
         return accepted;
@@ -847,9 +868,6 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     {
         using IServiceScope scope = _scopeFactory.CreateScope();
         ISessionIdentityResolver resolver = scope.ServiceProvider.GetRequiredService<ISessionIdentityResolver>();
-        ILogger<LobbyService> logger = scope.ServiceProvider.GetRequiredService<ILogger<LobbyService>>();
-        Dictionary<string, object> properties = new() { [LobbyDispatchErrors.SessionLookupScopeProperty] = true };
-        using IDisposable? diagnosticsScope = logger.BeginScope(properties);
         return resolver.Require(sessionToken, operation);
     }
 

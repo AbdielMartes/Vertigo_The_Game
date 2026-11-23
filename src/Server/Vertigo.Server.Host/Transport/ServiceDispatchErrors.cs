@@ -9,19 +9,19 @@ using Microsoft.Extensions.Logging;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
 
-namespace Vertigo.Server.Matchmaking.Lobbies.Services;
+namespace Vertigo.Server.Host.Transport;
 
-public sealed class LobbyDispatchErrors : IServiceBehavior, IErrorHandler
+internal sealed class ServiceDispatchErrors : IServiceBehavior, IErrorHandler, IDispatchMessageInspector
 {
-    public const string SessionLookupScopeProperty = "LobbySessionLookup";
-    private static readonly EventId InvalidMessageEvent = new(2101, "InvalidLobbyMessage");
-    private static readonly EventId UnexpectedFailureEvent = new(2102, "UnexpectedLobbyFailure");
+    internal const string FailureOwnerScope = "ServiceFailureOwner";
+    private static readonly EventId InvalidMessageEvent = new(2101, "InvalidServiceMessage");
+    private static readonly EventId UnexpectedFailureEvent = new(2102, "UnexpectedServiceFailure");
     private static readonly EventId ForbiddenLobbyAccessEvent = new(2103, "ForbiddenLobbyAccess");
 
-    private readonly ILogger<LobbyDispatchErrors> _logger;
+    private readonly ILogger<ServiceDispatchErrors> _logger;
     private readonly Dictionary<string, (string Operation, string FaultAction)> _operations = new();
 
-    public LobbyDispatchErrors(ILogger<LobbyDispatchErrors> logger)
+    public ServiceDispatchErrors(ILogger<ServiceDispatchErrors> logger)
     {
         ArgumentNullException.ThrowIfNull(logger);
         _logger = logger;
@@ -37,13 +37,28 @@ public sealed class LobbyDispatchErrors : IServiceBehavior, IErrorHandler
                 if (fault is not null && !operation.IsOneWay)
                 {
                     _operations.TryAdd(operation.Messages[0].Action, (operation.Name, fault.Action));
+                    if (!operation.OperationBehaviors.Contains(typeof(FailureScopeBehavior)))
+                    {
+                        operation.OperationBehaviors.Add(new FailureScopeBehavior(_logger));
+                    }
                 }
             }
         }
 
+        ServiceDebugBehavior? debug = description.Behaviors.Find<ServiceDebugBehavior>();
+        if (debug is not null)
+        {
+            debug.IncludeExceptionDetailInFaults = false;
+        }
+
         foreach (ChannelDispatcher dispatcher in host.ChannelDispatchers.OfType<ChannelDispatcher>())
         {
+            dispatcher.IncludeExceptionDetailInFaults = false;
             dispatcher.ErrorHandlers.Add(this);
+            foreach (EndpointDispatcher endpoint in dispatcher.Endpoints)
+            {
+                endpoint.DispatchRuntime.MessageInspectors.Add(this);
+            }
         }
     }
 
@@ -69,9 +84,10 @@ public sealed class LobbyDispatchErrors : IServiceBehavior, IErrorHandler
             return;
         }
 
-        if (error is FaultException<ServiceFault> translated)
+        if (error is FaultException<ServiceFault> { Detail: { } detail }
+            && !string.IsNullOrWhiteSpace(detail.ErrorCode) && !string.IsNullOrWhiteSpace(detail.MessageKey))
         {
-            LogSecurityRejection(contract.Operation, translated.Detail.ErrorCode);
+            LogSecurityRejection(contract.Operation, detail.ErrorCode);
         }
         else
         {
@@ -83,7 +99,7 @@ public sealed class LobbyDispatchErrors : IServiceBehavior, IErrorHandler
         (string Operation, string FaultAction) contract)
     {
         ServiceFault detail = new();
-        if (error is NetDispatcherFaultException { InnerException: XmlException or FormatException
+        if (error is EmptyRequestBodyException || error is NetDispatcherFaultException { InnerException: XmlException or FormatException
             or SerializationException } || error is CommunicationException { InnerException: SerializationException })
         {
             _logger.LogWarning(InvalidMessageEvent, "Could not deserialize request for {Operation}.",
@@ -103,6 +119,56 @@ public sealed class LobbyDispatchErrors : IServiceBehavior, IErrorHandler
 
         FaultException<ServiceFault> response = new(detail, new FaultReason(detail.ErrorCode));
         return Message.CreateMessage(version, response.CreateMessageFault(), contract.FaultAction);
+    }
+
+    public object? AfterReceiveRequest(ref Message request, IClientChannel channel, InstanceContext instanceContext)
+    {
+        if (request.IsEmpty && request.Headers.Action is string action && _operations.ContainsKey(action))
+        {
+            throw new EmptyRequestBodyException();
+        }
+
+        return null;
+    }
+
+    public void BeforeSendReply(ref Message reply, object correlationState)
+    {
+    }
+
+    private sealed class EmptyRequestBodyException() : Exception("The operation requires a SOAP body.");
+
+    private sealed class FailureScopeBehavior(ILogger logger) : IOperationBehavior
+    {
+        public void ApplyDispatchBehavior(OperationDescription operation, DispatchOperation dispatch)
+        {
+            dispatch.Invoker = new ScopedInvoker(dispatch.Invoker, logger);
+        }
+
+        public void AddBindingParameters(OperationDescription operation, BindingParameterCollection parameters)
+        {
+        }
+
+        public void ApplyClientBehavior(OperationDescription operation, ClientOperation client)
+        {
+        }
+
+        public void Validate(OperationDescription operation)
+        {
+        }
+    }
+
+    private sealed class ScopedInvoker(IOperationInvoker inner, ILogger logger) : IOperationInvoker
+    {
+        public object[] AllocateInputs()
+        {
+            return inner.AllocateInputs();
+        }
+
+        public async ValueTask<(object returnValue, object[] outputs)> InvokeAsync(object instance, object[] inputs)
+        {
+            using IDisposable? scope = logger.BeginScope(new Dictionary<string, object> { [FailureOwnerScope] = true });
+            return await inner.InvokeAsync(instance, inputs);
+        }
     }
 
     private void LogSecurityRejection(string operation, string code)

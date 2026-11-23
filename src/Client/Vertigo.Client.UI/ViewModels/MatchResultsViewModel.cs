@@ -9,7 +9,10 @@ namespace Vertigo.Client.UI.ViewModels;
 
 public sealed class MatchResultsViewModel : ViewModelBase
 {
+    private static readonly TimeSpan RoundPreviewDuration = TimeSpan.FromSeconds(7);
     private readonly ITextLocalizer _text;
+    private readonly TimeProvider _clock;
+    private long? _roundPreviewStarted;
     private IReadOnlyList<MatchRoundSummary> _roundSummaries = Array.Empty<MatchRoundSummary>();
     private IReadOnlyList<MatchRoundResultRow> _rounds = Array.Empty<MatchRoundResultRow>();
     private MatchRoundResultRow? _selectedRound;
@@ -22,9 +25,10 @@ public sealed class MatchResultsViewModel : ViewModelBase
     private IReadOnlyList<string> _winnerNames = Array.Empty<string>();
     private bool _isExpanded;
 
-    internal MatchResultsViewModel(ITextLocalizer text)
+    internal MatchResultsViewModel(ITextLocalizer text, TimeProvider? clock = null)
     {
         _text = text;
+        _clock = clock ?? TimeProvider.System;
     }
 
     public IReadOnlyList<MatchRoundSummary> RoundSummaries => _roundSummaries;
@@ -70,10 +74,19 @@ public sealed class MatchResultsViewModel : ViewModelBase
     public bool IsExpanded
     {
         get => _isExpanded;
-        set => SetProperty(ref _isExpanded, value);
+        set
+        {
+            if (SetProperty(ref _isExpanded, value))
+            {
+                _roundPreviewStarted = null;
+                OnPropertyChanged(nameof(IsRoundSummaryOpen));
+            }
+        }
     }
 
     public bool HasRoundSummaries => _roundSummaries.Count > 0;
+    public bool ShowRoundSummary => HasRoundSummaries && !HasFinalResult;
+    public bool IsRoundSummaryOpen => ShowRoundSummary && IsExpanded;
     public bool HasResults => HasRoundSummaries || HasFinalResult;
     public bool HasFinalResult => _endReason != MatchEndReason.None;
     public bool IsAbandonment => _endReason == MatchEndReason.Abandonment;
@@ -99,6 +112,7 @@ public sealed class MatchResultsViewModel : ViewModelBase
 
     internal void ApplyBoard(MatchBoardSnapshot board, Guid? localPlayerId = null)
     {
+        bool newRound = board.RoundSummaries.Count > _roundSummaries.Count;
         bool identityChanged = _localPlayerId != localPlayerId;
         _localPlayerId = localPlayerId;
         if (identityChanged || _roundSummaries.Count != board.RoundSummaries.Count)
@@ -114,11 +128,43 @@ public sealed class MatchResultsViewModel : ViewModelBase
             if (endedNow)
             {
                 IsExpanded = true;
+                _roundPreviewStarted = null;
             }
         }
 
+        if (newRound && !HasFinalResult)
+        {
+            if (!IsExpanded)
+            {
+                IsExpanded = true;
+                _roundPreviewStarted = _clock.GetTimestamp();
+            }
+            else if (_roundPreviewStarted.HasValue)
+            {
+                _roundPreviewStarted = _clock.GetTimestamp();
+            }
+        }
+
+        OnPropertyChanged(nameof(ShowRoundSummary));
+        OnPropertyChanged(nameof(IsRoundSummaryOpen));
         OnPropertyChanged(nameof(HasResults));
         OnPropertyChanged(nameof(HeaderText));
+    }
+
+    public void ToggleRoundSummary()
+    {
+        if (ShowRoundSummary)
+        {
+            IsExpanded = !IsExpanded;
+        }
+    }
+
+    internal void UpdateRoundPreview()
+    {
+        if (_roundPreviewStarted is long started && _clock.GetElapsedTime(started) >= RoundPreviewDuration)
+        {
+            IsExpanded = false;
+        }
     }
 
     internal void Reset()
@@ -133,6 +179,8 @@ public sealed class MatchResultsViewModel : ViewModelBase
         _finalStandings = Array.Empty<MatchFinalStandingRow>();
         IsExpanded = false;
         OnPropertyChanged(nameof(HasRoundSummaries));
+        OnPropertyChanged(nameof(ShowRoundSummary));
+        OnPropertyChanged(nameof(IsRoundSummaryOpen));
         RefreshFinalResult();
         OnPropertyChanged(nameof(HasResults));
         OnPropertyChanged(nameof(HeaderText));

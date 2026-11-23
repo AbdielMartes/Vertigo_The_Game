@@ -5,7 +5,7 @@ using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Formatting.Json;
-using Vertigo.Server.Matchmaking.Lobbies.Services;
+using Vertigo.Server.Host.Transport;
 
 namespace Vertigo.Server.Host.Logging;
 
@@ -36,7 +36,7 @@ internal static class ServerLoggingConfiguration
             .MinimumLevel.Override("Microsoft", frameworkLevel)
             .MinimumLevel.Override("System", frameworkLevel)
             .Enrich.FromLogContext()
-            .Filter.ByExcluding(IsLobbySessionLookupDatabaseEvent);
+            .Filter.ByExcluding(IsOwnedDatabaseDiagnostic);
 
         bool technicalAvailable = TryCreateDirectory(technicalDirectory);
         if (technicalAvailable)
@@ -170,13 +170,15 @@ internal static class ServerLoggingConfiguration
         return level;
     }
 
-    private static bool IsLobbySessionLookupDatabaseEvent(LogEvent logEvent)
+    private static bool IsOwnedDatabaseDiagnostic(LogEvent logEvent)
     {
-        return logEvent.Properties.ContainsKey(LobbyDispatchErrors.SessionLookupScopeProperty)
+        return logEvent.Level >= LogEventLevel.Error
+            && logEvent.Properties.ContainsKey(ServiceDispatchErrors.FailureOwnerScope)
             && logEvent.Properties.TryGetValue("SourceContext", out LogEventPropertyValue? source)
             && source is ScalarValue { Value: string category }
-            && (category.StartsWith("Microsoft.EntityFrameworkCore.Database.Command", StringComparison.Ordinal)
-                || category.StartsWith("Microsoft.EntityFrameworkCore.Query", StringComparison.Ordinal));
+            && (category.StartsWith("Microsoft.EntityFrameworkCore.Database", StringComparison.Ordinal)
+                || category.StartsWith("Microsoft.EntityFrameworkCore.Query", StringComparison.Ordinal)
+                || category.StartsWith("Microsoft.EntityFrameworkCore.Update", StringComparison.Ordinal));
     }
 
     private static bool IsSecurityEvent(LogEvent logEvent)

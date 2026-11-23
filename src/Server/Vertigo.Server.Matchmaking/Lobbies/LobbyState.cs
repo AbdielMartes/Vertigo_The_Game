@@ -14,6 +14,7 @@ public sealed class LobbyState
     private readonly HashSet<Guid> _readyPlayerIds = new();
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
     private long _revision;
+    private long _chatSequence;
     private Guid _matchId;
 
     public Guid LobbyInstanceId { get; }
@@ -24,6 +25,13 @@ public sealed class LobbyState
         new Dictionary<Guid, string>();
 
     public long Revision => _revision;
+
+    internal object ChatDispatchLock { get; } = new();
+
+    internal long NextChatSequence()
+    {
+        return ++_chatSequence;
+    }
 
     public LobbyState(LobbySettings settings, Guid? lobbyInstanceId = null)
     {

@@ -19,6 +19,7 @@
     <Using Include="Xunit" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="../../src/Server/Vertigo.Server.Game/Vertigo.Server.Game.csproj" />
+    <ProjectReference Include="../../src/Server/Vertigo.Server.Host/Vertigo.Server.Host.csproj" />
     <ProjectReference Include="../../src/Server/Vertigo.Server.Matchmaking/Vertigo.Server.Matchmaking.csproj" />
     <ProjectReference Include="../../src/Server/Vertigo.Server.PlayerManagement/Vertigo.Server.PlayerManagement.csproj" />
   </ItemGroup>

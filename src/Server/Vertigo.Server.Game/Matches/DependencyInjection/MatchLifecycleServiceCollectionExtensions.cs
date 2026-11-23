@@ -12,6 +12,7 @@ public static class MatchLifecycleServiceCollectionExtensions
 
         services.AddSingleton<InMemoryMatchSessionStarter>();
         services.AddSingleton<IMatchRecovery>(provider => provider.GetRequiredService<InMemoryMatchSessionStarter>());
+        services.AddSingleton<ICompletedMatchSource>(provider => provider.GetRequiredService<InMemoryMatchSessionStarter>());
         services.AddSingleton<IMatchSessionStarter>(provider =>
             provider.GetRequiredService<InMemoryMatchSessionStarter>());
         services.AddSingleton<IMatchLifecycle>(provider =>

@@ -98,6 +98,10 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <Style Selector="TextBlock.chat-notice">
+            <Setter Property="Foreground" Value="{DynamicResource ColorError}"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+        </Style>
         <Style Selector="Button:focus-visible">
             <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
             <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
@@ -161,8 +165,13 @@
                         <StackPanel Spacing="2">
                             <TextBlock Text="VÉRTIGO" FontSize="32" FontWeight="Bold"
                                        FontFamily="{DynamicResource FontTitleDisplay}"/>
-                            <TextBlock Text="{Binding TitleText}" FontSize="12"
-                                       Foreground="{DynamicResource ColorTextSecondary}"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{Binding TitleText}" FontSize="12" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource ColorTextSecondary}"/>
+                                <Button Classes="vertigo-button neutral match-compact"
+                                        IsVisible="{Binding Results.ShowRoundSummary}"
+                                        Content="{Binding Results.HeaderText}" Command="{Binding ToggleRoundSummaryCommand}"/>
+                            </StackPanel>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12"
                                     VerticalAlignment="Center">
@@ -229,12 +238,6 @@
                                       Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
                                 <TextBlock Grid.Column="1" Text="{Binding ErrorMessage}" TextWrapping="Wrap"/>
                             </Grid>
-                        </Border>
-                        <Border IsVisible="{Binding Results.HasRoundSummaries}">
-                            <ScrollViewer IsVisible="{Binding !Results.HasFinalResult}" MaxHeight="118"
-                                          HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                                <views:MatchResultsView DataContext="{Binding Results}"/>
-                            </ScrollViewer>
                         </Border>
                     </StackPanel>
 
@@ -433,7 +436,8 @@
                                                                                Foreground="{DynamicResource
                                                                                ColorTextSecondary}"/>
                                                                 </Grid>
-                                                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap"
+                                                                           Classes.chat-notice="{Binding IsNotice}"/>
                                                             </StackPanel>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
@@ -667,6 +671,13 @@
                     </Border>
                 </Grid>
             </Border>
+        </ScrollViewer>
+        <ScrollViewer x:Name="scrRoundSummary" IsVisible="{Binding Results.IsRoundSummaryOpen}"
+                      IsEnabled="{Binding !IsExitConfirmationOpen}" Margin="18,82,18,18"
+                      MaxWidth="550" MaxHeight="320" VerticalAlignment="Top"
+                      ScrollViewer.IsScrollChainingEnabled="False"
+                      HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <views:MatchResultsView DataContext="{Binding Results}"/>
         </ScrollViewer>
         <Border IsVisible="{Binding IsExitConfirmationOpen}" Background="{DynamicResource ColorCanvas}"
                 BorderBrush="{DynamicResource ColorCoal}" BorderThickness="2"

@@ -44,6 +44,7 @@ public partial class App : Application
             registrations.AddSingleton<IUserSettingsStore, JsonUserSettingsStore>();
             registrations.AddSingleton<SettingsViewModel>();
             registrations.AddSingleton<ProfileViewModel>();
+            registrations.AddSingleton<RankingViewModel>();
             registrations.AddTransient<MainScreensContext>();
             registrations.AddTransient<MainContext>();
             registrations.AddSingleton<AccessViewModel>();

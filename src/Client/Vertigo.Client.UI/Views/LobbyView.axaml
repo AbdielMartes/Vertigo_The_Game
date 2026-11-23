@@ -7,6 +7,10 @@
              x:DataType="vm:LobbyViewModel"
              x:CompileBindings="True">
     <UserControl.Styles>
+        <Style Selector="TextBlock.chat-notice">
+            <Setter Property="Foreground" Value="{DynamicResource ColorError}"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+        </Style>
         <Style Selector="Button:focus-visible">
             <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
             <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
@@ -118,27 +122,32 @@
                 <Border Grid.Column="2" Classes="vertigo-lobby-panel">
                     <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="12">
                         <TextBlock Text="{Binding ChatTitleText}" FontSize="21" FontWeight="SemiBold"/>
-                        <ListBox Grid.Row="1" ItemsSource="{Binding Messages}" TabIndex="3"
+                        <ListBox x:Name="lstLobbyChat" Grid.Row="1" ItemsSource="{Binding Messages}" TabIndex="3"
                                  MinHeight="260" MaxHeight="520"
                                  AutomationProperties.Name="{Binding ChatTitleText}">
                             <ListBox.ItemTemplate>
-                                <DataTemplate x:DataType="models:LobbyChatMessage">
+                                <DataTemplate x:DataType="presentation:MatchChatRow">
                                     <StackPanel Margin="4,8" Spacing="3">
-                                        <TextBlock Text="{Binding SenderUsername}" FontWeight="Bold"
+                                        <TextBlock Text="{Binding Sender}" FontWeight="Bold"
                                                    Foreground="{DynamicResource ColorSnesBlue}"/>
-                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"
+                                                   Classes.chat-notice="{Binding IsNotice}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                         <TextBox Grid.Row="2" Classes="vertigo-input" TabIndex="4"
-                                 MaxLength="500" AcceptsReturn="False"
+                                 MaxLength="{x:Static models:MatchChatRules.MaximumLength}" AcceptsReturn="False"
                                  Text="{Binding MessageText, Mode=TwoWay}"
                                  PlaceholderText="{Binding MessagePlaceholderText}"
-                                 AutomationProperties.Name="{Binding MessagePlaceholderText}"/>
+                                 AutomationProperties.Name="{Binding MessagePlaceholderText}">
+                            <TextBox.KeyBindings>
+                                <KeyBinding Gesture="Enter" Command="{Binding SendMessageCommand}"/>
+                            </TextBox.KeyBindings>
+                        </TextBox>
                         <Button Grid.Row="3" Classes="vertigo-button primary" TabIndex="5"
                                 Command="{Binding SendMessageCommand}"
-                                Content="{Binding SendText}" IsEnabled="{Binding !IsBusy}"/>
+                                Content="{Binding SendText}"/>
                     </Grid>
                 </Border>
             </Grid>

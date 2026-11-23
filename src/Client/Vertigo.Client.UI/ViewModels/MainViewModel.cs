@@ -28,6 +28,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         Social = context.SocialContext.Social;
         Settings = context.Settings;
         Profile = context.Profile;
+        Ranking = context.Screens.Ranking;
         _home = context.Home;
         _previousPage = _navigation.CurrentPage;
         _navigation.PageChanged += OnPageChanged;
@@ -43,6 +44,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     public SocialViewModel Social { get; }
     public SettingsViewModel Settings { get; }
     public ProfileViewModel Profile { get; }
+    public RankingViewModel Ranking { get; }
 
     public NavigationPage CurrentPage => _navigation.CurrentPage;
     public bool IsAccessPage => CurrentPage == NavigationPage.Access;
@@ -61,6 +63,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         NavigationPage.Social => Social,
         NavigationPage.Settings => Settings,
         NavigationPage.Profile => Profile,
+        NavigationPage.Ranking => Ranking,
         _ => Access
     };
 
@@ -119,6 +122,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             NavigationPage.Social => Social,
             NavigationPage.Settings => Settings,
             NavigationPage.Profile => Profile,
+            NavigationPage.Ranking => Ranking,
             _ => null
         };
     }

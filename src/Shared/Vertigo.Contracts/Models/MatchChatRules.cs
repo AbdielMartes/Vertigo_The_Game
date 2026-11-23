@@ -7,6 +7,6 @@ public static class MatchChatRules
     public static bool CanSend(string? message)
     {
         return !string.IsNullOrWhiteSpace(message) && message.Length <= MaximumLength
-            && !message.Contains('\r') && !message.Contains('\n');
+            && message.AsSpan().IndexOfAny("\r\n\u0085\u2028\u2029") < 0;
     }
 }

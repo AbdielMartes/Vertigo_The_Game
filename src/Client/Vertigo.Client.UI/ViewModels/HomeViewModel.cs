@@ -41,6 +41,7 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
         OpenPlayCommand = new RelayCommand(OpenPlay);
         ToggleNotificationsCommand = new RelayCommand(ToggleNotifications);
         OpenProfileCommand = new RelayCommand(OpenProfile);
+        OpenRankingCommand = new RelayCommand(OpenRanking);
         OpenSettingsCommand = new RelayCommand(OpenSettings);
     }
 
@@ -66,6 +67,7 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     public IRelayCommand OpenSocialCommand { get; }
     public IRelayCommand ToggleNotificationsCommand { get; }
     public IRelayCommand OpenProfileCommand { get; }
+    public IRelayCommand OpenRankingCommand { get; }
     public IRelayCommand OpenSettingsCommand { get; }
 
     public bool IsNotificationsOpen
@@ -135,6 +137,14 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
         if (!IsBusy && _coordinator.HasActiveSession())
         {
             _navigation.NavigateTo(NavigationPage.Profile);
+        }
+    }
+
+    private void OpenRanking()
+    {
+        if (!IsBusy && _coordinator.HasActiveSession())
+        {
+            _navigation.NavigateTo(NavigationPage.Ranking);
         }
     }
 

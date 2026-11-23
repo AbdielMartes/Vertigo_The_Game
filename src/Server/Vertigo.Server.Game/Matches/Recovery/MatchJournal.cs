@@ -14,6 +14,7 @@ internal sealed class MatchJournal
     internal sealed record Commit(Entry Entry, long BoardRevision, long LifecycleRevision);
 
     private const string StartFile = "start.json";
+    private const string StatisticsFile = "statistics-recorded.json";
     private const string FormatDirectory = "matches-v1";
     private readonly string _root;
 
@@ -39,6 +40,19 @@ internal sealed class MatchJournal
     public void Append(Guid matchId, int sequence, Commit commit)
     {
         RecoveryDirectory.Write(Path.Combine(MatchPath(matchId), EventName(sequence)), commit);
+    }
+
+    public bool AreStatisticsRecorded(Guid matchId)
+    {
+        return File.Exists(Path.Combine(MatchPath(matchId), StatisticsFile));
+    }
+
+    public void AcknowledgeStatistics(Guid matchId)
+    {
+        if (!AreStatisticsRecorded(matchId))
+        {
+            RecoveryDirectory.Write(Path.Combine(MatchPath(matchId), StatisticsFile), true);
+        }
     }
 
     public IEnumerable<Commit> ReadEvents(Guid matchId)

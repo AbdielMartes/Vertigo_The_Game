@@ -22,6 +22,8 @@ namespace Vertigo.Client.UI.ViewModels;
 
 public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationAware
 {
+    private const int MaximumRetainedChatMessages = 100;
+
     private readonly ILobbyClient _lobbyClient;
     private readonly IChatClient _chatClient;
     private readonly PlayerSession _playerSession;
@@ -65,7 +67,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         _lobbyClient.PlayerLeft += OnPlayerLeft;
         _lobbyClient.MessageReceived += OnMessageReceived;
         _lobbyClient.PreparationChanged += OnPreparationChanged;
-        SendMessageCommand = new AsyncRelayCommand(SendMessageAsync);
+        SendMessageCommand = new AsyncRelayCommand(SendMessageAsync, CanSendMessage);
         LeaveCommand = new AsyncRelayCommand(LeaveAsync);
         ToggleReadyCommand = new AsyncRelayCommand(ToggleReadyAsync);
         StartMatchCommand = new AsyncRelayCommand(StartMatchAsync);
@@ -75,7 +77,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
 
     public ObservableCollection<LobbyMember> Members { get; } = new();
     public ObservableCollection<LobbyMemberRow> MemberRows { get; } = new();
-    public ObservableCollection<LobbyChatMessage> Messages { get; } = new();
+    public ObservableCollection<MatchChatRow> Messages { get; } = new();
     public ObservableCollection<Guid> ReadyPlayerIds { get; } = new();
 
     public Guid HostPlayerId
@@ -105,13 +107,25 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
     public string LobbyCode
     {
         get => _lobbyCode;
-        private set => SetProperty(ref _lobbyCode, value);
+        private set
+        {
+            if (SetProperty(ref _lobbyCode, value))
+            {
+                SendMessageCommand.NotifyCanExecuteChanged();
+            }
+        }
     }
 
     public string MessageText
     {
         get => _messageText;
-        set => SetProperty(ref _messageText, value);
+        set
+        {
+            if (SetProperty(ref _messageText, value))
+            {
+                SendMessageCommand.NotifyCanExecuteChanged();
+            }
+        }
     }
 
     public string ErrorMessage
@@ -134,6 +148,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
             if (SetProperty(ref _isBusy, value))
             {
                 OnPropertyChanged(nameof(CanPrepare));
+                SendMessageCommand.NotifyCanExecuteChanged();
             }
         }
     }
@@ -407,9 +422,18 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         }
     }
 
+    private bool CanSendMessage()
+    {
+        return !IsBusy && !string.IsNullOrEmpty(LobbyCode) && MatchChatRules.CanSend(MessageText);
+    }
+
     private async Task SendMessageAsync()
     {
-        if (IsBusy || string.IsNullOrWhiteSpace(MessageText) || string.IsNullOrEmpty(LobbyCode)) return;
+        if (!CanSendMessage())
+        {
+            return;
+        }
+
         SessionSnapshot? session = _playerSession.GetActiveSession();
         if (session is null)
         {
@@ -417,21 +441,32 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
         }
         else
         {
-            string text = MessageText.Trim();
+            string text = MessageText;
+            string lobbyCode = LobbyCode;
+            long generation = _lobbyGeneration;
             IsBusy = true;
             ErrorMessage = string.Empty;
             try
             {
-                var result = await Task.Run(() => _chatClient.SendMessage(LobbyCode, text, session.Token));
+                var result = await Task.Run(() => _chatClient.SendMessage(lobbyCode, text, session.Token));
                 if (_errors.IsUnauthorized(result))
                 {
                     _coordinator.Invalidate(session);
                 }
-                else if (IsCurrentSession(session))
+                else if (IsCurrentSession(session) && generation == _lobbyGeneration)
                 {
-                    if (result.IsSuccess && result.Value)
+                    bool blocked = result.ErrorCode == ServiceErrorCodes.ChatLanguageBlocked;
+                    if (blocked)
                     {
-                        MessageText = string.Empty;
+                        AddChatRow(MatchChatRow.Blocked(session.Username, _text.Get("Chat.ExplicitContent")));
+                    }
+
+                    if (blocked || (result.IsSuccess && result.Value))
+                    {
+                        if (MessageText == text)
+                        {
+                            MessageText = string.Empty;
+                        }
                     }
                     else
                     {
@@ -439,7 +474,13 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
                     }
                 }
             }
-            catch (Exception ex) { HandleServiceFailure(ex, session, "Lobby.MessageFailed"); }
+            catch (Exception ex)
+            {
+                if (generation == _lobbyGeneration)
+                {
+                    HandleServiceFailure(ex, session, "Lobby.MessageFailed");
+                }
+            }
             finally { IsBusy = false; }
         }
     }
@@ -531,8 +572,19 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
                 return;
             }
             if (!_disposed && string.Equals(LobbyCode, message.LobbyCode, StringComparison.OrdinalIgnoreCase))
-                Messages.Add(message);
+            {
+                AddChatRow(MatchChatRow.FromMessage(message));
+            }
         });
+    }
+
+    private void AddChatRow(MatchChatRow row)
+    {
+        Messages.Add(row);
+        if (Messages.Count > MaximumRetainedChatMessages)
+        {
+            Messages.RemoveAt(0);
+        }
     }
 
     public void OnNavigatedTo()

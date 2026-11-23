@@ -8,6 +8,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using Vertigo.Contracts.Callbacks;
 using Vertigo.Contracts.Interfaces;
 using Vertigo.Contracts.Internal;
@@ -19,13 +20,17 @@ using Vertigo.Server.DataAccess.Contexts;
 using Vertigo.Server.DataAccess.Entities.Identity;
 using Vertigo.Server.DataAccess.Repositories.Implementations;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.DataAccess.Repositories.Statistics;
 using Vertigo.Server.Game.Matches.DependencyInjection;
+using Vertigo.Server.Host.Transport;
+using Vertigo.Server.Matchmaking.Chat.Services;
 using Vertigo.Server.Matchmaking.Lobbies.Match;
 using Vertigo.Server.Matchmaking.Lobbies.Services;
 using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
 using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
 using Vertigo.Server.PlayerManagement.Authentication.Services;
 using Vertigo.Server.PlayerManagement.Friendships.Services;
+using Vertigo.Server.PlayerManagement.Statistics;
 
 namespace Vertigo.Server.Matchmaking.Tests.Lobbies;
 
@@ -51,8 +56,19 @@ internal sealed class LobbyHarness : IAsyncDisposable
     public RecordingLogger Log => Services.GetRequiredService<RecordingLogger>();
     public IGuestSessionRegistry Guests => Services.GetRequiredService<IGuestSessionRegistry>();
 
-    public static async Task<LobbyHarness> StartAsync(SqliteConnection? retained = null,
+    public static Task<LobbyHarness> StartAsync(SqliteConnection? retained = null,
         RecoveryDirectory? recovery = null, TimeProvider? clock = null)
+    {
+        return StartAsync(retained, recovery, (clock, null));
+    }
+
+    public static Task<LobbyHarness> StartWithTechnicalLogAsync(Serilog.ILogger logger)
+    {
+        return StartAsync(null, null, (null, logger));
+    }
+
+    private static async Task<LobbyHarness> StartAsync(SqliteConnection? retained, RecoveryDirectory? recovery,
+        (TimeProvider? Clock, Serilog.ILogger? TechnicalLog) options)
     {
         int port = FindAvailablePort();
         SqliteConnection connection = retained ?? new("Data Source=:memory:");
@@ -64,9 +80,13 @@ internal sealed class LobbyHarness : IAsyncDisposable
         builder.Logging.ClearProviders();
         builder.Services.AddSingleton<RecordingLogger>();
         builder.Services.AddSingleton<ILoggerProvider>(services => services.GetRequiredService<RecordingLogger>());
+        if (options.TechnicalLog is { } logger)
+        {
+            builder.Services.AddSerilog(logger, dispose: false);
+        }
         builder.WebHost.UseNetTcp(IPAddress.Loopback, port);
         RegisterServices(builder.Services, connection);
-        builder.Services.AddSingleton<TimeProvider>(clock ?? TimeProvider.System);
+        builder.Services.AddSingleton<TimeProvider>(options.Clock ?? TimeProvider.System);
         if (recovery is not null)
         {
             builder.Services.AddSingleton(recovery);
@@ -82,8 +102,17 @@ internal sealed class LobbyHarness : IAsyncDisposable
             {
                 services.AddService<LobbyService>().AddServiceEndpoint<LobbyService, ILobbyService>(
                     new CoreWCF.NetTcpBinding(CoreWCF.SecurityMode.None), "/Lobby");
-                services.ConfigureServiceHostBase<LobbyService>(service => service.Description.Behaviors.Add(
-                    new LobbyDispatchErrors(host.Services.GetRequiredService<ILogger<LobbyDispatchErrors>>())));
+                services.AddService<ChatService>().AddServiceEndpoint<ChatService, IChatService>(
+                    new CoreWCF.NetTcpBinding(CoreWCF.SecurityMode.None), "/ChatService");
+                services.AddService<StatisticsService>().AddServiceEndpoint<StatisticsService, IStatisticsService>(
+                    new CoreWCF.NetTcpBinding(CoreWCF.SecurityMode.None), "/StatisticsService");
+                var dispatchLogger = host.Services.GetRequiredService<ILogger<ServiceDispatchErrors>>();
+                services.ConfigureServiceHostBase<LobbyService>(service =>
+                    service.Description.Behaviors.Add(new ServiceDispatchErrors(dispatchLogger)));
+                services.ConfigureServiceHostBase<ChatService>(service =>
+                    service.Description.Behaviors.Add(new ServiceDispatchErrors(dispatchLogger)));
+                services.ConfigureServiceHostBase<StatisticsService>(service =>
+                    service.Description.Behaviors.Add(new ServiceDispatchErrors(dispatchLogger)));
             });
             await host.StartAsync();
             EndpointAddress address = new($"net.tcp://127.0.0.1:{port}/Lobby");
@@ -115,6 +144,13 @@ internal sealed class LobbyHarness : IAsyncDisposable
         services.AddSingleton<LobbyGameOperations>();
         services.AddSingleton<LobbyLifecycle>();
         services.AddSingleton<LobbyService>();
+        services.AddSingleton<ILobbyDirectory>(provider => provider.GetRequiredService<LobbyService>());
+        services.AddSingleton<ChatLanguageFilter>();
+        services.AddScoped<ChatServiceDependencies>();
+        services.AddTransient<ChatService>();
+        services.AddScoped<MatchStatisticsRepository>();
+        services.AddScoped<CompletedMatchRecorder>();
+        services.AddTransient<StatisticsService>();
     }
 
     public string SeedRegisteredSession(DateTime expiration, bool revoked)
@@ -184,7 +220,7 @@ internal sealed class RecordingLogger : ILoggerProvider
         return _entries.Where(entry => entry.Id == id).Select(entry => entry.Message);
     }
 
-    public ILogger CreateLogger(string categoryName)
+    public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName)
     {
         return new Capture(_entries);
     }
@@ -193,7 +229,7 @@ internal sealed class RecordingLogger : ILoggerProvider
     {
     }
 
-    private sealed class Capture(ConcurrentQueue<(int Id, string Message)> entries) : ILogger
+    private sealed class Capture(ConcurrentQueue<(int Id, string Message)> entries) : Microsoft.Extensions.Logging.ILogger
     {
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull
         {

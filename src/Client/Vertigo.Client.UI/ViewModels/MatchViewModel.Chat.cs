@@ -8,6 +8,7 @@ using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking.Interfaces;
 using Vertigo.Client.Networking.Results;
 using Vertigo.Client.UI.ViewModels.Presentation;
+using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
 
 namespace Vertigo.Client.UI.ViewModels;
@@ -101,13 +102,25 @@ public sealed partial class MatchViewModel
         {
             _guard?.Invalidate(identity.Session);
         }
-        else if (!result.IsSuccess || !result.Value)
+        else
         {
-            ChatErrorMessage = _errors?.FromResult(result, ChatSendFailed) ?? _text.Get(ChatSendFailed);
-        }
-        else if (DraftMessage == sentText)
-        {
-            DraftMessage = string.Empty;
+            bool blocked = result.ErrorCode == ServiceErrorCodes.ChatLanguageBlocked;
+            if (blocked)
+            {
+                AddChatRow(MatchChatRow.Blocked(identity.Session.Username, _text.Get("Chat.ExplicitContent")));
+            }
+
+            if (blocked || (result.IsSuccess && result.Value))
+            {
+                if (DraftMessage == sentText)
+                {
+                    DraftMessage = string.Empty;
+                }
+            }
+            else
+            {
+                ChatErrorMessage = _errors?.FromResult(result, ChatSendFailed) ?? _text.Get(ChatSendFailed);
+            }
         }
     }
 
@@ -132,12 +145,12 @@ public sealed partial class MatchViewModel
             return;
         }
 
-        ChatMessages.Add(new MatchChatRow
-        {
-            Sender = message.SenderUsername,
-            Text = message.Text,
-            SentAt = message.SentAt
-        });
+        AddChatRow(MatchChatRow.FromMessage(message));
+    }
+
+    private void AddChatRow(MatchChatRow row)
+    {
+        ChatMessages.Add(row);
         if (ChatMessages.Count > MaximumRetainedChatMessages)
         {
             ChatMessages.RemoveAt(0);

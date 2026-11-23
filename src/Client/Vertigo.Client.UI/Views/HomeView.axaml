@@ -121,7 +121,7 @@
                         </StackPanel>
                     </Button>
                     <Button Classes="vertigo-home-action" TabIndex="7"
-                            IsEnabled="False" AutomationProperties.HelpText="{Binding NotAvailableText}">
+                            Command="{Binding OpenRankingCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="18">
                             <Path Width="32" Height="32" Stretch="Uniform"
                                   Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.6"

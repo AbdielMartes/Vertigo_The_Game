@@ -9,5 +9,6 @@ public enum NavigationPage
     Match,
     Social,
     Settings,
-    Profile
+    Profile,
+    Ranking
 }
