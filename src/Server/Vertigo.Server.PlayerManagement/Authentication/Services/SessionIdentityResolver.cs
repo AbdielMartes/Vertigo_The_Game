@@ -66,7 +66,10 @@ public sealed class SessionIdentityResolver : ISessionIdentityResolver
                 SessionToken? session = _sessionTokenRepository.GetActiveSessionToken(tokenHash);
                 if (session is not null)
                 {
-                    identity = new SessionIdentity(session.PlayerId, session.Player.Username, false);
+                    identity = new SessionIdentity(session.PlayerId, session.Player.Username, false)
+                    {
+                        AvatarId = session.Player.AvatarId
+                    };
                 }
             }
         }

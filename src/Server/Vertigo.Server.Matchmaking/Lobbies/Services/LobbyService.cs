@@ -877,6 +877,7 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
         {
             PlayerId = identity.PlayerId,
             Username = identity.Username,
+            AvatarId = identity.AvatarId,
             IsGuest = identity.IsGuest
         };
     }

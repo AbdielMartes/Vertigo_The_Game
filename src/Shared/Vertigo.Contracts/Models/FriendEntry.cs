@@ -10,4 +10,6 @@ public class FriendEntry
 
     [DataMember]
     public string Username { get; set; } = string.Empty;
+    [DataMember(Order = 1)]
+    public int? AvatarId { get; set; }
 }

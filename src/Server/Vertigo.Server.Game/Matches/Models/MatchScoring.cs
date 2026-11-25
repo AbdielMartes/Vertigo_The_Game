@@ -7,6 +7,8 @@ internal sealed class MatchScoring
     private const int HighestTowerBonus = 10;
     private readonly List<RoundScore> _rounds = new();
 
+    public bool HasCompletedRounds => _rounds.Count > 0;
+
     public void AddRound(IReadOnlyDictionary<Guid, int> floors, Guid? closedBy)
     {
         int highest = floors.Values.Max();

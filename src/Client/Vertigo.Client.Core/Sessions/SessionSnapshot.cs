@@ -6,6 +6,8 @@ public sealed record SessionSnapshot
 
     public required string Username { get; init; }
 
+    public int? AvatarId { get; init; }
+
     public required string Token { get; init; }
 
     public required DateTime ExpiresAt { get; init; }

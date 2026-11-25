@@ -31,6 +31,14 @@ public sealed class AccountClient : IAccountClient
             (change, sessionToken));
     }
 
+    public ClientResult<bool> UpdateProfile(ProfileUpdate profile, string sessionToken)
+    {
+        return _serviceCaller.Call<IAccountService, (ProfileUpdate Profile, string Token), bool>(
+            ServiceEndpoints.AccountServiceAddress,
+            (channel, args) => channel.UpdateProfile(args.Profile, args.Token),
+            (profile, sessionToken));
+    }
+
     private static bool RegisterAccountOperation(IAccountService channel, AccountRegistration request)
     {
         return channel.RegisterAccount(request);

@@ -19,4 +19,23 @@ public sealed class StatisticsClient(IServiceCaller serviceCaller) : IStatistics
         return serviceCaller.Call<IStatisticsService, string, PlayerMatchRecord>(
             ServiceEndpoints.StatisticsServiceAddress, (channel, token) => channel.GetMyRecord(token), sessionToken);
     }
+    public ClientResult<List<RankingEntry>> GetFriendsRanking(string sessionToken)
+    {
+        return serviceCaller.Call<IStatisticsService, string, List<RankingEntry>>(
+            ServiceEndpoints.StatisticsServiceAddress, (channel, token) => channel.GetFriendsRanking(token), sessionToken);
+    }
+
+    public ClientResult<List<RankingEntry>> GetCountryRanking(string sessionToken)
+    {
+        return serviceCaller.Call<IStatisticsService, string, List<RankingEntry>>(
+            ServiceEndpoints.StatisticsServiceAddress, (channel, token) => channel.GetCountryRanking(token), sessionToken);
+    }
+
+    public ClientResult<PublicPlayerProfile> GetPlayerProfile(Guid playerId, string sessionToken)
+    {
+        return serviceCaller.Call<IStatisticsService, (Guid PlayerId, string Token), PublicPlayerProfile>(
+            ServiceEndpoints.StatisticsServiceAddress,
+            (channel, args) => channel.GetPlayerProfile(args.PlayerId, args.Token),
+            (playerId, sessionToken));
+    }
 }

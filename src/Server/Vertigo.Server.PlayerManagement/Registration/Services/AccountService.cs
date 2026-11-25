@@ -5,7 +5,9 @@ using Vertigo.Contracts.Models;
 using Vertigo.Registration;
 using Vertigo.Server.CrossCutting.Security.Interfaces;
 using Vertigo.Server.DataAccess.Entities.Identity;
+using Vertigo.Server.DataAccess.Repositories;
 using Vertigo.Server.DataAccess.Repositories.Interfaces;
+using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
 
 namespace Vertigo.Server.PlayerManagement.Registration.Services;
 
@@ -15,15 +17,18 @@ public class AccountService : IAccountService
     private readonly IPlayerRepository _playerRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly AccountPasswordService _passwordService;
+    private readonly ISessionIdentityResolver _sessions;
 
     public AccountService(
         IPlayerRepository playerRepository,
         IPasswordHasher passwordHasher,
-        AccountPasswordService passwordService)
+        AccountPasswordService passwordService,
+        ISessionIdentityResolver sessions)
     {
         _playerRepository = playerRepository;
         _passwordHasher = passwordHasher;
         _passwordService = passwordService;
+        _sessions = sessions;
     }
 
     public bool RegisterAccount(AccountRegistration registration)
@@ -67,6 +72,37 @@ public class AccountService : IAccountService
     public bool ChangePassword(PasswordChange change, string sessionToken)
     {
         return _passwordService.ChangePassword(change, sessionToken);
+    }
+
+    public bool UpdateProfile(ProfileUpdate profile, string sessionToken)
+    {
+        Guid playerId = _sessions.RequireRegistered(sessionToken).PlayerId;
+        if (profile is null || RegistrationRules.ValidateUsername(profile.Username) != FieldValidationError.None)
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        string? country = CountryCatalog.Normalize(profile.CountryCode);
+        bool hasInvalidCountry = !string.IsNullOrWhiteSpace(profile.CountryCode) && country is null;
+        bool hasInvalidAvatar = profile.AvatarId is int avatar && !Enum.IsDefined((ProfileAvatar)avatar);
+        if (hasInvalidCountry || hasInvalidAvatar)
+        {
+            throw CreateFault(ServiceErrorCodes.InvalidData, ServiceMessageKeys.InvalidData);
+        }
+
+        PlayerProfileUpdateResult result = _playerRepository.UpdateProfile(
+            playerId, profile.Username.Trim(), country, profile.AvatarId);
+        if (result == PlayerProfileUpdateResult.UsernameTaken)
+        {
+            throw CreateFault(ServiceErrorCodes.UsernameAlreadyRegistered, ServiceMessageKeys.UsernameAlreadyRegistered);
+        }
+
+        if (result == PlayerProfileUpdateResult.PlayerNotFound)
+        {
+            throw CreateFault(ServiceErrorCodes.Unauthorized, ServiceMessageKeys.Unauthorized);
+        }
+
+        return result == PlayerProfileUpdateResult.Updated;
     }
 
     private static FaultException<ServiceFault> CreateFault(string errorCode, string messageKey)

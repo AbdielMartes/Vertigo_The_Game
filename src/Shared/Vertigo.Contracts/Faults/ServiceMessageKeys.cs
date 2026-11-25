@@ -9,6 +9,7 @@ public static class ServiceMessageKeys
     public const string LobbyFull = "ROOM_FULL";    
     public const string LobbyAlreadyStarted = "MSG-ROOM-009";
     public const string InvalidLobbyCapacity = "MSG-ROOM-011";
+    public const string RankingCountryRequired = "Ranking.CountryRequired";
     public const string InvalidData = "ErrorInvalidData";
     public const string Unexpected = "Error.Unknown";
     public const string UserNotFound = "ErrorUserNotFound";

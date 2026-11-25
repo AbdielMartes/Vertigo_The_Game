@@ -8,6 +8,8 @@ namespace Vertigo.Server.DataAccess.Contexts;
 
 public class VertigoDatabaseContext : DbContext
 {
+    private const int CountryCodeLength = 2;
+
     public DbSet<Player> Players => Set<Player>();
     public DbSet<PlayerStats> PlayerStats => Set<PlayerStats>();
     public DbSet<SessionToken> SessionTokens => Set<SessionToken>();
@@ -17,6 +19,26 @@ public class VertigoDatabaseContext : DbContext
 
     public VertigoDatabaseContext(DbContextOptions<VertigoDatabaseContext> options) : base(options)
     {
+    }
+
+    public void UpgradeExistingSchema()
+    {
+        if (!Database.IsSqlServer())
+        {
+            throw new InvalidOperationException("Schema provisioning requires SQL Server.");
+        }
+
+        ApplySchemaScript("001_ReducePlayerRegistrationLengths.sql");
+        ApplySchemaScript("002_AddPlayerCountryCode.sql");
+    }
+
+    private void ApplySchemaScript(string fileName)
+    {
+        string resource = "Vertigo.Server.DataAccess.Sql." + fileName;
+        using Stream script = typeof(VertigoDatabaseContext).Assembly.GetManifestResourceStream(resource)
+            ?? throw new InvalidOperationException($"Schema script {fileName} is missing.");
+        using StreamReader reader = new(script);
+        Database.ExecuteSqlRaw(reader.ReadToEnd());
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +63,7 @@ public class VertigoDatabaseContext : DbContext
             player.Property(p => p.Email).HasMaxLength(RegistrationRules.EmailMaximumLength).IsRequired();
             player.Property(p => p.PasswordHash).HasMaxLength(256).IsRequired();
             player.Property(p => p.PasswordSalt).HasMaxLength(128).IsRequired();
+            player.Property(p => p.CountryCode).IsUnicode(false).HasMaxLength(CountryCodeLength);
             player.Property(p => p.IsEmailVerified).HasDefaultValue(false);
             player.Property(p => p.CreatedAt).HasColumnType("datetime2").HasDefaultValueSql("SYSUTCDATETIME()");
             player.Property(p => p.LastLoginAt).HasColumnType("datetime2");

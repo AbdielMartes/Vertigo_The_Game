@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
              xmlns:models="using:Vertigo.Contracts.Models"
+             xmlns:resources="using:Vertigo.Client.UI.Resources"
+             xmlns:conv="using:Avalonia.Data.Converters"
              x:Class="Vertigo.Client.UI.Views.SocialView"
              x:DataType="vm:SocialViewModel" x:CompileBindings="True">
     <UserControl.Styles>
@@ -10,6 +12,9 @@
             <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
         </Style>
     </UserControl.Styles>
+    <UserControl.Resources>
+        <resources:AvatarImageConverter x:Key="AvatarImage"/>
+    </UserControl.Resources>
     <ScrollViewer Background="{DynamicResource ColorCanvas}" HorizontalScrollBarVisibility="Auto">
         <StackPanel MinWidth="760" Margin="28" Spacing="20">
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="18">
@@ -46,12 +51,20 @@
                                          MinHeight="180" MaxHeight="320">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate x:DataType="models:FriendEntry">
-                                            <TextBlock Text="{Binding Username}" Margin="8"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="8">
+                                                <Image Width="28" Height="28" Source="{Binding AvatarId, Converter={StaticResource AvatarImage}}"/>
+                                                <TextBlock Text="{Binding Username}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </StackPanel>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
                                 <Button Classes="vertigo-button neutral" Command="{Binding Friends.RemoveCommand}"
                                         Content="{Binding RemoveFriendText}" TabIndex="6"/>
+                                <Button Classes="vertigo-button neutral"
+                                        IsVisible="{Binding SelectedFriend, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+                                        Command="{Binding ViewProfileCommand}"
+                                        CommandParameter="{Binding SelectedFriend.PlayerId}"
+                                        Content="{Binding ViewProfileText}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Spacing="8">
                                 <TextBlock Text="{Binding SearchResultsText}" FontWeight="Bold"/>
@@ -60,12 +73,20 @@
                                          MinHeight="180" MaxHeight="320">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate x:DataType="models:PlayerSearchEntry">
-                                            <TextBlock Text="{Binding Username}" Margin="8"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="8">
+                                                <Image Width="28" Height="28" Source="{Binding AvatarId, Converter={StaticResource AvatarImage}}"/>
+                                                <TextBlock Text="{Binding Username}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </StackPanel>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
                                 <Button Classes="vertigo-button primary" TabIndex="8"
                                         Content="{Binding SendRequestText}" Command="{Binding Friends.SendRequestCommand}"/>
+                                <Button Classes="vertigo-button neutral"
+                                        IsVisible="{Binding SelectedSearch, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+                                        Command="{Binding ViewProfileCommand}"
+                                        CommandParameter="{Binding SelectedSearch.PlayerId}"
+                                        Content="{Binding ViewProfileText}"/>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -76,7 +97,10 @@
                                  SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" MinHeight="200">
                             <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="models:FriendshipInvitationEntry">
-                                    <TextBlock Text="{Binding SenderUsername}" Margin="8"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="8">
+                                        <Image Width="28" Height="28" Source="{Binding AvatarId, Converter={StaticResource AvatarImage}}"/>
+                                        <TextBlock Text="{Binding SenderUsername}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -86,6 +110,11 @@
                                     Command="{Binding Friends.AcceptCommand}"/>
                             <Button Classes="vertigo-button neutral" Content="{Binding RejectText}" TabIndex="11"
                                     Command="{Binding Friends.RejectCommand}"/>
+                            <Button Classes="vertigo-button neutral"
+                                    IsVisible="{Binding SelectedRequest, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+                                    Command="{Binding ViewProfileCommand}"
+                                    CommandParameter="{Binding SelectedRequest.SenderId}"
+                                    Content="{Binding ViewProfileText}"/>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
@@ -95,7 +124,13 @@
                                  SelectedItem="{Binding SelectedInvitation, Mode=TwoWay}" MinHeight="200">
                             <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="models:LobbyInvitationEntry">
-                                    <TextBlock Text="{Binding LobbyCode}" Margin="8"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="8">
+                                        <Image Width="28" Height="28" Source="{Binding AvatarId, Converter={StaticResource AvatarImage}}"/>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding SenderUsername}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding LobbyCode}"/>
+                                        </StackPanel>
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -105,6 +140,11 @@
                                     Command="{Binding Invitations.AcceptCommand}"/>
                             <Button Classes="vertigo-button neutral" Content="{Binding RejectText}" TabIndex="14"
                                     Command="{Binding Invitations.DeclineCommand}"/>
+                            <Button Classes="vertigo-button neutral"
+                                    IsVisible="{Binding SelectedInvitation, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+                                    Command="{Binding ViewProfileCommand}"
+                                    CommandParameter="{Binding SelectedInvitation.SenderId}"
+                                    Content="{Binding ViewProfileText}"/>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
@@ -114,13 +154,21 @@
                                  SelectedItem="{Binding SelectedBlocked, Mode=TwoWay}" MinHeight="200">
                             <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="models:BlockedPlayerSummary">
-                                    <TextBlock Text="{Binding Username}" Margin="8"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="8">
+                                        <Image Width="28" Height="28" Source="{Binding AvatarId, Converter={StaticResource AvatarImage}}"/>
+                                        <TextBlock Text="{Binding Username}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                         <TextBlock Text="{Binding Blocked.ErrorMessage}" Foreground="{DynamicResource ColorError}"/>
                         <Button Classes="vertigo-button neutral" Content="{Binding UnblockText}"
                                 TabIndex="16" Command="{Binding Blocked.UnblockCommand}"/>
+                        <Button Classes="vertigo-button neutral"
+                                IsVisible="{Binding SelectedBlocked, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+                                Command="{Binding ViewProfileCommand}"
+                                CommandParameter="{Binding SelectedBlocked.PlayerId}"
+                                Content="{Binding ViewProfileText}"/>
                     </StackPanel>
                 </TabItem>
             </TabControl>

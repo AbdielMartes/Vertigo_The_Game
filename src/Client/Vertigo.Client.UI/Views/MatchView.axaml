@@ -254,8 +254,14 @@
                                             <Border Classes="match-player" Padding="6,10"
                                                     Classes.active-turn="{Binding IsCurrentTurn}">
                                                 <StackPanel Spacing="5">
-                                                    <TextBlock Text="{Binding Username}" FontWeight="SemiBold"
-                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                                                        <Image Width="24" Height="24" Source="{Binding Avatar}"/>
+                                                        <TextBlock Grid.Column="1"
+                                                                   VerticalAlignment="Center"
+                                                                   FontWeight="SemiBold"
+                                                                   TextTrimming="CharacterEllipsis"
+                                                                   Text="{Binding Username}"/>
+                                                    </Grid>
                                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                                         <Path
                                                               Width="15"

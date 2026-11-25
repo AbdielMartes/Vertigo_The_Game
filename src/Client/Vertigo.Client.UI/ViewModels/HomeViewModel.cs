@@ -1,11 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vertigo.Client.Core.Navigation;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking.Results;
 using Vertigo.Client.Networking.Sessions.Interfaces;
+using Vertigo.Client.UI.Resources;
 using Vertigo.Client.UI.ViewModels.Dependencies;
 using Vertigo.Client.UI.ViewModels.Lifecycle;
 using Vertigo.Client.UI.Utilities.Localization.Interfaces;
@@ -49,6 +51,7 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     public IRelayCommand OpenPlayCommand { get; }
 
     public string Username => _playerSession.GetActiveSession()?.Username ?? string.Empty;
+    public IImage? Avatar => AvatarCatalog.Resolve(_playerSession.GetActiveSession()?.AvatarId);
     public bool IsGuest => _playerSession.GetActiveSession()?.IsGuest ?? false;
 
     public string ErrorMessage
@@ -114,6 +117,7 @@ public sealed class HomeViewModel : ObservableObject, INavigationAware
     public void RefreshIdentity()
     {
         OnPropertyChanged(nameof(Username));
+        OnPropertyChanged(nameof(Avatar));
         OnPropertyChanged(nameof(IsGuest));
         OnPropertyChanged(nameof(PlayerTag));
         OnPropertyChanged(nameof(AccountKindText));

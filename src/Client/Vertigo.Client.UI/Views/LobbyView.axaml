@@ -69,9 +69,7 @@
                                     <Border BorderBrush="{DynamicResource ColorDivider}" BorderThickness="0,0,0,1"
                                             Padding="6,12">
                                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-                                            <Path Width="28" Height="28" Stretch="Uniform"
-                                                  Stroke="{DynamicResource ColorSnesBlue}" StrokeThickness="1.7"
-                                                  Data="M 12,3 A 5,5 0 1 1 11.99,3 Z M 3,23 Q 3,14 12,14 Q 21,14 21,23 Z"/>
+                                            <Image Width="28" Height="28" Source="{Binding Avatar}"/>
                                             <StackPanel Grid.Column="1" Spacing="4">
                                                 <TextBlock Text="{Binding Username}" FontWeight="SemiBold"
                                                            TextTrimming="CharacterEllipsis"/>

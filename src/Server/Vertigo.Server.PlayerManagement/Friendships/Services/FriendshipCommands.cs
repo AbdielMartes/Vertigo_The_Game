@@ -133,7 +133,8 @@ public sealed class FriendshipCommands
         FriendshipInvitationEntry entry = new FriendshipInvitationEntry
         {
             SenderId = sender.PlayerId,
-            SenderUsername = sender.Username
+            SenderUsername = sender.Username,
+            AvatarId = sender.AvatarId
         };
         _notifier.NotifyFriendRequestReceived(target.PlayerId, entry);
 

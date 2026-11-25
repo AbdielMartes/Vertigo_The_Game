@@ -66,6 +66,7 @@ public sealed class SessionCoordinator : ISessionCoordinator
             {
                 PlayerId = session.PlayerId,
                 Username = session.Username,
+                AvatarId = session.AvatarId,
                 Token = session.Token,
                 ExpiresAt = session.ExpiresAt,
                 IsGuest = session.IsGuest

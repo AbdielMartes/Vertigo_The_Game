@@ -42,6 +42,22 @@ public sealed class PlayerSession
         }
     }
 
+    public bool UpdateProfile(SessionSnapshot expected, string username, int? avatarId)
+    {
+        ArgumentNullException.ThrowIfNull(expected);
+        bool updated = false;
+        lock (_syncRoot)
+        {
+            if (ReferenceEquals(GetActiveSession(), expected))
+            {
+                _session = expected with { Username = username, AvatarId = avatarId };
+                updated = true;
+            }
+        }
+
+        return updated;
+    }
+
     public void Clear(SessionSnapshot session)
     {
         lock (_syncRoot)

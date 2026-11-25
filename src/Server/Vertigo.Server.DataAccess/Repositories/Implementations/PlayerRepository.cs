@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Vertigo.Server.DataAccess.Contexts;
@@ -9,6 +10,8 @@ namespace Vertigo.Server.DataAccess.Repositories.Implementations;
 public class PlayerRepository : IPlayerRepository
 {
     private const int ExpectedAffectedRows = 1;
+    private const int DuplicateIndexError = 2601;
+    private const int DuplicateConstraintError = 2627;
 
     private readonly VertigoDatabaseContext _context;
 
@@ -61,6 +64,40 @@ public class PlayerRepository : IPlayerRepository
         int affectedRows = _context.SaveChanges();
 
         return affectedRows >= ExpectedAffectedRows;
+    }
+
+    public PlayerProfileUpdateResult UpdateProfile(Guid playerId, string username, string? countryCode, int? avatarId)
+    {
+        PlayerProfileUpdateResult result = PlayerProfileUpdateResult.Updated;
+        try
+        {
+            int affectedRows = _context.Players
+                .Where(player => player.PlayerId == playerId && !_context.Players.Any(other =>
+                    other.PlayerId != playerId && other.Username == username))
+                .ExecuteUpdate(setters => setters
+                    .SetProperty(player => player.Username, username)
+                    .SetProperty(player => player.CountryCode, countryCode)
+                    .SetProperty(player => player.AvatarId, avatarId));
+
+            if (affectedRows != ExpectedAffectedRows)
+            {
+                bool playerExists = _context.Players.Any(player => player.PlayerId == playerId);
+                if (playerExists)
+                {
+                    result = PlayerProfileUpdateResult.UsernameTaken;
+                }
+                else
+                {
+                    result = PlayerProfileUpdateResult.PlayerNotFound;
+                }
+            }
+        }
+        catch (SqlException ex) when (ex.Number is DuplicateIndexError or DuplicateConstraintError)
+        {
+            result = PlayerProfileUpdateResult.UsernameTaken;
+        }
+
+        return result;
     }
 
     public bool UpdateLastLogin(Guid playerId, DateTime lastLoginAt)

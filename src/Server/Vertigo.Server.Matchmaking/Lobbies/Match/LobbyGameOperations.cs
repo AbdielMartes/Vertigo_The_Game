@@ -32,28 +32,29 @@ public sealed class LobbyGameOperations
         MatchBoardSnapshot? board = _state.GetBoard(lobby.MatchId);
         if (board is not null)
         {
-            IReadOnlyDictionary<Guid, string> names = lobby.MatchPlayerNames;
+            IReadOnlyDictionary<Guid, LobbyMember> members = lobby.MatchPlayers;
             foreach (MatchBoardMove move in board.RecentMoves)
             {
-                if (names.TryGetValue(move.PlayerId, out string? username))
+                if (members.TryGetValue(move.PlayerId, out LobbyMember? member))
                 {
-                    move.PlayerUsername = username;
+                    move.PlayerUsername = member.Username;
                 }
             }
 
             foreach (MatchRoundPlayerScore score in board.RoundSummaries.SelectMany(round => round.Players))
             {
-                if (names.TryGetValue(score.PlayerId, out string? username))
+                if (members.TryGetValue(score.PlayerId, out LobbyMember? member))
                 {
-                    score.PlayerUsername = username;
+                    score.PlayerUsername = member.Username;
                 }
             }
 
             foreach (MatchBoardPlayer player in board.Players)
             {
-                if (names.TryGetValue(player.PlayerId, out string? username))
+                if (members.TryGetValue(player.PlayerId, out LobbyMember? member))
                 {
-                    player.Username = username;
+                    player.Username = member.Username;
+                    player.AvatarId = member.AvatarId;
                 }
             }
         }

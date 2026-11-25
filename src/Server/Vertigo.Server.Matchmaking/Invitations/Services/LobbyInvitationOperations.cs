@@ -74,7 +74,7 @@ public sealed class LobbyInvitationOperations
             if (isRegistered)
             {
                 invitedIds.Add(friend.PlayerId);
-                _notifier.NotifyLobbyInvitationReceived(friend.PlayerId, CreateEntry(lobby, sender.Username, sender.PlayerId));
+                _notifier.NotifyLobbyInvitationReceived(friend.PlayerId, CreateEntry(lobby, sender, sender.PlayerId));
             }
         }
 
@@ -93,10 +93,9 @@ public sealed class LobbyInvitationOperations
         foreach (LobbyOverview lobby in _lobbyDirectory.FindLobbiesInviting(playerId))
         {
             Guid senderId = lobby.Invitations[playerId];
-            LobbyMember? sender = lobby.Members.FirstOrDefault(member => member.PlayerId == senderId)
-                                  ?? lobby.Members.FirstOrDefault(member => member.PlayerId == lobby.HostPlayerId);
+            LobbyMember? sender = lobby.Members.FirstOrDefault(member => member.PlayerId == senderId);
 
-            entries.Add(CreateEntry(lobby, sender?.Username ?? string.Empty, senderId));
+            entries.Add(CreateEntry(lobby, sender, senderId));
         }
 
         return entries;
@@ -142,13 +141,14 @@ public sealed class LobbyInvitationOperations
         }
     }
 
-    private static LobbyInvitationEntry CreateEntry(LobbyOverview lobby, string senderUsername, Guid senderId)
+    private static LobbyInvitationEntry CreateEntry(LobbyOverview lobby, LobbyMember? sender, Guid senderId)
     {
         return new LobbyInvitationEntry
         {
             LobbyCode = lobby.LobbyCode,
             SenderId = senderId,
-            SenderUsername = senderUsername,
+            SenderUsername = sender?.Username ?? string.Empty,
+            AvatarId = sender?.AvatarId,
             CurrentPlayers = lobby.Members.Count,
             MaxPlayers = lobby.MaxPlayers
         };

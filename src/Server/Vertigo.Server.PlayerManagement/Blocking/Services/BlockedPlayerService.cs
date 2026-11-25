@@ -51,6 +51,7 @@ public class BlockedPlayerService : IBlockedPlayerService
         {
             PlayerId = blocked.PlayerBlockedId,
             Username = blocked.PlayerBlocked.Username,
+            AvatarId = blocked.PlayerBlocked.AvatarId,
             BlockedAt = blocked.CreatedAt
         }).ToList();
     }

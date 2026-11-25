@@ -251,13 +251,14 @@ internal static class RoundClosureSmoke
     private static void CheckAbandonment(MatchBoardSnapshot after, MatchBoardSnapshot before)
     {
         Guid expelled = before.CurrentTurnPlayerId;
-        Guid winner = before.Players.Single(player => player.PlayerId != expelled).PlayerId;
+        Guid remaining = before.Players.Single(player => player.PlayerId != expelled).PlayerId;
+        bool hadCompletedRound = before.RoundSummaries.Count > 0;
         Check(after.EndReason == MatchEndReason.Abandonment && after.CurrentTurnPlayerId == Guid.Empty
             && after.TurnDeadlineUtc is null && after.Revision == before.Revision + 2
-            && after.WinnerIds.SequenceEqual(new[] { winner })
-            && after.Players.Single(player => player.PlayerId == winner).FinalPosition == 1
+            && after.WinnerIds.SequenceEqual(hadCompletedRound ? new[] { remaining } : Array.Empty<Guid>())
+            && after.Players.Single(player => player.PlayerId == remaining).FinalPosition == (hadCompletedRound ? 1 : null)
             && after.ExpelledPlayerIds.SequenceEqual(new[] { expelled }),
-            "The timed-out match did not end with the expected winner and expelled player.");
+            "The timed-out match did not end with the expected outcome and expelled player.");
     }
 
     private static void VerifySummary(MatchBoardSnapshot expected, MatchBoardSnapshot received)

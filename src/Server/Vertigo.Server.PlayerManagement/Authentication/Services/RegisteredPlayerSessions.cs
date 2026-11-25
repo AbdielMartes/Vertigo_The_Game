@@ -48,6 +48,7 @@ public sealed class RegisteredPlayerSessions
         {
             PlayerId = player.PlayerId,
             Username = player.Username,
+            AvatarId = player.AvatarId,
             Token = sessionToken,
             ExpiresAt = expiresAt
         };
@@ -63,6 +64,7 @@ public sealed class RegisteredPlayerSessions
             {
                 PlayerId = storedToken.PlayerId,
                 Username = storedToken.Player.Username,
+                AvatarId = storedToken.Player.AvatarId,
                 Token = sessionToken,
                 ExpiresAt = storedToken.ExpiresAt
             };

@@ -3,6 +3,7 @@ using System.Net;
 using CoreWCF.Configuration;
 using CoreWCF;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -12,6 +13,7 @@ using Vertigo.Contracts.Internal;
 using Vertigo.Server.CrossCutting.Security.Implementations;
 using Vertigo.Server.CrossCutting.Security.Interfaces;
 using Vertigo.Server.DataAccess;
+using Vertigo.Server.DataAccess.Contexts;
 using Vertigo.Server.Game.Matches.DependencyInjection;
 using Vertigo.Server.Host.Logging;
 using Vertigo.Server.Host.Matches;
@@ -82,9 +84,18 @@ try
     builder.Services.AddTransient<ChatService>();
 
     await using WebApplication app = builder.Build();
-    ILogger<ServiceDispatchErrors> dispatchLogger = app.Services.GetRequiredService<ILogger<ServiceDispatchErrors>>();
-    ((IApplicationBuilder)app).UseServiceModel(services => ConfigureServices(services, dispatchLogger));
-    app.Run();
+    if (builder.Configuration.GetValue<bool>("DatabaseSchema:UpgradeOnly"))
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        scope.ServiceProvider.GetRequiredService<VertigoDatabaseContext>().UpgradeExistingSchema();
+        Console.WriteLine("Vértigo database schema is up to date.");
+    }
+    else
+    {
+        ILogger<ServiceDispatchErrors> dispatchLogger = app.Services.GetRequiredService<ILogger<ServiceDispatchErrors>>();
+        ((IApplicationBuilder)app).UseServiceModel(services => ConfigureServices(services, dispatchLogger));
+        app.Run();
+    }
 }
 finally
 {

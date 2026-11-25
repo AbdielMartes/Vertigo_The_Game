@@ -87,13 +87,23 @@ public sealed class MatchSyncLongGameNetTcpTests
         return states;
     }
 
-    [Fact]
-    public async Task LeaveMatch_AbandonmentDoesNotGenerateStatistics()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task LeaveMatch_AbandonmentRequiresAClosedRoundForWinnerAndNeverGeneratesStatistics(bool roundClosed)
     {
         await using LobbyHarness server = await LobbyHarness.StartAsync();
         using PlayerChannels players = new(server, 2, CreateRegisteredSession(server));
         MatchIdentity match = players.StartMatch();
         PlayerChannel guest = players.All[1];
+        string token = players.Host.Session.Token;
+        MatchBoardSnapshot active = players.Host.Channel.GetMatchBoard(match.LobbyCode, token);
+        for (int turn = 0; roundClosed && turn < TurnLimit && active.RoundSummaries.Count == 0; turn++)
+        {
+            active = PlayTurn(players.For(active.CurrentTurnPlayerId), match.LobbyCode, active);
+        }
+
+        Assert.Equal(roundClosed ? 1 : 0, active.RoundSummaries.Count);
 
         bool left = guest.Channel.LeaveMatch(new MatchLeaveRequest
         {
@@ -101,9 +111,10 @@ public sealed class MatchSyncLongGameNetTcpTests
         });
 
         Assert.True(left);
-        MatchBoardSnapshot board = players.Host.Channel.GetMatchBoard(match.LobbyCode, players.Host.Session.Token);
+        MatchBoardSnapshot board = players.Host.Channel.GetMatchBoard(match.LobbyCode, token);
         Assert.Equal(MatchEndReason.Abandonment, board.EndReason);
-        Assert.Contains(players.Host.Session.PlayerId, board.WinnerIds);
+        Assert.Equal(roundClosed ? new[] { players.Host.Session.PlayerId } : Array.Empty<Guid>(), board.WinnerIds);
+        Assert.Equal(roundClosed ? 1 : null, Assert.Single(board.Players).FinalPosition);
         Assert.Empty(server.Services.GetRequiredService<ICompletedMatchSource>().GetPendingResults(16));
     }
 

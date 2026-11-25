@@ -9,6 +9,14 @@
              xmlns:homeviews="using:Vertigo.Client.UI.Views">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Vertigo.Client.UI/Resources/Avatars.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.DataTemplates>
         <DataTemplate DataType="{x:Type playvm:PlayViewModel}">
             <playviews:PlayView />

@@ -90,6 +90,10 @@ public sealed class MatchResultsViewModel : ViewModelBase
     public bool HasResults => HasRoundSummaries || HasFinalResult;
     public bool HasFinalResult => _endReason != MatchEndReason.None;
     public bool IsAbandonment => _endReason == MatchEndReason.Abandonment;
+    public bool IsEarlyAbandonment => IsAbandonment && !HasRoundSummaries;
+    public bool IsLocalWinner => _finalStandings.Any(row => row.IsLocal && row.IsWinner);
+    public bool IsLocalDefeat => !IsAbandonment && _finalStandings.Any(row => row.IsWinner)
+        && _finalStandings.Any(row => row.IsLocal && row.Position.HasValue && !row.IsWinner);
     public string HeaderText => HasFinalResult || !HasRoundSummaries ? _text.Get("Match.Results.Title")
         : string.Format(_text.Get("Match.Results.RoundClosed"), _roundSummaries[^1].RoundNumber);
     public string WinnerText => _winnerNames.Count switch
@@ -99,11 +103,13 @@ public sealed class MatchResultsViewModel : ViewModelBase
         _ => string.Format(_text.Get("Match.Results.Winners"), string.Join(", ", _winnerNames))
     };
 
-    public string VictoryTitle => _text.Get(IsAbandonment ? "Match.Results.Abandonment"
-        : _winnerNames.Count > 1 ? "Match.Results.SharedVictory" : "Match.Results.Victory");
+    public string ResultTitle => _text.Get(GetResultTitleKey());
+    public string ResultDetail => IsEarlyAbandonment ? _text.Get("Match.Results.EarlyAbandonmentDetail") : WinnerText;
+    public string LocalPlayerText => _text.Get("Match.Results.You");
+    public string WinnerIconText => _text.Get("Match.Results.WinnerIcon");
     public string PersonalTowerText => _text.Get("Match.Results.PersonalTower");
     public string FinalTowerText => _text.Get("Match.Results.FinalTower");
-    public string StandingsText => _text.Get("Match.Results.Standings");
+    public string StandingsText => _text.Get(IsEarlyAbandonment ? "Match.Players" : "Match.Results.Standings");
     public string SelectRoundText => _text.Get("Match.Results.SelectRound");
     public string PlayerText => _text.Get("Match.Results.Player");
     public string FloorsText => _text.Get("Match.Results.Floors");
@@ -191,7 +197,10 @@ public sealed class MatchResultsViewModel : ViewModelBase
         BuildRoundOptions(SelectedRound?.RoundNumber);
         OnPropertyChanged(nameof(HeaderText));
         OnPropertyChanged(nameof(WinnerText));
-        OnPropertyChanged(nameof(VictoryTitle));
+        OnPropertyChanged(nameof(ResultTitle));
+        OnPropertyChanged(nameof(ResultDetail));
+        OnPropertyChanged(nameof(LocalPlayerText));
+        OnPropertyChanged(nameof(WinnerIconText));
         OnPropertyChanged(nameof(PersonalTowerText));
         OnPropertyChanged(nameof(FinalTowerText));
         OnPropertyChanged(nameof(StandingsText));
@@ -238,24 +247,49 @@ public sealed class MatchResultsViewModel : ViewModelBase
 
     private void ApplyFinalResult(MatchBoardSnapshot board)
     {
+        IReadOnlyList<Guid> winners = IsEarlyAbandonment ? Array.Empty<Guid>() : board.WinnerIds;
         Dictionary<Guid, string> names = board.Players.ToDictionary(
             player => player.PlayerId, player => player.Username);
-        _winnerNames = board.WinnerIds.Select(id => names.GetValueOrDefault(id))
+        _winnerNames = winners.Select(id => names.GetValueOrDefault(id))
             .Where(name => !string.IsNullOrWhiteSpace(name)).Select(name => name!).ToArray();
         _finalStandings = board.Players
             .Select(player => new MatchFinalStandingRow
             {
-                Position = player.FinalPosition,
+                Position = IsEarlyAbandonment ? null : player.FinalPosition,
                 Username = player.Username,
                 TotalFloors = player.GlobalFloors,
-                IsWinner = board.WinnerIds.Contains(player.PlayerId)
+                IsWinner = winners.Contains(player.PlayerId),
+                IsLocal = player.PlayerId == _localPlayerId
             })
             .OrderBy(row => row.Position ?? int.MaxValue)
             .ThenByDescending(row => row.IsWinner)
             .ThenByDescending(row => row.TotalFloors)
             .ToArray();
-        _finalTower = BuildFinalTower(board);
+        _finalTower = IsEarlyAbandonment ? null : BuildFinalTower(board);
         RefreshFinalResult();
+    }
+
+    private string GetResultTitleKey()
+    {
+        string key = "Match.Results.Finished";
+        if (IsEarlyAbandonment)
+        {
+            key = "Match.Results.NoWinner";
+        }
+        else if (IsAbandonment)
+        {
+            key = IsLocalWinner ? "Match.Results.Abandonment" : "Match.Results.FinishedByAbandonment";
+        }
+        else if (IsLocalWinner)
+        {
+            key = _finalStandings.Count(row => row.IsWinner) > 1 ? "Match.Results.SharedVictory" : "Match.Results.Victory";
+        }
+        else if (IsLocalDefeat)
+        {
+            key = "Match.Results.Defeat";
+        }
+
+        return key;
     }
 
     private MatchTowerResult? BuildFinalTower(MatchBoardSnapshot board)
@@ -288,8 +322,13 @@ public sealed class MatchResultsViewModel : ViewModelBase
     {
         OnPropertyChanged(nameof(HasFinalResult));
         OnPropertyChanged(nameof(IsAbandonment));
+        OnPropertyChanged(nameof(IsEarlyAbandonment));
+        OnPropertyChanged(nameof(IsLocalWinner));
+        OnPropertyChanged(nameof(IsLocalDefeat));
         OnPropertyChanged(nameof(WinnerText));
-        OnPropertyChanged(nameof(VictoryTitle));
+        OnPropertyChanged(nameof(ResultTitle));
+        OnPropertyChanged(nameof(ResultDetail));
+        OnPropertyChanged(nameof(StandingsText));
         OnPropertyChanged(nameof(FinalTower));
         OnPropertyChanged(nameof(HasFinalTower));
         OnPropertyChanged(nameof(FinalTowerCaption));

@@ -12,6 +12,7 @@ using Vertigo.Client.UI.Utilities.Localization.Interfaces;
 using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
 using Vertigo.Client.UI.ViewModels.Lifecycle;
 using Vertigo.Client.UI.ViewModels.Social;
+using Vertigo.Client.UI.ViewModels.Utilities;
 using Vertigo.Client.UI.ViewModels.Dependencies;
 using Vertigo.Contracts.Models;
 
@@ -39,7 +40,7 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
     private string _errorMessage = string.Empty;
 
     public SocialViewModel(FriendsViewModel friends, BlockedPlayersViewModel blocked,
-        SocialViewModelContext context)
+        SocialViewModelContext context, ProfileNavigation profileNavigation)
     {
         Friends = friends;
         Blocked = blocked;
@@ -52,6 +53,7 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
         _errors = context.NavigationContext.Services.Errors;
         BackCommand = new RelayCommand(() => _navigation.NavigateTo(NavigationPage.Home));
         RefreshCommand = new AsyncRelayCommand(RefreshAsync);
+        ViewProfileCommand = new RelayCommand<Guid?>(profileNavigation.Open);
         _notifications.FriendRequestReceived += OnFriendRequest;
         _notifications.FriendshipEstablished += OnFriendship;
         _notifications.LobbyInvitationReceived += OnInvitation;
@@ -71,6 +73,7 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
     public string SendRequestText => _text.Get("SocialUi.SendRequest");
     public string AcceptText => _text.Get("SocialUi.Accept");
     public string RejectText => _text.Get("SocialUi.Reject");
+    public string ViewProfileText => _text.Get("Profile.View");
     public string UnblockText => _text.Get("SocialUi.Unblock");
 
     public FriendEntry? SelectedFriend
@@ -151,6 +154,7 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
         OnPropertyChanged(nameof(AcceptText));
         OnPropertyChanged(nameof(RejectText));
         OnPropertyChanged(nameof(UnblockText));
+        OnPropertyChanged(nameof(ViewProfileText));
     }
 
     public FriendsViewModel Friends { get; }
@@ -158,6 +162,7 @@ public sealed class SocialViewModel : ObservableObject, INavigationAware, IDispo
     public LobbyInvitationsViewModel Invitations { get; }
     public string ErrorMessage { get => _errorMessage; private set => SetProperty(ref _errorMessage, value); }
     public IRelayCommand BackCommand { get; }
+    public IRelayCommand<Guid?> ViewProfileCommand { get; }
     public IAsyncRelayCommand RefreshCommand { get; }
 
     public void OnNavigatedTo()

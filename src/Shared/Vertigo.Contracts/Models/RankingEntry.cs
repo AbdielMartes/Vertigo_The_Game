@@ -13,4 +13,9 @@ public sealed class RankingEntry
 
     [DataMember]
     public int FloorsBuilt { get; set; }
+    [DataMember(Order = 1)]
+    public int? AvatarId { get; set; }
+
+    [DataMember(Order = 2)]
+    public Guid PlayerId { get; set; }
 }

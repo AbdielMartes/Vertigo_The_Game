@@ -45,9 +45,7 @@
                         CornerRadius="{DynamicResource RadiusSmall}"
                         Padding="12,10">
                     <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                        <Path Width="45" Height="45" Stretch="Uniform"
-                              Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.7"
-                              Data="{StaticResource IconPeople}"/>
+                        <Image Width="45" Height="45" Source="{Binding Avatar}"/>
                         <StackPanel Spacing="2" VerticalAlignment="Center" MinWidth="132">
                             <TextBlock Text="{Binding PlayerTag}" FontWeight="Bold" FontSize="17"/>
                             <TextBlock Text="{Binding AccountKindText}" FontSize="12"

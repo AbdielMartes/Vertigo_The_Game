@@ -131,7 +131,8 @@ internal sealed class MatchRecord
                 PlayerId = id,
                 FloorsBuilt = _personalFloors[id],
                 GlobalFloors = _scoring.GetGlobalFloors(id),
-                FinalPosition = _endReason == MatchEndReason.Abandonment ? 1 : positions?[id]
+                FinalPosition = _endReason == MatchEndReason.Abandonment && _winnerIds.Contains(id)
+                    ? 1 : positions?[id]
             }).ToList(),
             Piles = _piles.Select(pile => new MatchBoardPile
             {
@@ -538,7 +539,8 @@ internal sealed class MatchRecord
 
         if (_activePlayerIds.Count == 1)
         {
-            FinishMatch(_activePlayerIds.ToArray(), MatchEndReason.Abandonment, now);
+            Guid[] winners = _scoring.HasCompletedRounds ? _activePlayerIds.ToArray() : Array.Empty<Guid>();
+            FinishMatch(winners, MatchEndReason.Abandonment, now);
         }
         else
         {

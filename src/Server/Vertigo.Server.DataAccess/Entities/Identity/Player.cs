@@ -10,6 +10,7 @@ public class Player
     public string PasswordHash { get; set; } = string.Empty;
     public string PasswordSalt { get; set; } = string.Empty;
     public int? AvatarId { get; set; }
+    public string? CountryCode { get; set; }
     public bool IsEmailVerified { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? LastLoginAt { get; set; }

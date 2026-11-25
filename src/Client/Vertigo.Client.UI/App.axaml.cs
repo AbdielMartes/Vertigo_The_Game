@@ -43,6 +43,7 @@ public partial class App : Application
             registrations.AddTransient<HomeContext>();
             registrations.AddSingleton<IUserSettingsStore, JsonUserSettingsStore>();
             registrations.AddSingleton<SettingsViewModel>();
+            registrations.AddSingleton<ProfileNavigation>();
             registrations.AddSingleton<ProfileViewModel>();
             registrations.AddSingleton<RankingViewModel>();
             registrations.AddTransient<MainScreensContext>();

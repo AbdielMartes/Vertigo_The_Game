@@ -19,4 +19,7 @@ public sealed class MatchBoardPlayer
 
     [DataMember(EmitDefaultValue = false)]
     public int? FinalPosition { get; set; }
+
+    [DataMember(Order = 1)]
+    public int? AvatarId { get; set; }
 }

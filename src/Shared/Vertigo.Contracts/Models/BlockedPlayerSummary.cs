@@ -13,4 +13,6 @@ public class BlockedPlayerSummary
 
     [DataMember]
     public DateTime BlockedAt { get; set; }
+    [DataMember(Order = 1)]
+    public int? AvatarId { get; set; }
 }

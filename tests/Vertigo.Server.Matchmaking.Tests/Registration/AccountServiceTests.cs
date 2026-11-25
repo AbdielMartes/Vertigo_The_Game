@@ -133,7 +133,7 @@ public sealed class AccountServiceTests
 
     private static AccountService CreateService(RecordingPlayerRepository repository)
     {
-        return new AccountService(repository, new PasswordHasher(), null!);
+        return new AccountService(repository, new PasswordHasher(), null!, null!);
     }
 
     private static AccountService CreatePasswordService(
@@ -155,7 +155,7 @@ public sealed class AccountServiceTests
         AccountPasswordStore store = new(players, hasher);
         AccountPasswordService passwords = new(store, sessions, NullLogger<AccountService>.Instance);
 
-        return new AccountService(players, hasher, passwords);
+        return new AccountService(players, hasher, passwords, null!);
     }
 
     private sealed class RecordingSessionResolver : ISessionIdentityResolver
@@ -254,6 +254,9 @@ public sealed class AccountServiceTests
 
             return player is not null;
         }
+
+        public Vertigo.Server.DataAccess.Repositories.PlayerProfileUpdateResult UpdateProfile(
+            Guid playerId, string username, string? countryCode, int? avatarId) => throw new NotSupportedException();
 
         public bool UpdateLastLogin(Guid playerId, DateTime lastLoginAt) => throw new NotSupportedException();
     }

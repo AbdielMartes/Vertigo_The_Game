@@ -88,6 +88,7 @@ public class AuthenticationService : IAuthService
         {
             PlayerId = session.PlayerId,
             Username = session.Username,
+            AvatarId = session.AvatarId,
             Token = session.Token,
             ExpiresAt = session.ExpiresAt,
             IsGuest = session.IsGuest

@@ -72,7 +72,7 @@ public sealed class MatchTurnClockTests
         ManualClock clock = new();
         var (game, matchId) = StartMatch(clock, 2);
         MatchBoardSnapshot before = game.GetBoard(matchId)!;
-        Guid winner = before.Players.Single(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
+        Guid remaining = before.Players.Single(player => player.PlayerId != before.CurrentTurnPlayerId).PlayerId;
 
         clock.Set(before.TurnDeadlineUtc!.Value);
         Assert.Equal(before.CurrentTurnPlayerId, game.TryExpireTurn(matchId));
@@ -86,7 +86,8 @@ public sealed class MatchTurnClockTests
         Assert.Empty(after.PresenceDeadlinesUtc);
         Assert.Equal(MatchLifecycleStatus.Finished, game.Get(matchId)!.Status);
         Assert.Equal(MatchEndReason.Abandonment, after.EndReason);
-        Assert.Equal(winner, Assert.Single(after.WinnerIds));
+        Assert.Empty(after.WinnerIds);
+        Assert.Equal(remaining, Assert.Single(after.Players).PlayerId);
         Assert.Equal(Guid.Empty, after.CurrentTurnPlayerId);
         Assert.Null(after.TurnDeadlineUtc);
         Assert.Empty(after.RoundSummaries);

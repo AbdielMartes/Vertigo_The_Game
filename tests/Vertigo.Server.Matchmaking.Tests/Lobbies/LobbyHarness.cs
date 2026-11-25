@@ -30,6 +30,7 @@ using Vertigo.Server.PlayerManagement.Authentication.Dependencies;
 using Vertigo.Server.PlayerManagement.Authentication.Interfaces;
 using Vertigo.Server.PlayerManagement.Authentication.Services;
 using Vertigo.Server.PlayerManagement.Friendships.Services;
+using Vertigo.Server.PlayerManagement.Registration.Services;
 using Vertigo.Server.PlayerManagement.Statistics;
 
 namespace Vertigo.Server.Matchmaking.Tests.Lobbies;
@@ -106,10 +107,16 @@ internal sealed class LobbyHarness : IAsyncDisposable
                     new CoreWCF.NetTcpBinding(CoreWCF.SecurityMode.None), "/ChatService");
                 services.AddService<StatisticsService>().AddServiceEndpoint<StatisticsService, IStatisticsService>(
                     new CoreWCF.NetTcpBinding(CoreWCF.SecurityMode.None), "/StatisticsService");
+                services.AddService<AccountService>().AddServiceEndpoint<AccountService, IAccountService>(
+                    new CoreWCF.NetTcpBinding(CoreWCF.SecurityMode.None), "/AccountService");
+                services.AddService<AuthenticationService>().AddServiceEndpoint<AuthenticationService, IAuthService>(
+                    new CoreWCF.NetTcpBinding(CoreWCF.SecurityMode.None), "/AuthService");
                 var dispatchLogger = host.Services.GetRequiredService<ILogger<ServiceDispatchErrors>>();
                 services.ConfigureServiceHostBase<LobbyService>(service =>
                     service.Description.Behaviors.Add(new ServiceDispatchErrors(dispatchLogger)));
                 services.ConfigureServiceHostBase<ChatService>(service =>
+                    service.Description.Behaviors.Add(new ServiceDispatchErrors(dispatchLogger)));
+                services.ConfigureServiceHostBase<AccountService>(service =>
                     service.Description.Behaviors.Add(new ServiceDispatchErrors(dispatchLogger)));
                 services.ConfigureServiceHostBase<StatisticsService>(service =>
                     service.Description.Behaviors.Add(new ServiceDispatchErrors(dispatchLogger)));
@@ -134,6 +141,15 @@ internal sealed class LobbyHarness : IAsyncDisposable
         services.AddServiceModelServices();
         services.AddDbContext<VertigoDatabaseContext>(options => options.UseSqlite(connection));
         services.AddScoped<ISessionTokenRepository, SessionTokenRepository>();
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddTransient<AccountPasswordStore>();
+        services.AddTransient<AccountPasswordService>();
+        services.AddTransient<AccountService>();
+        services.AddTransient<RegisteredPlayerSessions>();
+        services.AddTransient<PlayerCredentialsVerifier>();
+        services.AddTransient<SessionService>();
+        services.AddTransient<AuthenticationService>();
         services.AddSingleton<ITokenGenerator, TokenGenerator>();
         services.AddSingleton<IGuestSessionRegistry, GuestSessionRegistry>();
         services.AddScoped<SessionIdentityResolverDependencies>();

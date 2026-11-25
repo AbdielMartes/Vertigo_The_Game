@@ -93,20 +93,23 @@ public sealed class MatchResultsViewModelTests
             }
         };
 
-        results.ApplyBoard(board);
+        results.ApplyBoard(board, ana);
 
         Assert.True(results.HasFinalResult);
         Assert.True(results.IsExpanded);
         Assert.False(results.IsAbandonment);
         Assert.Equal("Ganaron Ana, Beto", results.WinnerText);
-        Assert.Equal("Match.Results.SharedVictory", results.VictoryTitle);
+        Assert.Equal("Match.Results.SharedVictory", results.ResultTitle);
+        Assert.True(results.IsLocalWinner);
+        Assert.All(results.FinalStandings, row => Assert.True(row.IsWinner));
         results.IsExpanded = false;
-        results.ApplyBoard(board);
+        results.ApplyBoard(board, beto);
         Assert.False(results.IsExpanded);
+        Assert.Equal("Beto", Assert.Single(results.FinalStandings, row => row.IsLocal).Username);
     }
 
     [Fact]
-    public void ApplyBoard_AbandonmentBeforeFirstRound_ShowsWinnerAndReasonWithoutScores()
+    public void ApplyBoard_AbandonmentBeforeFirstRound_ShowsReasonWithoutWinnerOrScores()
     {
         MatchResultsViewModel results = new(new ResultsText());
         Guid winner = Guid.NewGuid();
@@ -120,8 +123,10 @@ public sealed class MatchResultsViewModelTests
 
         Assert.True(results.HasResults);
         Assert.True(results.IsExpanded);
-        Assert.True(results.IsAbandonment);
-        Assert.Equal("Ganó Ana", results.WinnerText);
+        Assert.True(results.IsEarlyAbandonment);
+        Assert.Equal("Match.Results.NoWinner", results.ResultTitle);
+        Assert.Equal("Match.Results.EarlyAbandonmentDetail", results.ResultDetail);
+        Assert.Empty(results.WinnerText);
         Assert.Empty(results.SelectedScores);
         results.Reset();
         Assert.False(results.HasResults);
@@ -177,8 +182,8 @@ public sealed class MatchResultsViewModelTests
             RoundSummaries = { round },
             Players =
             {
-                new MatchBoardPlayer { PlayerId = ana, GlobalFloors = 15, FloorsBuilt = 99, FinalPosition = 2 },
-                new MatchBoardPlayer { PlayerId = beto, GlobalFloors = 15, FinalPosition = 1 }
+                new MatchBoardPlayer { PlayerId = ana, Username = "Ana", GlobalFloors = 15, FloorsBuilt = 99, FinalPosition = 2 },
+                new MatchBoardPlayer { PlayerId = beto, Username = "Beto", GlobalFloors = 15, FinalPosition = 1 }
             }
         };
 
@@ -189,10 +194,23 @@ public sealed class MatchResultsViewModelTests
         Assert.False(results.ShowLatestTower);
         Assert.Equal(new int?[] { 1, 2 }, results.FinalStandings.Select(row => row.Position));
         Assert.True(results.FinalStandings[0].IsWinner);
+        Assert.Equal("Match.Results.Defeat", results.ResultTitle);
+        Assert.Equal("Ganó Beto", results.ResultDetail);
+        Assert.Equal("Ana", Assert.Single(results.FinalStandings, row => row.IsLocal).Username);
         Assert.Equal(5, results.FinalTower!.BuiltFloors);
         Assert.Equal(10, results.FinalTower.BonusFloors);
         Assert.Equal(15, results.FinalTower.TotalFloors);
         Assert.Contains(results.FinalTower.Segments, segment => segment.IsBonus);
+        results.ApplyBoard(board, beto);
+        Assert.Equal("Match.Results.Victory", results.ResultTitle);
+        Assert.True(results.IsLocalWinner);
+        results.ApplyBoard(board, Guid.NewGuid());
+        Assert.Equal("Match.Results.Finished", results.ResultTitle);
+        Assert.False(results.IsLocalDefeat);
+        board.Players[0].FinalPosition = null;
+        results.ApplyBoard(board, ana);
+        Assert.Equal("Match.Results.Finished", results.ResultTitle);
+        Assert.False(results.IsLocalDefeat);
     }
 
     [Fact]
@@ -207,10 +225,13 @@ public sealed class MatchResultsViewModelTests
             Players = { new MatchBoardPlayer { PlayerId = winner, FloorsBuilt = 12, FinalPosition = 1 } }
         }, winner);
 
-        Assert.Equal("Match.Results.Abandonment", results.VictoryTitle);
-        Assert.Equal(0, results.FinalTower!.TotalFloors);
-        Assert.Empty(results.FinalTower.Segments);
-        Assert.True(Assert.Single(results.FinalStandings).IsWinner);
+        Assert.Equal("Match.Results.NoWinner", results.ResultTitle);
+        Assert.Null(results.FinalTower);
+        var survivor = Assert.Single(results.FinalStandings);
+        Assert.Equal(0, survivor.TotalFloors);
+        Assert.Null(survivor.Position);
+        Assert.False(survivor.IsWinner);
+        Assert.True(survivor.IsLocal);
     }
 
     private static MatchRoundSummary CreateRound(int number, (int Built, int Bonus) floors, int total)

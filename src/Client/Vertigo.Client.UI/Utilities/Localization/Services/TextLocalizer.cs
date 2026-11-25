@@ -7,18 +7,23 @@ namespace Vertigo.Client.UI.Utilities.Localization.Services;
 public sealed class TextLocalizer : ITextLocalizer
 {
     private const string ResourceBaseName = "Vertigo.Client.UI.Resources.Localization.Strings";
-    private readonly ResourceManager _resources = new(ResourceBaseName, typeof(TextLocalizer).Assembly);
+    private static readonly ResourceManager Resources = new(ResourceBaseName, typeof(TextLocalizer).Assembly);
+
+    internal static string? FindTranslation(string key)
+    {
+        return Resources.GetString(key, CultureInfo.CurrentUICulture);
+    }
 
     public string Get(string key)
     {
         string? translation = null;
         if (!string.IsNullOrWhiteSpace(key))
         {
-            translation = _resources.GetString(key, CultureInfo.CurrentUICulture);
+            translation = FindTranslation(key);
         }
 
         return translation
-            ?? _resources.GetString("Error.Unknown", CultureInfo.CurrentUICulture)
+            ?? FindTranslation("Error.Unknown")
             ?? "Ocurrió un error.";
     }
 }

@@ -19,4 +19,7 @@ public class LobbyInvitationEntry
 
     [DataMember]
     public int MaxPlayers { get; set; }
+
+    [DataMember(Order = 1)]
+    public int? AvatarId { get; set; }
 }

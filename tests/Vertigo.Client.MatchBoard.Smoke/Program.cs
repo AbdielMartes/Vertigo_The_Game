@@ -583,9 +583,10 @@ static async Task RunMatchExitAsync()
             staying.JoinLobby(code, secondSession.Token);
             MatchBoardSnapshot result = staying.GetMatchBoard(code, secondSession.Token);
             Require(result.EndReason == MatchEndReason.Abandonment
-                && result.WinnerIds.SequenceEqual(new[] { secondSession.PlayerId })
+                && result.WinnerIds.Count == 0
+                && result.Players.Single().PlayerId == secondSession.PlayerId
                 && result.RecentMoves.Single().PlayerUsername == firstSession.Username,
-                "After reconnecting, the remaining client did not recover the winner and departure.");
+                "After reconnecting, the remaining client did not recover the unranked result and departure.");
 
             request.SessionToken = secondSession.Token;
             Require(staying.LeaveMatch(request) && staying.LeaveMatch(request),

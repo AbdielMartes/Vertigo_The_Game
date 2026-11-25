@@ -19,4 +19,7 @@ public class UserSession
 
     [DataMember]
     public bool IsGuest { get; set; }
+
+    [DataMember(Order = 1)]
+    public int? AvatarId { get; set; }
 }

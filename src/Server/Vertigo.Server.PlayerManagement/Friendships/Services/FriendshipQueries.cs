@@ -152,6 +152,7 @@ public sealed class FriendshipQueries
         {
             PlayerId = player.PlayerId,
             Username = player.Username,
+            AvatarId = player.AvatarId,
             Relation = relation
         };
     }
@@ -161,7 +162,8 @@ public sealed class FriendshipQueries
         return new FriendshipInvitationEntry
         {
             SenderId = friendship.PlayerRequesterId,
-            SenderUsername = friendship.PlayerRequester.Username
+            SenderUsername = friendship.PlayerRequester.Username,
+            AvatarId = friendship.PlayerRequester.AvatarId
         };
     }
 
@@ -192,7 +194,8 @@ public sealed class FriendshipQueries
         return new FriendEntry
         {
             PlayerId = player.PlayerId,
-            Username = player.Username
+            Username = player.Username,
+            AvatarId = player.AvatarId
         };
     }
 

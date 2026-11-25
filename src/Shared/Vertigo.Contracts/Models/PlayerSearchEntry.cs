@@ -13,4 +13,6 @@ public class PlayerSearchEntry
 
     [DataMember]
     public PlayerRelation Relation { get; set; }
+    [DataMember(Order = 1)]
+    public int? AvatarId { get; set; }
 }

@@ -41,6 +41,23 @@ public sealed class PlayerSessionTests
     }
 
     [Fact]
+    public void UpdateProfile_ChangesOnlyCurrentSnapshotAndPreservesSessionCredentials()
+    {
+        PlayerSession playerSession = new(TimeProvider.System);
+        SessionSnapshot previous = CreateSnapshot("token-a");
+        SessionSnapshot current = CreateSnapshot("token-b");
+        playerSession.SetSession(previous);
+        playerSession.SetSession(current);
+
+        Assert.False(playerSession.UpdateProfile(previous, "Obsoleto", 2));
+        Assert.Same(current, playerSession.GetActiveSession());
+        Assert.True(playerSession.UpdateProfile(current, "TorreNueva", 6));
+
+        SessionSnapshot updated = Assert.IsType<SessionSnapshot>(playerSession.GetActiveSession());
+        Assert.Equal(current with { Username = "TorreNueva", AvatarId = 6 }, updated);
+    }
+
+    [Fact]
     public void Clear_CurrentSnapshot_EndsSession()
     {
         PlayerSession playerSession = new(TimeProvider.System);

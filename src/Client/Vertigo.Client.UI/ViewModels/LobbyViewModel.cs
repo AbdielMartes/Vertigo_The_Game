@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using Vertigo.Client.UI.Resources;
 using Vertigo.Client.UI.ViewModels.Presentation;
 using System.ServiceModel;
 using Avalonia.Threading;
@@ -208,7 +209,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
                 Members.Clear();
                 Messages.Clear();
                 Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
-                    IsGuest = session.IsGuest });
+                    IsGuest = session.IsGuest, AvatarId = session.AvatarId });
                 LobbyCode = code;
                 HostPlayerId = session.PlayerId;
                 ReadyPlayerIds.Clear();
@@ -269,7 +270,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
                 Messages.Clear();
                 foreach (LobbyMember member in admission.ExistingMembers) Members.Add(member);
                 Members.Add(new LobbyMember { PlayerId = session.PlayerId, Username = session.Username,
-                    IsGuest = session.IsGuest });
+                    IsGuest = session.IsGuest, AvatarId = session.AvatarId });
                 LobbyCode = admission.LobbyCode;
                 HostPlayerId = admission.HostPlayerId;
                 ReadyPlayerIds.Clear();
@@ -661,6 +662,7 @@ public sealed class LobbyViewModel : ObservableObject, IDisposable, INavigationA
             MemberRows.Add(new LobbyMemberRow
             {
                 Username = member.Username,
+                Avatar = AvatarCatalog.Resolve(member.AvatarId),
                 RoleText = _text.Get(host ? "Room.Host" : member.IsGuest ? "Room.Guest" : "Room.Player"),
                 ReadyText = _text.Get(ready ? "Room.Ready" : "Room.NotReady"),
                 IsReady = ready

@@ -12,5 +12,6 @@ public interface IPlayerRepository
     bool CreatePlayer(Player player);
     List<Player> SearchPlayersByUsername(string searchTerm, Guid excludedPlayerId, int maximumResults);
     bool UpdatePasswordAndRevokeSessions(Guid playerId, string passwordHash, string passwordSalt);
+    PlayerProfileUpdateResult UpdateProfile(Guid playerId, string username, string? countryCode, int? avatarId);
     bool UpdateLastLogin(Guid playerId, DateTime lastLoginAt);
 }

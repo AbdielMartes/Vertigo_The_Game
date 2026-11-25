@@ -7,4 +7,7 @@ public interface IStatisticsClient
 {
     ClientResult<List<RankingEntry>> GetRanking(string sessionToken);
     ClientResult<PlayerMatchRecord> GetMyRecord(string sessionToken);
+    ClientResult<List<RankingEntry>> GetFriendsRanking(string sessionToken);
+    ClientResult<List<RankingEntry>> GetCountryRanking(string sessionToken);
+    ClientResult<PublicPlayerProfile> GetPlayerProfile(Guid playerId, string sessionToken);
 }

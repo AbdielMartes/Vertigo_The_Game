@@ -31,7 +31,9 @@ public sealed class MatchLifecycleRegistrationTests
 
         Assert.Equal(new MatchDepartureResult(true, true), result);
         Assert.Null(reader.GetPrivateHand(match.MatchId, leaving));
-        Assert.Equal(remaining, Assert.Single(reader.GetBoard(match.MatchId)!.WinnerIds));
+        var board = reader.GetBoard(match.MatchId)!;
+        Assert.Empty(board.WinnerIds);
+        Assert.Equal(remaining, Assert.Single(board.Players).PlayerId);
     }
 
     [Fact]

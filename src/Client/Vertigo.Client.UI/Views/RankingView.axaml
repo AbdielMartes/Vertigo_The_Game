@@ -2,43 +2,49 @@
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
              xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
              x:Class="Vertigo.Client.UI.Views.RankingView" x:DataType="vm:RankingViewModel" x:CompileBindings="True">
-    <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="32" RowSpacing="12" MaxWidth="760">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" Margin="16" RowSpacing="12" MaxWidth="760">
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
             <Button Classes="vertigo-button neutral" Content="{Binding BackText}" Command="{Binding BackCommand}"/>
-            <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="32" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1" FontSize="{DynamicResource FontSizeSection}"
+                       FontWeight="Bold" TextWrapping="Wrap" Text="{Binding Title}"/>
             <Button Grid.Column="2" Classes="vertigo-button neutral" Content="{Binding RefreshText}"
                     Command="{Binding RefreshCommand}"/>
         </Grid>
-        <TextBlock Grid.Row="1" Text="{Binding Status}" TextWrapping="Wrap"
+        <ComboBox Grid.Row="1" IsVisible="{Binding HasScopes}"
+                  ItemsSource="{Binding ScopeLabels}"
+                  SelectedIndex="{Binding ScopeIndex, Mode=TwoWay}"
+                  AutomationProperties.Name="{Binding ScopeText}"/>
+        <TextBlock Grid.Row="2" Text="{Binding Status}" TextWrapping="Wrap"
                    AutomationProperties.LiveSetting="Polite"/>
-        <Grid Grid.Row="2" ColumnDefinitions="36,38,*,130,130" ColumnSpacing="8" Margin="10,0,24,0">
+        <Grid Grid.Row="3" ColumnDefinitions="28,32,*,75,75" ColumnSpacing="8" Margin="10,0,24,0">
             <TextBlock Grid.Column="2" Text="{Binding PlayerText}" FontWeight="Bold"/>
-            <TextBlock Grid.Column="3" Text="{Binding WinsText}" FontWeight="Bold" TextAlignment="Right"/>
-            <TextBlock Grid.Column="4" Text="{Binding FloorsText}" FontWeight="Bold" TextAlignment="Right"/>
+            <TextBlock Grid.Column="3" Text="{Binding WinsText}" FontWeight="Bold" TextAlignment="Right" TextWrapping="Wrap"/>
+            <TextBlock Grid.Column="4" Text="{Binding FloorsText}" FontWeight="Bold" TextAlignment="Right" TextWrapping="Wrap"/>
         </Grid>
-        <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding Rows}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="rows:RankingRow">
-                        <Border Background="{DynamicResource ColorWhite}" Margin="0,0,0,6" CornerRadius="4" Padding="10">
-                            <Grid ColumnDefinitions="36,38,*,130,130" ColumnSpacing="8">
-                                <TextBlock Text="{Binding Position}" VerticalAlignment="Center"/>
-                                <Border Grid.Column="1" Width="32" Height="32" CornerRadius="16"
-                                        Background="{DynamicResource ColorInfoBackground}">
-                                    <TextBlock Text="{Binding Initial}" HorizontalAlignment="Center"
-                                               VerticalAlignment="Center" FontWeight="Bold"/>
-                                </Border>
-                                <TextBlock Grid.Column="2" Text="{Binding Username}" VerticalAlignment="Center"
-                                           TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="3" Text="{Binding MatchesWon}" TextAlignment="Right"
-                                           VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="{Binding FloorsBuilt}" TextAlignment="Right"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <ListBox Grid.Row="4"
+                 ItemsSource="{Binding Rows}"
+                 SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="rows:RankingRow">
+                    <Border Padding="10">
+                        <Grid ColumnDefinitions="28,32,*,75,75" ColumnSpacing="8">
+                            <TextBlock Text="{Binding Position}" VerticalAlignment="Center"/>
+                            <Image Grid.Column="1" Width="32" Height="32" Source="{Binding Avatar}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Username}" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Grid.Column="3" Text="{Binding MatchesWon}" TextAlignment="Right"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="4" Text="{Binding FloorsBuilt}" TextAlignment="Right"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Grid.Row="5" Classes="vertigo-button neutral"
+                IsVisible="{Binding CanViewProfile}"
+                Command="{Binding ViewProfileCommand}"
+                Content="{Binding ViewProfileText}"/>
     </Grid>
 </UserControl>

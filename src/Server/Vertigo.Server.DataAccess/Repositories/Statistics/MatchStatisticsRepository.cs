@@ -1,6 +1,7 @@
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Vertigo.Server.DataAccess.Contexts;
+using Vertigo.Server.DataAccess.Entities.Enums;
 using Vertigo.Server.DataAccess.Entities.Game;
 using Vertigo.Server.DataAccess.Entities.Identity;
 
@@ -52,24 +53,66 @@ public sealed class MatchStatisticsRepository(VertigoDatabaseContext database)
         stats.HighestSkyscraper = Math.Max(stats.HighestSkyscraper, contribution.HighestSkyscraper);
     }
 
-    public List<RankingPlayer> GetRanking(int limit)
+    public List<RankingPlayer> GetRanking(int limit, Guid? viewerId = null)
     {
-        return database.PlayerStats.AsNoTracking().Where(stats => stats.MatchesPlayed > 0)
-            .OrderByDescending(stats => stats.MatchesWon)
-            .ThenByDescending(stats => stats.TotalFloorsBuilt)
-            .ThenBy(stats => stats.Player.Username)
-            .ThenBy(stats => stats.PlayerId)
-            .Take(limit)
-            .Select(stats => new RankingPlayer(stats.Player.Username, stats.MatchesWon, stats.TotalFloorsBuilt))
+        return ReadRanking(VisiblePlayers(viewerId)
+            .Where(player => player.Stats != null && player.Stats.MatchesPlayed > 0), limit);
+    }
+
+    public List<RankingPlayer> GetFriendsRanking(Guid playerId)
+    {
+        return ReadRanking(VisiblePlayers(playerId).Where(player =>
+            player.PlayerId == playerId || database.Friendships.Any(friendship =>
+                friendship.Status == FriendshipStatus.Accepted
+                && ((friendship.PlayerRequesterId == playerId && friendship.PlayerAddresseeId == player.PlayerId)
+                    || (friendship.PlayerAddresseeId == playerId && friendship.PlayerRequesterId == player.PlayerId)))));
+    }
+
+    public List<RankingPlayer> GetCountryRanking(Guid playerId, int limit)
+    {
+        return ReadRanking(VisiblePlayers(playerId).Where(player =>
+            player.CountryCode != null && player.Stats != null && player.Stats.MatchesPlayed > 0
+            && database.Players.Any(viewer => viewer.PlayerId == playerId && viewer.CountryCode == player.CountryCode)),
+            limit);
+    }
+
+    private static List<RankingPlayer> ReadRanking(IQueryable<Player> players, int? limit = null)
+    {
+        IQueryable<Player> ranking = players
+            .OrderByDescending(player => player.Stats == null ? 0 : player.Stats.MatchesWon)
+            .ThenByDescending(player => player.Stats == null ? 0 : player.Stats.TotalFloorsBuilt)
+            .ThenBy(player => player.Username)
+            .ThenBy(player => player.PlayerId);
+        if (limit.HasValue)
+        {
+            ranking = ranking.Take(limit.Value);
+        }
+
+        return ranking.Select(player => new RankingPlayer(player.PlayerId, player.Username, player.AvatarId,
+                player.Stats == null ? 0 : player.Stats.MatchesWon,
+                player.Stats == null ? 0 : player.Stats.TotalFloorsBuilt))
             .ToList();
     }
 
-    public (int Played, int Won) GetRecord(Guid playerId)
+    private IQueryable<Player> VisiblePlayers(Guid? viewerId)
     {
-        var record = database.PlayerStats.AsNoTracking().Where(stats => stats.PlayerId == playerId)
-            .Select(stats => new { stats.MatchesPlayed, stats.MatchesWon }).SingleOrDefault();
-        return (record?.MatchesPlayed ?? 0, record?.MatchesWon ?? 0);
+        return database.Players.AsNoTracking().Where(player => !database.BlockedPlayers.Any(block =>
+            block.PlayerBlockerId == player.PlayerId && block.PlayerBlockedId == viewerId));
     }
 
-    public sealed record RankingPlayer(string Username, int MatchesWon, int FloorsBuilt);
+    public PlayerProfileRecord? GetPlayerProfile(Guid playerId, Guid? viewerId = null)
+    {
+        return VisiblePlayers(viewerId)
+            .Where(player => player.PlayerId == playerId)
+            .Select(player => new PlayerProfileRecord(
+                player.Username,
+                player.CreatedAt.Year,
+                player.AvatarId,
+                player.CountryCode,
+                player.Stats == null ? 0 : player.Stats.MatchesPlayed,
+                player.Stats == null ? 0 : player.Stats.MatchesWon))
+            .SingleOrDefault();
+    }
+
+    public sealed record RankingPlayer(Guid PlayerId, string Username, int? AvatarId, int MatchesWon, int FloorsBuilt);
 }

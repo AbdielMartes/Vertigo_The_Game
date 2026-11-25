@@ -13,4 +13,8 @@ public interface IAccountService
     [OperationContract]
     [FaultContract(typeof(ServiceFault))]
     bool ChangePassword(PasswordChange change, string sessionToken);
+
+    [OperationContract]
+    [FaultContract(typeof(ServiceFault))]
+    bool UpdateProfile(ProfileUpdate profile, string sessionToken);
 }

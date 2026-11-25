@@ -19,8 +19,10 @@ public sealed class MatchDepartureTests
         Assert.Equal(new MatchDepartureResult(true, true), departure);
         MatchBoardSnapshot finished = game.GetBoard(before.MatchId)!;
         Assert.Equal(MatchEndReason.Abandonment, finished.EndReason);
-        Assert.Equal(remaining, Assert.Single(finished.WinnerIds));
-        Assert.Equal(1, Assert.Single(finished.Players).FinalPosition);
+        Assert.Empty(finished.WinnerIds);
+        var survivor = Assert.Single(finished.Players);
+        Assert.Equal(remaining, survivor.PlayerId);
+        Assert.Null(survivor.FinalPosition);
         Assert.Equal(leaving, Assert.Single(finished.ExpelledPlayerIds));
         Assert.Equal(MatchBoardActionKind.LeftMatch, Assert.Single(finished.RecentMoves).ActionKind);
         Assert.Empty(finished.RoundSummaries);
@@ -30,7 +32,7 @@ public sealed class MatchDepartureTests
         Assert.Equal(new MatchDepartureResult(true, false), game.TryLeaveMatch(before.MatchId, leaving));
         Assert.Equal(new MatchDepartureResult(true, false), game.TryLeaveMatch(before.MatchId, remaining));
         Assert.Equal(finished.Revision, game.GetBoard(before.MatchId)!.Revision);
-        Assert.Equal(remaining, Assert.Single(game.GetBoard(before.MatchId)!.WinnerIds));
+        Assert.Empty(game.GetBoard(before.MatchId)!.WinnerIds);
     }
 
     [Fact]
@@ -92,7 +94,8 @@ public sealed class MatchDepartureTests
         Assert.Equal(new MatchDepartureResult(true, true), game.TryLeaveMatch(before.MatchId, leaving));
 
         MatchBoardSnapshot after = game.GetBoard(before.MatchId)!;
-        Assert.Equal(before.CurrentTurnPlayerId, Assert.Single(after.WinnerIds));
+        Assert.Empty(after.WinnerIds);
+        Assert.Equal(before.CurrentTurnPlayerId, Assert.Single(after.Players).PlayerId);
         Assert.Equal(new[] { MatchBoardActionKind.TurnSkipped, MatchBoardActionKind.LeftMatch },
             after.RecentMoves.Select(move => move.ActionKind));
         Assert.Null(game.TryExpireTurn(before.MatchId));

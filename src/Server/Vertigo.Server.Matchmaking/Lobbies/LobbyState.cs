@@ -21,8 +21,8 @@ public sealed class LobbyState
 
     public Guid MatchId => _matchId;
 
-    public IReadOnlyDictionary<Guid, string> MatchPlayerNames { get; private set; } =
-        new Dictionary<Guid, string>();
+    public IReadOnlyDictionary<Guid, LobbyMember> MatchPlayers { get; private set; } =
+        new Dictionary<Guid, LobbyMember>();
 
     public long Revision => _revision;
 
@@ -238,8 +238,8 @@ public sealed class LobbyState
             throw new InvalidOperationException("The lobby has already started a match.");
         }
 
-        MatchPlayerNames = _connections.ToDictionary(connection => connection.Member.PlayerId,
-            connection => connection.Member.Username);
+        MatchPlayers = _connections.ToDictionary(connection => connection.Member.PlayerId,
+            connection => connection.Member);
         _matchId = matchId;
         Status = LobbyStatus.InGame;
         _revision++;
@@ -254,7 +254,7 @@ public sealed class LobbyState
         }
 
         StartMatch(matchId);
-        MatchPlayerNames = lobby.Members.ToDictionary(member => member.PlayerId, member => member.Username);
+        MatchPlayers = lobby.Members.ToDictionary(member => member.PlayerId);
     }
 
     public List<LobbyMember> GetMembersExcept(Guid playerId)

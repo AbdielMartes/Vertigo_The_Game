@@ -6,4 +6,5 @@ public sealed record MatchFinalStandingRow
     public required string Username { get; init; }
     public int TotalFloors { get; init; }
     public bool IsWinner { get; init; }
+    public bool IsLocal { get; init; }
 }

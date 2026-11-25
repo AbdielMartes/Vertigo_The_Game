@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using Vertigo.Client.Core.Navigation;
 using Vertigo.Client.Core.Sessions;
 using Vertigo.Client.Networking.Interfaces;
+using Vertigo.Client.UI.Resources;
 using Vertigo.Client.UI.Utilities.Sessions.Interfaces;
 using Vertigo.Contracts.Faults;
 using Vertigo.Contracts.Models;
@@ -585,6 +586,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         return new MatchPlayerRow
         {
             Username = player.Username,
+            Avatar = AvatarCatalog.Resolve(player.AvatarId),
             FloorsBuilt = player.FloorsBuilt,
             IsCurrentTurn = targetId == activePlayerId,
             IsMe = targetId == localPlayerId,
