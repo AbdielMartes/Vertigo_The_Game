@@ -20,9 +20,10 @@ internal sealed class MatchRecord
 
     private readonly Dictionary<Guid, DateTimeOffset> _presenceDeadlinesUtc = new();
     private readonly List<Guid> _inactivePlayerIds = new();
+    private readonly List<Guid> _expelledByVotePlayerIds = new();
     private readonly HashSet<Guid> _disconnectedPlayerIds = new();
     private readonly HashSet<Guid> _activePlayerIds;
-    private readonly Dictionary<Guid, HashSet<Guid>> _expulsionVotes = new();
+    private readonly Dictionary<Guid, MatchExpulsionBallot> _expulsionVotes = new();
     private readonly Dictionary<Guid, IReadOnlyList<int>> _hands = new();
     private readonly Dictionary<Guid, int> _personalFloors = new();
     private readonly Dictionary<Guid, int> _masterPlans = new();
@@ -110,11 +111,12 @@ internal sealed class MatchRecord
             EndReason = _endReason,
             PresenceDeadlinesUtc = new(_presenceDeadlinesUtc),
             InactivePlayerIds = new(_inactivePlayerIds),
+            ExpelledByVotePlayerIds = new(_expelledByVotePlayerIds),
             ExpelledPlayerIds = Session.PlayerIds.Where(id => !_activePlayerIds.Contains(id)).ToList(),
             VotingRevision = _votingRevision,
             ExpulsionVotesRequired = ExpulsionVotesRequired,
             ExpulsionVotes = Session.PlayerIds.Where(_expulsionVotes.ContainsKey).Select(id =>
-                new MatchExpulsionVoteSummary { TargetPlayerId = id, VoteCount = _expulsionVotes[id].Count }).ToList(),
+                _expulsionVotes[id].ToSummary(id)).ToList(),
             WinnerIds = _winnerIds.ToList(),
             RoundSummaries = _scoring.ToRoundSummaries(),
             RecentMoves = _recentMoves.Select(move => new MatchBoardMove
@@ -482,36 +484,52 @@ internal sealed class MatchRecord
         }
         else
         {
-            result = RecordExpulsionVote(voterId, vote.TargetPlayerId, now);
+            result = RecordExpulsionVote(voterId, vote, now);
         }
 
         return result;
     }
 
-    private MatchExpulsionVoteResult RecordExpulsionVote(Guid voterId, Guid targetId, DateTimeOffset now)
+    private MatchExpulsionVoteResult RecordExpulsionVote(Guid voterId, MatchExpulsionVote vote, DateTimeOffset now)
     {
-        if (!_expulsionVotes.TryGetValue(targetId, out HashSet<Guid>? voters))
+        Guid targetId = vote.TargetPlayerId;
+        _expulsionVotes.TryGetValue(targetId, out MatchExpulsionBallot? ballot);
+        bool canRecord = vote.Decision switch
         {
-            voters = new HashSet<Guid>();
-            _expulsionVotes.Add(targetId, voters);
+            MatchExpulsionDecision.Support => vote.BallotId == 0
+                && (ballot is null or { IsRejected: false, AllowsLegacySupport: true }),
+            MatchExpulsionDecision.Request => (ballot is null or { IsRejected: true })
+                && vote.BallotId == (ballot?.Id ?? 0),
+            MatchExpulsionDecision.Accept or MatchExpulsionDecision.Reject => ballot is { IsRejected: false }
+                && vote.BallotId == ballot.Id,
+            _ => false
+        };
+
+        if (!canRecord)
+        {
+            return MatchExpulsionVoteResult.StaleVotingRevision;
         }
 
-        MatchExpulsionVoteResult result = MatchExpulsionVoteResult.AlreadyVoted;
-        if (voters.Add(voterId))
+        if (ballot is null or { IsRejected: true })
         {
-            if (voters.Count >= ExpulsionVotesRequired)
-            {
-                RemoveActivePlayer(targetId, MatchBoardActionKind.ExpelledByVote, now);
-                result = MatchExpulsionVoteResult.Expelled;
-            }
-            else
-            {
-                _boardRevision++;
-                result = MatchExpulsionVoteResult.Recorded;
-            }
+            ballot = new MatchExpulsionBallot(_boardRevision + 1, allowsLegacySupport: ballot is null);
+            _expulsionVotes[targetId] = ballot;
         }
 
-        return result;
+        if (!ballot.TryRecord(voterId, vote.Decision != MatchExpulsionDecision.Reject,
+            _activePlayerIds.Count - 1, ExpulsionVotesRequired))
+        {
+            return MatchExpulsionVoteResult.AlreadyVoted;
+        }
+
+        if (ballot.AcceptedCount >= ExpulsionVotesRequired)
+        {
+            RemoveActivePlayer(targetId, MatchBoardActionKind.ExpelledByVote, now);
+            return MatchExpulsionVoteResult.Expelled;
+        }
+
+        _boardRevision++;
+        return MatchExpulsionVoteResult.Recorded;
     }
 
     private bool HasPresenceExpired(Guid playerId, DateTimeOffset now)
@@ -528,6 +546,11 @@ internal sealed class MatchRecord
     {
         bool wasCurrentPlayer = _currentTurnPlayerId == playerId;
         RecordMove(playerId, (kind, 0, null), Array.Empty<int>());
+        if (kind == MatchBoardActionKind.ExpelledByVote)
+        {
+            _expelledByVotePlayerIds.Add(playerId);
+        }
+
         _deck.ReturnToBottom(_hands[playerId]);
         _hands.Remove(playerId);
         _activePlayerIds.Remove(playerId);
@@ -648,7 +671,7 @@ internal sealed class MatchRecord
                 Revision = _boardRevision,
                 VotingRevision = _votingRevision,
                 VotedExpulsionTargetIds = Session.PlayerIds.Where(targetId =>
-                    _expulsionVotes.TryGetValue(targetId, out HashSet<Guid>? voters) && voters.Contains(playerId))
+                    _expulsionVotes.TryGetValue(targetId, out MatchExpulsionBallot? ballot) && ballot.HasVoted(playerId))
                     .ToList()
             };
         }

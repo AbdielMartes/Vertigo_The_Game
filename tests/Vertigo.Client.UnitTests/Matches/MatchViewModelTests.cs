@@ -209,6 +209,50 @@ public sealed class MatchViewModelTests
         Assert.Empty(model.DraftMessage);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ApplyBoard_PlayerSelection_FollowsPlayerIdWhenRowsChange(bool targetStillPresent)
+    {
+        MatchViewModel model = CreateModel();
+        Guid matchId = Guid.NewGuid();
+        Guid targetId = Guid.NewGuid();
+        MatchBoardPlayer otherPlayer = new() { PlayerId = Guid.NewGuid(), Username = "Ana" };
+        model.Activate(matchId, "ABC234");
+        model.ApplyBoard(new MatchBoardSnapshot
+        {
+            MatchId = matchId,
+            Revision = 1,
+            Players = [new MatchBoardPlayer { PlayerId = targetId, Username = "Luis" }, otherPlayer]
+        });
+        model.SelectedPlayer = model.Players[0];
+
+        MatchBoardSnapshot updated = new()
+        {
+            MatchId = matchId,
+            Revision = 2,
+            Players = [otherPlayer]
+        };
+        if (targetStillPresent)
+        {
+            updated.Players.Add(new MatchBoardPlayer { PlayerId = targetId, Username = "Luis", FloorsBuilt = 2 });
+        }
+
+        Assert.True(model.ApplyBoard(updated));
+        if (targetStillPresent)
+        {
+            Assert.Same(model.Players[1], model.SelectedPlayer);
+            Assert.Equal(2, model.SelectedPlayer.FloorsBuilt);
+        }
+        else
+        {
+            Assert.Null(model.SelectedPlayer);
+        }
+
+        model.Activate(Guid.NewGuid(), "DEF234");
+        Assert.Null(model.SelectedPlayer);
+    }
+
     [Fact]
     public void ApplyBoard_ClosedRound_ExposesSummaryAndIgnoresOlderSnapshots()
     {
@@ -247,6 +291,7 @@ public sealed class MatchViewModelTests
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.RoundSummaries))!.Remove();
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.RecentMoves))!.Remove();
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.ExpelledPlayerIds))!.Remove();
+        payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.ExpelledByVotePlayerIds))!.Remove();
         payload.Element(payload.Name.Namespace + nameof(MatchBoardSnapshot.ExpulsionVotes))!.Remove();
         using System.Xml.XmlReader reader = payload.CreateReader();
         MatchBoardSnapshot board = Assert.IsType<MatchBoardSnapshot>(serializer.ReadObject(reader));
@@ -257,6 +302,7 @@ public sealed class MatchViewModelTests
         Assert.Empty(model.RoundSummaries);
         Assert.Empty(model.RecentMoves);
         Assert.Empty(board.ExpelledPlayerIds);
+        Assert.Empty(board.ExpelledByVotePlayerIds);
         Assert.Empty(board.ExpulsionVotes);
     }
 
@@ -439,6 +485,75 @@ public sealed class MatchViewModelTests
         Assert.Equal("Match.ExitConfirmTitle", model.ExitConfirmTitleText);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ApplyBoard_ExpulsionPrompt_ShowsTargetNoticeOrVotingControlsAndClosesOnExpulsion(bool isTarget)
+    {
+        Guid matchId = Guid.NewGuid();
+        Guid local = Guid.NewGuid();
+        Guid other = Guid.NewGuid();
+        Guid target = isTarget ? local : other;
+        PlayerSession session = new(TimeProvider.System);
+        session.SetSession(new SessionSnapshot
+        {
+            PlayerId = local,
+            Username = "Ana",
+            Token = "test-session",
+            ExpiresAt = DateTime.UtcNow.AddHours(1),
+            IsGuest = true
+        });
+        MatchViewModel model = new(new FakeTextLocalizer(), session, TimeProvider.System);
+        model.Activate(matchId, "ABC234");
+
+        MatchBoardSnapshot pending = new()
+        {
+            MatchId = matchId,
+            Revision = 5,
+            ExpulsionVotesRequired = 2,
+            Players = [new() { PlayerId = local }, new() { PlayerId = other }, new() { PlayerId = Guid.NewGuid() }],
+            ExpulsionVotes = [new() { BallotId = 5, TargetPlayerId = target, VoteCount = 1 }]
+        };
+        model.ApplyBoard(pending);
+        MatchExpulsionPrompt prompt = Assert.Single(model.ExpulsionPrompts);
+        Assert.Equal(isTarget ? "Match.Expulsion.TargetNotice" : "Match.Expulsion.Notice", prompt.Heading);
+        Assert.Equal(!isTarget, prompt.CanRespond);
+
+        if (!isTarget)
+        {
+            model.ApplyBoardAndHand(pending, new MatchPrivateHand
+            {
+                MatchId = matchId,
+                PlayerId = local,
+                Revision = 5,
+                VotedExpulsionTargetIds = [target]
+            });
+            prompt = Assert.Single(model.ExpulsionPrompts);
+            Assert.False(prompt.CanRespond);
+            Assert.True(prompt.CanHide);
+            prompt.HideCommand.Execute(null);
+            Assert.Empty(model.ExpulsionPrompts);
+            Assert.True(model.HasHiddenExpulsionPrompts);
+            model.ShowExpulsionPromptsCommand.Execute(null);
+            Assert.True(Assert.Single(model.ExpulsionPrompts).CanHide);
+        }
+
+        model.ApplyBoardAndHand(new MatchBoardSnapshot
+        {
+            MatchId = matchId,
+            Revision = 6,
+            Players = pending.Players.Where(player => player.PlayerId != target).ToList(),
+            ExpelledPlayerIds = [target],
+            ExpelledByVotePlayerIds = [target],
+            RecentMoves = [new() { ActionKind = MatchBoardActionKind.ExpelledByVote, PlayerUsername = "Rafa" }]
+        }, null);
+
+        Assert.Empty(model.ExpulsionPrompts);
+        Assert.Equal(isTarget, model.WasExpelledByVote);
+        Assert.Equal(isTarget ? "Match.Exit.ReturnHome" : "Match.Exit", model.ExitText);
+        Assert.Equal("Rafa salió de la partida.", Assert.Single(model.RecentMoves).Text);
+    }
+
     private static MatchViewModel CreateModel()
     {
         return new MatchViewModel(new FakeTextLocalizer());
@@ -453,6 +568,7 @@ public sealed class MatchViewModelTests
                 "Match.Move.Placement" => "{0} jugó {1} · torre {2}",
                 "Match.Move.MasterPlan" => "{0} usó un Plano Maestro: {1} · torre {2}",
                 "Match.Move.Dismantle" => "{0} desmontó la torre {1}.",
+                "Match.Move.LeftMatch" => "{0} salió de la partida.",
                 _ => key
             };
         }

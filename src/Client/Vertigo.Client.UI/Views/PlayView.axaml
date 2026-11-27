@@ -2,37 +2,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
              xmlns:contracts="using:Vertigo.Contracts.Models"
+             xmlns:conv="using:Avalonia.Data.Converters"
              x:Class="Vertigo.Client.UI.Views.PlayView"
              x:DataType="vm:PlayViewModel"
              x:CompileBindings="True">
-    <UserControl.Styles>
-        <Style Selector="Button:focus-visible">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
-        </Style>
-        <Style Selector="ListBox:focus-visible">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
-        </Style>
-    </UserControl.Styles>
     <ScrollViewer Background="{DynamicResource ColorCanvas}">
-        <StackPanel Margin="30" Spacing="24" MinWidth="730" MaxWidth="1080"
-                    HorizontalAlignment="Center">
+        <StackPanel Margin="{DynamicResource MarginScreen}"
+                    Spacing="{DynamicResource Space24}" MaxWidth="1000">
             <DockPanel LastChildFill="True">
                 <Button DockPanel.Dock="Left" Classes="vertigo-button neutral"
                         Command="{Binding BackCommand}" TabIndex="0"
                         AutomationProperties.Name="{Binding BackText}">
-                    <Path Width="24" Height="24" Stretch="Uniform"
-                          Stroke="{DynamicResource ColorCoal}" StrokeThickness="2"
-                          Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
+                    <Path Classes="vertigo-icon" Data="{StaticResource IconBack}"/>
                 </Button>
                 <StackPanel Margin="22,0,0,0" VerticalAlignment="Center" Spacing="4">
-                    <TextBlock Text="{Binding TitleText}" FontSize="34" FontWeight="Bold"
-                               FontFamily="{DynamicResource FontTitleDisplay}"/>
-                    <TextBlock Text="{Binding SubtitleText}" FontSize="14"
-                               Foreground="{DynamicResource ColorTextSecondary}"/>
+                    <TextBlock Classes="vertigo-title" TextWrapping="Wrap" Text="{Binding TitleText}"/>
+                    <TextBlock Classes="vertigo-secondary" Text="{Binding SubtitleText}"/>
                 </StackPanel>
             </DockPanel>
+            <ContentControl Classes="vertigo-message"
+                            IsVisible="{Binding ErrorMessage,
+                                       Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                            AutomationProperties.LiveSetting="Assertive">
+                <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
+            </ContentControl>
             <Border IsVisible="{Binding HasExistingLobby}" Classes="vertigo-lobby-panel">
                 <StackPanel Spacing="12">
                     <TextBlock Text="{Binding ExistingLobbyCode}" FontFamily="{DynamicResource FontMono}"/>
@@ -41,21 +34,18 @@
                             AutomationProperties.Name="{Binding ResumeLobbyText}"/>
                 </StackPanel>
             </Border>
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="22">
-                <Border Grid.Column="0" Background="{DynamicResource ColorWhite}"
-                        BorderBrush="{DynamicResource ColorCoal}"
-                        BorderThickness="{DynamicResource BorderThin}"
-                        CornerRadius="{DynamicResource RadiusSmall}" Padding="22">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="{DynamicResource Space16}">
+                <Border Grid.Column="0" Classes="vertigo-card">
                     <StackPanel Spacing="16">
                         <Path Width="40" Height="42" HorizontalAlignment="Left"
                               Stroke="{DynamicResource ColorSnesBlue}" StrokeThickness="2"
                               Data="M 5,38 L 5,20 L 18,20 L 18,38 M 18,38 L 18,8 L 35,8 L 35,38 M 2,38 L 39,38"/>
-                        <TextBlock Text="{Binding CreateTitleText}" FontSize="21" FontWeight="SemiBold"/>
+                        <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding CreateTitleText}"/>
                         <CheckBox IsChecked="{Binding IsPublic, Mode=TwoWay}"
                                   Content="{Binding PublicText}" TabIndex="1"
                                   AutomationProperties.Name="{Binding PublicText}"/>
                         <TextBlock Text="{Binding MaxPlayersText}"/>
-                        <NumericUpDown Minimum="2" Maximum="6" Increment="1"
+                        <NumericUpDown Classes="vertigo-input" Minimum="2" Maximum="6" Increment="1"
                                        Value="{Binding MaxPlayers, Mode=TwoWay}"
                                        Width="120" HorizontalAlignment="Left" TabIndex="2"
                                        AutomationProperties.Name="{Binding MaxPlayersText}"/>
@@ -64,15 +54,12 @@
                                 TabIndex="3"/>
                     </StackPanel>
                 </Border>
-                <Border Grid.Column="1" Background="{DynamicResource ColorWhite}"
-                        BorderBrush="{DynamicResource ColorCoal}"
-                        BorderThickness="{DynamicResource BorderThin}"
-                        CornerRadius="{DynamicResource RadiusSmall}" Padding="22">
+                <Border Grid.Column="1" Classes="vertigo-card">
                     <StackPanel Spacing="16">
                         <Path Width="40" Height="42" HorizontalAlignment="Left"
                               Stroke="{DynamicResource ColorSnesGreen}" StrokeThickness="2"
                               Data="M 2,15 L 14,15 L 14,28 L 2,28 Z M 14,21 L 32,21 M 25,13 L 33,21 L 25,29"/>
-                        <TextBlock Text="{Binding JoinTitleText}" FontSize="21" FontWeight="SemiBold"/>
+                        <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding JoinTitleText}"/>
                         <TextBlock Text="{Binding CodeText}"/>
                         <TextBox Text="{Binding LobbyCode, Mode=TwoWay}" MaxLength="6"
                                  Classes="vertigo-input" TabIndex="4"
@@ -83,23 +70,24 @@
                     </StackPanel>
                 </Border>
             </Grid>
-            <Border Background="{DynamicResource ColorWhite}"
-                    BorderBrush="{DynamicResource ColorCoal}"
-                    BorderThickness="{DynamicResource BorderThin}"
-                    CornerRadius="{DynamicResource RadiusSmall}" Padding="22">
+            <Border Classes="vertigo-card">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="{Binding BrowseTitleText}" FontSize="21" FontWeight="SemiBold"/>
-                    <StackPanel Orientation="Horizontal" Spacing="12">
+                    <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding BrowseTitleText}"/>
+                    <WrapPanel ItemSpacing="{DynamicResource Space12}" LineSpacing="{DynamicResource Space8}">
                         <Button Classes="vertigo-button secondary" Command="{Binding TogglePublicCommand}"
                                 Content="{Binding BrowseText}" TabIndex="6"/>
                         <Button Classes="vertigo-button neutral" Command="{Binding RefreshPublicCommand}"
                                 Content="{Binding RefreshText}" IsEnabled="{Binding !IsBusy}"
                                 IsVisible="{Binding IsPublicListOpen}" TabIndex="7"/>
-                    </StackPanel>
+                    </WrapPanel>
                     <StackPanel IsVisible="{Binding IsPublicListOpen}" Spacing="12">
-                        <TextBlock Text="{Binding EmptyText}" IsVisible="{Binding IsPublicListEmpty}"
-                                   Foreground="{DynamicResource ColorTextSecondary}"/>
-                        <ListBox ItemsSource="{Binding PublicLobbies}"
+                        <ContentControl Classes="vertigo-message status"
+                                        IsVisible="{Binding IsPublicListEmpty}"
+                                        AutomationProperties.LiveSetting="Polite">
+                            <TextBlock Classes="vertigo-message-text" Text="{Binding EmptyText}"/>
+                        </ContentControl>
+                        <ListBox Classes="vertigo-list" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ItemsSource="{Binding PublicLobbies}"
                                  SelectedItem="{Binding SelectedPublicLobby, Mode=TwoWay}"
                                  TabIndex="8" MaxHeight="260"
                                  AutomationProperties.Name="{Binding BrowseTitleText}">
@@ -108,7 +96,9 @@
                                     <Grid ColumnDefinitions="140,*,Auto" ColumnSpacing="16" Margin="8">
                                         <TextBlock Grid.Column="0" Text="{Binding LobbyCode}"
                                                    FontFamily="{DynamicResource FontMono}" FontWeight="Bold"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding HostUsername}"/>
+                                        <TextBlock Grid.Column="1"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Text="{Binding HostUsername}"/>
                                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
                                             <TextBlock Text="{Binding CurrentPlayers}"/>
                                             <TextBlock Text="/"/>
@@ -124,8 +114,6 @@
                     </StackPanel>
                 </StackPanel>
             </Border>
-            <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-                       Foreground="{DynamicResource ColorError}"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

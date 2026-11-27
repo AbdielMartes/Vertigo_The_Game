@@ -76,13 +76,89 @@ public sealed class MatchSyncNetTcpTests
     }
 
     [Fact]
+    public async Task VoteToExpelMatchPlayer_RejectionAndExpulsionReachTheTargetOverNetTcp()
+    {
+        await using LobbyHarness server = await LobbyHarness.StartAsync();
+        ILobbyService channel = server.Channel;
+        AuthenticatedSession requester = server.Guests.Create();
+        AuthenticatedSession voter = server.Guests.Create();
+        AuthenticatedSession target = server.Guests.Create();
+        string lobby = channel.CreateLobby(true, 3, requester.Token);
+        channel.JoinLobby(lobby, voter.Token);
+        channel.JoinLobby(lobby, target.Token);
+        foreach (AuthenticatedSession player in new[] { requester, voter, target })
+        {
+            channel.SetReady(lobby, true, player.Token);
+        }
+
+        LobbyPreparation preparation = channel.StartMatch(lobby, requester.Token);
+        MatchSyncRequest sync = new()
+        {
+            LobbyCode = lobby,
+            MatchId = preparation.MatchId,
+            SessionToken = target.Token
+        };
+        MatchSyncState initial = MatchSynchronization.Apply(channel.GetMatchUpdate(sync), null, target.PlayerId);
+        MatchExpulsionVoteRequest request = new()
+        {
+            LobbyCode = lobby,
+            MatchId = preparation.MatchId,
+            SessionToken = requester.Token,
+            TargetPlayerId = target.PlayerId,
+            ExpectedVotingRevision = initial.Board.VotingRevision,
+            Decision = MatchExpulsionDecision.Request
+        };
+        MatchExpulsionVoteRequest response = new()
+        {
+            LobbyCode = request.LobbyCode,
+            MatchId = request.MatchId,
+            SessionToken = voter.Token,
+            TargetPlayerId = request.TargetPlayerId,
+            ExpectedVotingRevision = request.ExpectedVotingRevision,
+            Decision = MatchExpulsionDecision.Reject
+        };
+
+        MatchExpulsionVoteSummary ballot = Assert.Single(channel.VoteToExpelMatchPlayer(request).ExpulsionVotes);
+        response.BallotId = ballot.BallotId;
+        channel.VoteToExpelMatchPlayer(response);
+        sync.Known = MatchSynchronization.Describe(initial);
+        MatchSyncState rejected = MatchSynchronization.Apply(channel.GetMatchUpdate(sync), initial, target.PlayerId);
+
+        MatchExpulsionVoteSummary closed = Assert.Single(rejected.Board.ExpulsionVotes);
+        Assert.True(closed.IsRejected);
+        Assert.Equal(1, closed.VoteCount);
+        Assert.Equal(1, closed.RejectedCount);
+        Assert.NotNull(rejected.Hand);
+
+        request.BallotId = closed.BallotId;
+        ballot = Assert.Single(channel.VoteToExpelMatchPlayer(request).ExpulsionVotes);
+        response.BallotId = ballot.BallotId;
+        response.Decision = MatchExpulsionDecision.Accept;
+        channel.VoteToExpelMatchPlayer(response);
+        sync.Known = MatchSynchronization.Describe(rejected);
+        MatchSyncState expelled = MatchSynchronization.Apply(channel.GetMatchUpdate(sync), rejected, target.PlayerId);
+
+        Assert.Null(expelled.Hand);
+        Assert.Contains(target.PlayerId, expelled.Board.ExpelledByVotePlayerIds);
+        MatchBoardMove departure = Assert.Single(expelled.Board.RecentMoves);
+        Assert.Equal(MatchBoardActionKind.ExpelledByVote, departure.ActionKind);
+        Assert.Equal(target.PlayerId, departure.PlayerId);
+    }
+
+    [Fact]
     public void Apply_DeltaAfterExpulsion_ClearsHandAndRejectsWrongBase()
     {
         Guid self = Guid.NewGuid();
         MatchBoardSnapshot before = new() { MatchId = Guid.NewGuid(), Revision = 5 };
         MatchPrivateHand hand = new() { MatchId = before.MatchId, PlayerId = self, Revision = 5, Cards = [12] };
         MatchSyncState baseline = new(before, hand);
-        MatchBoardSnapshot next = new() { MatchId = before.MatchId, Revision = 6, ExpelledPlayerIds = [self] };
+        MatchBoardSnapshot next = new()
+        {
+            MatchId = before.MatchId,
+            Revision = 6,
+            ExpelledPlayerIds = [self],
+            ExpelledByVotePlayerIds = [self]
+        };
         MatchSyncUpdate delta = MatchSynchronization.Compare(new MatchSyncState(next, null), self,
             MatchSynchronization.Describe(baseline));
 
@@ -90,6 +166,7 @@ public sealed class MatchSyncNetTcpTests
 
         Assert.Null(received.Hand);
         Assert.Contains(self, received.Board.ExpelledPlayerIds);
+        Assert.Contains(self, received.Board.ExpelledByVotePlayerIds);
         Assert.Throws<InvalidDataException>(() => MatchSynchronization.Apply(delta, null, self));
     }
 

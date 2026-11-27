@@ -623,10 +623,10 @@
     <value>Total acumulado</value>
   </data>
   <data name="Match.Expulsion.Vote" xml:space="preserve">
-    <value>Votar expulsión</value>
+    <value>Pedir expulsión</value>
   </data>
   <data name="Match.Expulsion.Count" xml:space="preserve">
-    <value>{0} de {1} votos</value>
+    <value>A favor: {0} · En contra: {1} · Necesarios: {2}</value>
   </data>
   <data name="Match.Exit.ReturnHome" xml:space="preserve">
     <value>Volver al menú</value>
@@ -857,5 +857,32 @@
   </data>
   <data name="Country.VE" xml:space="preserve">
     <value>Venezuela</value>
+  </data>
+  <data name="Match.Expulsion.Show" xml:space="preserve">
+    <value>Ver votaciones</value>
+  </data>
+  <data name="Match.Expulsion.Removed" xml:space="preserve">
+    <value>Fuiste expulsado de la partida por votación.</value>
+  </data>
+  <data name="Match.Expulsion.TargetNotice" xml:space="preserve">
+    <value>Se está votando tu expulsión.</value>
+  </data>
+  <data name="Match.Expulsion.Notice" xml:space="preserve">
+    <value>Solicitud para expulsar a {0}</value>
+  </data>
+  <data name="Match.Expulsion.Rejected" xml:space="preserve">
+    <value>La expulsión fue rechazada.</value>
+  </data>
+  <data name="Match.Expulsion.Recorded" xml:space="preserve">
+    <value>Tu voto se registró.</value>
+  </data>
+  <data name="Match.Expulsion.Accept" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="Match.Expulsion.Reject" xml:space="preserve">
+    <value>Rechazar</value>
+  </data>
+  <data name="Match.Expulsion.Hide" xml:space="preserve">
+    <value>Ocultar</value>
   </data>
 </root>

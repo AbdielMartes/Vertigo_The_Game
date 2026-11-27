@@ -2,20 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
              xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
+             xmlns:conv="using:Avalonia.Data.Converters"
              x:Class="Vertigo.Client.UI.Views.ProfileView"
              x:DataType="vm:ProfileViewModel"
              x:CompileBindings="True">
     <UserControl.Styles>
-        <Style Selector="Button:focus-visible">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
-        </Style>
-        <Style Selector="TextBlock.profile-label">
-            <Setter Property="Foreground" Value="{DynamicResource ColorTextSecondary}"/>
-            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-        </Style>
         <Style Selector="TextBlock.profile-stat">
+            <Setter Property="FontFamily" Value="{DynamicResource FontMono}"/>
             <Setter Property="Foreground" Value="{DynamicResource ColorAccent}"/>
             <Setter Property="FontSize" Value="{DynamicResource FontSizeSection}"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -24,8 +17,8 @@
     <ScrollViewer Background="{DynamicResource ColorCanvas}"
                   HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="16,10"
-                    MaxWidth="560"
+        <StackPanel Margin="{DynamicResource MarginScreen}"
+                    MaxWidth="620"
                     Spacing="{DynamicResource Space12}">
             <DockPanel LastChildFill="True">
                 <Button DockPanel.Dock="Left"
@@ -34,24 +27,15 @@
                         Command="{Binding BackCommand}"
                         TabIndex="0"
                         AutomationProperties.Name="{Binding BackText}">
-                    <Path Width="22"
-                          Height="22"
-                          Stroke="{DynamicResource ColorCoal}"
-                          StrokeThickness="{DynamicResource StrokeStrong}"
-                          Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
+                    <Path Classes="vertigo-icon" Data="{StaticResource IconBack}"/>
                 </Button>
-                <TextBlock Margin="16,0,0,0"
+                <TextBlock Classes="vertigo-title"
+                           Margin="16,0,0,0"
                            VerticalAlignment="Center"
-                           FontSize="{DynamicResource FontSizeTitle}"
-                           FontWeight="Bold"
+                           TextWrapping="Wrap"
                            Text="{Binding HeadingText}"/>
             </DockPanel>
-            <Border IsVisible="{Binding !IsEditing}"
-                    Background="{DynamicResource ColorSurface}"
-                    BorderBrush="{DynamicResource ColorBorder}"
-                    BorderThickness="{DynamicResource BorderThin}"
-                    CornerRadius="{DynamicResource RadiusCard}"
-                    Padding="{DynamicResource PaddingControl}">
+            <Border Classes="vertigo-card" IsVisible="{Binding !IsEditing}">
                 <StackPanel Spacing="{DynamicResource Space12}">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{DynamicResource Space12}">
                         <Image Width="64" Height="64" Source="{Binding Avatar}"/>
@@ -60,13 +44,21 @@
                                        FontWeight="Bold"
                                        TextWrapping="Wrap"
                                        Text="{Binding Username}"/>
-                            <TextBlock Classes="profile-label" Text="{Binding AccountType}"/>
+                            <TextBlock Classes="vertigo-secondary" Text="{Binding AccountType}"/>
                         </StackPanel>
                     </Grid>
                     <StackPanel IsVisible="{Binding ShowStatistics}" Spacing="{DynamicResource Space12}">
-                        <TextBlock Classes="profile-label"
-                                   IsVisible="{Binding !IsRecordAvailable}"
-                                   Text="{Binding RecordStatus}"/>
+                        <ContentControl Classes="vertigo-message status"
+                                        AutomationProperties.LiveSetting="Polite">
+                            <ContentControl.IsVisible>
+                                <MultiBinding Converter="{x:Static conv:BoolConverters.And}">
+                                    <Binding Path="!IsRecordAvailable"/>
+                                    <Binding Path="RecordStatus"
+                                             Converter="{x:Static conv:StringConverters.IsNotNullOrEmpty}"/>
+                                </MultiBinding>
+                            </ContentControl.IsVisible>
+                            <TextBlock Classes="vertigo-message-text" Text="{Binding RecordStatus}"/>
+                        </ContentControl>
                         <Grid IsVisible="{Binding IsRecordAvailable}"
                               ColumnDefinitions="*,*,*"
                               RowDefinitions="Auto,Auto"
@@ -75,51 +67,49 @@
                             <TextBlock Classes="profile-stat" Text="{Binding MatchesPlayed}"/>
                             <TextBlock Grid.Column="1" Classes="profile-stat" Text="{Binding MatchesWon}"/>
                             <TextBlock Grid.Column="2" Classes="profile-stat" TextWrapping="Wrap" Text="{Binding WinRate}"/>
-                            <TextBlock Grid.Row="1" Classes="profile-label" Text="{Binding MatchesPlayedText}"/>
+                            <TextBlock Grid.Row="1" Classes="vertigo-secondary" Text="{Binding MatchesPlayedText}"/>
                             <TextBlock Grid.Row="1" Grid.Column="1"
-                                       Classes="profile-label" Text="{Binding MatchesWonText}"/>
+                                       Classes="vertigo-secondary" Text="{Binding MatchesWonText}"/>
                             <TextBlock Grid.Row="1" Grid.Column="2"
-                                       Classes="profile-label" Text="{Binding WinRateText}"/>
+                                       Classes="vertigo-secondary" Text="{Binding WinRateText}"/>
                         </Grid>
                         <Grid IsVisible="{Binding IsRecordAvailable}"
                               ColumnDefinitions="*,*"
                               RowDefinitions="Auto,Auto"
                               ColumnSpacing="{DynamicResource Space8}">
-                            <TextBlock Classes="profile-label" Text="{Binding CreatedYearText}"/>
-                            <TextBlock Grid.Column="1" Classes="profile-label" Text="{Binding CountryText}"/>
+                            <TextBlock Classes="vertigo-secondary" Text="{Binding CreatedYearText}"/>
+                            <TextBlock Grid.Column="1" Classes="vertigo-secondary" Text="{Binding CountryText}"/>
                             <TextBlock Grid.Row="1" TextWrapping="Wrap" Text="{Binding CreatedYear}"/>
                             <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Country}"/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
             </Border>
-            <Button Classes="vertigo-button neutral"
+            <Button Classes="vertigo-button neutral" HorizontalAlignment="Right"
                     IsVisible="{Binding CanShowEdit}"
                     IsEnabled="{Binding IsRecordAvailable}"
                     Command="{Binding EditCommand}"
                     Content="{Binding EditProfileText}"/>
-            <Border IsVisible="{Binding IsEditing}"
-                    Background="{DynamicResource ColorSurface}"
-                    BorderBrush="{DynamicResource ColorBorder}"
-                    BorderThickness="{DynamicResource BorderThin}"
-                    CornerRadius="{DynamicResource RadiusCard}"
-                    Padding="{DynamicResource PaddingControl}">
+            <Border Classes="vertigo-card" IsVisible="{Binding IsEditing}">
                 <StackPanel IsEnabled="{Binding !SaveProfileCommand.IsRunning}" Spacing="{DynamicResource Space8}">
                     <Grid ColumnDefinitions="Auto,*"
                           RowDefinitions="Auto,Auto,Auto"
                           ColumnSpacing="{DynamicResource Space8}"
                           RowSpacing="{DynamicResource Space8}">
-                        <TextBlock Classes="profile-label" VerticalAlignment="Center" Text="{Binding UsernameText}"/>
-                        <TextBox Grid.Column="1"
+                        <TextBlock Classes="vertigo-secondary"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding UsernameText}"/>
+                        <TextBox Grid.Column="1" Classes="vertigo-input"
                                  Text="{Binding DraftUsername, Mode=TwoWay}"
                                  MaxLength="{Binding UsernameMaximumLength}"
                                  AutomationProperties.Name="{Binding UsernameText}"/>
                         <TextBlock Grid.Row="1"
-                                   Classes="profile-label"
+                                   Classes="vertigo-secondary"
                                    VerticalAlignment="Center"
                                    Text="{Binding CountryText}"/>
                         <AutoCompleteBox Grid.Row="1"
                                          Grid.Column="1"
+                                         Classes="vertigo-input"
                                          ItemsSource="{Binding CountryChoices}"
                                          ItemFilter="{Binding CountryFilter}"
                                          Text="{Binding DraftCountryText, Mode=TwoWay}"
@@ -128,11 +118,12 @@
                                          PlaceholderText="{Binding CountrySearchText}"
                                          AutomationProperties.Name="{Binding CountryText}"/>
                         <TextBlock Grid.Row="2"
-                                   Classes="profile-label"
+                                   Classes="vertigo-secondary"
                                    VerticalAlignment="Center"
                                    Text="{Binding AvatarText}"/>
                         <ComboBox Grid.Row="2"
                                   Grid.Column="1"
+                                  Classes="vertigo-input"
                                   ItemsSource="{Binding AvatarChoices}"
                                   SelectedItem="{Binding DraftAvatar, Mode=TwoWay}"
                                   HorizontalAlignment="Stretch"
@@ -147,10 +138,11 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </Grid>
-                    <TextBlock IsVisible="{Binding HasEditError}"
-                               Foreground="{DynamicResource ColorError}"
-                               TextWrapping="Wrap"
-                               Text="{Binding EditError}"/>
+                    <ContentControl Classes="vertigo-message"
+                                    IsVisible="{Binding HasEditError}"
+                                    AutomationProperties.LiveSetting="Assertive">
+                        <TextBlock Classes="vertigo-message-text" Text="{Binding EditError}"/>
+                    </ContentControl>
                     <WrapPanel ItemSpacing="{DynamicResource Space8}" LineSpacing="{DynamicResource Space8}">
                         <Button Classes="vertigo-button secondary"
                                 Command="{Binding SaveProfileCommand}"

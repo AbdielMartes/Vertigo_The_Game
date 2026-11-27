@@ -456,7 +456,8 @@ public sealed class LobbyService : ILobbyService, ILobbyDirectory
     {
         RequireRequest(request);
         Guid matchToVote = request.MatchId;
-        MatchExpulsionVote vote = new(request.TargetPlayerId, request.ExpectedVotingRevision);
+        MatchExpulsionVote vote = new(
+            request.TargetPlayerId, request.ExpectedVotingRevision, request.Decision, request.BallotId);
 
         return ApplyMatchBoardAction((request.LobbyCode, request.SessionToken, nameof(VoteToExpelMatchPlayer)), (0, 0), ApplyVote);
 

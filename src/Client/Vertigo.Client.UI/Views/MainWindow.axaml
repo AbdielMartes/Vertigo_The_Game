@@ -8,6 +8,7 @@
         x:Class="Vertigo.Client.UI.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         x:CompileBindings="True"
+        Background="{DynamicResource ColorCanvas}"
         Icon="/Assets/avalonia-logo.ico"
         Title="Vertigo.Client.UI">
 

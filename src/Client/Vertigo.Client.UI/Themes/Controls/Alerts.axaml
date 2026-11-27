@@ -1,16 +1,72 @@
 <Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style Selector="Border.vertigo-alert">
+    <Style Selector="ContentControl.vertigo-message">
         <Setter Property="Background" Value="{DynamicResource ColorErrorBackground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ColorError}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
-        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
-        <Setter Property="Padding" Value="{DynamicResource PaddingCard}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
+        <Setter Property="Padding" Value="{DynamicResource PaddingStatus}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{DynamicResource Space8}">
+                        <Path Classes="vertigo-message-icon"
+                              Stroke="{TemplateBinding BorderBrush}"
+                              Data="{StaticResource IconWarning}"/>
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                          Grid.Column="1"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
     </Style>
-    <Style Selector="Border.vertigo-lobby-panel">
-        <Setter Property="Background" Value="{DynamicResource ColorWhite}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
-        <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
-        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
-        <Setter Property="Padding" Value="{DynamicResource PaddingCard}"/>
+    <Style Selector="ContentControl.vertigo-message.info">
+        <Setter Property="Background" Value="{DynamicResource ColorInfoBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorAccent}"/>
+    </Style>
+    <Style Selector="ContentControl.vertigo-message.success">
+        <Setter Property="Background" Value="{DynamicResource ColorSuccessBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorSuccess}"/>
+    </Style>
+    <Style Selector="ContentControl.vertigo-message.status">
+        <Setter Property="Background" Value="{DynamicResource ColorSurfaceMuted}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorderStrong}"/>
+    </Style>
+    <Style Selector="ContentControl.vertigo-message.compact /template/ Path.vertigo-message-icon">
+        <Setter Property="Width" Value="{DynamicResource Space12}"/>
+        <Setter Property="Height" Value="{DynamicResource Space12}"/>
+    </Style>
+    <Style Selector="ContentControl.vertigo-message.info /template/ Path.vertigo-message-icon,
+                     ContentControl.vertigo-message.status /template/ Path.vertigo-message-icon">
+        <Setter Property="Data" Value="{StaticResource IconInfo}"/>
+    </Style>
+    <Style Selector="ContentControl.vertigo-message.success /template/ Path.vertigo-message-icon">
+        <Setter Property="Data" Value="{StaticResource IconReady}"/>
+    </Style>
+    <Style Selector="Path.vertigo-message-icon">
+        <Setter Property="Width" Value="{DynamicResource Space16}"/>
+        <Setter Property="Height" Value="{DynamicResource Space16}"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="StrokeThickness" Value="{DynamicResource StrokeStrong}"/>
+        <Setter Property="StrokeLineCap" Value="Round"/>
+    </Style>
+    <Style Selector="TextBlock.vertigo-message-text, TextBlock.vertigo-field-error">
+        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="TextBlock.vertigo-field-error">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource ColorError}"/>
     </Style>
 </Styles>

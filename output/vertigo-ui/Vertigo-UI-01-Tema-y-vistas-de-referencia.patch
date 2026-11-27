@@ -1,0 +1,456 @@
+diff --git a/src/Client/Vertigo.Client.UI/Themes/Controls/Alerts.axaml b/src/Client/Vertigo.Client.UI/Themes/Controls/Alerts.axaml
+index 45f9ba2..6fb6cd9 100644
+--- a/src/Client/Vertigo.Client.UI/Themes/Controls/Alerts.axaml
++++ b/src/Client/Vertigo.Client.UI/Themes/Controls/Alerts.axaml
+@@ -1,16 +1,72 @@
+ <Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+-    <Style Selector="Border.vertigo-alert">
++    <Style Selector="ContentControl.vertigo-message">
+         <Setter Property="Background" Value="{DynamicResource ColorErrorBackground}"/>
+         <Setter Property="BorderBrush" Value="{DynamicResource ColorError}"/>
+         <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+-        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
+-        <Setter Property="Padding" Value="{DynamicResource PaddingCard}"/>
++        <Setter Property="CornerRadius" Value="{DynamicResource RadiusControl}"/>
++        <Setter Property="Padding" Value="{DynamicResource PaddingStatus}"/>
++        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
++        <Setter Property="Template">
++            <ControlTemplate>
++                <Border Background="{TemplateBinding Background}"
++                        BorderBrush="{TemplateBinding BorderBrush}"
++                        BorderThickness="{TemplateBinding BorderThickness}"
++                        CornerRadius="{TemplateBinding CornerRadius}"
++                        Padding="{TemplateBinding Padding}">
++                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{DynamicResource Space8}">
++                        <Path Classes="vertigo-message-icon"
++                              Stroke="{TemplateBinding BorderBrush}"
++                              Data="{StaticResource IconWarning}"/>
++                        <ContentPresenter x:Name="PART_ContentPresenter"
++                                          Grid.Column="1"
++                                          Content="{TemplateBinding Content}"
++                                          ContentTemplate="{TemplateBinding ContentTemplate}"
++                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"/>
++                    </Grid>
++                </Border>
++            </ControlTemplate>
++        </Setter>
+     </Style>
+-    <Style Selector="Border.vertigo-lobby-panel">
+-        <Setter Property="Background" Value="{DynamicResource ColorWhite}"/>
+-        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
+-        <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+-        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
+-        <Setter Property="Padding" Value="{DynamicResource PaddingCard}"/>
++    <Style Selector="ContentControl.vertigo-message.info">
++        <Setter Property="Background" Value="{DynamicResource ColorInfoBackground}"/>
++        <Setter Property="BorderBrush" Value="{DynamicResource ColorAccent}"/>
++    </Style>
++    <Style Selector="ContentControl.vertigo-message.success">
++        <Setter Property="Background" Value="{DynamicResource ColorSuccessBackground}"/>
++        <Setter Property="BorderBrush" Value="{DynamicResource ColorSuccess}"/>
++    </Style>
++    <Style Selector="ContentControl.vertigo-message.status">
++        <Setter Property="Background" Value="{DynamicResource ColorSurfaceMuted}"/>
++        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorderStrong}"/>
++    </Style>
++    <Style Selector="ContentControl.vertigo-message.compact /template/ Path.vertigo-message-icon">
++        <Setter Property="Width" Value="{DynamicResource Space12}"/>
++        <Setter Property="Height" Value="{DynamicResource Space12}"/>
++    </Style>
++    <Style Selector="ContentControl.vertigo-message.info /template/ Path.vertigo-message-icon,
++                     ContentControl.vertigo-message.status /template/ Path.vertigo-message-icon">
++        <Setter Property="Data" Value="{StaticResource IconInfo}"/>
++    </Style>
++    <Style Selector="ContentControl.vertigo-message.success /template/ Path.vertigo-message-icon">
++        <Setter Property="Data" Value="{StaticResource IconReady}"/>
++    </Style>
++    <Style Selector="Path.vertigo-message-icon">
++        <Setter Property="Width" Value="{DynamicResource Space16}"/>
++        <Setter Property="Height" Value="{DynamicResource Space16}"/>
++        <Setter Property="Stretch" Value="Uniform"/>
++        <Setter Property="VerticalAlignment" Value="Top"/>
++        <Setter Property="StrokeThickness" Value="{DynamicResource StrokeStrong}"/>
++        <Setter Property="StrokeLineCap" Value="Round"/>
++    </Style>
++    <Style Selector="TextBlock.vertigo-message-text, TextBlock.vertigo-field-error">
++        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
++        <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}"/>
++        <Setter Property="Foreground" Value="{DynamicResource ColorTextPrimary}"/>
++        <Setter Property="TextWrapping" Value="Wrap"/>
++        <Setter Property="VerticalAlignment" Value="Center"/>
++    </Style>
++    <Style Selector="TextBlock.vertigo-field-error">
++        <Setter Property="FontWeight" Value="SemiBold"/>
++        <Setter Property="Foreground" Value="{DynamicResource ColorError}"/>
+     </Style>
+ </Styles>
+diff --git a/src/Client/Vertigo.Client.UI/Themes/Controls/Buttons.axaml b/src/Client/Vertigo.Client.UI/Themes/Controls/Buttons.axaml
+index 90f082a..2fbb99e 100644
+--- a/src/Client/Vertigo.Client.UI/Themes/Controls/Buttons.axaml
++++ b/src/Client/Vertigo.Client.UI/Themes/Controls/Buttons.axaml
+@@ -51,4 +51,8 @@
+         <Setter Property="Background" Value="{DynamicResource ColorDisabledBackground}"/>
+         <Setter Property="Foreground" Value="{DynamicResource ColorDisabledForeground}"/>
+     </Style>
++    <Style Selector="Button.vertigo-button:focus-visible">
++        <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
++        <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
++    </Style>
+ </Styles>
+diff --git a/src/Client/Vertigo.Client.UI/Themes/Controls/Lists.axaml b/src/Client/Vertigo.Client.UI/Themes/Controls/Lists.axaml
+index a9d44eb..4850f75 100644
+--- a/src/Client/Vertigo.Client.UI/Themes/Controls/Lists.axaml
++++ b/src/Client/Vertigo.Client.UI/Themes/Controls/Lists.axaml
+@@ -4,4 +4,11 @@
+         <Setter Property="BorderBrush" Value="{DynamicResource ColorDivider}"/>
+         <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+     </Style>
++    <Style Selector="ListBox.vertigo-list:focus-visible">
++        <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
++        <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
++    </Style>
++    <Style Selector="ListBox.vertigo-list ListBoxItem">
++        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
++    </Style>
+ </Styles>
+diff --git a/src/Client/Vertigo.Client.UI/Themes/Controls/TextInputs.axaml b/src/Client/Vertigo.Client.UI/Themes/Controls/TextInputs.axaml
+index 03f2795..61c01af 100644
+--- a/src/Client/Vertigo.Client.UI/Themes/Controls/TextInputs.axaml
++++ b/src/Client/Vertigo.Client.UI/Themes/Controls/TextInputs.axaml
+@@ -1,5 +1,6 @@
+ <Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+-    <Style Selector="TextBox.vertigo-input">
++    <Style Selector="TextBox.vertigo-input, ComboBox.vertigo-input,
++                     AutoCompleteBox.vertigo-input, NumericUpDown.vertigo-input">
+         <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}"/>
+         <Setter Property="CornerRadius" Value="{DynamicResource RadiusInput}"/>
+         <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
+@@ -9,7 +10,8 @@
+         <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
+         <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+     </Style>
+-    <Style Selector="TextBox.vertigo-input:focus">
++    <Style Selector="TextBox.vertigo-input:focus, ComboBox.vertigo-input:focus-visible,
++                     AutoCompleteBox.vertigo-input:focus-within, NumericUpDown.vertigo-input:focus-within">
+         <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+         <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+     </Style>
+diff --git a/src/Client/Vertigo.Client.UI/Themes/Layouts/Panels.axaml b/src/Client/Vertigo.Client.UI/Themes/Layouts/Panels.axaml
+index b5a8857..be3633e 100644
+--- a/src/Client/Vertigo.Client.UI/Themes/Layouts/Panels.axaml
++++ b/src/Client/Vertigo.Client.UI/Themes/Layouts/Panels.axaml
+@@ -33,4 +33,22 @@
+         <Setter Property="StrokeThickness" Value="{DynamicResource StrokeStrong}"/>
+         <Setter Property="StrokeLineCap" Value="Round"/>
+     </Style>
++    <Style Selector="TextBlock.vertigo-secondary">
++        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
++        <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}"/>
++        <Setter Property="Foreground" Value="{DynamicResource ColorTextSecondary}"/>
++        <Setter Property="TextWrapping" Value="Wrap"/>
++    </Style>
++    <Style Selector="TextBlock.vertigo-table-number">
++        <Setter Property="FontFamily" Value="{DynamicResource FontMono}"/>
++        <Setter Property="TextAlignment" Value="Right"/>
++        <Setter Property="VerticalAlignment" Value="Center"/>
++    </Style>
++    <Style Selector="Border.vertigo-lobby-panel">
++        <Setter Property="Background" Value="{DynamicResource ColorSurface}"/>
++        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
++        <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
++        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSmall}"/>
++        <Setter Property="Padding" Value="{DynamicResource PaddingCard}"/>
++    </Style>
+ </Styles>
+diff --git a/src/Client/Vertigo.Client.UI/Themes/Tokens/Icons.axaml b/src/Client/Vertigo.Client.UI/Themes/Tokens/Icons.axaml
+index 9df073d..05c749a 100644
+--- a/src/Client/Vertigo.Client.UI/Themes/Tokens/Icons.axaml
++++ b/src/Client/Vertigo.Client.UI/Themes/Tokens/Icons.axaml
+@@ -19,6 +19,12 @@
+         M 12,11 A 3,3 0 1 0 12,5 A 3,3 0 1 0 12,11 Z M 5,20 C 5,15 8,13 12,13 C 16,13 19,15 19,20
+         M 18,7 C 21,8 21,11 18,12
+     </StreamGeometry>
++    <StreamGeometry x:Key="IconInfo">
++        M 12,2 A 10,10 0 1 1 12,22 A 10,10 0 1 1 12,2 Z M 12,11 L 12,17 M 12,7 L 12,7.5
++    </StreamGeometry>
++    <StreamGeometry x:Key="IconBack">
++        M 20,12 L 4,12 M 11,5 L 4,12 L 11,19
++    </StreamGeometry>
+     <StreamGeometry x:Key="IconWarning">
+         M 12,3 L 22,21 L 2,21 Z M 12,9 L 12,15 M 12,18 L 12,18.5
+     </StreamGeometry>
+diff --git a/src/Client/Vertigo.Client.UI/Views/AccessView.axaml b/src/Client/Vertigo.Client.UI/Views/AccessView.axaml
+index dc535c8..06cdeba 100644
+--- a/src/Client/Vertigo.Client.UI/Views/AccessView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/AccessView.axaml
+@@ -2,15 +2,10 @@
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+              xmlns:validation="clr-namespace:Vertigo.Registration;assembly=Vertigo.Registration"
++             xmlns:conv="using:Avalonia.Data.Converters"
+              x:Class="Vertigo.Client.UI.Views.AccessView"
+              x:DataType="vm:AccessViewModel"
+              x:CompileBindings="True">
+-    <UserControl.Styles>
+-        <Style Selector="Button.vertigo-button:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+-    </UserControl.Styles>
+     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                   VerticalScrollBarVisibility="Auto"
+                   Background="{DynamicResource ColorCanvas}">
+@@ -49,11 +44,7 @@
+                         MinWidth="300"
+                         MaxWidth="420"
+                         VerticalAlignment="Center"
+-                        Background="{DynamicResource ColorSurface}"
+-                        BorderBrush="{DynamicResource ColorBorder}"
+-                        BorderThickness="{DynamicResource BorderThin}"
+-                        CornerRadius="{DynamicResource RadiusCard}"
+-                        Padding="{DynamicResource PaddingCard}">
++                        Classes="vertigo-card">
+                     <StackPanel Spacing="{DynamicResource Space12}">
+                         <TextBlock Classes="vertigo-title"
+                                    Text="{Binding TitleText}"/>
+@@ -88,14 +79,18 @@
+                                     Command="{Binding GuestCommand}"
+                                     Content="{Binding GuestText}"/>
+                         </StackPanel>
+-                        <TextBlock Text="{Binding ErrorMessage}"
+-                                   Foreground="{DynamicResource ColorError}"
+-                                   FontWeight="SemiBold"
+-                                   TextWrapping="Wrap"
+-                                   AutomationProperties.HelpText="{Binding ErrorHeadingText}"/>
+-                        <TextBlock IsVisible="{Binding IsBusy}"
+-                                   Text="{Binding ProgressText}"
+-                                   Foreground="{DynamicResource ColorTextSecondary}"/>
++                        <ContentControl Classes="vertigo-message"
++                                        IsVisible="{Binding ErrorMessage,
++                                                   Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                                        AutomationProperties.HelpText="{Binding ErrorHeadingText}"
++                                        AutomationProperties.LiveSetting="Assertive">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
++                        </ContentControl>
++                        <ContentControl Classes="vertigo-message status"
++                                        IsVisible="{Binding IsBusy}"
++                                        AutomationProperties.LiveSetting="Polite">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding ProgressText}"/>
++                        </ContentControl>
+                         <Button Classes="vertigo-button neutral"
+                                 TabIndex="5"
+                                 IsEnabled="{Binding !IsBusy}"
+@@ -116,9 +111,7 @@
+                                      Text="{Binding RegisterUsername, Mode=TwoWay}"
+                                      MaxLength="{x:Static validation:RegistrationRules.UsernameMaximumLength}"
+                                      AutomationProperties.Name="{Binding UsernameLabel}"/>
+-                            <TextBlock Text="{Binding RegisterUsernameError}"
+-                                       Foreground="{DynamicResource ColorError}"
+-                                       TextWrapping="Wrap"/>
++                            <TextBlock Classes="vertigo-field-error" Text="{Binding RegisterUsernameError}"/>
+                             <TextBlock Text="{Binding UsernameHint}"
+                                        Foreground="{DynamicResource ColorTextSecondary}"
+                                        TextWrapping="Wrap"/>
+@@ -128,9 +121,7 @@
+                                      Text="{Binding RegisterEmail, Mode=TwoWay}"
+                                      MaxLength="{x:Static validation:RegistrationRules.EmailMaximumLength}"
+                                      AutomationProperties.Name="{Binding EmailLabel}"/>
+-                            <TextBlock Text="{Binding RegisterEmailError}"
+-                                       Foreground="{DynamicResource ColorError}"
+-                                       TextWrapping="Wrap"/>
++                            <TextBlock Classes="vertigo-field-error" Text="{Binding RegisterEmailError}"/>
+                             <TextBlock Text="{Binding PasswordLabel}"/>
+                             <TextBox Classes="vertigo-input"
+                                      TabIndex="9"
+@@ -138,9 +129,7 @@
+                                      Text="{Binding RegisterPassword, Mode=TwoWay}"
+                                      MaxLength="{x:Static validation:RegistrationRules.PasswordMaximumLength}"
+                                      AutomationProperties.Name="{Binding PasswordLabel}"/>
+-                            <TextBlock Text="{Binding RegisterPasswordError}"
+-                                       Foreground="{DynamicResource ColorError}"
+-                                       TextWrapping="Wrap"/>
++                            <TextBlock Classes="vertigo-field-error" Text="{Binding RegisterPasswordError}"/>
+                             <TextBlock Text="{Binding PasswordHint}"
+                                        Foreground="{DynamicResource ColorTextSecondary}"
+                                        TextWrapping="Wrap"/>
+@@ -151,18 +140,19 @@
+                                      Text="{Binding ConfirmPassword, Mode=TwoWay}"
+                                      MaxLength="{x:Static validation:RegistrationRules.PasswordMaximumLength}"
+                                      AutomationProperties.Name="{Binding ConfirmPasswordLabel}"/>
+-                            <TextBlock Text="{Binding ConfirmPasswordError}"
+-                                       Foreground="{DynamicResource ColorError}"
+-                                       TextWrapping="Wrap"/>
++                            <TextBlock Classes="vertigo-field-error" Text="{Binding ConfirmPasswordError}"/>
+                             <Button Classes="vertigo-button primary"
+                                     TabIndex="11"
+                                     IsEnabled="{Binding !IsBusy}"
+                                     Command="{Binding RegisterCommand}"
+                                     Content="{Binding CreateAccountText}"/>
+                         </StackPanel>
+-                        <TextBlock Text="{Binding RegistrationMessage}"
+-                                   TextWrapping="Wrap"
+-                                   Foreground="{DynamicResource ColorSuccess}"/>
++                        <ContentControl Classes="vertigo-message success"
++                                        IsVisible="{Binding RegistrationMessage,
++                                                   Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                                        AutomationProperties.LiveSetting="Polite">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding RegistrationMessage}"/>
++                        </ContentControl>
+                         <TextBlock Text="{Binding HelpText}"
+                                    TextWrapping="Wrap"
+                                    Foreground="{DynamicResource ColorTextMuted}"/>
+diff --git a/src/Client/Vertigo.Client.UI/Views/HomeView.axaml b/src/Client/Vertigo.Client.UI/Views/HomeView.axaml
+index 8258434..1e69386 100644
+--- a/src/Client/Vertigo.Client.UI/Views/HomeView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/HomeView.axaml
+@@ -1,6 +1,7 @@
+ <UserControl xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
++             xmlns:conv="using:Avalonia.Data.Converters"
+              x:Class="Vertigo.Client.UI.Views.HomeView"
+              x:DataType="vm:HomeViewModel"
+              x:CompileBindings="True">
+@@ -28,15 +29,11 @@
+             <Setter Property="Foreground" Value="{DynamicResource ColorDisabledForeground}"/>
+             <Setter Property="Background" Value="{DynamicResource ColorDisabledBackground}"/>
+         </Style>
+-        <Style Selector="Button.vertigo-home-utility:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+     </UserControl.Styles>
+-    <ScrollViewer HorizontalScrollBarVisibility="Auto"
++    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                   VerticalScrollBarVisibility="Auto"
+                   Background="{DynamicResource ColorCanvas}">
+-        <Grid MinHeight="720" MinWidth="900" RowDefinitions="Auto,Auto,*,Auto" Margin="30">
++        <Grid MinHeight="620" MinWidth="840" RowDefinitions="Auto,Auto,*,Auto" Margin="{DynamicResource MarginScreen}">
+             <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                 <Border Grid.Column="0"
+                         Background="{DynamicResource ColorWhite}"
+@@ -89,7 +86,7 @@
+                     </StackPanel>
+                 </Border>
+             </Grid>
+-            <Grid Grid.Row="2" ColumnDefinitions="420,*" ColumnSpacing="48" Margin="25,30,0,0">
++            <Grid Grid.Row="2" ColumnDefinitions="380,*" ColumnSpacing="{DynamicResource Space32}" Margin="12,20,0,0">
+                 <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="14">
+                     <TextBlock Text="VÉRTIGO" FontSize="62" FontWeight="ExtraBold"
+                                Foreground="{DynamicResource ColorCoal}"
+@@ -140,8 +137,12 @@
+                             <TextBlock Text="{Binding SettingsText}" VerticalAlignment="Center"/>
+                         </StackPanel>
+                     </Button>
+-                    <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+-                               Foreground="{DynamicResource ColorError}"/>
++                    <ContentControl Classes="vertigo-message"
++                                    IsVisible="{Binding ErrorMessage,
++                                               Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                                    AutomationProperties.LiveSetting="Assertive">
++                        <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
++                    </ContentControl>
+                 </StackPanel>
+                 <Border Grid.Column="1" VerticalAlignment="Center"
+                         Background="{DynamicResource ColorWhite}"
+diff --git a/src/Client/Vertigo.Client.UI/Views/LobbyView.axaml b/src/Client/Vertigo.Client.UI/Views/LobbyView.axaml
+index 99f37ef..12f9979 100644
+--- a/src/Client/Vertigo.Client.UI/Views/LobbyView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/LobbyView.axaml
+@@ -11,23 +11,14 @@
+             <Setter Property="Foreground" Value="{DynamicResource ColorError}"/>
+             <Setter Property="FontStyle" Value="Italic"/>
+         </Style>
+-        <Style Selector="Button:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+-        <Style Selector="TextBox:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+     </UserControl.Styles>
+     <ScrollViewer Background="{DynamicResource ColorCanvas}"
+-                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+-        <StackPanel MinWidth="880" MaxWidth="1380" Margin="28" Spacing="18"
+-                    HorizontalAlignment="Center">
++                  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
++        <StackPanel MaxWidth="{DynamicResource ContentMaxWidth}"
++                    Margin="{DynamicResource MarginScreen}" Spacing="{DynamicResource Space16}">
+             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                 <StackPanel Spacing="6">
+-                    <TextBlock Text="{Binding RoomTitleText}" FontFamily="{DynamicResource FontTitleDisplay}"
+-                               FontSize="34" FontWeight="Bold"/>
++                    <TextBlock Classes="vertigo-title" TextWrapping="Wrap" Text="{Binding RoomTitleText}"/>
+                     <StackPanel Orientation="Horizontal" Spacing="10">
+                         <TextBlock Text="{Binding CodeTitleText}" VerticalAlignment="Center"/>
+                         <Border Background="{DynamicResource ColorInfoBackground}"
+@@ -43,24 +34,19 @@
+                         IsEnabled="{Binding !IsBusy}"
+                         AutomationProperties.Name="{Binding LeaveText}"/>
+             </Grid>
+-            <Border Classes="vertigo-alert" IsVisible="{Binding HasError}"
+-                    AutomationProperties.Name="{Binding ErrorHeadingText}">
+-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+-                    <Path Width="22" Height="22" Stretch="Uniform" VerticalAlignment="Top"
+-                          Stroke="{DynamicResource ColorError}" StrokeThickness="2"
+-                          Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
+-                    <StackPanel Grid.Column="1" Spacing="5">
+-                        <TextBlock Text="{Binding ErrorHeadingText}" FontWeight="Bold"
+-                                   Foreground="{DynamicResource ColorError}"/>
+-                        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+-                                   Foreground="{DynamicResource ColorTextPrimary}"/>
+-                    </StackPanel>
+-                </Grid>
+-            </Border>
++            <ContentControl Classes="vertigo-message"
++                            IsVisible="{Binding HasError}"
++                            AutomationProperties.Name="{Binding ErrorHeadingText}"
++                            AutomationProperties.LiveSetting="Assertive">
++                <StackPanel Spacing="{DynamicResource Space4}">
++                    <TextBlock Classes="vertigo-field-error" Text="{Binding ErrorHeadingText}"/>
++                    <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
++                </StackPanel>
++            </ContentControl>
+             <Grid ColumnDefinitions="1.05*,0.9*,1.2*" ColumnSpacing="16" MinHeight="480">
+                 <Border Grid.Column="0" Classes="vertigo-lobby-panel">
+                     <StackPanel Spacing="12">
+-                        <TextBlock Text="{Binding MembersTitleText}" FontSize="21" FontWeight="SemiBold"/>
++                        <TextBlock Classes="vertigo-section" Text="{Binding MembersTitleText}"/>
+                         <TextBlock Text="{Binding MembersDescriptionText}"
+                                    Foreground="{DynamicResource ColorTextSecondary}" TextWrapping="Wrap"/>
+                         <ItemsControl ItemsSource="{Binding MemberRows}">
+@@ -77,10 +63,9 @@
+                                                            Foreground="{DynamicResource ColorTextSecondary}"/>
+                                             </StackPanel>
+                                             <Border Grid.Column="2" Classes="vertigo-status"
+-                                                    
+                                                     VerticalAlignment="Center">
+-                                                <TextBlock Text="{Binding ReadyText}" FontSize="12"
+-                                                           FontWeight="SemiBold"/>
++                                                <TextBlock Classes="vertigo-status-text"
++                                                           Text="{Binding ReadyText}"/>
+                                             </Border>
+                                         </Grid>
+                                     </Border>
+@@ -91,7 +76,7 @@
+                 </Border>
+                 <Border Grid.Column="1" Classes="vertigo-lobby-panel">
+                     <StackPanel Spacing="16">
+-                        <TextBlock Text="{Binding PreparationTitleText}" FontSize="21" FontWeight="SemiBold"/>
++                        <TextBlock Classes="vertigo-section" Text="{Binding PreparationTitleText}"/>
+                         <Path Height="116" Width="110" HorizontalAlignment="Center" Stretch="Uniform"
+                               Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.5"
+                               Fill="{DynamicResource ColorInfoBackground}"
+@@ -119,8 +104,9 @@
+                 </Border>
+                 <Border Grid.Column="2" Classes="vertigo-lobby-panel">
+                     <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="12">
+-                        <TextBlock Text="{Binding ChatTitleText}" FontSize="21" FontWeight="SemiBold"/>
+-                        <ListBox x:Name="lstLobbyChat" Grid.Row="1" ItemsSource="{Binding Messages}" TabIndex="3"
++                        <TextBlock Classes="vertigo-section" Text="{Binding ChatTitleText}"/>
++                        <ListBox x:Name="lstLobbyChat" Grid.Row="1" Classes="vertigo-list" TabIndex="3"
++                                 ItemsSource="{Binding Messages}"
+                                  MinHeight="260" MaxHeight="520"
+                                  AutomationProperties.Name="{Binding ChatTitleText}">
+                             <ListBox.ItemTemplate>

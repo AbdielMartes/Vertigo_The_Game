@@ -51,4 +51,8 @@
         <Setter Property="Background" Value="{DynamicResource ColorDisabledBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource ColorDisabledForeground}"/>
     </Style>
+    <Style Selector="Button.vertigo-button:focus-visible">
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+    </Style>
 </Styles>

@@ -62,6 +62,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
     private string _errorMessage = string.Empty;
     private MatchCardRow? _selectedCard;
     private MatchPileRow? _selectedPile;
+    private MatchPlayerRow? _selectedPlayer;
     private long _currentBoardRevision;
     private (SessionSnapshot Session, MatchSyncState State)? _syncBaseline;
     private bool _pendingBoardRefresh;
@@ -94,6 +95,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         AddMasterPlanModuleCommand = new RelayCommand(AddMasterPlanModule, CanAddMasterPlanModule);
         RemoveMasterPlanModuleCommand = new RelayCommand(RemoveMasterPlanModule, CanRemoveMasterPlanModule);
         PlayMasterPlanCommand = new AsyncRelayCommand(PlayMasterPlanAsync, CanPlayMasterPlan);
+        ShowExpulsionPromptsCommand = new RelayCommand(ShowHiddenExpulsionPrompts);
         RequestExitCommand = new RelayCommand(RequestExit);
         CancelExitCommand = new RelayCommand(CancelExit, () => !_isLeavingMatch);
         ConfirmExitCommand = new AsyncRelayCommand(ConfirmExitAsync, CanConfirmExit);
@@ -131,6 +133,13 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
             }
         }
     }
+
+    public MatchPlayerRow? SelectedPlayer
+    {
+        get => _selectedPlayer;
+        set => SetProperty(ref _selectedPlayer, value);
+    }
+
     public bool IsLoadingBoard
     {
         get => _isLoadingBoard;
@@ -175,8 +184,11 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         _boardRevision.Reset();
         _matchId = Guid.Empty;
         _lobbyCode = string.Empty;
+        SelectedPlayer = null;
         Players.Clear();
         _voting.ApplyBoard(null, null);
+        _hiddenBallots.Clear();
+        RefreshExpulsionPrompts();
         Piles.Clear();
         Hand.Clear();
         ChatMessages.Clear();
@@ -527,6 +539,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
             Guid? localPlayerId = _session?.GetActiveSession()?.PlayerId;
             _voting.ApplyBoard(board, localPlayerId);
             RefreshPlayers();
+            RefreshExpulsionPrompts();
 
             _currentBoardRevision = board.Revision;
             UpdatePiles(board.Piles);
@@ -567,6 +580,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
 
     private void RefreshPlayers()
     {
+        Guid? selectedPlayerId = SelectedPlayer?.PlayerId;
         Players.Clear();
         if (_voting.Board is MatchBoardSnapshot board)
         {
@@ -576,26 +590,31 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
                 Players.Add(CreatePlayerRow(player, board.CurrentTurnPlayerId, localPlayerId));
             }
         }
+
+        SelectedPlayer = Players.FirstOrDefault(player => player.PlayerId == selectedPlayerId);
     }
 
     private MatchPlayerRow CreatePlayerRow(MatchBoardPlayer player, Guid activePlayerId, Guid? localPlayerId)
     {
         Guid targetId = player.PlayerId;
-        int votes = _voting.GetVoteCount(targetId);
-        bool canShowVote = _voting.IsEligibleTarget(targetId);
+        MatchExpulsionVoteSummary? ballot = _voting.FindBallot(targetId);
+        long ballotId = ballot?.BallotId ?? 0;
+        bool legacyBallot = ballot is { BallotId: 0, IsRejected: false };
+        bool canShowVote = _voting.IsEligibleTarget(targetId) && (legacyBallot || CanRequestExpulsion(targetId, ballotId));
+        MatchExpulsionDecision decision = legacyBallot ? MatchExpulsionDecision.Support : MatchExpulsionDecision.Request;
         return new MatchPlayerRow
         {
+            PlayerId = targetId,
             Username = player.Username,
             Avatar = AvatarCatalog.Resolve(player.AvatarId),
             FloorsBuilt = player.FloorsBuilt,
             IsCurrentTurn = targetId == activePlayerId,
             IsMe = targetId == localPlayerId,
             VoteText = _text.Get("Match.Expulsion.Vote"),
-            VoteCountText = canShowVote || votes > 0
-                ? string.Format(_text.Get("Match.Expulsion.Count"), votes, _voting.RequiredVotes)
-                : string.Empty,
             VoteCommand = canShowVote
-                ? new AsyncRelayCommand(() => VoteToExpelAsync(targetId), () => CanVoteToExpel(targetId))
+                ? new AsyncRelayCommand(
+                    () => SubmitExpulsionAsync(targetId, decision, ballotId),
+                    () => CanSubmitExpulsionDecision(targetId, decision, ballotId))
                 : null
         };
     }
@@ -671,32 +690,6 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         return CanConfirmPresence()
             ? SubmitTurnAsync((lobbies, token) =>
                 lobbies.ConfirmMatchPresence(CreatePresenceRequest(lobbyCode, matchId, token)))
-            : Task.CompletedTask;
-    }
-
-    private bool CanVoteToExpel(Guid targetId)
-    {
-        return _hasCurrentHand && !NeedsReconnect && !MatchUnavailable && !IsLoadingBoard
-            && !_isSubmittingTurn && !_isLeavingMatch
-            && _turnClock.GetRemainingSeconds() is > 0
-            && _voting.CanVoteFor(targetId);
-    }
-
-    private Task VoteToExpelAsync(Guid targetId)
-    {
-        string lobbyCode = _lobbyCode;
-        Guid matchId = _matchId;
-        long votingRevision = _voting.Revision;
-
-        return CanVoteToExpel(targetId)
-            ? SubmitTurnAsync((lobbies, token) => lobbies.VoteToExpelMatchPlayer(new MatchExpulsionVoteRequest
-            {
-                LobbyCode = lobbyCode,
-                SessionToken = token,
-                MatchId = matchId,
-                TargetPlayerId = targetId,
-                ExpectedVotingRevision = votingRevision
-            }))
             : Task.CompletedTask;
     }
 
@@ -907,6 +900,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         SelectedCard = null;
         _hasCurrentHand = hand is not null;
         _voting.ApplyPrivateHand(hand);
+        RefreshExpulsionPrompts();
         SetMasterPlanCount(hand?.MasterPlans ?? 0);
         if (hand is null || !HasMasterPlans || !_masterPlanDraft.IsStillInHand(hand.Cards))
         {
@@ -942,6 +936,12 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         AddMasterPlanModuleCommand.NotifyCanExecuteChanged();
         RemoveMasterPlanModuleCommand.NotifyCanExecuteChanged();
         PlayMasterPlanCommand.NotifyCanExecuteChanged();
+        foreach (MatchExpulsionPrompt prompt in ExpulsionPrompts)
+        {
+            prompt.AcceptCommand.NotifyCanExecuteChanged();
+            prompt.RejectCommand.NotifyCanExecuteChanged();
+        }
+
         foreach (MatchPlayerRow player in Players)
         {
             player.VoteCommand?.NotifyCanExecuteChanged();
@@ -1100,8 +1100,7 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         {
             if (SetProperty(ref _isExitConfirmationOpen, value))
             {
-                ConfirmExitCommand.NotifyCanExecuteChanged();
-                SendChatCommand.NotifyCanExecuteChanged();
+                RefreshTurnCommands();
             }
         }
     }
@@ -1176,6 +1175,8 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         OnPropertyChanged(nameof(ConfirmPresenceText));
         RefreshPresenceNotice();
         RefreshPlayers();
+        RefreshExpulsionPrompts();
+        OnPropertyChanged(nameof(ShowExpulsionPromptsText));
         OnPropertyChanged(nameof(TitleText));
         OnPropertyChanged(nameof(RoundText));
         OnPropertyChanged(nameof(CurrentTurnLabel));
@@ -1236,13 +1237,9 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
         {
             label = string.Format(_text.Get("Match.Move.PresenceConfirmed"), move.PlayerUsername);
         }
-        else if (move.ActionKind == MatchBoardActionKind.LeftMatch)
+        else if (move.ActionKind is MatchBoardActionKind.LeftMatch or MatchBoardActionKind.ExpelledByVote)
         {
             label = string.Format(_text.Get("Match.Move.LeftMatch"), move.PlayerUsername);
-        }
-        else if (move.ActionKind == MatchBoardActionKind.ExpelledByVote)
-        {
-            label = string.Format(_text.Get("Match.Move.ExpelledByVote"), move.PlayerUsername);
         }
         else
         {
@@ -1258,6 +1255,8 @@ public sealed partial class MatchViewModel : ViewModelBase, INavigationAware
 
     private void RefreshExitLabels()
     {
+        OnPropertyChanged(nameof(WasExpelledByVote));
+        OnPropertyChanged(nameof(ExpelledByVoteText));
         OnPropertyChanged(nameof(ExitText));
         OnPropertyChanged(nameof(ExitConfirmTitleText));
         OnPropertyChanged(nameof(ExitConfirmBodyText));

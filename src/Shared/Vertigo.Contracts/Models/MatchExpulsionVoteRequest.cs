@@ -19,4 +19,14 @@ public sealed class MatchExpulsionVoteRequest
 
     [DataMember]
     public long ExpectedVotingRevision { get; set; }
+
+    [DataMember(EmitDefaultValue = false)]
+    public MatchExpulsionDecision Decision { get; set; }
+
+    /// <summary>
+    /// Identifies the open ballot for a response or the rejected ballot for a new request.
+    /// Use zero for the first request or for legacy support.
+    /// </summary>
+    [DataMember(EmitDefaultValue = false)]
+    public long BallotId { get; set; }
 }

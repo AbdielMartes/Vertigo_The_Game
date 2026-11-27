@@ -1,0 +1,336 @@
+diff --git a/src/Client/Vertigo.Client.UI/Views/MatchResultsView.axaml b/src/Client/Vertigo.Client.UI/Views/MatchResultsView.axaml
+index fab7490..eab12f7 100644
+--- a/src/Client/Vertigo.Client.UI/Views/MatchResultsView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/MatchResultsView.axaml
+@@ -53,11 +53,9 @@
+         </Style>
+     </UserControl.Styles>
+ 
+-    <Border Padding="14" Background="{DynamicResource ColorWhite}"
+-            BorderBrush="{DynamicResource ColorBorderStrong}" BorderThickness="{DynamicResource BorderThin}"
+-            CornerRadius="{DynamicResource RadiusSmall}">
++    <Border Classes="vertigo-card" Padding="{DynamicResource PaddingControl}">
+         <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+-                  HorizontalContentAlignment="Stretch">
++                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+             <Expander.Header>
+                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                     <Viewbox Height="34" IsVisible="{Binding ShowLatestTower}">
+@@ -65,7 +63,7 @@
+                                         ContentTemplate="{StaticResource TowerDrawing}"/>
+                     </Viewbox>
+                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+-                        <TextBlock Text="{Binding HeaderText}" FontWeight="Bold"/>
++                        <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding HeaderText}"/>
+                         <TextBlock Text="{Binding LatestTowerCaption}" IsVisible="{Binding ShowLatestTower}"
+                                    Foreground="{DynamicResource ColorTextSecondary}" TextWrapping="Wrap"/>
+                     </StackPanel>
+@@ -78,8 +76,8 @@
+                             Classes.lost="{Binding IsLocalDefeat}"
+                             CornerRadius="{DynamicResource RadiusSmall}">
+                         <StackPanel Spacing="3">
+-                            <TextBlock Text="{Binding ResultTitle}" FontSize="22" FontWeight="Bold" TextWrapping="Wrap"/>
+-                            <TextBlock Text="{Binding ResultDetail}" FontSize="15" TextWrapping="Wrap"/>
++                            <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding ResultTitle}"/>
++                            <TextBlock Classes="vertigo-body" TextWrapping="Wrap" Text="{Binding ResultDetail}"/>
+                         </StackPanel>
+                     </Border>
+                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+@@ -118,7 +116,9 @@
+                                                 <TextBlock Grid.Column="2" IsVisible="{Binding IsLocal}" FontWeight="SemiBold"
+                                                            Foreground="{DynamicResource ColorSnesBlue}"
+                                                            Text="{Binding #resultView.((vm:MatchResultsViewModel)DataContext).LocalPlayerText}"/>
+-                                                <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
++                                                <TextBlock Grid.Column="3"
++                                                           Classes="vertigo-table-number"
++                                                           Text="{Binding TotalFloors}"
+                                                            IsVisible="{Binding !#resultView.((vm:MatchResultsViewModel)DataContext).IsEarlyAbandonment}"
+                                                            FontWeight="Bold"/>
+                                             </Grid>
+@@ -131,7 +131,8 @@
+                 </StackPanel>
+ 
+                 <StackPanel Spacing="10" IsVisible="{Binding HasRoundSummaries}">
+-                    <ComboBox ItemsSource="{Binding Rounds}" SelectedItem="{Binding SelectedRound, Mode=TwoWay}"
++                    <ComboBox Classes="vertigo-input" ItemsSource="{Binding Rounds}"
++                              SelectedItem="{Binding SelectedRound, Mode=TwoWay}"
+                               AutomationProperties.Name="{Binding SelectRoundText}">
+                         <ComboBox.ItemTemplate>
+                             <DataTemplate x:DataType="rows:MatchRoundResultRow">
+@@ -150,11 +151,18 @@
+                         <StackPanel Grid.Column="1" Spacing="6">
+                             <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="8" Margin="8,0">
+                                 <TextBlock Text="{Binding PlayerText}" FontWeight="SemiBold"/>
+-                                <TextBlock Grid.Column="1" Text="{Binding FloorsText}" FontWeight="SemiBold"
+-                                           TextWrapping="Wrap"/>
+-                                <TextBlock Grid.Column="2" Text="{Binding BonusText}" FontWeight="SemiBold"/>
+-                                <TextBlock Grid.Column="3" Text="{Binding TotalText}" FontWeight="SemiBold"
+-                                           TextWrapping="Wrap"/>
++                                <TextBlock Grid.Column="1"
++                                           Classes="vertigo-secondary"
++                                           TextAlignment="Right"
++                                           Text="{Binding FloorsText}"/>
++                                <TextBlock Grid.Column="2"
++                                           Classes="vertigo-secondary"
++                                           TextAlignment="Right"
++                                           Text="{Binding BonusText}"/>
++                                <TextBlock Grid.Column="3"
++                                           Classes="vertigo-secondary"
++                                           TextAlignment="Right"
++                                           Text="{Binding TotalText}"/>
+                             </Grid>
+                             <ItemsControl ItemsSource="{Binding SelectedScores}">
+                                 <ItemsControl.ItemTemplate>
+@@ -164,9 +172,15 @@
+                                             <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="8">
+                                                 <TextBlock Text="{Binding PlayerUsername}"
+                                                            TextTrimming="CharacterEllipsis"/>
+-                                                <TextBlock Grid.Column="1" Text="{Binding FloorsBuilt}"/>
+-                                                <TextBlock Grid.Column="2" Text="{Binding BonusFloors}"/>
+-                                                <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
++                                                <TextBlock Grid.Column="1"
++                                                           Classes="vertigo-table-number"
++                                                           Text="{Binding FloorsBuilt}"/>
++                                                <TextBlock Grid.Column="2"
++                                                           Classes="vertigo-table-number"
++                                                           Text="{Binding BonusFloors}"/>
++                                                <TextBlock Grid.Column="3"
++                                                           Classes="vertigo-table-number"
++                                                           Text="{Binding TotalFloors}"
+                                                            FontWeight="Bold"/>
+                                             </Grid>
+                                         </Border>
+diff --git a/src/Client/Vertigo.Client.UI/Views/MatchView.axaml b/src/Client/Vertigo.Client.UI/Views/MatchView.axaml
+index cc4405e..6b347e0 100644
+--- a/src/Client/Vertigo.Client.UI/Views/MatchView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/MatchView.axaml
+@@ -10,6 +10,10 @@
+     <UserControl.KeyBindings>
+         <KeyBinding Gesture="Escape" Command="{Binding CancelExitCommand}"/>
+     </UserControl.KeyBindings>
++    <UserControl.Resources>
++        <x:Double x:Key="ExpulsionPromptWidth">315</x:Double>
++        <Thickness x:Key="ExpulsionPromptClearance">0,0,327,0</Thickness>
++    </UserControl.Resources>
+     <UserControl.Styles>
+         <Style Selector="Border.match-panel">
+             <Setter Property="Background" Value="{DynamicResource ColorWhite}"/>
+@@ -74,6 +78,9 @@
+             <Setter Property="Background" Value="{DynamicResource ColorPlanTowerSurface}"/>
+             <Setter Property="BorderBrush" Value="{DynamicResource ColorPlanTowerBorder}"/>
+         </Style>
++        <Style Selector="TextBox.match-compact">
++            <Setter Property="MinHeight" Value="32"/>
++        </Style>
+         <Style Selector="Button.match-compact">
+             <Setter Property="MinHeight" Value="32"/>
+             <Setter Property="Padding" Value="9,4"/>
+@@ -102,13 +109,8 @@
+             <Setter Property="Foreground" Value="{DynamicResource ColorError}"/>
+             <Setter Property="FontStyle" Value="Italic"/>
+         </Style>
+-        <Style Selector="Button:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+-        <Style Selector="TextBox:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
++        <Style Selector="StackPanel.match-notices.expulsion-open">
++            <Setter Property="Margin" Value="{StaticResource ExpulsionPromptClearance}"/>
+         </Style>
+     </UserControl.Styles>
+     <Grid x:Name="grdMatchViewport" ClipToBounds="True">
+@@ -193,56 +195,47 @@
+                         <Button Grid.Column="2" Classes="vertigo-button danger" TabIndex="0"
+                                 Content="{Binding ExitText}" Command="{Binding RequestExitCommand}"/>
+                     </Grid>
+-                    <StackPanel Grid.Row="1" Spacing="6">
+-                        <Border IsVisible="{Binding NeedsReconnect}" Classes="match-panel" Padding="10,6"
+-                                Background="{DynamicResource ColorErrorBackground}">
++                    <StackPanel Grid.Row="1" Classes="match-notices"
++                                Classes.expulsion-open="{Binding HasExpulsionPrompts}" Spacing="6">
++                        <ContentControl Classes="vertigo-message compact"
++                                        IsVisible="{Binding NeedsReconnect}"
++                                        AutomationProperties.LiveSetting="Polite">
+                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+-                                <TextBlock
+-                                           Text="{Binding ConnectionText}"
+-                                           TextWrapping="Wrap"
+-                                           VerticalAlignment="Center"/>
++                                <TextBlock Classes="vertigo-message-text" Text="{Binding ConnectionText}"/>
+                                 <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                         Content="{Binding ReconnectText}" Command="{Binding ReconnectCommand}"/>
+                             </Grid>
+-                        </Border>
+-                        <Border IsVisible="{Binding MatchUnavailable}" Classes="match-panel" Padding="10,6"
+-                                Background="{DynamicResource ColorErrorBackground}">
++                        </ContentControl>
++                        <ContentControl Classes="vertigo-message compact"
++                                        IsVisible="{Binding MatchUnavailable}"
++                                        AutomationProperties.LiveSetting="Polite">
+                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+-                                <TextBlock
+-                                           Text="{Binding MatchUnavailableText}"
+-                                           TextWrapping="Wrap"
+-                                           VerticalAlignment="Center"/>
++                                <TextBlock Classes="vertigo-message-text" Text="{Binding MatchUnavailableText}"/>
+                                 <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                         Content="{Binding ReturnToMenuText}" Command="{Binding ReturnToMenuCommand}"/>
+                             </Grid>
+-                        </Border>
+-                        <Border IsVisible="{Binding WasExpelledByVote}" Classes="match-panel" Padding="10,6"
+-                                Background="{DynamicResource ColorErrorBackground}">
+-                            <TextBlock Text="{Binding ExpelledByVoteText}" TextWrapping="Wrap"/>
+-                        </Border>
+-                        <Border IsVisible="{Binding HasPresenceNotice}" Classes="match-panel" Padding="10,6"
+-                                Background="{DynamicResource ColorInfoBackground}">
++                        </ContentControl>
++                        <ContentControl Classes="vertigo-message compact"
++                                        IsVisible="{Binding WasExpelledByVote}"
++                                        AutomationProperties.LiveSetting="Assertive">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding ExpelledByVoteText}"/>
++                        </ContentControl>
++                        <ContentControl Classes="vertigo-message info compact"
++                                        IsVisible="{Binding HasPresenceNotice}"
++                                        AutomationProperties.LiveSetting="Polite">
+                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+-                                <TextBlock
+-                                           Text="{Binding PresenceNotice}"
+-                                           TextWrapping="Wrap"
+-                                           VerticalAlignment="Center"/>
++                                <TextBlock Classes="vertigo-message-text" Text="{Binding PresenceNotice}"/>
+                                 <Button Grid.Column="1" Classes="vertigo-button primary match-compact"
+                                         IsVisible="{Binding ShowConfirmPresence}"
+                                         Content="{Binding ConfirmPresenceText}"
+                                         Command="{Binding ConfirmPresenceCommand}"/>
+                             </Grid>
+-                        </Border>
+-                        <Border IsVisible="{Binding HasError}" Classes="match-panel" Padding="10,6"
+-                                Background="{DynamicResource ColorErrorBackground}"
+-                                BorderBrush="{DynamicResource ColorError}">
+-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+-                                <Path Width="18" Height="18" Stretch="Uniform"
+-                                      Stroke="{DynamicResource ColorError}" StrokeThickness="2"
+-                                      Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
+-                                <TextBlock Grid.Column="1" Text="{Binding ErrorMessage}" TextWrapping="Wrap"/>
+-                            </Grid>
+-                        </Border>
++                        </ContentControl>
++                        <ContentControl Classes="vertigo-message compact"
++                                        IsVisible="{Binding HasError}"
++                                        AutomationProperties.LiveSetting="Assertive">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
++                        </ContentControl>
+                     </StackPanel>
+ 
+                     <Grid Grid.Row="2" ColumnDefinitions="168,*,250" ColumnSpacing="12" MinHeight="164" MaxHeight="360">
+@@ -460,7 +453,7 @@
+                                         </ScrollViewer>
+                                         <StackPanel Grid.Row="2" Spacing="3">
+                                             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="5">
+-                                                <TextBox
++                                                <TextBox Classes="vertigo-input match-compact"
+                                                          TabIndex="3"
+                                                          MaxLength="{x:Static contracts:MatchChatRules.MaximumLength}"
+                                                          Text="{Binding DraftMessage, Mode=TwoWay}"
+@@ -484,10 +477,19 @@
+                                                            FontSize="11"
+                                                            Foreground="{DynamicResource ColorTextSecondary}"/>
+                                             </Grid>
+-                                            <TextBlock
+-                                                       Text="{Binding ChatErrorMessage}"
+-                                                       IsVisible="{Binding HasChatError}"
+-                                                       TextWrapping="Wrap" Foreground="{DynamicResource ColorError}"/>
++                                            <ScrollViewer IsVisible="{Binding HasChatError}"
++                                                          MaxHeight="72"
++                                                          HorizontalScrollBarVisibility="Disabled"
++                                                          VerticalScrollBarVisibility="Auto"
++                                                          ScrollViewer.IsScrollChainingEnabled="False"
++                                                          Focusable="True"
++                                                          TabIndex="4">
++                                                <ContentControl Classes="vertigo-message compact"
++                                                                AutomationProperties.LiveSetting="Assertive">
++                                                    <TextBlock Classes="vertigo-message-text"
++                                                               Text="{Binding ChatErrorMessage}"/>
++                                                </ContentControl>
++                                            </ScrollViewer>
+                                         </StackPanel>
+                                     </Grid>
+                                 </Border>
+@@ -694,7 +696,7 @@
+             <views:MatchResultsView DataContext="{Binding Results}"/>
+         </ScrollViewer>
+         <ScrollViewer IsVisible="{Binding HasExpulsionPrompts}" IsEnabled="{Binding !IsExitConfirmationOpen}"
+-                      Margin="12,82,18,12" Width="315" MaxHeight="235"
++                      Margin="12,82,18,12" Width="{StaticResource ExpulsionPromptWidth}" MaxHeight="235"
+                       HorizontalAlignment="Right" VerticalAlignment="Top"
+                       ScrollViewer.IsScrollChainingEnabled="False"
+                       HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+@@ -703,11 +705,15 @@
+                     <DataTemplate x:DataType="rows:MatchExpulsionPrompt">
+                         <Border Classes="match-panel" Padding="12" Margin="0,0,0,6">
+                             <StackPanel Spacing="6">
+-                                <TextBlock Text="{Binding Heading}" FontWeight="Bold" TextWrapping="Wrap"/>
+-                                <TextBlock Text="{Binding CountText}" TextWrapping="Wrap"/>
+-                                <TextBlock Text="{Binding StatusText}" IsVisible="{Binding HasStatus}"
+-                                           TextWrapping="Wrap"/>
+-                                <StackPanel Orientation="Horizontal" Spacing="6">
++                                <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding Heading}"/>
++                                <TextBlock Classes="vertigo-secondary" Text="{Binding CountText}"/>
++                                <ContentControl Classes="vertigo-message status compact"
++                                                IsVisible="{Binding HasStatus}"
++                                                AutomationProperties.LiveSetting="Polite">
++                                    <TextBlock Classes="vertigo-message-text" Text="{Binding StatusText}"/>
++                                </ContentControl>
++                                <WrapPanel ItemSpacing="{DynamicResource Space8}"
++                                           LineSpacing="{DynamicResource Space4}">
+                                     <Button Classes="vertigo-button danger match-compact"
+                                             IsVisible="{Binding CanRespond}" Content="{Binding AcceptText}"
+                                             Command="{Binding AcceptCommand}"/>
+@@ -717,30 +723,33 @@
+                                     <Button Classes="vertigo-button neutral match-compact"
+                                             IsVisible="{Binding CanHide}" Content="{Binding HideText}"
+                                             Command="{Binding HideCommand}"/>
+-                                </StackPanel>
++                                </WrapPanel>
+                             </StackPanel>
+                         </Border>
+                     </DataTemplate>
+                 </ItemsControl.ItemTemplate>
+             </ItemsControl>
+         </ScrollViewer>
+-        <Border IsVisible="{Binding IsExitConfirmationOpen}" Background="{DynamicResource ColorCanvas}"
+-                BorderBrush="{DynamicResource ColorCoal}" BorderThickness="2"
+-                CornerRadius="{DynamicResource RadiusSmall}"
+-                Margin="14" MaxWidth="450" Padding="24"
++        <Border Classes="vertigo-card" IsVisible="{Binding IsExitConfirmationOpen}"
++                BorderBrush="{DynamicResource ColorBorderStrong}" BorderThickness="{DynamicResource BorderStrong}"
++                Margin="16" MaxWidth="480"
+                 HorizontalAlignment="Center" VerticalAlignment="Center"
+                 Focusable="True">
+-            <StackPanel Spacing="14">
+-                <TextBlock Text="{Binding ExitConfirmTitleText}" FontWeight="Bold" FontSize="21"/>
+-                <TextBlock Text="{Binding ExitConfirmBodyText}" TextWrapping="Wrap"/>
+-                <TextBlock Text="{Binding ExitErrorMessage}" IsVisible="{Binding HasExitError}"
+-                           TextWrapping="Wrap" Foreground="{DynamicResource ColorError}"/>
+-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
++            <StackPanel Spacing="{DynamicResource Space16}">
++                <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding ExitConfirmTitleText}"/>
++                <TextBlock Classes="vertigo-body" TextWrapping="Wrap" Text="{Binding ExitConfirmBodyText}"/>
++                <ContentControl Classes="vertigo-message"
++                                IsVisible="{Binding HasExitError}"
++                                AutomationProperties.LiveSetting="Assertive">
++                    <TextBlock Classes="vertigo-message-text" Text="{Binding ExitErrorMessage}"/>
++                </ContentControl>
++                <WrapPanel HorizontalAlignment="Right"
++                           ItemSpacing="{DynamicResource Space8}" LineSpacing="{DynamicResource Space8}">
+                     <Button Content="{Binding CancelText}" Command="{Binding CancelExitCommand}"
+                             Classes="vertigo-button neutral" TabIndex="7"/>
+                     <Button Content="{Binding ConfirmText}" Command="{Binding ConfirmExitCommand}"
+                             Classes="vertigo-button danger" TabIndex="8"/>
+-                </StackPanel>
++                </WrapPanel>
+             </StackPanel>
+         </Border>
+     </Grid>

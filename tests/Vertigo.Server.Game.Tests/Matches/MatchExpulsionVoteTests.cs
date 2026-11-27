@@ -46,6 +46,7 @@ public sealed class MatchExpulsionVoteTests
         Assert.Equal(clock.Now + (initial.TurnDeadlineUtc!.Value - Start), after.TurnDeadlineUtc);
         Assert.Equal(initial.Revision + 2, after.Revision);
         Assert.Equal(target, Assert.Single(after.ExpelledPlayerIds));
+        Assert.Equal(target, Assert.Single(after.ExpelledByVotePlayerIds));
         Assert.Equal(MatchBoardActionKind.ExpelledByVote, Assert.Single(after.RecentMoves).ActionKind);
         Assert.Empty(after.ExpulsionVotes);
         Assert.Null(game.GetPrivateHand(initial.MatchId, target));
@@ -185,6 +186,75 @@ public sealed class MatchExpulsionVoteTests
         }
 
         Assert.Equal(board.Revision + 2, game.GetBoard(board.MatchId)!.Revision);
+    }
+
+    [Fact]
+    public void TryVoteToExpel_RejectionPreventsMajorityAndOldResponseCannotVoteInNewBallot()
+    {
+        InMemoryMatchSessionStarter game = new(new ManualClock());
+        MatchBoardSnapshot board = StartMatch(game, 3);
+        Guid target = board.CurrentTurnPlayerId;
+        Guid[] voters = board.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
+        MatchExpulsionVote request = new(target, board.VotingRevision, MatchExpulsionDecision.Request);
+
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[0], request));
+        MatchExpulsionVoteSummary open = Assert.Single(game.GetBoard(board.MatchId)!.ExpulsionVotes);
+        MatchExpulsionVote reject = new(target, board.VotingRevision, MatchExpulsionDecision.Reject, open.BallotId);
+        Assert.Equal(MatchExpulsionVoteResult.InvalidTarget, game.TryVoteToExpel(board.MatchId, target, reject));
+        Assert.Equal(MatchExpulsionVoteResult.AlreadyVoted, game.TryVoteToExpel(board.MatchId, voters[0], reject));
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[1], reject));
+
+        MatchBoardSnapshot after = game.GetBoard(board.MatchId)!;
+        MatchExpulsionVoteSummary closed = Assert.Single(after.ExpulsionVotes);
+        Assert.True(closed.IsRejected);
+        Assert.Equal(1, closed.VoteCount);
+        Assert.Equal(1, closed.RejectedCount);
+        Assert.Empty(after.ExpelledPlayerIds);
+        Assert.Empty(after.RecentMoves);
+        Assert.Equal(target, Assert.Single(game.GetPrivateHand(board.MatchId, voters[1])!.VotedExpulsionTargetIds));
+
+        MatchExpulsionVote legacyVote = new(target, board.VotingRevision);
+        Assert.Equal(MatchExpulsionVoteResult.StaleVotingRevision,
+            game.TryVoteToExpel(board.MatchId, voters[0], request));
+        Assert.Equal(MatchExpulsionVoteResult.StaleVotingRevision,
+            game.TryVoteToExpel(board.MatchId, voters[1], legacyVote));
+        Assert.Equal(after.Revision, game.GetBoard(board.MatchId)!.Revision);
+
+        MatchExpulsionVote reopen = request with { BallotId = closed.BallotId };
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[0], reopen));
+        Assert.Equal(MatchExpulsionVoteResult.StaleVotingRevision, game.TryVoteToExpel(board.MatchId, voters[1], reject));
+        Assert.Equal(MatchExpulsionVoteResult.StaleVotingRevision,
+            game.TryVoteToExpel(board.MatchId, voters[1], legacyVote));
+        MatchExpulsionVoteSummary reopened = Assert.Single(game.GetBoard(board.MatchId)!.ExpulsionVotes);
+        Assert.NotEqual(open.BallotId, reopened.BallotId);
+        Assert.False(reopened.IsRejected);
+        Assert.Equal(1, reopened.VoteCount);
+        Assert.Equal(0, reopened.RejectedCount);
+        MatchExpulsionVote accept = new(target, board.VotingRevision, MatchExpulsionDecision.Accept, reopened.BallotId);
+        Assert.Equal(MatchExpulsionVoteResult.Expelled, game.TryVoteToExpel(board.MatchId, voters[1], accept));
+    }
+
+    [Fact]
+    public void TryVoteToExpel_FivePlayers_StaysOpenWhenExactlyEnoughAcceptancesRemainPossible()
+    {
+        InMemoryMatchSessionStarter game = new(new ManualClock());
+        MatchBoardSnapshot board = StartMatch(game, 5);
+        Guid target = board.CurrentTurnPlayerId;
+        Guid[] voters = board.Players.Select(player => player.PlayerId).Where(id => id != target).ToArray();
+        Assert.Equal(3, board.ExpulsionVotesRequired);
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(
+            board.MatchId, voters[0], new MatchExpulsionVote(target, board.VotingRevision, MatchExpulsionDecision.Request)));
+        MatchExpulsionVoteSummary open = Assert.Single(game.GetBoard(board.MatchId)!.ExpulsionVotes);
+        MatchExpulsionVote reject = new(target, board.VotingRevision, MatchExpulsionDecision.Reject, open.BallotId);
+
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[1], reject));
+        MatchExpulsionVoteSummary pending = Assert.Single(game.GetBoard(board.MatchId)!.ExpulsionVotes);
+        Assert.False(pending.IsRejected);
+        Assert.Equal(1, pending.RejectedCount);
+
+        MatchExpulsionVote accept = reject with { Decision = MatchExpulsionDecision.Accept };
+        Assert.Equal(MatchExpulsionVoteResult.Recorded, game.TryVoteToExpel(board.MatchId, voters[2], accept));
+        Assert.Equal(MatchExpulsionVoteResult.Expelled, game.TryVoteToExpel(board.MatchId, voters[3], accept));
     }
 
     private static MatchBoardSnapshot StartMatch(InMemoryMatchSessionStarter game, int playerCount)

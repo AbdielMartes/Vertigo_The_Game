@@ -2,15 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
              xmlns:validation="clr-namespace:Vertigo.Registration;assembly=Vertigo.Registration"
+             xmlns:conv="using:Avalonia.Data.Converters"
              x:Class="Vertigo.Client.UI.Views.AccessView"
              x:DataType="vm:AccessViewModel"
              x:CompileBindings="True">
-    <UserControl.Styles>
-        <Style Selector="Button.vertigo-button:focus-visible">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
-        </Style>
-    </UserControl.Styles>
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto"
                   Background="{DynamicResource ColorCanvas}">
@@ -49,11 +44,7 @@
                         MinWidth="300"
                         MaxWidth="420"
                         VerticalAlignment="Center"
-                        Background="{DynamicResource ColorSurface}"
-                        BorderBrush="{DynamicResource ColorBorder}"
-                        BorderThickness="{DynamicResource BorderThin}"
-                        CornerRadius="{DynamicResource RadiusCard}"
-                        Padding="{DynamicResource PaddingCard}">
+                        Classes="vertigo-card">
                     <StackPanel Spacing="{DynamicResource Space12}">
                         <TextBlock Classes="vertigo-title"
                                    Text="{Binding TitleText}"/>
@@ -88,14 +79,18 @@
                                     Command="{Binding GuestCommand}"
                                     Content="{Binding GuestText}"/>
                         </StackPanel>
-                        <TextBlock Text="{Binding ErrorMessage}"
-                                   Foreground="{DynamicResource ColorError}"
-                                   FontWeight="SemiBold"
-                                   TextWrapping="Wrap"
-                                   AutomationProperties.HelpText="{Binding ErrorHeadingText}"/>
-                        <TextBlock IsVisible="{Binding IsBusy}"
-                                   Text="{Binding ProgressText}"
-                                   Foreground="{DynamicResource ColorTextSecondary}"/>
+                        <ContentControl Classes="vertigo-message"
+                                        IsVisible="{Binding ErrorMessage,
+                                                   Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                                        AutomationProperties.HelpText="{Binding ErrorHeadingText}"
+                                        AutomationProperties.LiveSetting="Assertive">
+                            <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
+                        </ContentControl>
+                        <ContentControl Classes="vertigo-message status"
+                                        IsVisible="{Binding IsBusy}"
+                                        AutomationProperties.LiveSetting="Polite">
+                            <TextBlock Classes="vertigo-message-text" Text="{Binding ProgressText}"/>
+                        </ContentControl>
                         <Button Classes="vertigo-button neutral"
                                 TabIndex="5"
                                 IsEnabled="{Binding !IsBusy}"
@@ -116,9 +111,7 @@
                                      Text="{Binding RegisterUsername, Mode=TwoWay}"
                                      MaxLength="{x:Static validation:RegistrationRules.UsernameMaximumLength}"
                                      AutomationProperties.Name="{Binding UsernameLabel}"/>
-                            <TextBlock Text="{Binding RegisterUsernameError}"
-                                       Foreground="{DynamicResource ColorError}"
-                                       TextWrapping="Wrap"/>
+                            <TextBlock Classes="vertigo-field-error" Text="{Binding RegisterUsernameError}"/>
                             <TextBlock Text="{Binding UsernameHint}"
                                        Foreground="{DynamicResource ColorTextSecondary}"
                                        TextWrapping="Wrap"/>
@@ -128,9 +121,7 @@
                                      Text="{Binding RegisterEmail, Mode=TwoWay}"
                                      MaxLength="{x:Static validation:RegistrationRules.EmailMaximumLength}"
                                      AutomationProperties.Name="{Binding EmailLabel}"/>
-                            <TextBlock Text="{Binding RegisterEmailError}"
-                                       Foreground="{DynamicResource ColorError}"
-                                       TextWrapping="Wrap"/>
+                            <TextBlock Classes="vertigo-field-error" Text="{Binding RegisterEmailError}"/>
                             <TextBlock Text="{Binding PasswordLabel}"/>
                             <TextBox Classes="vertigo-input"
                                      TabIndex="9"
@@ -138,9 +129,7 @@
                                      Text="{Binding RegisterPassword, Mode=TwoWay}"
                                      MaxLength="{x:Static validation:RegistrationRules.PasswordMaximumLength}"
                                      AutomationProperties.Name="{Binding PasswordLabel}"/>
-                            <TextBlock Text="{Binding RegisterPasswordError}"
-                                       Foreground="{DynamicResource ColorError}"
-                                       TextWrapping="Wrap"/>
+                            <TextBlock Classes="vertigo-field-error" Text="{Binding RegisterPasswordError}"/>
                             <TextBlock Text="{Binding PasswordHint}"
                                        Foreground="{DynamicResource ColorTextSecondary}"
                                        TextWrapping="Wrap"/>
@@ -151,18 +140,19 @@
                                      Text="{Binding ConfirmPassword, Mode=TwoWay}"
                                      MaxLength="{x:Static validation:RegistrationRules.PasswordMaximumLength}"
                                      AutomationProperties.Name="{Binding ConfirmPasswordLabel}"/>
-                            <TextBlock Text="{Binding ConfirmPasswordError}"
-                                       Foreground="{DynamicResource ColorError}"
-                                       TextWrapping="Wrap"/>
+                            <TextBlock Classes="vertigo-field-error" Text="{Binding ConfirmPasswordError}"/>
                             <Button Classes="vertigo-button primary"
                                     TabIndex="11"
                                     IsEnabled="{Binding !IsBusy}"
                                     Command="{Binding RegisterCommand}"
                                     Content="{Binding CreateAccountText}"/>
                         </StackPanel>
-                        <TextBlock Text="{Binding RegistrationMessage}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource ColorSuccess}"/>
+                        <ContentControl Classes="vertigo-message success"
+                                        IsVisible="{Binding RegistrationMessage,
+                                                   Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                                        AutomationProperties.LiveSetting="Polite">
+                            <TextBlock Classes="vertigo-message-text" Text="{Binding RegistrationMessage}"/>
+                        </ContentControl>
                         <TextBlock Text="{Binding HelpText}"
                                    TextWrapping="Wrap"
                                    Foreground="{DynamicResource ColorTextMuted}"/>

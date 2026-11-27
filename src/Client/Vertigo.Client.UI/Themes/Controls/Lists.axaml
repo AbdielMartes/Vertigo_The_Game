@@ -4,4 +4,21 @@
         <Setter Property="BorderBrush" Value="{DynamicResource ColorDivider}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
     </Style>
+    <Style Selector="ListBox.vertigo-list:focus-visible">
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+    </Style>
+    <Style Selector="ListBox.vertigo-list ListBoxItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="TabControl.vertigo-tabs">
+        <Setter Property="Background" Value="{DynamicResource ColorSurface}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
+        <Setter Property="Padding" Value="{DynamicResource PaddingStatus}"/>
+    </Style>
+    <Style Selector="TabControl.vertigo-tabs TabItem">
+        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
 </Styles>

@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <EmbeddedResource Include="Sql/001_ReducePlayerRegistrationLengths.sql;Sql/002_AddPlayerCountryCode.sql" />
     <ProjectReference Include="..\Vertigo.Server.CrossCutting\Vertigo.Server.CrossCutting.csproj" />
     <ProjectReference Include="..\..\Shared\Vertigo.Registration\Vertigo.Registration.csproj" />
   </ItemGroup>

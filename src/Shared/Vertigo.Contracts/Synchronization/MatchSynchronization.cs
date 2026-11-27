@@ -100,6 +100,7 @@ public static class MatchSynchronization
             WinnerIds = status.Winners,
             ExpelledPlayerIds = status.Expelled,
             InactivePlayerIds = status.Inactive,
+            ExpelledByVotePlayerIds = status.ExpelledByVote ?? new List<Guid>(),
             PresenceDeadlinesUtc = status.PresenceDeadlinesUtc,
             ExpulsionVotes = status.ExpulsionVotes
         };
@@ -138,6 +139,7 @@ public static class MatchSynchronization
         {
             Expelled = board.ExpelledPlayerIds,
             Inactive = board.InactivePlayerIds,
+            ExpelledByVote = board.ExpelledByVotePlayerIds.Count > 0 ? board.ExpelledByVotePlayerIds : null,
             Winners = board.WinnerIds,
             PresenceDeadlinesUtc = board.PresenceDeadlinesUtc,
             ExpulsionVotes = board.ExpulsionVotes

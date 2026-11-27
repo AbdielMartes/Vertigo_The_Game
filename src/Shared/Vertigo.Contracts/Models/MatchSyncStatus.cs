@@ -11,6 +11,9 @@ public sealed class MatchSyncStatus
     [DataMember]
     public List<Guid> Inactive { get; set; } = new();
 
+    [DataMember(EmitDefaultValue = false)]
+    public List<Guid>? ExpelledByVote { get; set; }
+
     [DataMember]
     public List<Guid> Winners { get; set; } = new();
 

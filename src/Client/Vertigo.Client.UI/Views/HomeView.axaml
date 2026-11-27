@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:conv="using:Avalonia.Data.Converters"
              x:Class="Vertigo.Client.UI.Views.HomeView"
              x:DataType="vm:HomeViewModel"
              x:CompileBindings="True">
@@ -28,15 +29,11 @@
             <Setter Property="Foreground" Value="{DynamicResource ColorDisabledForeground}"/>
             <Setter Property="Background" Value="{DynamicResource ColorDisabledBackground}"/>
         </Style>
-        <Style Selector="Button.vertigo-home-utility:focus-visible">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
-        </Style>
     </UserControl.Styles>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto"
                   Background="{DynamicResource ColorCanvas}">
-        <Grid MinHeight="720" MinWidth="900" RowDefinitions="Auto,Auto,*,Auto" Margin="30">
+        <Grid MinHeight="620" MinWidth="840" RowDefinitions="Auto,Auto,*,Auto" Margin="{DynamicResource MarginScreen}">
             <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
                 <Border Grid.Column="0"
                         Background="{DynamicResource ColorWhite}"
@@ -89,7 +86,7 @@
                     </StackPanel>
                 </Border>
             </Grid>
-            <Grid Grid.Row="2" ColumnDefinitions="420,*" ColumnSpacing="48" Margin="25,30,0,0">
+            <Grid Grid.Row="2" ColumnDefinitions="380,*" ColumnSpacing="{DynamicResource Space32}" Margin="12,20,0,0">
                 <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="14">
                     <TextBlock Text="VÉRTIGO" FontSize="62" FontWeight="ExtraBold"
                                Foreground="{DynamicResource ColorCoal}"
@@ -140,8 +137,12 @@
                             <TextBlock Text="{Binding SettingsText}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-                               Foreground="{DynamicResource ColorError}"/>
+                    <ContentControl Classes="vertigo-message"
+                                    IsVisible="{Binding ErrorMessage,
+                                               Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                                    AutomationProperties.LiveSetting="Assertive">
+                        <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
+                    </ContentControl>
                 </StackPanel>
                 <Border Grid.Column="1" VerticalAlignment="Center"
                         Background="{DynamicResource ColorWhite}"

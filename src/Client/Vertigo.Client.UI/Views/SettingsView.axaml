@@ -1,39 +1,39 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+             xmlns:conv="using:Avalonia.Data.Converters"
              x:Class="Vertigo.Client.UI.Views.SettingsView"
              x:DataType="vm:SettingsViewModel"
              x:CompileBindings="True">
-    <UserControl.Styles>
-        <Style Selector="Button:focus-visible">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
-        </Style>
-    </UserControl.Styles>
     <ScrollViewer Background="{DynamicResource ColorCanvas}">
-        <StackPanel Margin="32" Spacing="24" MaxWidth="660" HorizontalAlignment="Center">
+        <StackPanel Margin="{DynamicResource MarginScreen}"
+                    Spacing="{DynamicResource Space24}" MaxWidth="560">
             <DockPanel LastChildFill="True">
                 <Button DockPanel.Dock="Left" Classes="vertigo-button neutral"
                         Command="{Binding BackCommand}" TabIndex="0"
                         AutomationProperties.Name="{Binding BackText}">
-                    <Path Width="22" Height="22" Stroke="{DynamicResource ColorCoal}"
-                          StrokeThickness="2" Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
+                    <Path Classes="vertigo-icon" Data="{StaticResource IconBack}"/>
                 </Button>
-                <TextBlock Text="{Binding HeadingText}" Margin="24,0,0,0" FontSize="32"
-                           FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock Classes="vertigo-title" Margin="24,0,0,0"
+                           VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding HeadingText}"/>
             </DockPanel>
-            <Border Background="{DynamicResource ColorWhite}" BorderBrush="{DynamicResource ColorBorderStrong}"
-                    BorderThickness="{DynamicResource BorderThin}" CornerRadius="4" Padding="24">
-                <StackPanel Spacing="14">
-                    <TextBlock Text="{Binding LanguageText}" FontSize="18" FontWeight="SemiBold"/>
-                    <ComboBox SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}" TabIndex="1"
+            <Border Classes="vertigo-card">
+                <StackPanel Spacing="{DynamicResource Space16}">
+                    <TextBlock Classes="vertigo-section" Text="{Binding LanguageText}"/>
+                    <ComboBox Classes="vertigo-input" HorizontalAlignment="Stretch"
+                              SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}" TabIndex="1"
                               AutomationProperties.Name="{Binding LanguageText}">
                         <ComboBoxItem Content="{Binding SpanishText}"/>
                         <ComboBoxItem Content="{Binding EnglishText}"/>
                     </ComboBox>
-                    <Button Classes="vertigo-button primary" Command="{Binding SaveCommand}"
+                    <Button Classes="vertigo-button primary" HorizontalAlignment="Right" Command="{Binding SaveCommand}"
                             Content="{Binding SaveText}" TabIndex="2"/>
-                    <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ColorError}" TextWrapping="Wrap"/>
+                    <ContentControl Classes="vertigo-message"
+                                    IsVisible="{Binding ErrorMessage,
+                                               Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                                    AutomationProperties.LiveSetting="Assertive">
+                        <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
+                    </ContentControl>
                 </StackPanel>
             </Border>
         </StackPanel>

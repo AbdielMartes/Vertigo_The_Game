@@ -366,7 +366,7 @@ public sealed class MatchTurnPresentationTests
     }
 
     [Fact]
-    public void VoteCommand_RefreshedPrivateVote_DisablesOnlyThePreviouslyVotedTarget()
+    public void VoteCommand_OpenBallotMovesVotingForTheTargetToThePrompt()
     {
         TurnFixture turn = CreateTurn();
         turn.Board.Players.Add(new MatchBoardPlayer { PlayerId = Guid.NewGuid(), Username = "Carla" });
@@ -378,11 +378,43 @@ public sealed class MatchTurnPresentationTests
 
         turn.Board.Revision++;
         turn.Hand.Revision = turn.Board.Revision;
-        turn.Hand.VotedExpulsionTargetIds.Add(turn.Board.Players[1].PlayerId);
+        Guid target = turn.Board.Players[1].PlayerId;
+        turn.Board.ExpulsionVotes.Add(new MatchExpulsionVoteSummary
+        {
+            BallotId = turn.Board.Revision,
+            TargetPlayerId = target,
+            VoteCount = 1
+        });
         turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
 
-        Assert.False(turn.Model.Players[1].VoteCommand!.CanExecute(null));
+        Assert.Null(turn.Model.Players[1].VoteCommand);
         Assert.True(turn.Model.Players[2].VoteCommand!.CanExecute(null));
+        MatchExpulsionPrompt prompt = Assert.Single(turn.Model.ExpulsionPrompts);
+        Assert.True(prompt.AcceptCommand.CanExecute(null));
+        Assert.True(prompt.RejectCommand.CanExecute(null));
+
+        turn.Hand.VotedExpulsionTargetIds.Add(target);
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        prompt = Assert.Single(turn.Model.ExpulsionPrompts);
+        Assert.False(prompt.AcceptCommand.CanExecute(null));
+        Assert.False(prompt.RejectCommand.CanExecute(null));
+        Assert.True(prompt.CanHide);
+    }
+
+    [Fact]
+    public void VoteCommand_LegacyBallot_KeepsSupportWithoutShowingReject()
+    {
+        TurnFixture turn = CreateTurn();
+        turn.Board.Players.Add(new MatchBoardPlayer { PlayerId = Guid.NewGuid() });
+        turn.Board.ExpulsionVotesRequired = 2;
+        Guid target = turn.Board.Players[1].PlayerId;
+        turn.Board.ExpulsionVotes.Add(new MatchExpulsionVoteSummary { TargetPlayerId = target, VoteCount = 1 });
+
+        turn.Model.ApplyBoardAndHand(turn.Board, turn.Hand);
+
+        Assert.Empty(turn.Model.ExpulsionPrompts);
+        Assert.True(turn.Model.Players[1].VoteCommand!.CanExecute(null));
     }
 
     [Fact]

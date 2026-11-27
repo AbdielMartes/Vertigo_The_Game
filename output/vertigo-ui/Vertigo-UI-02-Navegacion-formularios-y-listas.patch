@@ -1,0 +1,749 @@
+diff --git a/src/Client/Vertigo.Client.UI/Themes/Controls/Lists.axaml b/src/Client/Vertigo.Client.UI/Themes/Controls/Lists.axaml
+index 4850f75..a4124a0 100644
+--- a/src/Client/Vertigo.Client.UI/Themes/Controls/Lists.axaml
++++ b/src/Client/Vertigo.Client.UI/Themes/Controls/Lists.axaml
+@@ -11,4 +11,14 @@
+     <Style Selector="ListBox.vertigo-list ListBoxItem">
+         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+     </Style>
++    <Style Selector="TabControl.vertigo-tabs">
++        <Setter Property="Background" Value="{DynamicResource ColorSurface}"/>
++        <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
++        <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
++        <Setter Property="Padding" Value="{DynamicResource PaddingStatus}"/>
++    </Style>
++    <Style Selector="TabControl.vertigo-tabs TabItem">
++        <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
++        <Setter Property="FontWeight" Value="SemiBold"/>
++    </Style>
+ </Styles>
+diff --git a/src/Client/Vertigo.Client.UI/Views/MainWindow.axaml b/src/Client/Vertigo.Client.UI/Views/MainWindow.axaml
+index 358aed6..767a933 100644
+--- a/src/Client/Vertigo.Client.UI/Views/MainWindow.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/MainWindow.axaml
+@@ -8,6 +8,7 @@
+         x:Class="Vertigo.Client.UI.Views.MainWindow"
+         x:DataType="vm:MainViewModel"
+         x:CompileBindings="True"
++        Background="{DynamicResource ColorCanvas}"
+         Icon="/Assets/avalonia-logo.ico"
+         Title="Vertigo.Client.UI">
+ 
+diff --git a/src/Client/Vertigo.Client.UI/Views/PlayView.axaml b/src/Client/Vertigo.Client.UI/Views/PlayView.axaml
+index 938a048..6ee42aa 100644
+--- a/src/Client/Vertigo.Client.UI/Views/PlayView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/PlayView.axaml
+@@ -2,37 +2,30 @@
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+              xmlns:contracts="using:Vertigo.Contracts.Models"
++             xmlns:conv="using:Avalonia.Data.Converters"
+              x:Class="Vertigo.Client.UI.Views.PlayView"
+              x:DataType="vm:PlayViewModel"
+              x:CompileBindings="True">
+-    <UserControl.Styles>
+-        <Style Selector="Button:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+-        <Style Selector="ListBox:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+-    </UserControl.Styles>
+     <ScrollViewer Background="{DynamicResource ColorCanvas}">
+-        <StackPanel Margin="30" Spacing="24" MinWidth="730" MaxWidth="1080"
+-                    HorizontalAlignment="Center">
++        <StackPanel Margin="{DynamicResource MarginScreen}"
++                    Spacing="{DynamicResource Space24}" MaxWidth="1000">
+             <DockPanel LastChildFill="True">
+                 <Button DockPanel.Dock="Left" Classes="vertigo-button neutral"
+                         Command="{Binding BackCommand}" TabIndex="0"
+                         AutomationProperties.Name="{Binding BackText}">
+-                    <Path Width="24" Height="24" Stretch="Uniform"
+-                          Stroke="{DynamicResource ColorCoal}" StrokeThickness="2"
+-                          Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
++                    <Path Classes="vertigo-icon" Data="{StaticResource IconBack}"/>
+                 </Button>
+                 <StackPanel Margin="22,0,0,0" VerticalAlignment="Center" Spacing="4">
+-                    <TextBlock Text="{Binding TitleText}" FontSize="34" FontWeight="Bold"
+-                               FontFamily="{DynamicResource FontTitleDisplay}"/>
+-                    <TextBlock Text="{Binding SubtitleText}" FontSize="14"
+-                               Foreground="{DynamicResource ColorTextSecondary}"/>
++                    <TextBlock Classes="vertigo-title" TextWrapping="Wrap" Text="{Binding TitleText}"/>
++                    <TextBlock Classes="vertigo-secondary" Text="{Binding SubtitleText}"/>
+                 </StackPanel>
+             </DockPanel>
++            <ContentControl Classes="vertigo-message"
++                            IsVisible="{Binding ErrorMessage,
++                                       Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                            AutomationProperties.LiveSetting="Assertive">
++                <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
++            </ContentControl>
+             <Border IsVisible="{Binding HasExistingLobby}" Classes="vertigo-lobby-panel">
+                 <StackPanel Spacing="12">
+                     <TextBlock Text="{Binding ExistingLobbyCode}" FontFamily="{DynamicResource FontMono}"/>
+@@ -41,21 +34,18 @@
+                             AutomationProperties.Name="{Binding ResumeLobbyText}"/>
+                 </StackPanel>
+             </Border>
+-            <Grid ColumnDefinitions="*,*" ColumnSpacing="22">
+-                <Border Grid.Column="0" Background="{DynamicResource ColorWhite}"
+-                        BorderBrush="{DynamicResource ColorCoal}"
+-                        BorderThickness="{DynamicResource BorderThin}"
+-                        CornerRadius="{DynamicResource RadiusSmall}" Padding="22">
++            <Grid ColumnDefinitions="*,*" ColumnSpacing="{DynamicResource Space16}">
++                <Border Grid.Column="0" Classes="vertigo-card">
+                     <StackPanel Spacing="16">
+                         <Path Width="40" Height="42" HorizontalAlignment="Left"
+                               Stroke="{DynamicResource ColorSnesBlue}" StrokeThickness="2"
+                               Data="M 5,38 L 5,20 L 18,20 L 18,38 M 18,38 L 18,8 L 35,8 L 35,38 M 2,38 L 39,38"/>
+-                        <TextBlock Text="{Binding CreateTitleText}" FontSize="21" FontWeight="SemiBold"/>
++                        <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding CreateTitleText}"/>
+                         <CheckBox IsChecked="{Binding IsPublic, Mode=TwoWay}"
+                                   Content="{Binding PublicText}" TabIndex="1"
+                                   AutomationProperties.Name="{Binding PublicText}"/>
+                         <TextBlock Text="{Binding MaxPlayersText}"/>
+-                        <NumericUpDown Minimum="2" Maximum="6" Increment="1"
++                        <NumericUpDown Classes="vertigo-input" Minimum="2" Maximum="6" Increment="1"
+                                        Value="{Binding MaxPlayers, Mode=TwoWay}"
+                                        Width="120" HorizontalAlignment="Left" TabIndex="2"
+                                        AutomationProperties.Name="{Binding MaxPlayersText}"/>
+@@ -64,15 +54,12 @@
+                                 TabIndex="3"/>
+                     </StackPanel>
+                 </Border>
+-                <Border Grid.Column="1" Background="{DynamicResource ColorWhite}"
+-                        BorderBrush="{DynamicResource ColorCoal}"
+-                        BorderThickness="{DynamicResource BorderThin}"
+-                        CornerRadius="{DynamicResource RadiusSmall}" Padding="22">
++                <Border Grid.Column="1" Classes="vertigo-card">
+                     <StackPanel Spacing="16">
+                         <Path Width="40" Height="42" HorizontalAlignment="Left"
+                               Stroke="{DynamicResource ColorSnesGreen}" StrokeThickness="2"
+                               Data="M 2,15 L 14,15 L 14,28 L 2,28 Z M 14,21 L 32,21 M 25,13 L 33,21 L 25,29"/>
+-                        <TextBlock Text="{Binding JoinTitleText}" FontSize="21" FontWeight="SemiBold"/>
++                        <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding JoinTitleText}"/>
+                         <TextBlock Text="{Binding CodeText}"/>
+                         <TextBox Text="{Binding LobbyCode, Mode=TwoWay}" MaxLength="6"
+                                  Classes="vertigo-input" TabIndex="4"
+@@ -83,23 +70,24 @@
+                     </StackPanel>
+                 </Border>
+             </Grid>
+-            <Border Background="{DynamicResource ColorWhite}"
+-                    BorderBrush="{DynamicResource ColorCoal}"
+-                    BorderThickness="{DynamicResource BorderThin}"
+-                    CornerRadius="{DynamicResource RadiusSmall}" Padding="22">
++            <Border Classes="vertigo-card">
+                 <StackPanel Spacing="16">
+-                    <TextBlock Text="{Binding BrowseTitleText}" FontSize="21" FontWeight="SemiBold"/>
+-                    <StackPanel Orientation="Horizontal" Spacing="12">
++                    <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding BrowseTitleText}"/>
++                    <WrapPanel ItemSpacing="{DynamicResource Space12}" LineSpacing="{DynamicResource Space8}">
+                         <Button Classes="vertigo-button secondary" Command="{Binding TogglePublicCommand}"
+                                 Content="{Binding BrowseText}" TabIndex="6"/>
+                         <Button Classes="vertigo-button neutral" Command="{Binding RefreshPublicCommand}"
+                                 Content="{Binding RefreshText}" IsEnabled="{Binding !IsBusy}"
+                                 IsVisible="{Binding IsPublicListOpen}" TabIndex="7"/>
+-                    </StackPanel>
++                    </WrapPanel>
+                     <StackPanel IsVisible="{Binding IsPublicListOpen}" Spacing="12">
+-                        <TextBlock Text="{Binding EmptyText}" IsVisible="{Binding IsPublicListEmpty}"
+-                                   Foreground="{DynamicResource ColorTextSecondary}"/>
+-                        <ListBox ItemsSource="{Binding PublicLobbies}"
++                        <ContentControl Classes="vertigo-message status"
++                                        IsVisible="{Binding IsPublicListEmpty}"
++                                        AutomationProperties.LiveSetting="Polite">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding EmptyText}"/>
++                        </ContentControl>
++                        <ListBox Classes="vertigo-list" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
++                                 ItemsSource="{Binding PublicLobbies}"
+                                  SelectedItem="{Binding SelectedPublicLobby, Mode=TwoWay}"
+                                  TabIndex="8" MaxHeight="260"
+                                  AutomationProperties.Name="{Binding BrowseTitleText}">
+@@ -108,7 +96,9 @@
+                                     <Grid ColumnDefinitions="140,*,Auto" ColumnSpacing="16" Margin="8">
+                                         <TextBlock Grid.Column="0" Text="{Binding LobbyCode}"
+                                                    FontFamily="{DynamicResource FontMono}" FontWeight="Bold"/>
+-                                        <TextBlock Grid.Column="1" Text="{Binding HostUsername}"/>
++                                        <TextBlock Grid.Column="1"
++                                                   TextTrimming="CharacterEllipsis"
++                                                   Text="{Binding HostUsername}"/>
+                                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
+                                             <TextBlock Text="{Binding CurrentPlayers}"/>
+                                             <TextBlock Text="/"/>
+@@ -124,8 +114,6 @@
+                     </StackPanel>
+                 </StackPanel>
+             </Border>
+-            <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+-                       Foreground="{DynamicResource ColorError}"/>
+         </StackPanel>
+     </ScrollViewer>
+ </UserControl>
+diff --git a/src/Client/Vertigo.Client.UI/Views/ProfileView.axaml b/src/Client/Vertigo.Client.UI/Views/ProfileView.axaml
+index 50dcb56..574a4b3 100644
+--- a/src/Client/Vertigo.Client.UI/Views/ProfileView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/ProfileView.axaml
+@@ -2,20 +2,13 @@
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+              xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
++             xmlns:conv="using:Avalonia.Data.Converters"
+              x:Class="Vertigo.Client.UI.Views.ProfileView"
+              x:DataType="vm:ProfileViewModel"
+              x:CompileBindings="True">
+     <UserControl.Styles>
+-        <Style Selector="Button:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+-        <Style Selector="TextBlock.profile-label">
+-            <Setter Property="Foreground" Value="{DynamicResource ColorTextSecondary}"/>
+-            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}"/>
+-            <Setter Property="TextWrapping" Value="Wrap"/>
+-        </Style>
+         <Style Selector="TextBlock.profile-stat">
++            <Setter Property="FontFamily" Value="{DynamicResource FontMono}"/>
+             <Setter Property="Foreground" Value="{DynamicResource ColorAccent}"/>
+             <Setter Property="FontSize" Value="{DynamicResource FontSizeSection}"/>
+             <Setter Property="FontWeight" Value="SemiBold"/>
+@@ -24,8 +17,8 @@
+     <ScrollViewer Background="{DynamicResource ColorCanvas}"
+                   HorizontalScrollBarVisibility="Disabled"
+                   VerticalScrollBarVisibility="Auto">
+-        <StackPanel Margin="16,10"
+-                    MaxWidth="560"
++        <StackPanel Margin="{DynamicResource MarginScreen}"
++                    MaxWidth="620"
+                     Spacing="{DynamicResource Space12}">
+             <DockPanel LastChildFill="True">
+                 <Button DockPanel.Dock="Left"
+@@ -34,24 +27,15 @@
+                         Command="{Binding BackCommand}"
+                         TabIndex="0"
+                         AutomationProperties.Name="{Binding BackText}">
+-                    <Path Width="22"
+-                          Height="22"
+-                          Stroke="{DynamicResource ColorCoal}"
+-                          StrokeThickness="{DynamicResource StrokeStrong}"
+-                          Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
++                    <Path Classes="vertigo-icon" Data="{StaticResource IconBack}"/>
+                 </Button>
+-                <TextBlock Margin="16,0,0,0"
++                <TextBlock Classes="vertigo-title"
++                           Margin="16,0,0,0"
+                            VerticalAlignment="Center"
+-                           FontSize="{DynamicResource FontSizeTitle}"
+-                           FontWeight="Bold"
++                           TextWrapping="Wrap"
+                            Text="{Binding HeadingText}"/>
+             </DockPanel>
+-            <Border IsVisible="{Binding !IsEditing}"
+-                    Background="{DynamicResource ColorSurface}"
+-                    BorderBrush="{DynamicResource ColorBorder}"
+-                    BorderThickness="{DynamicResource BorderThin}"
+-                    CornerRadius="{DynamicResource RadiusCard}"
+-                    Padding="{DynamicResource PaddingControl}">
++            <Border Classes="vertigo-card" IsVisible="{Binding !IsEditing}">
+                 <StackPanel Spacing="{DynamicResource Space12}">
+                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{DynamicResource Space12}">
+                         <Image Width="64" Height="64" Source="{Binding Avatar}"/>
+@@ -60,13 +44,21 @@
+                                        FontWeight="Bold"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding Username}"/>
+-                            <TextBlock Classes="profile-label" Text="{Binding AccountType}"/>
++                            <TextBlock Classes="vertigo-secondary" Text="{Binding AccountType}"/>
+                         </StackPanel>
+                     </Grid>
+                     <StackPanel IsVisible="{Binding ShowStatistics}" Spacing="{DynamicResource Space12}">
+-                        <TextBlock Classes="profile-label"
+-                                   IsVisible="{Binding !IsRecordAvailable}"
+-                                   Text="{Binding RecordStatus}"/>
++                        <ContentControl Classes="vertigo-message status"
++                                        AutomationProperties.LiveSetting="Polite">
++                            <ContentControl.IsVisible>
++                                <MultiBinding Converter="{x:Static conv:BoolConverters.And}">
++                                    <Binding Path="!IsRecordAvailable"/>
++                                    <Binding Path="RecordStatus"
++                                             Converter="{x:Static conv:StringConverters.IsNotNullOrEmpty}"/>
++                                </MultiBinding>
++                            </ContentControl.IsVisible>
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding RecordStatus}"/>
++                        </ContentControl>
+                         <Grid IsVisible="{Binding IsRecordAvailable}"
+                               ColumnDefinitions="*,*,*"
+                               RowDefinitions="Auto,Auto"
+@@ -75,51 +67,49 @@
+                             <TextBlock Classes="profile-stat" Text="{Binding MatchesPlayed}"/>
+                             <TextBlock Grid.Column="1" Classes="profile-stat" Text="{Binding MatchesWon}"/>
+                             <TextBlock Grid.Column="2" Classes="profile-stat" TextWrapping="Wrap" Text="{Binding WinRate}"/>
+-                            <TextBlock Grid.Row="1" Classes="profile-label" Text="{Binding MatchesPlayedText}"/>
++                            <TextBlock Grid.Row="1" Classes="vertigo-secondary" Text="{Binding MatchesPlayedText}"/>
+                             <TextBlock Grid.Row="1" Grid.Column="1"
+-                                       Classes="profile-label" Text="{Binding MatchesWonText}"/>
++                                       Classes="vertigo-secondary" Text="{Binding MatchesWonText}"/>
+                             <TextBlock Grid.Row="1" Grid.Column="2"
+-                                       Classes="profile-label" Text="{Binding WinRateText}"/>
++                                       Classes="vertigo-secondary" Text="{Binding WinRateText}"/>
+                         </Grid>
+                         <Grid IsVisible="{Binding IsRecordAvailable}"
+                               ColumnDefinitions="*,*"
+                               RowDefinitions="Auto,Auto"
+                               ColumnSpacing="{DynamicResource Space8}">
+-                            <TextBlock Classes="profile-label" Text="{Binding CreatedYearText}"/>
+-                            <TextBlock Grid.Column="1" Classes="profile-label" Text="{Binding CountryText}"/>
++                            <TextBlock Classes="vertigo-secondary" Text="{Binding CreatedYearText}"/>
++                            <TextBlock Grid.Column="1" Classes="vertigo-secondary" Text="{Binding CountryText}"/>
+                             <TextBlock Grid.Row="1" TextWrapping="Wrap" Text="{Binding CreatedYear}"/>
+                             <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Country}"/>
+                         </Grid>
+                     </StackPanel>
+                 </StackPanel>
+             </Border>
+-            <Button Classes="vertigo-button neutral"
++            <Button Classes="vertigo-button neutral" HorizontalAlignment="Right"
+                     IsVisible="{Binding CanShowEdit}"
+                     IsEnabled="{Binding IsRecordAvailable}"
+                     Command="{Binding EditCommand}"
+                     Content="{Binding EditProfileText}"/>
+-            <Border IsVisible="{Binding IsEditing}"
+-                    Background="{DynamicResource ColorSurface}"
+-                    BorderBrush="{DynamicResource ColorBorder}"
+-                    BorderThickness="{DynamicResource BorderThin}"
+-                    CornerRadius="{DynamicResource RadiusCard}"
+-                    Padding="{DynamicResource PaddingControl}">
++            <Border Classes="vertigo-card" IsVisible="{Binding IsEditing}">
+                 <StackPanel IsEnabled="{Binding !SaveProfileCommand.IsRunning}" Spacing="{DynamicResource Space8}">
+                     <Grid ColumnDefinitions="Auto,*"
+                           RowDefinitions="Auto,Auto,Auto"
+                           ColumnSpacing="{DynamicResource Space8}"
+                           RowSpacing="{DynamicResource Space8}">
+-                        <TextBlock Classes="profile-label" VerticalAlignment="Center" Text="{Binding UsernameText}"/>
+-                        <TextBox Grid.Column="1"
++                        <TextBlock Classes="vertigo-secondary"
++                                   VerticalAlignment="Center"
++                                   Text="{Binding UsernameText}"/>
++                        <TextBox Grid.Column="1" Classes="vertigo-input"
+                                  Text="{Binding DraftUsername, Mode=TwoWay}"
+                                  MaxLength="{Binding UsernameMaximumLength}"
+                                  AutomationProperties.Name="{Binding UsernameText}"/>
+                         <TextBlock Grid.Row="1"
+-                                   Classes="profile-label"
++                                   Classes="vertigo-secondary"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding CountryText}"/>
+                         <AutoCompleteBox Grid.Row="1"
+                                          Grid.Column="1"
++                                         Classes="vertigo-input"
+                                          ItemsSource="{Binding CountryChoices}"
+                                          ItemFilter="{Binding CountryFilter}"
+                                          Text="{Binding DraftCountryText, Mode=TwoWay}"
+@@ -128,11 +118,12 @@
+                                          PlaceholderText="{Binding CountrySearchText}"
+                                          AutomationProperties.Name="{Binding CountryText}"/>
+                         <TextBlock Grid.Row="2"
+-                                   Classes="profile-label"
++                                   Classes="vertigo-secondary"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding AvatarText}"/>
+                         <ComboBox Grid.Row="2"
+                                   Grid.Column="1"
++                                  Classes="vertigo-input"
+                                   ItemsSource="{Binding AvatarChoices}"
+                                   SelectedItem="{Binding DraftAvatar, Mode=TwoWay}"
+                                   HorizontalAlignment="Stretch"
+@@ -147,10 +138,11 @@
+                             </ComboBox.ItemTemplate>
+                         </ComboBox>
+                     </Grid>
+-                    <TextBlock IsVisible="{Binding HasEditError}"
+-                               Foreground="{DynamicResource ColorError}"
+-                               TextWrapping="Wrap"
+-                               Text="{Binding EditError}"/>
++                    <ContentControl Classes="vertigo-message"
++                                    IsVisible="{Binding HasEditError}"
++                                    AutomationProperties.LiveSetting="Assertive">
++                        <TextBlock Classes="vertigo-message-text" Text="{Binding EditError}"/>
++                    </ContentControl>
+                     <WrapPanel ItemSpacing="{DynamicResource Space8}" LineSpacing="{DynamicResource Space8}">
+                         <Button Classes="vertigo-button secondary"
+                                 Command="{Binding SaveProfileCommand}"
+diff --git a/src/Client/Vertigo.Client.UI/Views/RankingView.axaml b/src/Client/Vertigo.Client.UI/Views/RankingView.axaml
+index bba7d12..1609a81 100644
+--- a/src/Client/Vertigo.Client.UI/Views/RankingView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/RankingView.axaml
+@@ -1,50 +1,77 @@
+ <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
+              xmlns:rows="using:Vertigo.Client.UI.ViewModels.Presentation"
+-             x:Class="Vertigo.Client.UI.Views.RankingView" x:DataType="vm:RankingViewModel" x:CompileBindings="True">
+-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" Margin="16" RowSpacing="12" MaxWidth="760">
+-        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+-            <Button Classes="vertigo-button neutral" Content="{Binding BackText}" Command="{Binding BackCommand}"/>
+-            <TextBlock Grid.Column="1" FontSize="{DynamicResource FontSizeSection}"
+-                       FontWeight="Bold" TextWrapping="Wrap" Text="{Binding Title}"/>
+-            <Button Grid.Column="2" Classes="vertigo-button neutral" Content="{Binding RefreshText}"
+-                    Command="{Binding RefreshCommand}"/>
++             xmlns:conv="using:Avalonia.Data.Converters"
++             x:Class="Vertigo.Client.UI.Views.RankingView"
++             x:DataType="vm:RankingViewModel"
++             x:CompileBindings="True">
++    <Border Classes="vertigo-screen" Padding="{DynamicResource MarginScreen}">
++        <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="{DynamicResource Space12}" MaxWidth="900">
++            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
++                <Button Classes="vertigo-button neutral" Content="{Binding BackText}" Command="{Binding BackCommand}"/>
++                <TextBlock Grid.Column="1" Classes="vertigo-title"
++                           VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding Title}"/>
++                <Button Grid.Column="2" Classes="vertigo-button neutral" Content="{Binding RefreshText}"
++                        Command="{Binding RefreshCommand}"/>
++            </Grid>
++            <ComboBox Grid.Row="1" Classes="vertigo-input" IsVisible="{Binding HasScopes}"
++                      ItemsSource="{Binding ScopeLabels}"
++                      SelectedIndex="{Binding ScopeIndex, Mode=TwoWay}"
++                      AutomationProperties.Name="{Binding ScopeText}"/>
++            <ContentControl Grid.Row="2" Classes="vertigo-message status"
++                            IsVisible="{Binding Status, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                            AutomationProperties.LiveSetting="Polite">
++                <TextBlock Classes="vertigo-message-text" Text="{Binding Status}"/>
++            </ContentControl>
++            <Border Grid.Row="3" Classes="vertigo-card" Padding="{DynamicResource PaddingControl}">
++                <Grid RowDefinitions="Auto,*" RowSpacing="{DynamicResource Space8}">
++                    <Grid ColumnDefinitions="28,32,*,75,75" ColumnSpacing="8" Margin="23,0,23,0">
++                        <TextBlock Grid.Column="2"
++                                   Classes="vertigo-secondary"
++                                   FontWeight="SemiBold"
++                                   Text="{Binding PlayerText}"/>
++                        <TextBlock Grid.Column="3"
++                                   Classes="vertigo-secondary"
++                                   FontWeight="SemiBold"
++                                   Text="{Binding WinsText}"
++                                   TextAlignment="Right"
++                                   TextWrapping="Wrap"/>
++                        <TextBlock Grid.Column="4"
++                                   Classes="vertigo-secondary"
++                                   FontWeight="SemiBold"
++                                   Text="{Binding FloorsText}"
++                                   TextAlignment="Right"
++                                   TextWrapping="Wrap"/>
++                    </Grid>
++                    <ListBox Grid.Row="1" Classes="vertigo-list"
++                             ItemsSource="{Binding Rows}"
++                             SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
++                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
++                        <ListBox.ItemTemplate>
++                            <DataTemplate x:DataType="rows:RankingRow">
++                                <Border Padding="10">
++                                    <Grid ColumnDefinitions="28,32,*,75,75" ColumnSpacing="8">
++                                        <TextBlock Classes="vertigo-table-number" Text="{Binding Position}"/>
++                                        <Image Grid.Column="1" Width="32" Height="32" Source="{Binding Avatar}"/>
++                                        <TextBlock Grid.Column="2" Text="{Binding Username}" VerticalAlignment="Center"
++                                                   TextTrimming="CharacterEllipsis"/>
++                                        <TextBlock Grid.Column="3"
++                                                   Classes="vertigo-table-number"
++                                                   Text="{Binding MatchesWon}"/>
++                                        <TextBlock Grid.Column="4"
++                                                   Classes="vertigo-table-number"
++                                                   Text="{Binding FloorsBuilt}"/>
++                                    </Grid>
++                                </Border>
++                            </DataTemplate>
++                        </ListBox.ItemTemplate>
++                    </ListBox>
++                </Grid>
++            </Border>
++            <Button Grid.Row="4" HorizontalAlignment="Right" Classes="vertigo-button neutral"
++                    IsVisible="{Binding CanViewProfile}"
++                    Command="{Binding ViewProfileCommand}"
++                    Content="{Binding ViewProfileText}"/>
+         </Grid>
+-        <ComboBox Grid.Row="1" IsVisible="{Binding HasScopes}"
+-                  ItemsSource="{Binding ScopeLabels}"
+-                  SelectedIndex="{Binding ScopeIndex, Mode=TwoWay}"
+-                  AutomationProperties.Name="{Binding ScopeText}"/>
+-        <TextBlock Grid.Row="2" Text="{Binding Status}" TextWrapping="Wrap"
+-                   AutomationProperties.LiveSetting="Polite"/>
+-        <Grid Grid.Row="3" ColumnDefinitions="28,32,*,75,75" ColumnSpacing="8" Margin="10,0,24,0">
+-            <TextBlock Grid.Column="2" Text="{Binding PlayerText}" FontWeight="Bold"/>
+-            <TextBlock Grid.Column="3" Text="{Binding WinsText}" FontWeight="Bold" TextAlignment="Right" TextWrapping="Wrap"/>
+-            <TextBlock Grid.Column="4" Text="{Binding FloorsText}" FontWeight="Bold" TextAlignment="Right" TextWrapping="Wrap"/>
+-        </Grid>
+-        <ListBox Grid.Row="4"
+-                 ItemsSource="{Binding Rows}"
+-                 SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+-            <ListBox.ItemTemplate>
+-                <DataTemplate x:DataType="rows:RankingRow">
+-                    <Border Padding="10">
+-                        <Grid ColumnDefinitions="28,32,*,75,75" ColumnSpacing="8">
+-                            <TextBlock Text="{Binding Position}" VerticalAlignment="Center"/>
+-                            <Image Grid.Column="1" Width="32" Height="32" Source="{Binding Avatar}"/>
+-                            <TextBlock Grid.Column="2" Text="{Binding Username}" VerticalAlignment="Center"
+-                                       TextTrimming="CharacterEllipsis"/>
+-                            <TextBlock Grid.Column="3" Text="{Binding MatchesWon}" TextAlignment="Right"
+-                                       VerticalAlignment="Center"/>
+-                            <TextBlock Grid.Column="4" Text="{Binding FloorsBuilt}" TextAlignment="Right"
+-                                       VerticalAlignment="Center"/>
+-                        </Grid>
+-                    </Border>
+-                </DataTemplate>
+-            </ListBox.ItemTemplate>
+-        </ListBox>
+-        <Button Grid.Row="5" Classes="vertigo-button neutral"
+-                IsVisible="{Binding CanViewProfile}"
+-                Command="{Binding ViewProfileCommand}"
+-                Content="{Binding ViewProfileText}"/>
+-    </Grid>
++    </Border>
+ </UserControl>
+diff --git a/src/Client/Vertigo.Client.UI/Views/SettingsView.axaml b/src/Client/Vertigo.Client.UI/Views/SettingsView.axaml
+index 300379a..f122fc7 100644
+--- a/src/Client/Vertigo.Client.UI/Views/SettingsView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/SettingsView.axaml
+@@ -1,39 +1,39 @@
+ <UserControl xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:Vertigo.Client.UI.ViewModels"
++             xmlns:conv="using:Avalonia.Data.Converters"
+              x:Class="Vertigo.Client.UI.Views.SettingsView"
+              x:DataType="vm:SettingsViewModel"
+              x:CompileBindings="True">
+-    <UserControl.Styles>
+-        <Style Selector="Button:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+-    </UserControl.Styles>
+     <ScrollViewer Background="{DynamicResource ColorCanvas}">
+-        <StackPanel Margin="32" Spacing="24" MaxWidth="660" HorizontalAlignment="Center">
++        <StackPanel Margin="{DynamicResource MarginScreen}"
++                    Spacing="{DynamicResource Space24}" MaxWidth="560">
+             <DockPanel LastChildFill="True">
+                 <Button DockPanel.Dock="Left" Classes="vertigo-button neutral"
+                         Command="{Binding BackCommand}" TabIndex="0"
+                         AutomationProperties.Name="{Binding BackText}">
+-                    <Path Width="22" Height="22" Stroke="{DynamicResource ColorCoal}"
+-                          StrokeThickness="2" Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
++                    <Path Classes="vertigo-icon" Data="{StaticResource IconBack}"/>
+                 </Button>
+-                <TextBlock Text="{Binding HeadingText}" Margin="24,0,0,0" FontSize="32"
+-                           FontWeight="Bold" VerticalAlignment="Center"/>
++                <TextBlock Classes="vertigo-title" Margin="24,0,0,0"
++                           VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding HeadingText}"/>
+             </DockPanel>
+-            <Border Background="{DynamicResource ColorWhite}" BorderBrush="{DynamicResource ColorBorderStrong}"
+-                    BorderThickness="{DynamicResource BorderThin}" CornerRadius="4" Padding="24">
+-                <StackPanel Spacing="14">
+-                    <TextBlock Text="{Binding LanguageText}" FontSize="18" FontWeight="SemiBold"/>
+-                    <ComboBox SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}" TabIndex="1"
++            <Border Classes="vertigo-card">
++                <StackPanel Spacing="{DynamicResource Space16}">
++                    <TextBlock Classes="vertigo-section" Text="{Binding LanguageText}"/>
++                    <ComboBox Classes="vertigo-input" HorizontalAlignment="Stretch"
++                              SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}" TabIndex="1"
+                               AutomationProperties.Name="{Binding LanguageText}">
+                         <ComboBoxItem Content="{Binding SpanishText}"/>
+                         <ComboBoxItem Content="{Binding EnglishText}"/>
+                     </ComboBox>
+-                    <Button Classes="vertigo-button primary" Command="{Binding SaveCommand}"
++                    <Button Classes="vertigo-button primary" HorizontalAlignment="Right" Command="{Binding SaveCommand}"
+                             Content="{Binding SaveText}" TabIndex="2"/>
+-                    <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ColorError}" TextWrapping="Wrap"/>
++                    <ContentControl Classes="vertigo-message"
++                                    IsVisible="{Binding ErrorMessage,
++                                               Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                                    AutomationProperties.LiveSetting="Assertive">
++                        <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
++                    </ContentControl>
+                 </StackPanel>
+             </Border>
+         </StackPanel>
+diff --git a/src/Client/Vertigo.Client.UI/Views/SocialView.axaml b/src/Client/Vertigo.Client.UI/Views/SocialView.axaml
+index 32e56fe..c851ba7 100644
+--- a/src/Client/Vertigo.Client.UI/Views/SocialView.axaml
++++ b/src/Client/Vertigo.Client.UI/Views/SocialView.axaml
+@@ -6,32 +6,30 @@
+              xmlns:conv="using:Avalonia.Data.Converters"
+              x:Class="Vertigo.Client.UI.Views.SocialView"
+              x:DataType="vm:SocialViewModel" x:CompileBindings="True">
+-    <UserControl.Styles>
+-        <Style Selector="Button:focus-visible">
+-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
+-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
+-        </Style>
+-    </UserControl.Styles>
+     <UserControl.Resources>
+         <resources:AvatarImageConverter x:Key="AvatarImage"/>
+     </UserControl.Resources>
+-    <ScrollViewer Background="{DynamicResource ColorCanvas}" HorizontalScrollBarVisibility="Auto">
+-        <StackPanel MinWidth="760" Margin="28" Spacing="20">
++    <ScrollViewer Background="{DynamicResource ColorCanvas}"
++                  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
++        <StackPanel MaxWidth="{DynamicResource ContentMaxWidth}"
++                    Margin="{DynamicResource MarginScreen}" Spacing="{DynamicResource Space16}">
+             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="18">
+                 <Button Grid.Column="0" Classes="vertigo-button neutral" Command="{Binding BackCommand}"
+                         AutomationProperties.Name="{Binding BackText}" TabIndex="0">
+-                    <Path Width="22" Height="22" Stroke="{DynamicResource ColorCoal}" StrokeThickness="2"
+-                          Data="M 20,12 L 4,12 M 11,5 L 4,12 L 11,19"/>
++                    <Path Classes="vertigo-icon" Data="{StaticResource IconBack}"/>
+                 </Button>
+-                <TextBlock Grid.Column="1" Text="{Binding HeadingText}" FontSize="34"
+-                           FontFamily="{DynamicResource FontTitleDisplay}" FontWeight="Bold"
+-                           VerticalAlignment="Center"/>
++                <TextBlock Grid.Column="1" Classes="vertigo-title"
++                           VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding HeadingText}"/>
+                 <Button Grid.Column="2" Classes="vertigo-button neutral" TabIndex="1"
+                         Command="{Binding RefreshCommand}" Content="{Binding RefreshText}"/>
+             </Grid>
+-            <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ColorError}"
+-                       TextWrapping="Wrap"/>
+-            <TabControl SelectedIndex="0" TabIndex="2">
++            <ContentControl Classes="vertigo-message"
++                            IsVisible="{Binding ErrorMessage,
++                                       Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                            AutomationProperties.LiveSetting="Assertive">
++                <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
++            </ContentControl>
++            <TabControl Classes="vertigo-tabs" SelectedIndex="0" TabIndex="2">
+                 <TabItem Header="{Binding FriendsTabText}">
+                     <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14" Margin="16">
+                         <StackPanel Orientation="Horizontal" Spacing="12">
+@@ -41,12 +39,17 @@
+                             <Button Classes="vertigo-button secondary" TabIndex="4"
+                                     Content="{Binding SearchText}" Command="{Binding Friends.SearchCommand}"/>
+                         </StackPanel>
+-                        <TextBlock Grid.Row="1" Text="{Binding Friends.ErrorMessage}"
+-                                   Foreground="{DynamicResource ColorError}" TextWrapping="Wrap"/>
++                        <ContentControl Grid.Row="1" Classes="vertigo-message"
++                                        IsVisible="{Binding Friends.ErrorMessage,
++                                                   Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                                        AutomationProperties.LiveSetting="Assertive">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding Friends.ErrorMessage}"/>
++                        </ContentControl>
+                         <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="18">
+                             <StackPanel Spacing="8">
+-                                <TextBlock Text="{Binding FriendsTabText}" FontWeight="Bold"/>
+-                                <ListBox ItemsSource="{Binding Friends.Friends}"
++                                <TextBlock Classes="vertigo-section" Text="{Binding FriendsTabText}"/>
++                                <ListBox Classes="vertigo-list" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
++                                         ItemsSource="{Binding Friends.Friends}"
+                                          SelectedItem="{Binding SelectedFriend, Mode=TwoWay}" TabIndex="5"
+                                          MinHeight="180" MaxHeight="320">
+                                     <ListBox.ItemTemplate>
+@@ -67,8 +70,9 @@
+                                         Content="{Binding ViewProfileText}"/>
+                             </StackPanel>
+                             <StackPanel Grid.Column="1" Spacing="8">
+-                                <TextBlock Text="{Binding SearchResultsText}" FontWeight="Bold"/>
+-                                <ListBox ItemsSource="{Binding Friends.SearchResults}"
++                                <TextBlock Classes="vertigo-section" Text="{Binding SearchResultsText}"/>
++                                <ListBox Classes="vertigo-list" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
++                                         ItemsSource="{Binding Friends.SearchResults}"
+                                          SelectedItem="{Binding SelectedSearch, Mode=TwoWay}" TabIndex="7"
+                                          MinHeight="180" MaxHeight="320">
+                                     <ListBox.ItemTemplate>
+@@ -93,8 +97,9 @@
+                 </TabItem>
+                 <TabItem Header="{Binding RequestsTabText}">
+                     <StackPanel Margin="16" Spacing="12">
+-                        <ListBox ItemsSource="{Binding Friends.PendingRequests}" TabIndex="9"
+-                                 SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" MinHeight="200">
++                        <ListBox Classes="vertigo-list" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
++                                         ItemsSource="{Binding Friends.PendingRequests}" TabIndex="9"
++                                 SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" MinHeight="200" MaxHeight="360">
+                             <ListBox.ItemTemplate>
+                                 <DataTemplate x:DataType="models:FriendshipInvitationEntry">
+                                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="8">
+@@ -104,8 +109,13 @@
+                                 </DataTemplate>
+                             </ListBox.ItemTemplate>
+                         </ListBox>
+-                        <TextBlock Text="{Binding Friends.ErrorMessage}" Foreground="{DynamicResource ColorError}"/>
+-                        <StackPanel Orientation="Horizontal" Spacing="12">
++                        <ContentControl Classes="vertigo-message"
++                                        IsVisible="{Binding Friends.ErrorMessage,
++                                                   Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                                        AutomationProperties.LiveSetting="Assertive">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding Friends.ErrorMessage}"/>
++                        </ContentControl>
++                        <WrapPanel ItemSpacing="{DynamicResource Space12}" LineSpacing="{DynamicResource Space8}">
+                             <Button Classes="vertigo-button primary" Content="{Binding AcceptText}" TabIndex="10"
+                                     Command="{Binding Friends.AcceptCommand}"/>
+                             <Button Classes="vertigo-button neutral" Content="{Binding RejectText}" TabIndex="11"
+@@ -115,27 +125,35 @@
+                                     Command="{Binding ViewProfileCommand}"
+                                     CommandParameter="{Binding SelectedRequest.SenderId}"
+                                     Content="{Binding ViewProfileText}"/>
+-                        </StackPanel>
++                        </WrapPanel>
+                     </StackPanel>
+                 </TabItem>
+                 <TabItem Header="{Binding InvitationsTabText}">
+                     <StackPanel Margin="16" Spacing="12">
+-                        <ListBox ItemsSource="{Binding Invitations.PendingInvitations}" TabIndex="12"
+-                                 SelectedItem="{Binding SelectedInvitation, Mode=TwoWay}" MinHeight="200">
++                        <ListBox Classes="vertigo-list" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
++                                         ItemsSource="{Binding Invitations.PendingInvitations}" TabIndex="12"
++                                 SelectedItem="{Binding SelectedInvitation, Mode=TwoWay}"
++                                 MinHeight="200" MaxHeight="360">
+                             <ListBox.ItemTemplate>
+                                 <DataTemplate x:DataType="models:LobbyInvitationEntry">
+                                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="8">
+                                         <Image Width="28" Height="28" Source="{Binding AvatarId, Converter={StaticResource AvatarImage}}"/>
+                                         <StackPanel>
+                                             <TextBlock Text="{Binding SenderUsername}" TextTrimming="CharacterEllipsis"/>
+-                                            <TextBlock Text="{Binding LobbyCode}"/>
++                                            <TextBlock FontFamily="{DynamicResource FontMono}"
++                                                       Text="{Binding LobbyCode}"/>
+                                         </StackPanel>
+                                     </StackPanel>
+                                 </DataTemplate>
+                             </ListBox.ItemTemplate>
+                         </ListBox>
+-                        <TextBlock Text="{Binding Invitations.ErrorMessage}" Foreground="{DynamicResource ColorError}"/>
+-                        <StackPanel Orientation="Horizontal" Spacing="12">
++                        <ContentControl Classes="vertigo-message"
++                                        IsVisible="{Binding Invitations.ErrorMessage,
++                                                   Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                                        AutomationProperties.LiveSetting="Assertive">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding Invitations.ErrorMessage}"/>
++                        </ContentControl>
++                        <WrapPanel ItemSpacing="{DynamicResource Space12}" LineSpacing="{DynamicResource Space8}">
+                             <Button Classes="vertigo-button primary" Content="{Binding AcceptText}" TabIndex="13"
+                                     Command="{Binding Invitations.AcceptCommand}"/>
+                             <Button Classes="vertigo-button neutral" Content="{Binding RejectText}" TabIndex="14"
+@@ -145,13 +163,14 @@
+                                     Command="{Binding ViewProfileCommand}"
+                                     CommandParameter="{Binding SelectedInvitation.SenderId}"
+                                     Content="{Binding ViewProfileText}"/>
+-                        </StackPanel>
++                        </WrapPanel>
+                     </StackPanel>
+                 </TabItem>
+                 <TabItem Header="{Binding BlockedTabText}">
+                     <StackPanel Margin="16" Spacing="12">
+-                        <ListBox ItemsSource="{Binding Blocked.BlockedPlayers}" TabIndex="15"
+-                                 SelectedItem="{Binding SelectedBlocked, Mode=TwoWay}" MinHeight="200">
++                        <ListBox Classes="vertigo-list" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
++                                         ItemsSource="{Binding Blocked.BlockedPlayers}" TabIndex="15"
++                                 SelectedItem="{Binding SelectedBlocked, Mode=TwoWay}" MinHeight="200" MaxHeight="360">
+                             <ListBox.ItemTemplate>
+                                 <DataTemplate x:DataType="models:BlockedPlayerSummary">
+                                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="8">
+@@ -161,7 +180,12 @@
+                                 </DataTemplate>
+                             </ListBox.ItemTemplate>
+                         </ListBox>
+-                        <TextBlock Text="{Binding Blocked.ErrorMessage}" Foreground="{DynamicResource ColorError}"/>
++                        <ContentControl Classes="vertigo-message"
++                                        IsVisible="{Binding Blocked.ErrorMessage,
++                                                   Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
++                                        AutomationProperties.LiveSetting="Assertive">
++                            <TextBlock Classes="vertigo-message-text" Text="{Binding Blocked.ErrorMessage}"/>
++                        </ContentControl>
+                         <Button Classes="vertigo-button neutral" Content="{Binding UnblockText}"
+                                 TabIndex="16" Command="{Binding Blocked.UnblockCommand}"/>
+                         <Button Classes="vertigo-button neutral"

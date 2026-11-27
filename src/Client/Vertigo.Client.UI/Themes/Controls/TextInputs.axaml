@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style Selector="TextBox.vertigo-input">
+    <Style Selector="TextBox.vertigo-input, ComboBox.vertigo-input,
+                     AutoCompleteBox.vertigo-input, NumericUpDown.vertigo-input">
         <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}"/>
         <Setter Property="CornerRadius" Value="{DynamicResource RadiusInput}"/>
         <Setter Property="FontFamily" Value="{DynamicResource FontBody}"/>
@@ -9,7 +10,8 @@
         <Setter Property="BorderBrush" Value="{DynamicResource ColorBorder}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource BorderThin}"/>
     </Style>
-    <Style Selector="TextBox.vertigo-input:focus">
+    <Style Selector="TextBox.vertigo-input:focus, ComboBox.vertigo-input:focus-visible,
+                     AutoCompleteBox.vertigo-input:focus-within, NumericUpDown.vertigo-input:focus-within">
         <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
     </Style>

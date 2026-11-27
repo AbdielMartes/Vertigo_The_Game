@@ -53,11 +53,9 @@
         </Style>
     </UserControl.Styles>
 
-    <Border Padding="14" Background="{DynamicResource ColorWhite}"
-            BorderBrush="{DynamicResource ColorBorderStrong}" BorderThickness="{DynamicResource BorderThin}"
-            CornerRadius="{DynamicResource RadiusSmall}">
+    <Border Classes="vertigo-card" Padding="{DynamicResource PaddingControl}">
         <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
-                  HorizontalContentAlignment="Stretch">
+                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <Expander.Header>
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                     <Viewbox Height="34" IsVisible="{Binding ShowLatestTower}">
@@ -65,7 +63,7 @@
                                         ContentTemplate="{StaticResource TowerDrawing}"/>
                     </Viewbox>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                        <TextBlock Text="{Binding HeaderText}" FontWeight="Bold"/>
+                        <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding HeaderText}"/>
                         <TextBlock Text="{Binding LatestTowerCaption}" IsVisible="{Binding ShowLatestTower}"
                                    Foreground="{DynamicResource ColorTextSecondary}" TextWrapping="Wrap"/>
                     </StackPanel>
@@ -78,8 +76,8 @@
                             Classes.lost="{Binding IsLocalDefeat}"
                             CornerRadius="{DynamicResource RadiusSmall}">
                         <StackPanel Spacing="3">
-                            <TextBlock Text="{Binding ResultTitle}" FontSize="22" FontWeight="Bold" TextWrapping="Wrap"/>
-                            <TextBlock Text="{Binding ResultDetail}" FontSize="15" TextWrapping="Wrap"/>
+                            <TextBlock Classes="vertigo-section" TextWrapping="Wrap" Text="{Binding ResultTitle}"/>
+                            <TextBlock Classes="vertigo-body" TextWrapping="Wrap" Text="{Binding ResultDetail}"/>
                         </StackPanel>
                     </Border>
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
@@ -118,7 +116,9 @@
                                                 <TextBlock Grid.Column="2" IsVisible="{Binding IsLocal}" FontWeight="SemiBold"
                                                            Foreground="{DynamicResource ColorSnesBlue}"
                                                            Text="{Binding #resultView.((vm:MatchResultsViewModel)DataContext).LocalPlayerText}"/>
-                                                <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
+                                                <TextBlock Grid.Column="3"
+                                                           Classes="vertigo-table-number"
+                                                           Text="{Binding TotalFloors}"
                                                            IsVisible="{Binding !#resultView.((vm:MatchResultsViewModel)DataContext).IsEarlyAbandonment}"
                                                            FontWeight="Bold"/>
                                             </Grid>
@@ -131,7 +131,8 @@
                 </StackPanel>
 
                 <StackPanel Spacing="10" IsVisible="{Binding HasRoundSummaries}">
-                    <ComboBox ItemsSource="{Binding Rounds}" SelectedItem="{Binding SelectedRound, Mode=TwoWay}"
+                    <ComboBox Classes="vertigo-input" ItemsSource="{Binding Rounds}"
+                              SelectedItem="{Binding SelectedRound, Mode=TwoWay}"
                               AutomationProperties.Name="{Binding SelectRoundText}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="rows:MatchRoundResultRow">
@@ -150,11 +151,18 @@
                         <StackPanel Grid.Column="1" Spacing="6">
                             <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="8" Margin="8,0">
                                 <TextBlock Text="{Binding PlayerText}" FontWeight="SemiBold"/>
-                                <TextBlock Grid.Column="1" Text="{Binding FloorsText}" FontWeight="SemiBold"
-                                           TextWrapping="Wrap"/>
-                                <TextBlock Grid.Column="2" Text="{Binding BonusText}" FontWeight="SemiBold"/>
-                                <TextBlock Grid.Column="3" Text="{Binding TotalText}" FontWeight="SemiBold"
-                                           TextWrapping="Wrap"/>
+                                <TextBlock Grid.Column="1"
+                                           Classes="vertigo-secondary"
+                                           TextAlignment="Right"
+                                           Text="{Binding FloorsText}"/>
+                                <TextBlock Grid.Column="2"
+                                           Classes="vertigo-secondary"
+                                           TextAlignment="Right"
+                                           Text="{Binding BonusText}"/>
+                                <TextBlock Grid.Column="3"
+                                           Classes="vertigo-secondary"
+                                           TextAlignment="Right"
+                                           Text="{Binding TotalText}"/>
                             </Grid>
                             <ItemsControl ItemsSource="{Binding SelectedScores}">
                                 <ItemsControl.ItemTemplate>
@@ -164,9 +172,15 @@
                                             <Grid ColumnDefinitions="2*,*,*,*" ColumnSpacing="8">
                                                 <TextBlock Text="{Binding PlayerUsername}"
                                                            TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="1" Text="{Binding FloorsBuilt}"/>
-                                                <TextBlock Grid.Column="2" Text="{Binding BonusFloors}"/>
-                                                <TextBlock Grid.Column="3" Text="{Binding TotalFloors}"
+                                                <TextBlock Grid.Column="1"
+                                                           Classes="vertigo-table-number"
+                                                           Text="{Binding FloorsBuilt}"/>
+                                                <TextBlock Grid.Column="2"
+                                                           Classes="vertigo-table-number"
+                                                           Text="{Binding BonusFloors}"/>
+                                                <TextBlock Grid.Column="3"
+                                                           Classes="vertigo-table-number"
+                                                           Text="{Binding TotalFloors}"
                                                            FontWeight="Bold"/>
                                             </Grid>
                                         </Border>

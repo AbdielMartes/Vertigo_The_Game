@@ -32,7 +32,17 @@ internal sealed class MatchExpulsionVoting
 
     public int GetVoteCount(Guid targetId)
     {
-        return Board?.ExpulsionVotes.Find(vote => vote.TargetPlayerId == targetId)?.VoteCount ?? 0;
+        return FindBallot(targetId)?.VoteCount ?? 0;
+    }
+
+    public MatchExpulsionVoteSummary? FindBallot(Guid targetId)
+    {
+        return Board?.ExpulsionVotes.Find(vote => vote.TargetPlayerId == targetId);
+    }
+
+    public bool HasVoted(Guid targetId)
+    {
+        return _votedTargets?.Contains(targetId) == true;
     }
 
     public bool IsEligibleTarget(Guid targetId)

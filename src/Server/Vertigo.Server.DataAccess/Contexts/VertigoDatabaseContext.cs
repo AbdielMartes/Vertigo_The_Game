@@ -1,4 +1,8 @@
+using System.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
 using Vertigo.Registration;
 using Vertigo.Server.DataAccess.Entities.Enums;
 using Vertigo.Server.DataAccess.Entities.Game;
@@ -28,17 +32,15 @@ public class VertigoDatabaseContext : DbContext
             throw new InvalidOperationException("Schema provisioning requires SQL Server.");
         }
 
-        ApplySchemaScript("001_ReducePlayerRegistrationLengths.sql");
-        ApplySchemaScript("002_AddPlayerCountryCode.sql");
-    }
-
-    private void ApplySchemaScript(string fileName)
-    {
-        string resource = "Vertigo.Server.DataAccess.Sql." + fileName;
-        using Stream script = typeof(VertigoDatabaseContext).Assembly.GetManifestResourceStream(resource)
-            ?? throw new InvalidOperationException($"Schema script {fileName} is missing.");
-        using StreamReader reader = new(script);
-        Database.ExecuteSqlRaw(reader.ReadToEnd());
+        Database.OpenConnection();
+        try
+        {
+            ApplyExistingSchemaChanges();
+        }
+        finally
+        {
+            Database.CloseConnection();
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -50,6 +52,18 @@ public class VertigoDatabaseContext : DbContext
         ConfigureFriendships(modelBuilder);
         ConfigureBlockedPlayers(modelBuilder);
         ConfigureMatchHistory(modelBuilder);
+        if (Database.IsSqlServer())
+        {
+            modelBuilder.Entity<RegistrationColumn>(column =>
+            {
+                column.HasNoKey();
+                column.ToView("COLUMNS", "INFORMATION_SCHEMA");
+                column.Property(value => value.Schema).HasColumnName("TABLE_SCHEMA");
+                column.Property(value => value.Table).HasColumnName("TABLE_NAME");
+                column.Property(value => value.Name).HasColumnName("COLUMN_NAME");
+                column.Property(value => value.Collation).HasColumnName("COLLATION_NAME");
+            });
+        }
     }
 
     private static void ConfigurePlayers(ModelBuilder modelBuilder)
@@ -181,5 +195,147 @@ public class VertigoDatabaseContext : DbContext
                 .HasConstraintName("FK_MatchHistory_Winner")
                 .OnDelete(DeleteBehavior.NoAction);
         });
+    }
+
+    private const string PlayerSchema = "dbo";
+    private const string PlayerTable = "Players";
+    private const string UsernameIndex = "IX_Players_Username";
+    private const int LegacyUsernameLength = 32;
+    private const int LegacyEmailLength = 120;
+
+    private void ApplyExistingSchemaChanges()
+    {
+        var connection = Database.GetDbConnection();
+        using DataTable columns = connection.GetSchema("Columns", [null, PlayerSchema, PlayerTable]);
+        int? usernameLength = ReadColumnLength(columns, nameof(Player.Username), "nvarchar", nullable: false);
+        int? emailLength = ReadColumnLength(columns, nameof(Player.Email), "nvarchar", nullable: false);
+        int? countryLength = ReadColumnLength(columns, nameof(Player.CountryCode), "varchar", nullable: true);
+        if (countryLength.HasValue && countryLength != CountryCodeLength)
+        {
+            throw new InvalidOperationException("The existing Players.CountryCode column has an unsupported length.");
+        }
+
+        MigrationBuilder migration = new(Database.ProviderName);
+        bool reduceLengths = usernameLength != RegistrationRules.UsernameMaximumLength
+            || emailLength != RegistrationRules.EmailMaximumLength;
+        if (reduceLengths)
+        {
+            if (usernameLength != LegacyUsernameLength || emailLength != LegacyEmailLength)
+            {
+                throw new InvalidOperationException("Expected the legacy or current dbo.Players registration columns.");
+            }
+
+            using DataTable indexColumns = connection.GetSchema("IndexColumns", [null, PlayerSchema, PlayerTable]);
+            Dictionary<string, string?> collations = Set<RegistrationColumn>()
+                .Where(column => column.Schema == PlayerSchema && column.Table == PlayerTable
+                    && (column.Name == nameof(Player.Username) || column.Name == nameof(Player.Email)))
+                .ToDictionary(column => column.Name, column => column.Collation, StringComparer.OrdinalIgnoreCase);
+            AddRegistrationLengthChanges(migration, indexColumns, collations);
+        }
+
+        if (!countryLength.HasValue)
+        {
+            migration.AddColumn<string>(nameof(Player.CountryCode), PlayerTable, schema: PlayerSchema,
+                unicode: false, maxLength: CountryCodeLength, nullable: true);
+        }
+
+        if (migration.Operations.Count > 0)
+        {
+            using IDbContextTransaction transaction = Database.BeginTransaction(IsolationLevel.Serializable);
+            if (reduceLengths && Players.Any(player =>
+                EF.Functions.DataLength(player.Username) > RegistrationRules.UsernameMaximumLength * sizeof(char)
+                || EF.Functions.DataLength(player.Email) > RegistrationRules.EmailMaximumLength * sizeof(char)))
+            {
+                throw new InvalidOperationException("Existing usernames or emails exceed the registration limits.");
+            }
+
+            var generator = this.GetService<IMigrationsSqlGenerator>();
+            var relationalConnection = this.GetService<IRelationalConnection>();
+            foreach (MigrationCommand command in generator.Generate(migration.Operations))
+            {
+                command.ExecuteNonQuery(relationalConnection, null);
+            }
+
+            transaction.Commit();
+        }
+    }
+
+    private static int? ReadColumnLength(DataTable columns, string column, string storeType, bool nullable)
+    {
+        DataRow? row = columns.Rows.Cast<DataRow>()
+            .SingleOrDefault(item => string.Equals(item.Field<string>("COLUMN_NAME"), column,
+                StringComparison.OrdinalIgnoreCase));
+        if (row is not null && (!string.Equals(row.Field<string>("DATA_TYPE"), storeType,
+            StringComparison.OrdinalIgnoreCase) || (row.Field<string>("IS_NULLABLE") == "YES") != nullable))
+        {
+            throw new InvalidOperationException($"Unexpected definition for dbo.Players.{column}.");
+        }
+
+        return row?.Field<int?>("CHARACTER_MAXIMUM_LENGTH");
+    }
+
+    private static void AddRegistrationLengthChanges(MigrationBuilder migration, DataTable indexColumns,
+        IReadOnlyDictionary<string, string?> collations)
+    {
+        Dictionary<string, string?[]> indexes = indexColumns.Rows.Cast<DataRow>()
+            .GroupBy(row => row.Field<string>("index_name")!, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Select(row => row.Field<string>("column_name")).ToArray(),
+                StringComparer.Ordinal);
+        string usernameKey = FindRegistrationKey(indexes, nameof(Player.Username));
+        string emailKey = FindRegistrationKey(indexes, nameof(Player.Email));
+        bool hasUsernameIndex = indexes.TryGetValue(UsernameIndex, out string?[]? usernameIndexColumns);
+        if (hasUsernameIndex)
+        {
+            if (!usernameIndexColumns!.SequenceEqual([nameof(Player.Username)], StringComparer.Ordinal))
+            {
+                throw new InvalidOperationException("Unexpected IX_Players_Username definition.");
+            }
+
+            migration.DropIndex(UsernameIndex, PlayerTable, PlayerSchema);
+        }
+
+        migration.DropUniqueConstraint(usernameKey, PlayerTable, PlayerSchema);
+        migration.DropUniqueConstraint(emailKey, PlayerTable, PlayerSchema);
+        AddRegistrationColumnChange(migration,
+            (nameof(Player.Username), LegacyUsernameLength, RegistrationRules.UsernameMaximumLength), collations);
+        AddRegistrationColumnChange(migration,
+            (nameof(Player.Email), LegacyEmailLength, RegistrationRules.EmailMaximumLength), collations);
+        migration.AddUniqueConstraint(usernameKey, PlayerTable, nameof(Player.Username), PlayerSchema);
+        migration.AddUniqueConstraint(emailKey, PlayerTable, nameof(Player.Email), PlayerSchema);
+        if (hasUsernameIndex)
+        {
+            migration.CreateIndex(UsernameIndex, PlayerTable, nameof(Player.Username), PlayerSchema);
+        }
+    }
+
+    private static void AddRegistrationColumnChange(MigrationBuilder migration, (string Name, int OldLength, int Length) column,
+        IReadOnlyDictionary<string, string?> collations)
+    {
+        string collation = collations.GetValueOrDefault(column.Name)
+            ?? throw new InvalidOperationException($"Could not determine the collation for dbo.Players.{column.Name}.");
+        migration.AlterColumn<string>(column.Name, PlayerTable, schema: PlayerSchema, unicode: true,
+            maxLength: column.Length, collation: collation, oldClrType: typeof(string), oldUnicode: true,
+            oldMaxLength: column.OldLength, oldCollation: collation);
+    }
+
+    private static string FindRegistrationKey(Dictionary<string, string?[]> indexes, string column)
+    {
+        string[] candidates = indexes.Where(index => index.Key != UsernameIndex
+                && index.Value.Length == 1 && index.Value[0] == column)
+            .Select(index => index.Key).ToArray();
+        if (candidates.Length != 1)
+        {
+            throw new InvalidOperationException($"Expected a single unique constraint for dbo.Players.{column}.");
+        }
+
+        return candidates[0];
+    }
+
+    private sealed class RegistrationColumn
+    {
+        public string Schema { get; init; } = string.Empty;
+        public string Table { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string? Collation { get; init; }
     }
 }

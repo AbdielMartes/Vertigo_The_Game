@@ -11,23 +11,14 @@
             <Setter Property="Foreground" Value="{DynamicResource ColorError}"/>
             <Setter Property="FontStyle" Value="Italic"/>
         </Style>
-        <Style Selector="Button:focus-visible">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
-        </Style>
-        <Style Selector="TextBox:focus-visible">
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorFocus}"/>
-            <Setter Property="BorderThickness" Value="{DynamicResource BorderStrong}"/>
-        </Style>
     </UserControl.Styles>
     <ScrollViewer Background="{DynamicResource ColorCanvas}"
-                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <StackPanel MinWidth="880" MaxWidth="1380" Margin="28" Spacing="18"
-                    HorizontalAlignment="Center">
+                  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="{DynamicResource ContentMaxWidth}"
+                    Margin="{DynamicResource MarginScreen}" Spacing="{DynamicResource Space16}">
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                 <StackPanel Spacing="6">
-                    <TextBlock Text="{Binding RoomTitleText}" FontFamily="{DynamicResource FontTitleDisplay}"
-                               FontSize="34" FontWeight="Bold"/>
+                    <TextBlock Classes="vertigo-title" TextWrapping="Wrap" Text="{Binding RoomTitleText}"/>
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <TextBlock Text="{Binding CodeTitleText}" VerticalAlignment="Center"/>
                         <Border Background="{DynamicResource ColorInfoBackground}"
@@ -43,24 +34,19 @@
                         IsEnabled="{Binding !IsBusy}"
                         AutomationProperties.Name="{Binding LeaveText}"/>
             </Grid>
-            <Border Classes="vertigo-alert" IsVisible="{Binding HasError}"
-                    AutomationProperties.Name="{Binding ErrorHeadingText}">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                    <Path Width="22" Height="22" Stretch="Uniform" VerticalAlignment="Top"
-                          Stroke="{DynamicResource ColorError}" StrokeThickness="2"
-                          Data="M 12,2 L 22,20 L 2,20 Z M 12,8 L 12,14 M 12,17 L 12,18"/>
-                    <StackPanel Grid.Column="1" Spacing="5">
-                        <TextBlock Text="{Binding ErrorHeadingText}" FontWeight="Bold"
-                                   Foreground="{DynamicResource ColorError}"/>
-                        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-                                   Foreground="{DynamicResource ColorTextPrimary}"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
+            <ContentControl Classes="vertigo-message"
+                            IsVisible="{Binding HasError}"
+                            AutomationProperties.Name="{Binding ErrorHeadingText}"
+                            AutomationProperties.LiveSetting="Assertive">
+                <StackPanel Spacing="{DynamicResource Space4}">
+                    <TextBlock Classes="vertigo-field-error" Text="{Binding ErrorHeadingText}"/>
+                    <TextBlock Classes="vertigo-message-text" Text="{Binding ErrorMessage}"/>
+                </StackPanel>
+            </ContentControl>
             <Grid ColumnDefinitions="1.05*,0.9*,1.2*" ColumnSpacing="16" MinHeight="480">
                 <Border Grid.Column="0" Classes="vertigo-lobby-panel">
                     <StackPanel Spacing="12">
-                        <TextBlock Text="{Binding MembersTitleText}" FontSize="21" FontWeight="SemiBold"/>
+                        <TextBlock Classes="vertigo-section" Text="{Binding MembersTitleText}"/>
                         <TextBlock Text="{Binding MembersDescriptionText}"
                                    Foreground="{DynamicResource ColorTextSecondary}" TextWrapping="Wrap"/>
                         <ItemsControl ItemsSource="{Binding MemberRows}">
@@ -77,10 +63,9 @@
                                                            Foreground="{DynamicResource ColorTextSecondary}"/>
                                             </StackPanel>
                                             <Border Grid.Column="2" Classes="vertigo-status"
-                                                    
                                                     VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding ReadyText}" FontSize="12"
-                                                           FontWeight="SemiBold"/>
+                                                <TextBlock Classes="vertigo-status-text"
+                                                           Text="{Binding ReadyText}"/>
                                             </Border>
                                         </Grid>
                                     </Border>
@@ -91,7 +76,7 @@
                 </Border>
                 <Border Grid.Column="1" Classes="vertigo-lobby-panel">
                     <StackPanel Spacing="16">
-                        <TextBlock Text="{Binding PreparationTitleText}" FontSize="21" FontWeight="SemiBold"/>
+                        <TextBlock Classes="vertigo-section" Text="{Binding PreparationTitleText}"/>
                         <Path Height="116" Width="110" HorizontalAlignment="Center" Stretch="Uniform"
                               Stroke="{DynamicResource ColorCoal}" StrokeThickness="1.5"
                               Fill="{DynamicResource ColorInfoBackground}"
@@ -119,8 +104,9 @@
                 </Border>
                 <Border Grid.Column="2" Classes="vertigo-lobby-panel">
                     <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="12">
-                        <TextBlock Text="{Binding ChatTitleText}" FontSize="21" FontWeight="SemiBold"/>
-                        <ListBox x:Name="lstLobbyChat" Grid.Row="1" ItemsSource="{Binding Messages}" TabIndex="3"
+                        <TextBlock Classes="vertigo-section" Text="{Binding ChatTitleText}"/>
+                        <ListBox x:Name="lstLobbyChat" Grid.Row="1" Classes="vertigo-list" TabIndex="3"
+                                 ItemsSource="{Binding Messages}"
                                  MinHeight="260" MaxHeight="520"
                                  AutomationProperties.Name="{Binding ChatTitleText}">
                             <ListBox.ItemTemplate>
